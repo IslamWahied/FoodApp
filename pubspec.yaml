@@ -53,6 +53,7 @@ dependencies:
   introduction_screen:
   font_awesome_flutter:
   carousel_slider:
+  rounded_loading_button: ^2.0.9
 #  firebase_auth:
 #  firebase_core:
 #  google_sign_in:
