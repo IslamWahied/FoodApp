@@ -17,8 +17,12 @@ class LoginScreen extends StatelessWidget {
         var cubit = LoginCubit.get(context);
         return Scaffold(
           //    key: cubit.scaffoldLoginKey,
+
+
+
           backgroundColor: Colors.blue,
           body: BlocConsumer<LoginCubit, LoginState>(
+
             listener: (context, state) {
               var cubit = LoginCubit.get(context);
               // if(state is LoginErorrState)
