@@ -7,23 +7,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-
-
 
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
-      builder: (context,state){
+      builder: (context, state) {
         var cubit = LoginCubit.get(context);
         return Scaffold(
-      //    key: cubit.scaffoldLoginKey,
-          backgroundColor:Colors.blue,
+          //    key: cubit.scaffoldLoginKey,
+          backgroundColor: Colors.blue,
           body: BlocConsumer<LoginCubit, LoginState>(
-            listener: (context, state)   {
-              var cubit  = LoginCubit.get(context);
+            listener: (context, state) {
+              var cubit = LoginCubit.get(context);
               // if(state is LoginErorrState)
               // {
               //   cubit.scaffoldLoginKey.currentState.showSnackBar(SnackBar(
@@ -39,11 +36,14 @@ class LoginScreen extends StatelessWidget {
               //       duration: Duration(milliseconds: 2000)));
               // }
             },
-            builder:(context, state) {
+            builder: (context, state) {
               // var cubit = LoginCubit.get(context);
-              return  Container(
+              return Container(
                 height: double.infinity,
-                decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/bg.png"), fit: BoxFit.cover)),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/bg.png"),
+                        fit: BoxFit.cover)),
                 child: SingleChildScrollView(
                   child: Form(
                     // key: cubit.loginFormGlobalKey,
@@ -78,11 +78,10 @@ class LoginScreen extends StatelessWidget {
                           child: TextFormField(
                             maxLength: 11,
 
-
-                         //   controller: cubit.textMobileControl,
-                         //    onChanged: (value){
-                         //      cubit.changVaildState();
-                         //    },
+                            //   controller: cubit.textMobileControl,
+                            //    onChanged: (value){
+                            //      cubit.changVaildState();
+                            //    },
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'You must enter 11 numbers';
@@ -90,8 +89,7 @@ class LoginScreen extends StatelessWidget {
                               return '';
                             },
 
-                            decoration:  InputDecoration(
-
+                            decoration: InputDecoration(
                               fillColor: Colors.white,
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
@@ -99,8 +97,6 @@ class LoginScreen extends StatelessWidget {
                                 //   color: kSecondaryColor,
                                 // ),
                               ),
-
-
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
                                 borderSide: BorderSide(
@@ -108,7 +104,6 @@ class LoginScreen extends StatelessWidget {
                                   width: 2.0,
                                 ),
                               ),
-
                               labelText: 'Mobile',
                               labelStyle: const TextStyle(
                                   // color: kSecondaryColor,
@@ -128,66 +123,60 @@ class LoginScreen extends StatelessWidget {
                         SizedBox(
                           height: 20,
                         ),
-
                         Container(
                           width: 200,
                           height: 200,
                           child: RoundedLoadingButton(
-
-                              // controller: cubit.loginbtnController,
-                              successColor: Colors.green,
-                              // color: Colors.green,
-                              // color:cubit.isVaild ?kSecondaryColor: Colors.grey[500],
-                              disabledColor: Colors.grey,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    'Activation',
-                                    style:const TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  //  Icon(Icons.arrow_forward_outlined, color: Colors.white,)
-                                ],
-                              ),
-                              // animateOnTap:  cubit.isVaild,
-                              // onPressed: () {
-                              //   if ( cubit.isVaild) {
-                              //     cubit.getActivationCode(context);
-                              //   }
-                               // }
+                            // controller: cubit.loginbtnController,
+                            successColor: Colors.green,
+                            // color: Colors.green,
+                            // color:cubit.isVaild ?kSecondaryColor: Colors.grey[500],
+                            disabledColor: Colors.grey,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Activation',
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                  textAlign: TextAlign.center,
                                 ),
+                                //  Icon(Icons.arrow_forward_outlined, color: Colors.white,)
+                              ],
+                            ),
+                            // animateOnTap:  cubit.isVaild,
+                            // onPressed: () {
+                            //   if ( cubit.isVaild) {
+                            //     cubit.getActivationCode(context);
+                            //   }
+                            // }
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
               );
-            } ,
-
+            },
           ),
         );
       },
-      listener: (context,state){
+      listener: (context, state) {
         var cubit = LoginCubit.get(context);
-        if(state is LoginErorrState)
-          {
-            // cubit.scaffoldLoginKey.currentState.showSnackBar(SnackBar(
-            //     backgroundColor: Colors.red,
-            //     content: Text(
-            //       state.erorr.toString(),
-            //       textAlign: TextAlign.center,
-            //     ),
-            //     shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.all(Radius.circular(30))),
-            //     behavior: SnackBarBehavior.floating,
-            //     padding: EdgeInsets.all(10.0),
-            //     duration: Duration(milliseconds: 2000)));
-          }
+        if (state is LoginErorrState) {
+          // cubit.scaffoldLoginKey.currentState.showSnackBar(SnackBar(
+          //     backgroundColor: Colors.red,
+          //     content: Text(
+          //       state.erorr.toString(),
+          //       textAlign: TextAlign.center,
+          //     ),
+          //     shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.all(Radius.circular(30))),
+          //     behavior: SnackBarBehavior.floating,
+          //     padding: EdgeInsets.all(10.0),
+          //     duration: Duration(milliseconds: 2000)));
+        }
       },
-
     );
-
   }
 }
