@@ -1,18 +1,20 @@
 // @dart=2.9
 
-// Eslam22
+// ignore_for_file: must_be_immutable, non_constant_identifier_names
+
+
+import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
+import 'package:elomda/modules/upload_products/upload_products.dart';
+import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
-// yousse
 
-import 'bloc/SocialCubit/SocialCubit.dart';
-import 'bloc/home_bloc/HomeCubit.dart';
+
 import 'bloc/login_bloc/loginCubit.dart';
 
 
-import 'modules/login/login_screen.dart';
 
 
 
@@ -70,29 +72,29 @@ class MyApp extends StatelessWidget {
   String UserType;
   bool isUserLogined;
   bool showOnboarding;
-  MyApp();
+  MyApp({Key key}) : super(key: key);
 
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
 
-    // print(showOnboarding);
-    // print(isUserLogined);
+
 
 
 
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => LoginCubit()),
+          BlocProvider(create: (context) => UploadProducts()),
           // BlocProvider(create: (context) => HomeCubit()..getUserFavourit()),
           // BlocProvider(create: (context) => SocialCubit()),
         ],
         child: MaterialApp(
-          theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity,),
+          theme: Constants.lightTheme,
           debugShowCheckedModeBanner: false,
           // home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-           home:LoginScreen(),
+           home: const UploadProductForm(),
           // home:VerifiedScreen(),
           // home:RegisterScreen(),
         ));
