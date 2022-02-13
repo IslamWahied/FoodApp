@@ -4,6 +4,9 @@
 
 
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
+import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
+import 'package:elomda/home_layout/cubit/cubit.dart';
+import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/upload_products/upload_products.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -87,6 +90,8 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => LoginCubit()),
           BlocProvider(create: (context) => UploadProducts()),
+          BlocProvider(create: (context) => HomeLayoutCubit()),
+          BlocProvider(create: (context) => HomeScreenCubit()),
           // BlocProvider(create: (context) => HomeCubit()..getUserFavourit()),
           // BlocProvider(create: (context) => SocialCubit()),
         ],
@@ -94,7 +99,7 @@ class MyApp extends StatelessWidget {
           theme: Constants.lightTheme,
           debugShowCheckedModeBanner: false,
           // home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-           home: const UploadProductForm(),
+           home:  HomeLayout(),
           // home:VerifiedScreen(),
           // home:RegisterScreen(),
         ));
