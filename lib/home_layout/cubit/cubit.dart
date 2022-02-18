@@ -5,7 +5,8 @@ import 'package:elomda/modules/feeds/feeds_screen.dart';
 import 'package:elomda/modules/home/home_screen.dart';
 import 'package:elomda/modules/search/search_screen.dart';
 import 'package:elomda/modules/user_info/user_info_screen.dart';
-import 'package:elomda/shared/network/local.dart';
+import 'package:elomda/shared/network/local/shared_helper.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,15 +33,15 @@ class HomeLayoutCubit extends Cubit<HomeLayoutState> {
 
   bool isDarkTheme = false;
 
-  void mode({bool fromShared}) {
-    if (fromShared != null) {
-      isDarkTheme = fromShared;
-      emit(HomeChangeThemeState());
-    } else {
-      isDarkTheme = !isDarkTheme;
-      Cash_Helpper.saveData(key: 'them', value: isDarkTheme).then((value) {
-        emit(HomeChangeThemeState());
-      });
-    }
-  }
+  // void mode({bool fromShared}) {
+  //   if (fromShared != null) {
+  //     isDarkTheme = fromShared;
+  //     emit(HomeChangeThemeState());
+  //   } else {
+  //     isDarkTheme = !isDarkTheme;
+  //     CachHelper.saveData(key: 'them', value: isDarkTheme).then((value) {
+  //       emit(HomeChangeThemeState());
+  //     });
+  //   }
+  // }
 }
