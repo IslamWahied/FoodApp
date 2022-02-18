@@ -1,6 +1,9 @@
 // @dart=2.9
 
 
+import 'package:elomda/modules/login/login_screen.dart';
+import 'package:elomda/shared/network/local/helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +18,8 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitState());
   static LoginCubit get(context) => BlocProvider.of(context);
 
- //  bool isVaild = false;
- //  bool VerifiedisVaild = false;
+   bool isVaild = false;
+   bool VerifiedisVaild = false;
  //
  //  final GlobalKey<ScaffoldState> scaffoldLoginKey = GlobalKey<ScaffoldState>();
  //  final GlobalKey<ScaffoldState> scaffoldVerifiedKey = GlobalKey<ScaffoldState>();
@@ -25,11 +28,11 @@ class LoginCubit extends Cubit<LoginState> {
  //  final GlobalKey<FormState> loginFormGlobalKey = GlobalKey<FormState>();
  //  final GlobalKey<FormState> VerifiedFormGlobalKey = GlobalKey<FormState>();
  //
- //  RoundedLoadingButtonController loginbtnController = RoundedLoadingButtonController();
+   RoundedLoadingButtonController loginbtnController = RoundedLoadingButtonController();
  //  RoundedLoadingButtonController VerifiedbtnController = RoundedLoadingButtonController();
  //
- //  TextEditingController textMobileControl = TextEditingController();
- //  TextEditingController textVerifiedCodeControl = TextEditingController();
+    TextEditingController textMobileControl = TextEditingController();
+   TextEditingController textVerifiedCodeControl = TextEditingController();
  //  TextEditingController txtRegisterUserNameControl = TextEditingController();
  //
  //
@@ -42,44 +45,42 @@ class LoginCubit extends Cubit<LoginState> {
  //  String userTypeSelectedName = '';
  //  int userTypeSelectedId = 0;
  //
- //  getActivationCode(context) async {
- //    loginbtnController.start();
- //    emit(LoginLoadingState());
+  getActivationCode(context) async {
+    loginbtnController.start();
+    emit(LoginLoadingState());
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber:'+2'+textMobileControl.text,
+
+      verificationCompleted: (PhoneAuthCredential credential) {
+         ;
+
+         loginbtnController.success();
+         loginbtnController.reset();
+
+        emit(LoginSuccessState());
+      },
+      verificationFailed: (FirebaseAuthException e) {
+
+        loginbtnController.error();
+        loginbtnController.reset();
+        emit(LoginErorrState(e.message));
+      },
+      codeSent: (String verificationId, int resendToken) {
+
+        VerificationCode = verificationId;
+        loginbtnController.success();
+        navigatTo(context, const ActivationCodeScreen());
+        emit(LoginSuccessState());
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+    // loginbtnController.reset();
+    // NavigatTo(context, VerifiedScreen());
+
+  }
  //
- //    await FirebaseAuth.instance.verifyPhoneNumber(
- //      phoneNumber:'+2'+textMobileControl.text,
- //
- //      verificationCompleted: (PhoneAuthCredential credential) {
- //         print(credential.smsCode);
- //          loginbtnController.success();
- //         loginbtnController.reset();
- //
- //        emit(LoginSuccessState());
- //      },
- //      verificationFailed: (FirebaseAuthException e) {
- //
- //
- //
- //        loginbtnController.error();
- //        loginbtnController.reset();
- //        emit(LoginErorrState(e.message));
- //      },
- //      codeSent: (String verificationId, int resendToken) {
- // ;
- //        VerificationCode = verificationId;
- //
- //        loginbtnController.success();
- //        NavigatTo(context, VerifiedScreen());
- //        emit(LoginSuccessState());
- //      },
- //      codeAutoRetrievalTimeout: (String verificationId) {},
- //    );
- //    // loginbtnController.reset();
- //    // NavigatTo(context, VerifiedScreen());
- //
- //  }
- //
- //   String VerificationCode = '';
+    String VerificationCode = '';
  //
  //  activationNumber(context) async {
  //
@@ -123,29 +124,29 @@ class LoginCubit extends Cubit<LoginState> {
  //
  //    }
  //  }
- //  VerifiedchangVaildState() {
- //    if(textVerifiedCodeControl.text.trim() != '' &&  textVerifiedCodeControl.text !=null )
- //    {
- //      VerifiedisVaild = true;
- //    }
- //    else
- //    {
- //      VerifiedisVaild = false;
- //    }
- //    emit(LoginSuccessState());
- //  }
+  VerifiedchangVaildState() {
+    if(textVerifiedCodeControl.text.trim() != '' &&  textVerifiedCodeControl.text !=null )
+    {
+      VerifiedisVaild = true;
+    }
+    else
+    {
+      VerifiedisVaild = false;
+    }
+    emit(LoginSuccessState());
+  }
  //
- //  changVaildState() {
- //    if(textMobileControl.text.trim() != '' && textMobileControl.text.length == 11 && textMobileControl.text !=null  )
- //    {
- //      isVaild = true;
- //    }
- //    else
- //    {
- //      isVaild = false;
- //    }
- //    emit(LoginSuccessState());
- //  }
+  changVaildState() {
+    if(textMobileControl.text.trim() != '' && textMobileControl.text.length == 11 && textMobileControl.text !=null  )
+    {
+      isVaild = true;
+    }
+    else
+    {
+      isVaild = false;
+    }
+    emit(LoginSuccessState());
+  }
  //
  //
  //
@@ -254,7 +255,7 @@ class LoginCubit extends Cubit<LoginState> {
  //        RegisterVaild = false;
  //        VerifiedisVaild = false;
  //        isVaild = false;
- //       VerificationCode = '';
+     //  VerificationCode = '';
  //      floorSelectedName = '';
  //      floorSelectedId = 0;
  //      userTypeSelectedName = '';
