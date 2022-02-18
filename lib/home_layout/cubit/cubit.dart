@@ -5,8 +5,6 @@ import 'package:elomda/modules/feeds/feeds_screen.dart';
 import 'package:elomda/modules/home/home_screen.dart';
 import 'package:elomda/modules/search/search_screen.dart';
 import 'package:elomda/modules/user_info/user_info_screen.dart';
-import 'package:elomda/shared/network/local/shared_helper.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

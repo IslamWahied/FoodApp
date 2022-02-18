@@ -17,9 +17,9 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeScreenCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeScreenState>(
       builder: (context, state) {
-        var cubit = HomeScreenCubit.get(context);
+        var cubit = HomeCubit.get(context);
         return Scaffold(
           backgroundColor: Constants.lightBG,
           body: SingleChildScrollView(

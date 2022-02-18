@@ -24,6 +24,8 @@ class UploadProducts extends Cubit<UploadProductsState> {
   var txtUploadDescription = TextEditingController();
   var txtAddCategory = TextEditingController();
 
+
+
   // ignore: non_constant_identifier_names
   String CategoryValue;
   File finalPickedProductImage;
@@ -82,4 +84,22 @@ class UploadProducts extends Cubit<UploadProductsState> {
     Navigator.pop(context);
     emit(UploadProductsAddCategoryState());
   }
+
+  int selectedTypeItemId = 0;
+  onChangeTypeItemId(int index){
+    selectedTypeItemId = listCategory[index].id;
+    emit(onChangeTypeItemIdState());
+
+  }
+}
+List<ListCategory> listCategory = [
+  ListCategory(id:1, name: 'Category'),
+  ListCategory(id:2,name: 'SupCategory'),
+  ListCategory(id:3,name: 'Product'),
+
+];
+class ListCategory {
+  String name;
+  int id;
+  ListCategory({this.name,this.id});
 }

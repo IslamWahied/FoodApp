@@ -56,10 +56,11 @@ dependencies:
   carousel_slider:
   rounded_loading_button: ^2.0.9
   google_fonts:
-  firebase_auth:
-  firebase_core:
+  cloud_firestore: ^3.1.8
+  firebase_auth: ^3.3.7
   google_sign_in:
-  cloud_firestore:
+
+  dropdown_search: ^2.0.1
 
 dev_dependencies:
   flutter_test:

@@ -11,10 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-class HomeScreenCubit extends Cubit<HomeScreenState> {
-  HomeScreenCubit() : super(HomeScreenStateInitState());
+class HomeCubit extends Cubit<HomeScreenState> {
+  HomeCubit() : super(HomeScreenStateInitState());
 
-  static HomeScreenCubit get(context) => BlocProvider.of(context);
+  static HomeCubit get(context) => BlocProvider.of(context);
 
   List<String> carouselImage = [
     'assets/food3.jpeg',

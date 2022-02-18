@@ -1,12 +1,11 @@
 // @dart=2.9
 
-// ignore_for_file: must_be_immutable, non_constant_identifier_names
-
 
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/home_layout/cubit/cubit.dart';
 import 'package:elomda/home_layout/home_layout.dart';
+import 'package:elomda/modules/login/register_screen.dart';
 import 'package:elomda/modules/upload_products/upload_products.dart';
 import 'package:elomda/styles/colors.dart';
 // Eslam22
@@ -34,59 +33,59 @@ Future<void> main() async {
    await CachHelper.init();
     DioHelper.init();
 
-   String mobile =  CachHelper.GetData(key: 'Mobile');
-    String userName = CachHelper.GetData(key: 'UserName');
- String userType = CachHelper.GetData(key: 'UserType');
+   String mobile =  CachHelper.GetData(key: 'mobile');
+    String userName = CachHelper.GetData(key: 'userName');
+ String departmentId = CachHelper.GetData(key: 'departmentId');
 
 
-    bool isUserLogined  = false;
+    bool isUserLogin  = false;
 
-   bool showOnboarding  = CachHelper.GetData(key: 'showOnboarding') != null || CachHelper.GetData(key: 'showOnboarding') == false ? false :true ;
+   bool showOnBoarding  = CachHelper.GetData(key: 'showOnBoarding') != null || CachHelper.GetData(key: 'showOnBoarding') == false ? false :true ;
 
 
 
   if(
   mobile != null && mobile.trim() != '' &&
-       userType != null && userType.trim() != '' &&
+      departmentId != null && departmentId.trim() != '' &&
       userName !=null   && userName.trim() != ''
   ){
 
-    isUserLogined = true;
-    Global.Mobile = mobile;
+    isUserLogin = true;
+    Global.mobile = mobile;
     Global.userName = userName;
-     Global.UserType = userType;
+     Global.departmentId = departmentId;
 
   }
   else{
-    isUserLogined = false;
+    isUserLogin = false;
   }
 
 
-  if(showOnboarding == null && showOnboarding != false )
+  if(showOnBoarding == null && showOnBoarding != false )
   {
-    showOnboarding = true;
+    showOnBoarding = true;
   }
 
 
-  print(showOnboarding);
 
-    runApp(MyApp(userName: userName,Mobile: mobile , UserType: userType ,showOnboarding: showOnboarding,isUserLogined: isUserLogined,));
- // runApp(MyApp());
+
+    runApp(MyApp(userName: userName,mobile: mobile , departmentId: departmentId ,showOnBoarding: showOnBoarding,isUserLogin: isUserLogin,));
+
 }
 
 class MyApp extends StatelessWidget {
 
   String userName;
-  String Mobile;
-  String UserType;
-  bool isUserLogined;
-  bool showOnboarding;
+  String mobile;
+  String departmentId;
+  bool isUserLogin;
+  bool showOnBoarding;
   MyApp({
     this.userName,
-    this.Mobile,
-    this.UserType,
-    this.showOnboarding,
-    this.isUserLogined,
+    this.mobile,
+    this.departmentId,
+    this.showOnBoarding,
+    this.isUserLogin,
 
 });
 
@@ -104,7 +103,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => LoginCubit()),
           BlocProvider(create: (context) => UploadProducts()),
           BlocProvider(create: (context) => HomeLayoutCubit()),
-          BlocProvider(create: (context) => HomeScreenCubit()),
+          BlocProvider(create: (context) => HomeCubit()),
           // BlocProvider(create: (context) => HomeCubit()..getUserFavourit()),
           // BlocProvider(create: (context) => SocialCubit()),
         ],
@@ -114,9 +113,9 @@ class MyApp extends StatelessWidget {
           // home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
         //   home:  HomeLayout(),
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-           home:const LoginScreen(),
+          // home:const LoginScreen(),
           // home:VerifiedScreen(),
-          // home:RegisterScreen(),
+         home:const RegisterScreen(),
         ));
 
 

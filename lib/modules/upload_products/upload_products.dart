@@ -2,8 +2,10 @@
 
 // ignore_for_file: deprecated_member_use, use_key_in_widget_constructors
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_state.dart';
+import 'package:elomda/modules/login/register_screen.dart';
 
 import 'package:elomda/styles/colors.dart';
 
@@ -41,7 +43,8 @@ class UploadProductForm extends StatelessWidget {
               ),
             ),
             child: Material(
-              color: Theme.of(context).bottomAppBarColor,
+              color:Colors.yellowAccent[100],
+              //Theme.of(context).bottomAppBarColor,
               child: InkWell(
                 onTap: () {
                   if (cubit.UploadProduct_formKey.currentState.validate()) {
@@ -62,8 +65,7 @@ class UploadProductForm extends StatelessWidget {
                           textAlign: TextAlign.center),
                     ),
                     GradientIcon(
-                      Feather.upload,
-                      20,
+                      Feather.upload, 20,
                       LinearGradient(
                         colors: <Color>[
                           Colors.green,
@@ -289,25 +291,112 @@ class UploadProductForm extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 30),
+SizedBox(
+  width: double.infinity,
+  height: 50,
+  child:   ListView.separated(
+
+    scrollDirection: Axis.horizontal,
+
+      itemBuilder: (context,index)=>GestureDetector(
+        onTap: (){
+          cubit.onChangeTypeItemId(index);
+        },
+        child: Container(
+
+          height: 50.0,
+
+          width: 100,
+
+          color: Colors.transparent,
+
+          child: Container(
+
+              decoration: BoxDecoration(
+
+                  color:cubit.selectedTypeItemId == listCategory[index].id?Colors.blue.withOpacity(0.4): Colors.grey.withOpacity(0.3),
+
+                  borderRadius: BorderRadius.circular(25
+
+                  )
+
+              ),
+
+              child:   Center(
+
+                child:  Text(listCategory[index].name??''),
+
+              )
+
+          ),
+
+        ),
+      ),
+
+      separatorBuilder:  (context,index)=>const SizedBox(width: 20),
+
+
+
+      itemCount: listCategory.length??0
+
+  ),
+),
+
                           const SizedBox(
-                            height: 5,
+                            height: 20,
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Expanded(
-                                flex: 3,
-                                child: DropdownButtonFormField<String>(
-                                  items: cubit.categoryList,
-                                  onChanged: (String value) {
-                                    cubit.selectCategory(value);
-                                  },
-                                  validator: (value) => value == null
-                                      ? 'please select a category'
-                                      : null,
-                                  hint: const Text('Select a Category'),
-                                  value: cubit.CategoryValue,
-                                ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height * 0.075,
+                                  width: 300,
+
+                                  child:
+                                  DropdownSearch(
+
+                                    popupBackgroundColor:Colors.grey[250] ,
+
+                                    maxHeight: MediaQuery.of(context).size.height * 0.30,
+                                    dropdownSearchDecoration: InputDecoration(
+
+                                      fillColor: Colors.white,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+
+
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                          width: 2.0,
+                                        ),
+                                      ),
+
+                                      labelText: 'Category',
+
+                                      labelStyle: const TextStyle(
+                                          // color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14),
+                                    ),
+
+                                //    selectedItem:cubit.departmantSelectedName??'' ,
+
+                                    showSearchBox: true,
+                                    mode: Mode.MENU,
+                                  items: listDepartment.map((e) => e.name).toList(),
+                                    onChanged: (value) async {
+                                      // cubit.departmentId = listDepartment.firstWhere((element) => element.name == value ).id;
+                                      // cubit.changeRegisterValidState();
+
+                                    },
+                                  )
                               ),
                               IconButton(
                                 onPressed: () {
@@ -391,6 +480,201 @@ class UploadProductForm extends StatelessWidget {
                                   size: 20,
                                 ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height * 0.075,
+                                  width: 300,
+
+                                  child:
+                                  DropdownSearch(
+
+                                    popupBackgroundColor:Colors.grey[250] ,
+
+                                    maxHeight: MediaQuery.of(context).size.height * 0.30,
+                                    dropdownSearchDecoration: InputDecoration(
+
+                                      fillColor: Colors.white,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+
+
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                          width: 2.0,
+                                        ),
+                                      ),
+
+                                      labelText: 'SupCategory',
+
+                                      labelStyle: const TextStyle(
+                                        // color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14),
+                                    ),
+
+                                    //    selectedItem:cubit.departmantSelectedName??'' ,
+
+                                    showSearchBox: true,
+                                    mode: Mode.MENU,
+                                    items: listDepartment.map((e) => e.name).toList(),
+                                    onChanged: (value) async {
+                                      // cubit.departmentId = listDepartment.firstWhere((element) => element.name == value ).id;
+                                      // cubit.changeRegisterValidState();
+
+                                    },
+                                  )
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Form(
+                                          key: cubit.addCategoryFormKey,
+                                          child: AlertDialog(
+                                            title: Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                  const EdgeInsets.only(
+                                                      right: 6.0),
+                                                  child: Image.network(
+                                                    'https://cdn.iconscout.com/icon/premium/png-256-thumb/add-category-2636951-2184721.png',
+                                                    height: 40,
+                                                    width: 40,
+                                                  ),
+                                                ),
+                                                const Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Text('Add category'),
+                                                )
+                                              ],
+                                            ),
+                                            content: TextFormField(
+                                              controller: cubit.txtAddCategory,
+                                              textInputAction:
+                                              TextInputAction.done,
+                                              autofocus: true,
+                                              onEditingComplete: () {
+                                                if (cubit.addCategoryFormKey
+                                                    .currentState
+                                                    .validate()) {
+                                                  cubit.addCategory(
+                                                      cubit.txtAddCategory.text,
+                                                      cubit.txtAddCategory.text,
+                                                      context);
+                                                } else {
+                                                  return null;
+                                                }
+                                              },
+                                              validator: (value) {
+                                                if (value.isEmpty) {
+                                                  return 'Please enter a category';
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  child: const Text('Cancel')),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    if (cubit.addCategoryFormKey
+                                                        .currentState
+                                                        .validate()) {
+                                                      cubit.addCategory(
+                                                          cubit.txtAddCategory
+                                                              .text,
+                                                          cubit.txtAddCategory
+                                                              .text,
+                                                          context);
+                                                    } else {
+                                                      return null;
+                                                    }
+                                                  },
+                                                  child: const Text('Add')),
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                },
+                                icon: const Icon(
+                                  Icons.add_circle,
+                                  color: Colors.deepOrange,
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height * 0.095,
+                                  width: 300,
+
+                                  child: TextFormField(
+                                    // controller: cubit.txtRegisterUserNameControl,
+                                    // onChanged: (value){
+                                    //   cubit.changeRegisterValidState();
+                                    // },
+
+                                    decoration:  InputDecoration(
+
+                                      fillColor: Colors.white,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+
+
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderSide: const BorderSide(
+                                          color: Colors.black,
+                                          width: 2.0,
+                                        ),
+                                      ),
+
+                                      labelText: 'Product',
+                                      labelStyle: const TextStyle(
+                                          // color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 15),
+                                    ),
+
+                                    maxLength: 150,
+
+                                    keyboardType: TextInputType.text,
+                                    onFieldSubmitted: (value) {
+                                      // if ( cubit.registerValid) {
+                                      //   cubit.registerAndLogin(context);
+                                      // }
+                                    },
+                                  ),
+
+                              ),
+
                             ],
                           ),
                           const SizedBox(height: 25),
