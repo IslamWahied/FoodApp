@@ -1,10 +1,9 @@
 // ignore_for_file: deprecated_member_use, import_of_legacy_library_into_null_safe
 
+import 'package:elomda/bloc/home_layout_bloc/cubit.dart';
+import 'package:elomda/bloc/home_layout_bloc/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'cubit/cubit.dart';
-import 'cubit/state.dart';
 
 class HomeLayout extends StatelessWidget {
   const HomeLayout({Key? key}) : super(key: key);
