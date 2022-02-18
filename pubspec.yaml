@@ -37,6 +37,7 @@ dependencies:
 
   smooth_page_indicator:
   carousel_pro:
+
   shared_preferences:
   dio:
   fluttertoast:
