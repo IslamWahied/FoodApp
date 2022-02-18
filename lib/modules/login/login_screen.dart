@@ -137,7 +137,7 @@ class LoginScreen extends StatelessWidget {
       listener: (context, state) {
         var cubit = LoginCubit.get(context);
         if (state is LoginErorrState) {
-          // cubit.scaffoldLoginKey.currentState.showSnackBar(SnackBar(
+          // home_layout_bloc.scaffoldLoginKey.currentState.showSnackBar(SnackBar(
           //     backgroundColor: Colors.red,
           //     content: Text(
           //       state.erorr.toString(),
@@ -286,7 +286,7 @@ class ActivationCodeScreen extends StatelessWidget {
       listener: (context, state) {
         var cubit = LoginCubit.get(context);
         if (state is LoginErorrState) {
-          // cubit.scaffoldLoginKey.currentState.showSnackBar(SnackBar(
+          // home_layout_bloc.scaffoldLoginKey.currentState.showSnackBar(SnackBar(
           //     backgroundColor: Colors.red,
           //     content: Text(
           //       state.erorr.toString(),

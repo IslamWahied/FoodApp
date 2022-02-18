@@ -5,8 +5,10 @@
 
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
-import 'package:elomda/home_layout/cubit/cubit.dart';
+import 'package:elomda/bloc/home_layout_bloc/cubit.dart';
+
 import 'package:elomda/home_layout/home_layout.dart';
+
 import 'package:elomda/modules/upload_products/upload_products.dart';
 import 'package:elomda/styles/colors.dart';
 // Eslam22
@@ -25,7 +27,7 @@ import 'bloc/login_bloc/loginCubit.dart';
 import 'modules/login/login_screen.dart';
 import 'shared/Global.dart';
 
-
+//  https://flutterawesome.com/an-awesome-flutter-food-delivery-app-ui/
 
 Future<void> main() async {
 
@@ -112,9 +114,9 @@ class MyApp extends StatelessWidget {
           theme: Constants.lightTheme,
           debugShowCheckedModeBanner: false,
           // home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-        //   home:  HomeLayout(),
+          home:  HomeLayout(),
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-           home:const LoginScreen(),
+          // home:const LoginScreen(),
           // home:VerifiedScreen(),
           // home:RegisterScreen(),
         ));
