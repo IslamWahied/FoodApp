@@ -14,6 +14,7 @@ import 'package:elomda/styles/colors.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -31,30 +32,33 @@ class HomeScreen extends StatelessWidget {
               frontLayerBackgroundColor: Constants.white,
               headerHeight: MediaQuery.of(context).size.height * 0.45,
               appBar: BackdropAppBar(
-                title: const Text("Home"),
-                leading: const BackdropToggleButton(
-                  icon: AnimatedIcons.home_menu,
-                  color: Colors.deepOrange,
+                title: const Text(
+                  "Home",
+                  style: TextStyle(color: Colors.black),
                 ),
+                leading: IconButton(
+                    onPressed: () {
+                      // navigateTo(context, User_Info());
+                    },
+                    padding: const EdgeInsets.all(10),
+                    icon: const CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.white,
+                      child: CircleAvatar(
+                          radius: 13,
+                          backgroundImage: NetworkImage(
+                              'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')),
+                    )),
                 flexibleSpace: Container(
                   decoration: const BoxDecoration(
-                    color: Colors.black,
+                    color: Color(0xfffcfcff),
                   ),
                 ),
-                actions: <Widget>[
-                  IconButton(
-                      onPressed: () {
-                        // navigateTo(context, User_Info());
-                      },
-                      padding: const EdgeInsets.all(10),
-                      icon: const CircleAvatar(
-                        radius: 15,
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                            radius: 13,
-                            backgroundImage: NetworkImage(
-                                'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')),
-                      ))
+                actions: const <Widget>[
+                  BackdropToggleButton(
+                    icon: AnimatedIcons.home_menu,
+                    color: Colors.deepOrange,
+                  ),
                 ],
               ),
               backLayer: BackLayerMenu(),
@@ -92,17 +96,30 @@ class HomeScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 240,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: cubit.foodCategoryList.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding:
-                                  EdgeInsets.only(left: index == 0 ? 25 : 0),
-                              child: foodCategoryCard(
-                                  cubit.foodCategoryList[index]['imagePath'],
-                                  cubit.foodCategoryList[index]['name'],
-                                  index,
-                                  context),
+                          child: AnimationLimiter(
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: cubit.foodCategoryList.length,
+                              itemBuilder: (context, index) =>
+                                  AnimationConfiguration.staggeredList(
+                                      position: index,
+                                      duration: Duration(milliseconds: 375),
+                                      child: SlideAnimation(
+                                        verticalOffset: 50.0,
+                                        child: FadeInAnimation(
+                                          child: Padding(
+                                            padding:
+                                            EdgeInsets.only(left: index == 0 ? 25 : 0),
+                                            child: foodCategoryCard(
+                                                cubit.foodCategoryList[index]['imagePath'],
+                                                cubit.foodCategoryList[index]['name'],
+                                                index,
+                                                context),
+                                          ),
+                                        ),
+                                      )
+
+                                  ),
                             ),
                           ),
                         ),
@@ -113,15 +130,18 @@ class HomeScreen extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                               size: 22),
                         ),
-                        Column(
-                          children: List.generate(
-                            cubit.popularFoodList.length,
-                            (index) => popularFoodCard(
-                                cubit.popularFoodList[index]['imagePath'],
-                                cubit.popularFoodList[index]['name'],
-                                cubit.popularFoodList[index]['weight'],
-                                cubit.popularFoodList[index]['star'],
-                                context),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 30),
+                          child: Column(
+                            children: List.generate(
+                              cubit.popularFoodList.length,
+                              (index) => popularFoodCard(
+                                  cubit.popularFoodList[index]['imagePath'],
+                                  cubit.popularFoodList[index]['name'],
+                                  cubit.popularFoodList[index]['weight'],
+                                  cubit.popularFoodList[index]['star'],
+                                  context),
+                            ),
                           ),
                         ),
                       ],
@@ -179,9 +199,8 @@ class HomeScreen extends StatelessWidget {
   Widget popularFoodCard(
       String imagePath, String name, String weight, String star, context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         navigateTo(context, FoodDetail(imagePath));
-
       },
       child: Container(
         margin: const EdgeInsets.only(right: 25, left: 20, top: 25),

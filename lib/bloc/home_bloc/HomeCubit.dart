@@ -34,7 +34,13 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       'name': 'Pizza',
     },
   ];
+  bool isIconClicked = false;
+onIconClick(){
 
+  isIconClicked  = !isIconClicked;
+
+  emit(OnIconClickState());
+}
 
  List  popularFoodList = [
     {

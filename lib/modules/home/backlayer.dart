@@ -3,6 +3,11 @@
 
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/modules/cart/cart.dart';
+
+import 'package:elomda/modules/feeds/feeds_screen.dart';
+import 'package:elomda/modules/upload_products/upload_products.dart';
+import 'package:elomda/shared/components/componant.dart';
 import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,15 +19,15 @@ class BackLayerMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeScreenCubit, HomeScreenState>(
         builder: (context, state) {
-      //   var home_layout_bloc = HomeScreenCubit.get(context);
+          var cubit = HomeScreenCubit.get(context);
           return Stack(
 
             fit: StackFit.expand,
             children: [
               Ink(
-                decoration: const BoxDecoration(
+                decoration:  BoxDecoration(
 
-                  color: Colors.black
+                  color:Colors.white24
                 ),
               ),
 
@@ -49,11 +54,11 @@ class BackLayerMenu extends StatelessWidget {
                       ),
                       const SizedBox(height: 5.0),
                       content(context, () {
-                       // navigateTo(context, const Feeds());
+                        navigateTo(context,  FeedsScreen());
                       }, 'Feeds', 0),
                       const SizedBox(height: 5.0),
                       content(context, () {
-                       // navigateTo(context, const Cart());
+                        navigateTo(context, const Cart());
                       }, 'Cart', 1),
                       const SizedBox(height: 5.0),
                       content(context, () {
@@ -61,7 +66,7 @@ class BackLayerMenu extends StatelessWidget {
                       }, 'Wishlist', 2),
                       const SizedBox(height: 5.0),
                       content(context, () {
-                       // navigateTo(context, const UploadProductForm());
+                        navigateTo(context, const UploadProductForm());
                       }, 'Upload a new product', 3),
                     ],
                   ),
@@ -90,7 +95,7 @@ class BackLayerMenu extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               text,
-              style: const TextStyle(fontWeight: FontWeight.w700,color: Colors.white),
+              style: const TextStyle(fontWeight: FontWeight.w700,color: Colors.black),
               textAlign: TextAlign.center,
             ),
           ),

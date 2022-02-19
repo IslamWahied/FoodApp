@@ -61,6 +61,8 @@ dependencies:
   firebase_core:
   google_sign_in:
   cloud_firestore:
+  flutter_staggered_animations:
+  flutter_slidable:
 
 
 dev_dependencies:

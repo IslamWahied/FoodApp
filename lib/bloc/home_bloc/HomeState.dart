@@ -2,5 +2,6 @@
 abstract class HomeScreenState {}
 
 class HomeScreenStateInitState extends HomeScreenState {}
+class OnIconClickState extends HomeScreenState {}
 
 
