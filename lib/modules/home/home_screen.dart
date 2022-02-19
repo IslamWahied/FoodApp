@@ -143,7 +143,7 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: HomeScreenCubit.get(context).selectedFoodCard == index
+            color: HomeCubit.get(context).selectedFoodCard == index
                 ? Constants.primary
                 : Constants.white,
             boxShadow: const [
@@ -160,14 +160,14 @@ class HomeScreen extends StatelessWidget {
             RawMaterialButton(
                 onPressed: null,
                 fillColor:
-                    HomeScreenCubit.get(context).selectedFoodCard == index
+                HomeCubit.get(context).selectedFoodCard == index
                         ? Constants.white
                         : Constants.tertiary,
                 shape: const CircleBorder(),
                 child: Icon(Icons.chevron_right_rounded,
                     size: 20,
                     color:
-                        HomeScreenCubit.get(context).selectedFoodCard == index
+                    HomeCubit.get(context).selectedFoodCard == index
                             ? Constants.black
                             : Constants.white))
           ],

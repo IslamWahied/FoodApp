@@ -16,10 +16,10 @@ class FoodDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeScreenCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeScreenState>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = HomeScreenCubit.get(context);
+        var cubit = HomeCubit.get(context);
 
         return Scaffold(
           floatingActionButton: ConstrainedBox(
@@ -204,35 +204,36 @@ class FoodDetail extends StatelessWidget {
         ));
   }
 
-  Padding customAppBar(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 10,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(width: 1, color: Colors.grey[400])),
-              child: const Icon(Icons.chevron_left),
-            ),
-          ),
-          Container(
+
+}
+Padding customAppBar(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 20,
+      vertical: 10,
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Constants.primary,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Icon(Icons.star, color: Constants.white),
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(width: 1, color: Colors.grey[400])),
+            child: const Icon(Icons.chevron_left),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Constants.primary,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: const Icon(Icons.star, color: Constants.white),
+        ),
+      ],
+    ),
+  );
 }

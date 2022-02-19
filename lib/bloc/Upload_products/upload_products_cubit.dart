@@ -4,7 +4,11 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_state.dart';
+import 'package:elomda/shared/Global.dart';
+import 'package:elomda/shared/network/local/helper.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,38 +72,130 @@ class UploadProducts extends Cubit<UploadProductsState> {
   bool inCategory = false;
   List<String> category = [];
 
-  void addCategory(String title, String value, context) {
-    txtAddCategory.text = '';
-    categoryList.add(
-      DropdownMenuItem(
-        child: Text(title.toUpperCase()),
-        value: value,
-      ),
+  void addCategory( String value, context) {
+
+
+
+    Category model =  Category(
+        id: 1,
+        image: '',
+        isDeleted: 0,
+        name: txtAddCategory.text,
+        createdDate: DateTime.now().toString()
     );
-    category = [];
-    for (var element in categoryList) {
-      category.add(element.value);
-    }
+    FirebaseFirestore.instance.doc('Categories').set(model.toMap()).then((value) {
+
+
+      //
+      // FirebaseFirestore.instance.collection('Categories').get().then((value) {
+      // Category model =  Category(
+      //   id: 1,
+      //  image: '',
+      //  isDeleted: 0,
+      //  name: txtAddCategory.text,
+      //  createdDate: DateTime.now().toString()
+      // );
+
+      // listCategory =   value.docs.map((x) => Category.fromJson(x.data())).toList();
+      //
+      // if(userModel.mobile != null)
+      // {
+
+
+      // }
+      // else
+      // {
+    //    FirebaseFirestore.instance.collection('Categories').doc(Global.mobile).set(model.toMap()).then((value) {
+
+
+        // }).catchError((e){
+        //   if (kDebugMode) {
+        //     print(e);
+        //   }
+        // });
+    //  }
+
+
+
+
+    //  }).catchError((error){
+    // //
+    // //   FirebaseFirestore.instance.collection('User').doc(Global.mobile).set(model.toMap()).then((value) {
+    // //
+    // //
+    // //   }).catchError((e){
+    // //     if (kDebugMode) {
+    // //       print(e);
+    // //     }
+    //   });
+      });
+
+
 
     Navigator.pop(context);
     emit(UploadProductsAddCategoryState());
   }
 
-  int selectedTypeItemId = 0;
+  int selectedTypeItemId = 1;
+
+  int selectedCategoryId = 0;
+
   onChangeTypeItemId(int index){
-    selectedTypeItemId = listCategory[index].id;
+    selectedTypeItemId = listItemTypeCategory[index].id;
     emit(onChangeTypeItemIdState());
 
   }
+
+  List<Category> listCategory = [];
+
+
 }
-List<ListCategory> listCategory = [
-  ListCategory(id:1, name: 'Category'),
-  ListCategory(id:2,name: 'SupCategory'),
-  ListCategory(id:3,name: 'Product'),
+List<ListItemTypeCategory> listItemTypeCategory = [
+  ListItemTypeCategory(id:1, name: 'Category'),
+  ListItemTypeCategory(id:2,name: 'SupCategory'),
+  ListItemTypeCategory(id:3,name: 'Product'),
 
 ];
-class ListCategory {
+class ListItemTypeCategory {
   String name;
   int id;
-  ListCategory({this.name,this.id});
+  ListItemTypeCategory({this.name,this.id});
 }
+
+
+class Category {
+  String name;
+  int id;
+  int isDeleted;
+  String createdDate;
+  String image;
+  Category({this.name,this.id,this.createdDate,this.image,this.isDeleted});
+
+  Category.fromJson(Map<String, dynamic> json)
+  {
+    name = json['name'];
+    id = json['id'];
+    createdDate = json['createdDate'];
+    image = json['image'];
+    isDeleted = json['isDeleted'];
+  }
+
+  Map<String, dynamic> toMap()
+  {
+    return {
+
+      'name':name,
+      'id':id,
+      'createdDate':createdDate,
+      'image':image,
+      'isDeleted':isDeleted
+
+    };
+  }
+
+
+}
+
+
+
+

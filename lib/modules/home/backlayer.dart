@@ -3,6 +3,8 @@
 
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/modules/upload_products/upload_products.dart';
+import 'package:elomda/shared/components/componant.dart';
 import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +14,7 @@ class BackLayerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeScreenCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeScreenState>(
         builder: (context, state) {
       //   var home_layout_bloc = HomeScreenCubit.get(context);
           return Stack(
@@ -61,7 +63,7 @@ class BackLayerMenu extends StatelessWidget {
                       }, 'Wishlist', 2),
                       const SizedBox(height: 5.0),
                       content(context, () {
-                       // navigateTo(context, const UploadProductForm());
+                        navigateTo(context, const UploadProductForm());
                       }, 'Upload a new product', 3),
                     ],
                   ),

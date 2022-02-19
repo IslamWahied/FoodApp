@@ -178,7 +178,7 @@ class LoginCubit extends Cubit<LoginState> {
         // 2 - UserName
         // 3 - departmentId
 
-   Global.mobile ='01001271847'; //textMobileControl.text;
+   Global.mobile = textMobileControl.text;
    Global.userName = txtRegisterUserNameControl.text;
    Global.departmentId = departmentId.toString();
 
