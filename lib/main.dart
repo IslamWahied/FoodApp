@@ -16,6 +16,7 @@ import 'package:elomda/shared/network/local/shared_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 
 
@@ -111,6 +112,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           theme: Constants.lightTheme,
+          builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,
           // home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
           home:  HomeLayout(),

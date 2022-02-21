@@ -40,7 +40,7 @@ dependencies:
 
   shared_preferences:
   dio:
-  fluttertoast:
+  motion_toast: ^2.1.1
   list_tile_switch:
   flutter_icons:
   badges:
@@ -60,6 +60,8 @@ dependencies:
   cloud_firestore: ^3.1.8
   firebase_auth: ^3.3.7
   google_sign_in:
+  firebase_storage: ^10.2.7
+  flutter_easyloading: ^3.0.3
 
   dropdown_search: ^2.0.1
 
