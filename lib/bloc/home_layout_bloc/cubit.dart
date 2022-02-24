@@ -17,16 +17,16 @@ class HomeLayoutCubit extends Cubit<HomeLayoutState> {
 
   int currentIndex = 0;
   List screens = [
-    HomeScreen(),
+    const HomeScreen(),
     FeedsScreen(),
     SearchScreen(),
     CartScreen(),
     UserInfoScreen()
   ];
 
-  void changecurrentIndex(int value) {
+  void changeCurrentIndex(int value) {
     currentIndex = value;
-    emit(HomeChangeBottmNavState());
+    emit(HomeChangeBottomNavState());
   }
 
   // Change Theme Mode
@@ -39,9 +39,7 @@ class HomeLayoutCubit extends Cubit<HomeLayoutState> {
   //     emit(HomeChangeThemeState());
   //   } else {
   //     isDarkTheme = !isDarkTheme;
-  //     CachHelper.saveData(key: 'them', value: isDarkTheme).then((value) {
-  //       emit(HomeChangeThemeState());
-  //     });
+
   //   }
   // }
 }

@@ -33,7 +33,7 @@ class HomeLayout extends StatelessWidget {
                     ))),
                 child: BottomNavigationBar(
                   onTap: (value) {
-                    cubit.changecurrentIndex(value);
+                    cubit.changeCurrentIndex(value);
                   },
                   backgroundColor: Theme.of(context).primaryColor,
                   unselectedItemColor: Colors.grey,
@@ -75,7 +75,7 @@ class HomeLayout extends StatelessWidget {
             child: FloatingActionButton(
               backgroundColor: Colors.deepOrange,
               onPressed: () {
-                cubit.changecurrentIndex(2);
+                cubit.changeCurrentIndex(2);
               },
               child: const Icon(Icons.search_outlined),
               hoverElevation: 10,

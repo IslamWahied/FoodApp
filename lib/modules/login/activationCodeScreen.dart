@@ -142,12 +142,13 @@ class ActivationCodeScreen extends StatelessWidget {
         );
       },
       listener: (context, state) {
-        var cubit = LoginCubit.get(context);
-        if (state is LoginErorrState) {
-          cubit.scaffoldLoginKey.currentState.showSnackBar(SnackBar(
+       // var cubit = LoginCubit.get(context);
+        if (state is LoginErrorState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
               backgroundColor: Colors.red,
               content: Text(
-                state.erorr.toString(),
+                state.error.toString(),
                 textAlign: TextAlign.center,
               ),
               shape: const RoundedRectangleBorder(

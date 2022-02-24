@@ -41,7 +41,7 @@ class LoginCubit extends Cubit<LoginState> {
  //
  //
  //  var listUserType = userType.toList();
-   String departmantSelectedName = '';
+   String departMentSelectedName = '';
   int departmentId = 0;
 
 
@@ -66,7 +66,7 @@ class LoginCubit extends Cubit<LoginState> {
 
         loginBtnController.error();
         loginBtnController.reset();
-        emit(LoginErorrState(e.message));
+        emit(LoginErrorState(e.message));
       },
       codeSent: (String verificationId, int resendToken) {
 
@@ -101,7 +101,7 @@ class LoginCubit extends Cubit<LoginState> {
       }
     } on FirebaseAuthException catch (e) {
 
-      scaffoldVerifiedKey.currentState.showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content: Text(
             e.message.toString(),
@@ -207,7 +207,7 @@ class LoginCubit extends Cubit<LoginState> {
      if(userModel.mobile != null)
        {
          restLoginCubit();
-         // HomeCubit.get(context).getUserFavourit();
+         // HomeCubit.get(context).getUserFavourite();
          NavigatToAndReplace(context, const UploadProductForm());
       //   NavigatToAndReplace(context, const HomeLayout());
        }
@@ -254,7 +254,7 @@ class LoginCubit extends Cubit<LoginState> {
         verifiedIsValid = false;
         isValid = false;
       verificationCode = '';
-      departmantSelectedName = '';
+      departMentSelectedName = '';
       departmentId = 0;
     emit(ChangeInScreenState());
   }

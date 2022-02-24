@@ -9,7 +9,7 @@ import 'package:elomda/bloc/home_bloc/HomeState.dart';
 
 import 'package:elomda/modules/home/backlayer.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
-import 'package:elomda/shared/components/componant.dart';
+import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 
 import 'package:flutter/material.dart';
