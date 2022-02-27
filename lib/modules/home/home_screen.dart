@@ -1,11 +1,11 @@
 // @dart=2.9
 
-// ignore_for_file: missing_required_param
+
 
 import 'package:backdrop/backdrop.dart';
-
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+
 
 import 'package:elomda/modules/home/backlayer.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
@@ -14,14 +14,20 @@ import 'package:elomda/styles/colors.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 
 class HomeScreen extends StatelessWidget {
+
   const HomeScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+
+
+        return BlocConsumer<HomeCubit, HomeScreenState>(
+
+
+      listener: (context, state) => () {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return Scaffold(
@@ -29,7 +35,10 @@ class HomeScreen extends StatelessWidget {
           body: Center(
             child: BackdropScaffold(
               frontLayerBackgroundColor: Constants.white,
-              headerHeight: MediaQuery.of(context).size.height * 0.45,
+              headerHeight: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.45,
               appBar: BackdropAppBar(
                 title: const Text("Home"),
                 leading: const BackdropToggleButton(
@@ -94,16 +103,18 @@ class HomeScreen extends StatelessWidget {
                           height: 240,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: cubit.foodCategoryList.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding:
-                                  EdgeInsets.only(left: index == 0 ? 25 : 0),
-                              child: foodCategoryCard(
-                                  cubit.foodCategoryList[index]['imagePath'],
-                                  cubit.foodCategoryList[index]['name'],
-                                  index,
-                                  context),
-                            ),
+                            itemCount: cubit.listCategory.length ?? 0,
+                            itemBuilder: (context, index) =>
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: index == 0 ? 25 : 0),
+                                  child: foodCategoryCard(
+                                      cubit.listCategory[index].image,
+                                      cubit.listCategory[index].categoryTitle,
+                                      cubit.listCategory[index].categoryId,
+                                      context
+                                  ),
+                                ),
                           ),
                         ),
                         const Padding(
@@ -116,12 +127,19 @@ class HomeScreen extends StatelessWidget {
                         Column(
                           children: List.generate(
                             cubit.popularFoodList.length,
-                            (index) => popularFoodCard(
-                                cubit.popularFoodList[index]['imagePath'],
-                                cubit.popularFoodList[index]['name'],
-                                cubit.popularFoodList[index]['weight'],
-                                cubit.popularFoodList[index]['star'],
-                                context),
+                                (index) =>
+                                popularFoodCard(
+                                    imagePath:
+                                    cubit.popularFoodList[index]['imagePath'],
+                                    name:
+                                    cubit.popularFoodList[index]['name'],
+                                    weight:
+                                    cubit.popularFoodList[index]['weight'],
+                                    star:
+                                    cubit.popularFoodList[index]['star'],
+                                    context:
+                                    context
+                                ),
                           ),
                         ),
                       ],
@@ -136,52 +154,68 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget foodCategoryCard(String imagePath, String name, int index, context) {
-    return GestureDetector(
-      child: Container(
-        margin: const EdgeInsets.only(right: 20, top: 20, bottom: 20),
-        padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: HomeCubit.get(context).selectedFoodCard == index
-                ? Constants.primary
-                : Constants.white,
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.grey,
-                blurRadius: 15,
-              )
-            ]),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SvgPicture.asset(imagePath, width: 40),
-            PrimaryText(text: name, fontWeight: FontWeight.w800, size: 16),
-            RawMaterialButton(
-                onPressed: null,
-                fillColor:
-                HomeCubit.get(context).selectedFoodCard == index
-                        ? Constants.white
-                        : Constants.tertiary,
-                shape: const CircleBorder(),
-                child: Icon(Icons.chevron_right_rounded,
-                    size: 20,
-                    color:
-                    HomeCubit.get(context).selectedFoodCard == index
+  Widget foodCategoryCard(String imagePath, String name, int categoryId, context) {
+    return BlocConsumer<HomeCubit,HomeScreenState>(
+      listener: (context,state)=>{},
+      builder: (context,state){
+        var cubit = HomeCubit.get(context);
+        return  GestureDetector(
+          onTap: (){
+
+            cubit.selectCategory(categoryId,context);
+
+          },
+          child: Container(
+            margin: const EdgeInsets.only(right: 20, top: 20, bottom: 20),
+            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: HomeCubit.get(context).selectedCategoryId == categoryId
+                    ? Constants.primary
+                    : Constants.white,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 15,
+                  )
+                ]
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+              // SvgPicture.asset(imagePath, width: 40),
+                Image.network(imagePath,width: 90,height: 70),
+                PrimaryText(text: name, fontWeight: FontWeight.w800, size: 16),
+                RawMaterialButton(
+                    onPressed: null,
+                    fillColor: cubit.selectedCategoryId == categoryId ? Constants.white : Constants.tertiary,
+                    shape: const CircleBorder(),
+                    child: Icon(Icons.chevron_right_rounded,
+                        size: 20,
+                        color:
+                        HomeCubit.get(context).selectedCategoryId == categoryId
                             ? Constants.black
                             : Constants.white))
-          ],
-        ),
-      ),
+              ],
+            ),
+          ),
+        );
+      } ,
+
     );
   }
 
-  Widget popularFoodCard(
-      String imagePath, String name, String weight, String star, context) {
+  Widget popularFoodCard({String imagePath, String name, String weight, String star, context}) {
     return GestureDetector(
       onTap: (){
-        navigateTo(context, FoodDetail(imagePath));
 
+        navigateTo(context, FoodDetail(
+          imagePath:imagePath ,
+            itemPrice: 0,
+          itemName: '',
+          subCategoryTitle: '',
+        )
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(right: 25, left: 20, top: 25),

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/models/user/user_model.dart';
+import 'package:elomda/modules/home/home_screen.dart';
 import 'package:elomda/modules/login/activationCodeScreen.dart';
 
 import 'package:elomda/modules/login/register_screen.dart';
@@ -97,7 +98,8 @@ class LoginCubit extends Cubit<LoginState> {
       final authCredential = await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
       if(authCredential.user != null){
        await  CachHelper.SetData( key: 'mobile',value: textMobileControl.text);
-       navigatTo(context, const RegisterScreen());
+     //  navigatTo(context, const RegisterScreen());
+       navigatTo(context, const HomeScreen());
       }
     } on FirebaseAuthException catch (e) {
 

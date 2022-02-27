@@ -1,23 +1,23 @@
 // @dart=2.9
 class SubCategory {
-  String name;
+  String subCategoryTitle;
   int categoryId;
-  String categoryName;
+  String categoryTitle;
   int supCategoryId;
   int isDeleted;
   String createdDate;
   String image;
-  SubCategory({this.name,this.categoryId,this.createdDate,this.image,this.isDeleted,this.supCategoryId,this.categoryName});
+  SubCategory({this.subCategoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted,this.supCategoryId,this.categoryTitle});
 
   SubCategory.fromJson(Map<String, dynamic> json)
   {
-    name = json['name'];
+    subCategoryTitle = json['subCategoryTitle'];
     categoryId = json['categoryId'];
     createdDate = json['createdDate'];
     image = json['image'];
     isDeleted = json['isDeleted'];
     supCategoryId = json['supCategoryId'];
-    categoryName = json['categoryName'];
+    categoryTitle = json['categoryTitle'];
 
   }
 
@@ -25,13 +25,13 @@ class SubCategory {
   {
     return {
 
-      'name':name,
+      'subCategoryTitle':subCategoryTitle,
       'categoryId':categoryId,
       'createdDate':createdDate,
       'image':image,
       'isDeleted':isDeleted,
       'supCategoryId':supCategoryId,
-      'categoryName':categoryName,
+      'categoryTitle':categoryTitle,
 
 
     };

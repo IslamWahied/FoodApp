@@ -1,5 +1,5 @@
 // @dart=2.9
-// ignore_for_file: constant_identifier_names
+
 
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +123,15 @@ void showDialogAlairt(context, String title, String subtitle, Function fuc) {
         );
       });
 }
-
+class AppColors {
+  static const white = Colors.white;
+  static const secondary = Color(0xff323335);
+  static const lightGray = Color(0xffc0c1c3);
+  static const lighterGray = Color(0xffe0e0e0);
+  static const black = Colors.black;
+  static const primary = Color(0xfffdc912);
+  static const tertiary = Color(0xffff36b6b);
+}
 class PrimaryText extends StatelessWidget {
   final double size;
   final FontWeight fontWeight;
@@ -131,7 +139,7 @@ class PrimaryText extends StatelessWidget {
   final String text;
   final double height;
 
-   const PrimaryText({
+   const PrimaryText( {
     this.text,
     this.fontWeight = FontWeight.w400,
     this.color = Constants.secondary,
@@ -144,10 +152,12 @@ class PrimaryText extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
+        overflow: TextOverflow.ellipsis,
         color: color,
         height: height,
         fontFamily: 'Poppins',
         fontSize: size,
+
         fontWeight: fontWeight,
       ),
     );

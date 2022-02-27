@@ -1,29 +1,16 @@
 // @dart=2.9
-
-
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_layout_bloc/cubit.dart';
-
 import 'package:elomda/home_layout/home_layout.dart';
-import 'package:elomda/modules/login/register_screen.dart';
-
-import 'package:elomda/modules/upload_products/upload_products.dart';
 import 'package:elomda/styles/colors.dart';
-// Eslam22
 import 'package:elomda/shared/network/Dio_Helper/Dio_Helper.dart';
 import 'package:elomda/shared/network/local/shared_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
-
-
-
 import 'bloc/login_bloc/loginCubit.dart';
-
-
 import 'modules/login/login_screen.dart';
 import 'shared/Global.dart';
 
@@ -114,10 +101,10 @@ class MyApp extends StatelessWidget {
           theme: Constants.lightTheme,
           builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,
-          // home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-          home:  HomeLayout(),
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-          // home:const LoginScreen(),
+          home:  const HomeLayout(),
+          //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
+       //   home:const LoginScreen(),
           // home:VerifiedScreen(),
        //  home:const RegisterScreen(),
         ));

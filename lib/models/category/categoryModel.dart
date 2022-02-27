@@ -1,16 +1,16 @@
 // @dart=2.9
 class Category {
-  String name;
-  int id;
+  String categoryTitle;
+  int categoryId;
   int isDeleted;
   String createdDate;
   String image;
-  Category({this.name,this.id,this.createdDate,this.image,this.isDeleted});
+  Category({this.categoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted});
 
   Category.fromJson(Map<String, dynamic> json)
   {
-    name = json['name'];
-    id = json['id'];
+    categoryTitle = json['categoryTitle'];
+    categoryId = json['categoryId'];
     createdDate = json['createdDate'];
     image = json['image'];
     isDeleted = json['isDeleted'];
@@ -20,8 +20,8 @@ class Category {
   {
     return {
 
-      'name':name,
-      'id':id,
+      'categoryTitle':categoryTitle,
+      'categoryId':categoryId,
       'createdDate':createdDate,
       'image':image,
       'isDeleted':isDeleted

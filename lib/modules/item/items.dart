@@ -10,13 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'FeedFoodDetail.dart';
-
-class FeedScreen extends StatelessWidget {
-  const FeedScreen({Key key}) : super(key: key);
-
-
-
+class ItemsScreen extends StatelessWidget {
+  final String subcategoryTitle;
+  const ItemsScreen({this.subcategoryTitle,Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +21,34 @@ class FeedScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = HomeCubit.get(context);
-          return SafeArea(
-            child: Scaffold(
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              centerTitle: false,
+              leadingWidth: 0,
+              iconTheme: const IconThemeData(
+                  color: Constants.black
+              ),
 
+              title:customAppBar(context: context,title: subcategoryTitle) ,
+            ),
+            backgroundColor:Constants.white,
+            body: SafeArea(
 
-              backgroundColor:Constants.white,
-              body: Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // customAppBar2(context),
 
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                    ],
+                  ),
 
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,9 +63,9 @@ class FeedScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                           child: TextField(
-                            controller: cubit.txtFeedControl,
+                            controller: cubit.txtItemControl,
                             onChanged: (String value){
-                              cubit.searchInFeeds(value);
+                                cubit.searchInItems(value);
                             },
                             decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
@@ -69,24 +83,39 @@ class FeedScreen extends StatelessWidget {
                     ],
                   ),
 
-
+                  // GridView.count(
+                  //   shrinkWrap: true,
+                  //
+                  //   physics: const NeverScrollableScrollPhysics(),
+                  //   crossAxisCount: 2,
+                  //   mainAxisSpacing: 1.0,
+                  //   crossAxisSpacing: 1.0,
+                  //   childAspectRatio: 1 / 1.58,
+                  //   padding: const EdgeInsets.only(left: 15),
+                  //
+                  //   children: List.generate(
+                  //     cubit.listItemsSearch.length, (index) =>
+                  //       itemCard(cubit.listItemsSearch[index].image, cubit.listItemsSearch[index].itemTitle,'','', context),
+                  //   ),
+                  // ),
 
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                    child: SizedBox(
+                    
+                      width: 350,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: cubit.listFeedsSearch.length??0,
+                        itemCount: cubit.listItemsSearch.length??0,
                         itemBuilder: (context, index) => itemCard(
-                            itemId:cubit.listFeedsSearch[index].itemId ,
-                            itemPrice:cubit.listFeedsSearch[index].price ,
-                            subCategoryTitle: cubit.listFeedsSearch[index].supCategoryTitle,
-                            name:cubit.listFeedsSearch[index].itemTitle,
+                          itemId:cubit.listItemsSearch[index].itemId ,
+                            itemPrice:cubit.listItemsSearch[index].price ,
+                          subCategoryTitle: cubit.listItemsSearch[index].supCategoryTitle,
+                            name:cubit.listItemsSearch[index].itemTitle,
                             context: context,
-                            imagePath:  cubit.listFeedsSearch[index].image,
-                            itemsPrice:  cubit.listFeedsSearch[index].price,
+                            imagePath:  cubit.listItemsSearch[index].image,
+                            itemsPrice:  cubit.listItemsSearch[index].price,
                             star: '',
-                            itemDescription: cubit.listFeedsSearch[index].description??''
+                            itemDescription: cubit.listItemsSearch[index].description??''
 
 
                         ),
@@ -103,19 +132,17 @@ class FeedScreen extends StatelessWidget {
 Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double itemPrice ,String name, String itemDescription, String star, context,double itemsPrice}) {
   return GestureDetector(
     onTap: (){
-      HomeCubit.get(context).selectedItemId =  itemId;
-      HomeCubit.get(context).selectedCategoryId = HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).categoryId;
-      HomeCubit.get(context).selectedSubCategoryId = HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).supCategoryId;
+HomeCubit.get(context).selectedItemId = itemId;
 
-      navigateTo(context, FeedFoodDetailScreen(
-        imagePath:HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).image,
-        subCategoryTitle:HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).supCategoryTitle,
-        itemName:HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).itemTitle ,
-        itemDescription:HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).description??'' ,
-        itemPrice: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).price,
+        navigateTo(context, FoodDetail(
+          imagePath:imagePath,
+            subCategoryTitle:subCategoryTitle,
+            itemName:name ,
+        itemDescription:itemDescription??'' ,
+            itemPrice: itemsPrice,
 
 
-      ));
+        ));
 
 
     },
@@ -131,8 +158,8 @@ Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double item
       ),
       child: Stack(
         clipBehavior: Clip.none,
-        alignment: Alignment.centerRight,
-        //   crossAxisAlignment: CrossAxisAlignment.start,
+     alignment: Alignment.centerRight,
+     //   crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
           Column(
@@ -173,7 +200,7 @@ Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double item
                 children: [
                   GestureDetector(
                     onTap: (){
-                      HomeCubit.get(context).listOrder.add(HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId));
+                      HomeCubit.get(context).listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId));
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -205,19 +232,31 @@ Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double item
                       ),
                     ],
                   ),
-
+                  // SizedBox(
+                  //   child: Row(
+                  //     children: [
+                  //       const Icon(Icons.star, size: 12),
+                  //       const SizedBox(width: 5),
+                  //       PrimaryText(
+                  //         text: star,
+                  //         size: 18,
+                  //         fontWeight: FontWeight.w600,
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ],
           ),
           Container(
             height: 100,
-            width: 100,
-            transform: Matrix4.translationValues(20.0, 0.0, 0.0,),
+            width: 150,
+            transform: Matrix4.translationValues(50.0, 0.0, 0.0,),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 boxShadow: [
-                  BoxShadow(color: Colors.grey[300], blurRadius: 20,spreadRadius: 2)
+                  BoxShadow(color: Colors.grey[400], blurRadius: 20)
                 ]),
             child: Hero(
               tag: imagePath,

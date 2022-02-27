@@ -18,14 +18,15 @@ class HomeLayoutCubit extends Cubit<HomeLayoutState> {
   int currentIndex = 0;
   List screens = [
     const HomeScreen(),
-    FeedsScreen(),
+    const FeedScreen(),
     SearchScreen(),
-    CartScreen(),
+    const OrderScreen(),
     UserInfoScreen()
   ];
 
   void changeCurrentIndex(int value) {
     currentIndex = value;
+
     emit(HomeChangeBottomNavState());
   }
 

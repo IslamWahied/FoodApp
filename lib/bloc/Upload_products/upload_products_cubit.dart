@@ -1,9 +1,11 @@
 // @dart=2.9
-
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/models/category/SupCategory.dart';
+import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/categoryModel.dart';
+import 'package:elomda/models/category/itemModel.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,8 +29,10 @@ class UploadProducts extends Cubit<UploadProductsState> {
   var addCategoryFormKey = GlobalKey<FormState>();
   bool inCategory = false;
   List<String> category = [];
-  List<Category> listCategory = [];
-  List<SubCategory> listSubCategory = [];
+
+  List<AdditionsModel> listOfSelectedAdditions = [];
+
+
 
   int selectedTypeItemId = 1;
   int selectedCategoryId = 0;
@@ -37,214 +41,235 @@ class UploadProducts extends Cubit<UploadProductsState> {
   String categoryValue;
   File finalPickedProductImage;
 
-  restAfterUpload() {
+  restAfterUpload(context) {
     txtUploadTitle.text = '';
-    if (selectedTypeItemId == 1) {
-      listCategory = [];
-    }
-
-    isUploadValid = false;
-
+    txtUploadPrice.text = '';
     selectedCategoryId = 0;
+    selectedCategoryId = 0;
+    txtUploadDescription.text = '';
     finalPickedProductImage = null;
-    checkIsUploadValid();
+    isUploadValid = false;
+    listOfSelectedAdditions = [];
+
+    // if (selectedTypeItemId == 1) {
+    //   listCategory = [];
+    //   listSubCategory = [];
+    // }
+
+    checkIsUploadValid(context);
     emit(UploadProductsCameraUploadImageState());
   }
 
   bool isStartUpload = false;
-
+  List  ingredients = [
+    {
+      'imagePath': 'assets/tomato.png',
+    },
+    {
+      'imagePath': 'assets/onion.png',
+    },
+    {
+      'imagePath': 'assets/tomato.png',
+    },
+    {
+      'imagePath': 'assets/onion.png',
+    },
+    {
+      'imagePath': 'assets/tomato.png',
+    },
+    {
+      'imagePath': 'assets/onion.png',
+    },
+  ];
   uploadCategory(context) {
-    if (selectedTypeItemId == 1) {
+    if (selectedTypeItemId == 1 && isUploadValid) {
       EasyLoading.show(status: 'Uploading...');
 
-      FirebaseFirestore.instance.collection('Category').get().then((value) {
-        listCategory =
-            value.docs.map((x) => Category.fromJson(x.data())).toList();
 
-        bool isNameFind = listCategory.any((element) =>
-            element.name == txtUploadTitle.text && element.isDeleted == 0);
+      bool isNameFind = HomeCubit.get(context).listCategory.any((element) =>
+      element.categoryTitle == txtUploadTitle.text && element.isDeleted == 0);
 
-        if (isNameFind) {
-          EasyLoading.showError('تمت الاضافة من قبل');
-          // MotionToast.error(
-          //   title: const Text("تمت الاضافة من قبل",style:TextStyle(fontWeight: FontWeight.bold)),
-          //   width:  300,
-          //   description: null,
-          // ).show(context);
+      if (isNameFind) {
+        EasyLoading.showError('تمت الاضافة من قبل');
+      }
+      else {
+        firebase_storage.FirebaseStorage.instance
+            .ref()
+            .child(
+            'Category/${Uri.file(finalPickedProductImage.path).pathSegments.last}')
+            .putFile(finalPickedProductImage)
+            .then((value) {
+          value.ref.getDownloadURL().then((value) {
+            //emit(SocialUploadProfileImageSuccessState());
 
-        } else {
-          firebase_storage.FirebaseStorage.instance
-              .ref()
-              .child(
-                  'Category/${Uri.file(finalPickedProductImage.path).pathSegments.last}')
-              .putFile(finalPickedProductImage)
-              .then((value) {
-            value.ref.getDownloadURL().then((value) {
-              //emit(SocialUploadProfileImageSuccessState());
+            Category model = Category(
+                createdDate: DateTime.now().toString(),
+                categoryId: HomeCubit.get(context).listCategory.isEmpty ? 1 : HomeCubit.get(context).listCategory.length + 1,
+                image: value,
+                isDeleted: 0,
+                categoryTitle:  txtUploadTitle.text
+            );
+            FirebaseFirestore.instance
+                .collection('Category')
+                .doc(HomeCubit.get(context).listCategory.isEmpty ? 1.toString() : (HomeCubit.get(context).listCategory.length + 1).toString()).set(model.toMap())
+                .then((value) {
+              restAfterUpload(context);
+              EasyLoading.showSuccess('تمت الاضافة بنجاح!');
 
-              Category model = Category(
-                  createdDate: DateTime.now().toString(),
-                  id: listCategory.isEmpty ? 1 : listCategory.length + 1,
-                  image: value,
-                  isDeleted: 0,
-                  name: txtUploadTitle.text);
-              FirebaseFirestore.instance
-                  .collection('Category')
-                  .doc(listCategory.isEmpty ? 1.toString() : (listCategory.length + 1).toString()).set(model.toMap())
-                  .then((value) {
-                restAfterUpload();
-                EasyLoading.showSuccess('تمت الاضافة بنجاح!');
-
-                // MotionToast.success(
-                //   title: const Text("تمت الاضافة بنجاح",style:TextStyle(fontWeight: FontWeight.bold)),
-                //   width:  300,
-                //   description: null,
-                // ).show(context);
-
-                // isStartUpload = false;
-              }).catchError((e) {
-                EasyLoading.dismiss();
-              });
             }).catchError((e) {
               EasyLoading.dismiss();
             });
           }).catchError((e) {
             EasyLoading.dismiss();
           });
-        }
-      }).catchError((onError) {
-        EasyLoading.dismiss();
-      });
+        }).catchError((e) {
+          EasyLoading.dismiss();
+        });
+      }
+
+
     }
-    if (selectedTypeItemId == 2) {
+    else if (selectedTypeItemId == 2 && isUploadValid) {
       EasyLoading.show(status: 'Uploading...');
 
-      FirebaseFirestore.instance.collection('SubCategory').get().then((value) {
-        listSubCategory =
-            value.docs.map((x) => SubCategory.fromJson(x.data())).toList();
+      bool isNameFind = HomeCubit.get(context).listSubCategory
+          .any((element) => element.subCategoryTitle == txtUploadTitle.text);
 
-        bool isNameFind = listSubCategory
-            .any((element) => element.name == txtUploadTitle.text);
+      if (isNameFind) {
+        EasyLoading.showError('تمت الاضافة من قبل');
+        // MotionToast.error(
+        //   title: const Text("تمت الاضافة من قبل",style:TextStyle(fontWeight: FontWeight.bold)),
+        //   width:  300,
+        //   description: null,
+        // ).show(context);
 
-        if (isNameFind) {
-          EasyLoading.showError('تمت الاضافة من قبل');
-          // MotionToast.error(
-          //   title: const Text("تمت الاضافة من قبل",style:TextStyle(fontWeight: FontWeight.bold)),
-          //   width:  300,
-          //   description: null,
-          // ).show(context);
+      }
+      else {
+        firebase_storage.FirebaseStorage.instance
+            .ref()
+            .child(
+            'SubCategory/${Uri.file(finalPickedProductImage.path).pathSegments.last}')
+            .putFile(finalPickedProductImage)
+            .then((value) {
+          value.ref.getDownloadURL().then((value) {
 
-        } else {
-          firebase_storage.FirebaseStorage.instance
-              .ref()
-              .child(
-                  'SubCategory/${Uri.file(finalPickedProductImage.path).pathSegments.last}')
-              .putFile(finalPickedProductImage)
-              .then((value) {
-            value.ref.getDownloadURL().then((value) {
-              //emit(SocialUploadProfileImageSuccessState());
 
-              SubCategory model = SubCategory(
-                  createdDate: DateTime.now().toString(),
-                  categoryId: selectedCategoryId,
-                  supCategoryId:
-                      listSubCategory.isEmpty ? 1 : listSubCategory.length + 1,
-                  image: value,
-                  isDeleted: 0,
-                  categoryName: listCategory
-                      .firstWhere((element) =>
-                          element.id == selectedCategoryId &&
-                          element.isDeleted == 0)
-                      .name,
-                  name: txtUploadTitle.text);
-              FirebaseFirestore.instance
-                  .collection('SubCategory')
-                  .doc(listSubCategory.isEmpty
-                      ? 1.toString()
-                      : (listSubCategory.length + 1).toString())
-                  .set(model.toMap())
-                  .then((value) {
-                restAfterUpload();
-                EasyLoading.showSuccess('تمت الاضافة بنجاح!');
-                // MotionToast.success(
-                //   title: const Text("تمت الاضافة بنجاح",style:TextStyle(fontWeight: FontWeight.bold)),
-                //   width:  300,
-                //   description: null,
-                // ).show(context);
-                isStartUpload = false;
-              }).catchError((e) {
-                isStartUpload = false;
-              });
+            SubCategory model = SubCategory(
+                createdDate: DateTime.now().toString(),
+                categoryId: selectedCategoryId,
+                supCategoryId:
+                HomeCubit.get(context).listSubCategory.isEmpty ? 1 : HomeCubit.get(context).listSubCategory.length + 1,
+                image: value,
+                isDeleted: 0,
+                categoryTitle: HomeCubit.get(context).listCategory.firstWhere((element) => element.categoryId == selectedCategoryId &&
+                    element.isDeleted == 0)
+                    .categoryTitle,
+
+                subCategoryTitle: txtUploadTitle.text
+            );
+            FirebaseFirestore.instance
+                .collection('SubCategory')
+                .doc(HomeCubit.get(context).listSubCategory.isEmpty
+                ? 1.toString()
+                : (HomeCubit.get(context).listSubCategory.length + 1).toString())
+                .set(model.toMap())
+                .then((value) {
+              restAfterUpload(context);
+              EasyLoading.showSuccess('تمت الاضافة بنجاح!');
+
+              isStartUpload = false;
             }).catchError((e) {
-              EasyLoading.dismiss();
-
-              // emit(SocialUploadProfileImageErrorState());
+              isStartUpload = false;
             });
           }).catchError((e) {
             EasyLoading.dismiss();
 
-            //  emit(SocialUploadProfileImageErrorState());
+
           });
-        }
-      }).catchError((onError) {
-        EasyLoading.dismiss();
-      });
+        }).catchError((e) {
+          EasyLoading.dismiss();
+
+
+        });
+      }
+
+
     }
-    if (selectedTypeItemId == 3) {
-      EasyLoading.show(status: 'Uploading...');
+    else if (selectedTypeItemId == 3 && isUploadValid) {
 
-      FirebaseFirestore.instance.collection('Items').get().then((value) {
-        listSubCategory =
-            value.docs.map((x) => SubCategory.fromJson(x.data())).toList();
+      if(selectedSupCategoryId == 0)
+        {
+          EasyLoading.showError('Please Add SupCategory');
+        }
+      else{
+        EasyLoading.show(status: 'Uploading...');
 
-        bool isNameFind = listSubCategory
-            .any((element) => element.name == txtUploadTitle.text);
+
+        bool isNameFind =  HomeCubit.get(context).listItems.any((element) => element.itemTitle == txtUploadTitle.text);
 
         if (isNameFind) {
           EasyLoading.showError('تمت الاضافة من قبل');
-          // MotionToast.error(
-          //   title: const Text("تمت الاضافة من قبل",style:TextStyle(fontWeight: FontWeight.bold)),
-          //   width:  300,
-          //   description: null,
-          // ).show(context);
 
-        } else {
+        }
+        else {
           firebase_storage.FirebaseStorage.instance
               .ref()
-              .child(
-                  'SubCategory/${Uri.file(finalPickedProductImage.path).pathSegments.last}')
+              .child('Items/${Uri.file(finalPickedProductImage.path).pathSegments.last}')
               .putFile(finalPickedProductImage)
               .then((value) {
             value.ref.getDownloadURL().then((value) {
-              //emit(SocialUploadProfileImageSuccessState());
+              // emit(SocialUploadProfileImageSuccessState());
 
-              SubCategory model = SubCategory(
+              ItemModel model = ItemModel(
+                  itemId: HomeCubit.get(context).listItems.isEmpty ? 1: HomeCubit.get(context).listItems.length + 1,
                   createdDate: DateTime.now().toString(),
                   categoryId: selectedCategoryId,
-                  supCategoryId:
-                      listSubCategory.isEmpty ? 1 : listSubCategory.length + 1,
+                  supCategoryId: selectedSupCategoryId,
                   image: value,
                   isDeleted: 0,
-                  categoryName: listCategory
-                      .firstWhere((element) =>
-                          element.id == selectedCategoryId &&
-                          element.isDeleted == 0)
-                      .name,
-                  name: txtUploadTitle.text);
+                  additionsList:  listOfSelectedAdditions.toList(),
+                  description: txtUploadDescription.text??'',
+                  supCategoryTitle: HomeCubit.get(context).listSubCategory.firstWhere((element) => element.supCategoryId == selectedSupCategoryId && element.isDeleted == 0).subCategoryTitle??'' ,
+                  categoryTitle: HomeCubit.get(context).listCategory.firstWhere((element) => element.categoryId == selectedCategoryId && element.isDeleted == 0).categoryTitle??'',
+                  price: double.parse(txtUploadPrice.text)??0,
+                  itemTitle: txtUploadTitle.text??''
+              );
               FirebaseFirestore.instance
-                  .collection('SubCategory')
-                  .doc(listSubCategory.isEmpty
-                      ? 1.toString()
-                      : (listSubCategory.length + 1).toString())
-                  .set(model.toMap())
+                  .collection('Items')
+                  .doc(HomeCubit.get(context).listItems.isEmpty
+                  ? 1.toString() : ( HomeCubit.get(context).listItems.length + 1).toString())
+                  .set(model.toJson())
                   .then((value) {
-                restAfterUpload();
+              //   if(listOfSelectedAdditions.isNotEmpty){
+              //     for (var element in listOfSelectedAdditions) {
+              //       ItemModel additionsModel = ItemModel(
+              //           itemId: element.itemId,
+              //           createdDate: DateTime.now().toString(),
+              //           categoryId: 0,
+              //           supCategoryId: 0,
+              //           image: element.image,
+              //           isDeleted: 0,
+              //           description: element.description??'',
+              //           supCategoryTitle: element.supCategoryTitle??'' ,
+              //           categoryTitle:element.categoryTitle??'',
+              //           price: element.price??0,
+              //           itemTitle: element.itemTitle??''
+              //       );
+              //       FirebaseFirestore.instance
+              //           .collection('Items')
+              //           .doc(HomeCubit.get(context).listItems.isEmpty
+              //           ? 1.toString() : ( HomeCubit.get(context).listItems.length + 1).toString())
+              //           .collection('Additions').doc(element.itemId.toString()).set(additionsModel.toMap()).then((value) {
+              //
+              //       });
+              //
+              //     }
+              //   }
+
+
+                restAfterUpload(context);
                 EasyLoading.showSuccess('تمت الاضافة بنجاح!');
-                // MotionToast.success(
-                //   title: const Text("تمت الاضافة بنجاح",style:TextStyle(fontWeight: FontWeight.bold)),
-                //   width:  300,
-                //   description: null,
-                // ).show(context);
+
                 isStartUpload = false;
               }).catchError((e) {
                 isStartUpload = false;
@@ -252,18 +277,79 @@ class UploadProducts extends Cubit<UploadProductsState> {
             }).catchError((e) {
               EasyLoading.dismiss();
 
-              // emit(SocialUploadProfileImageErrorState());
+
             });
           }).catchError((e) {
             EasyLoading.dismiss();
 
-            //  emit(SocialUploadProfileImageErrorState());
+
           });
         }
-      }).catchError((onError) {
-        EasyLoading.dismiss();
-      });
+
+
+      }
+      }
+    else if (selectedTypeItemId == 4 && isUploadValid) {
+      EasyLoading.show(status: 'Uploading...');
+
+      bool isNameFind = HomeCubit.get(context).listAdditions.any((element) =>
+      element.itemTitle == txtUploadTitle.text);
+
+      if (isNameFind) {
+        EasyLoading.showError('تمت الاضافة من قبل');
+      }
+      else {
+        firebase_storage.FirebaseStorage.instance
+            .ref()
+            .child('Additions/${Uri
+            .file(finalPickedProductImage.path)
+            .pathSegments
+            .last}')
+            .putFile(finalPickedProductImage)
+            .then((value) {
+          value.ref.getDownloadURL().then((value) {
+            //emit(SocialUploadProfileImageSuccessState());
+
+            AdditionsModel model = AdditionsModel(
+                createdDate: DateTime.now().toString(),
+                itemId: HomeCubit.get(context).listAdditions.isEmpty ? 1: HomeCubit.get(context).listAdditions.length + 1,
+                categoryId: 0,
+                supCategoryId: 0,
+                image: value,
+                isDeleted: 0,
+                description: '',
+
+                supCategoryTitle: '',
+                categoryTitle:  '',
+                price: double.parse(txtUploadPrice.text) ?? 0,
+                itemTitle: txtUploadTitle.text ?? ''
+            );
+            FirebaseFirestore.instance
+                .collection('Additions')
+                .doc(
+                HomeCubit.get(context).listAdditions.isEmpty ? 1.toString() : (HomeCubit.get(context).listAdditions.length + 1).toString())
+                .set(model.toMap())
+                .then((value) {
+              restAfterUpload(context);
+              EasyLoading.showSuccess('تمت الاضافة بنجاح!');
+
+              isStartUpload = false;
+            }).catchError((e) {
+              isStartUpload = false;
+            });
+          }).catchError((e) {
+            EasyLoading.dismiss();
+          });
+        }).catchError((e) {
+          EasyLoading.dismiss();
+
+        });
+      }
+
+
     }
+
+
   }
 
   void uploadPickImageCamera(context) async {
@@ -272,7 +358,7 @@ class UploadProducts extends Cubit<UploadProductsState> {
     final pickedImage = await picker.pickImage(source: ImageSource.camera);
     final pickedImageFile = File(pickedImage.path);
     finalPickedProductImage = pickedImageFile;
-    checkIsUploadValid();
+    checkIsUploadValid(context);
     emit(UploadProductsCameraUploadImageState());
   }
 
@@ -281,45 +367,57 @@ class UploadProducts extends Cubit<UploadProductsState> {
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     final pickedImageFile = File(pickedImage.path);
     finalPickedProductImage = pickedImageFile;
-    checkIsUploadValid();
+    checkIsUploadValid(context);
     emit(UploadProductsGalleryUploadImageState());
   }
 
   void removeUploadImage(context) {
     finalPickedProductImage = null;
-    checkIsUploadValid();
+    checkIsUploadValid(context);
     emit(UploadProductsRemoveUploadImageState());
   }
 
-  void selectCategory(String value) {
+  void selectCategory(String value,context) {
     categoryValue = value;
     txtUploadCategory.text = value;
-    checkIsUploadValid();
+    checkIsUploadValid(context);
     emit(UploadProductsSelectCategoryState());
   }
 
   bool isUploadValid = false;
 
-  void checkIsUploadValid() {
+  void checkIsUploadValid(context) {
+
+
     if (selectedTypeItemId == 1) {
-      if (txtUploadTitle.text.trim() != '' &&
-          txtUploadTitle.text.trim() != null &&
-          finalPickedProductImage != null) {
+      if (txtUploadTitle.text.trim() != '' && txtUploadTitle.text.trim() != null &&
+          finalPickedProductImage != null)
+      {
         isUploadValid = true;
       } else {
         isUploadValid = false;
       }
-    } else if (selectedTypeItemId == 2) {
-      if (txtUploadTitle.text.trim() != '' &&
-          txtUploadTitle.text.trim() != null &&
-          selectedCategoryId != 0 &&
-          selectedCategoryId != null &&
-          finalPickedProductImage != null) {
+    }
+    else if (selectedTypeItemId == 2)
+    {
+
+      if (
+           txtUploadTitle.text.trim() != ''
+          &&
+          txtUploadTitle.text.trim() != null
+          &&
+          selectedCategoryId != 0
+          &&
+          selectedCategoryId != null
+          &&
+          finalPickedProductImage != null
+      ) {
         isUploadValid = true;
       } else {
         isUploadValid = false;
       }
-    } else if (selectedTypeItemId == 3) {
+    }
+    else if (selectedTypeItemId == 3) {
       if (txtUploadTitle.text.trim() != '' &&
           txtUploadTitle.text.trim() != null &&
           selectedCategoryId != 0 &&
@@ -328,32 +426,49 @@ class UploadProducts extends Cubit<UploadProductsState> {
           selectedSupCategoryId != null &&
           txtUploadPrice.text.trim() != '' &&
           txtUploadPrice.text.trim() != null &&
+          txtUploadDescription.text.trim() !=''&&
+          txtUploadDescription.text != null &&
           finalPickedProductImage != null &&
-          listCategory
-                  .firstWhere((element) => element.id == selectedCategoryId)
-                  .name
+          HomeCubit.get(context).listCategory
+                  .firstWhere((element) => element.categoryId == selectedCategoryId)
+                  .categoryTitle
                   .trim() !=
               '' &&
-          listCategory
+          HomeCubit.get(context).listCategory
                   .firstWhere((element) =>
-                      element.id == selectedCategoryId &&
+                      element.categoryId == selectedCategoryId &&
                       element.isDeleted == 0)
-                  .name
+                  .categoryTitle
                   .trim() !=
               null &&
-          listSubCategory
+          HomeCubit.get(context).listSubCategory
                   .firstWhere((element) =>
                       element.supCategoryId == selectedSupCategoryId)
-                  .name
+                  .subCategoryTitle
                   .trim() !=
               '' &&
-          listSubCategory
+          HomeCubit.get(context).listSubCategory
                   .firstWhere((element) =>
                       element.supCategoryId == selectedSupCategoryId &&
                       element.isDeleted == 0)
-                  .name
+                  .subCategoryTitle
                   .trim() !=
               null) {
+        isUploadValid = true;
+      } else {
+        isUploadValid = false;
+      }
+    }
+
+    else  if (selectedTypeItemId == 4) {
+      if (
+      txtUploadTitle.text.trim() != '' &&
+          txtUploadTitle.text.trim() != null &&
+          txtUploadPrice.text.trim() != '' &&
+          txtUploadPrice.text.trim() != null &&
+          finalPickedProductImage != null
+      )
+      {
         isUploadValid = true;
       } else {
         isUploadValid = false;
@@ -365,56 +480,53 @@ class UploadProducts extends Cubit<UploadProductsState> {
 
   List<SubCategory> listSubCategoryMaster;
 
-  getSubCategoryByCategoryId(id) {
+  getSubCategoryByCategoryId(id)
+  {
 
-    print(id);
-    listSubCategory = [];
+   selectedCategoryId = id;
+   emit(onChangeTypeItemIdState());
 
-    FirebaseFirestore.instance.collection('SubCategory').get().then((value) {
-      listSubCategory = value.docs.map((x) => SubCategory.fromJson(x.data())).toList();
-
-
-
-      listSubCategory = listSubCategory.where((element) => element.categoryId.toString() == id.toString()).toList();
-
-      emit(onChangeTypeItemIdState());
-    }).catchError((error){
-      print(error);
-    });
   }
 
-  onChangeTypeItemId(int index) {
-    listSubCategory =[];
-    if (index == 1) {
-      FirebaseFirestore.instance.collection('Category').get().then((value) {
-        listCategory =
-            value.docs.map((x) => Category.fromJson(x.data())).toList();
-        checkIsUploadValid();
-        selectedTypeItemId = listItemTypeCategory[index].id;
-        emit(onChangeTypeItemIdState());
-      });
+  onChangeTypeItemId(int index,context) async {
+
+    selectedCategoryId =0;
+    selectedSupCategoryId = 0;
+
+     if(index == 1) {
+
+    selectedTypeItemId = index;
+    emit(UploadProductsCameraUploadImageState());
+
     }
-    else if (index == 2) {
-      FirebaseFirestore.instance.collection('Category').get().then((value) {
-        listCategory =
-            value.docs.map((x) => Category.fromJson(x.data())).toList();
-        checkIsUploadValid();
-        selectedTypeItemId = listItemTypeCategory[index].id;
-        emit(onChangeTypeItemIdState());
-      });
+
+
+   else if (index == 2 || index == 3 ) {
+       selectedTypeItemId = index;
+
     }
-    else {
-      checkIsUploadValid();
-      selectedTypeItemId = listItemTypeCategory[index].id;
-      emit(onChangeTypeItemIdState());
-    }
+
+   else if(index == 4){
+
+       selectedTypeItemId = index;
+       emit(UploadProductsCameraUploadImageState());
+
+     }
+
+
+
+      checkIsUploadValid(context);
+
+
   }
+
 }
 
 List<ListItemTypeCategory> listItemTypeCategory = [
   ListItemTypeCategory(id: 1, name: 'Category'),
   ListItemTypeCategory(id: 2, name: 'SupCategory'),
   ListItemTypeCategory(id: 3, name: 'Product'),
+  ListItemTypeCategory(id: 4, name: 'Additions'),
 ];
 
 class ListItemTypeCategory {
