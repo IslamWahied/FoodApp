@@ -345,7 +345,7 @@ Padding customAppBar({BuildContext context,String title}) {
 
         Text(title??'',style: const TextStyle( fontSize: 25,
             fontWeight: FontWeight.w600,color: AppColors.black,overflow: TextOverflow.ellipsis),),
-        SizedBox(width:MediaQuery.of(context).size.width * 0.05 ,),
+        SizedBox(width:MediaQuery.of(context).size.width * 0.01 ,),
         // Container(
         //   padding: const EdgeInsets.all(10),
         //   decoration: BoxDecoration(

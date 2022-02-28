@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
@@ -31,11 +32,16 @@ class FeedScreen extends StatelessWidget {
 
               backgroundColor:Constants.white,
               body: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
 
-
+Padding(
+  padding: const EdgeInsets.only(right: 20,top: 15),
+  child:   Badge(
+      badgeContent: Text(cubit.listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
+      child: Image.asset('assets/shoppingcart.png',width: 30)),
+),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,

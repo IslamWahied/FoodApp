@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
@@ -25,6 +26,14 @@ class subCategoryScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           centerTitle: false,
           leadingWidth: 0,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20,top: 15),
+              child:   Badge(
+                  badgeContent: Text(cubit.listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
+                  child: Image.asset('assets/shoppingcart.png',width: 30)),
+            ),
+          ],
           iconTheme: const IconThemeData(
               color: Constants.black
           ),
@@ -160,6 +169,7 @@ class subCategoryScreen extends StatelessWidget {
               //     ],
               //   ),
               // ),
+
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -251,6 +261,7 @@ Widget foodSubCategoryCard({String imagePath, String name, int supCategoryId, co
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+
               // SvgPicture.asset(imagePath, width: 40),
               Image.network(imagePath,width: 150,height: 130),
               const SizedBox(height: 5,),
