@@ -14,6 +14,7 @@ import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -213,236 +214,242 @@ class HomeScreen extends StatelessWidget {
     int value = 1;
     return StatefulBuilder(
         builder: (context, setState) {
-          return GestureDetector(
-            onTap: () {
-              HomeCubit
-                  .get(context)
-                  .selectedItemId = itemId;
-              HomeCubit
-                  .get(context)
-                  .selectedCategoryId = HomeCubit
-                  .get(context)
-                  .listFeedsSearch
-                  .firstWhere((element) => element.itemId == itemId)
-                  .categoryId;
-              HomeCubit
-                  .get(context)
-                  .selectedSubCategoryId = HomeCubit
-                  .get(context)
-                  .listFeedsSearch
-                  .firstWhere((element) => element.itemId == itemId)
-                  .supCategoryId;
-
-              navigateTo(context, FeedFoodDetailScreen(
-                imagePath: HomeCubit
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: GestureDetector(
+              onTap: () {
+                HomeCubit
+                    .get(context)
+                    .selectedItemId = itemId;
+                HomeCubit
+                    .get(context)
+                    .selectedCategoryId = HomeCubit
                     .get(context)
                     .listFeedsSearch
                     .firstWhere((element) => element.itemId == itemId)
-                    .image,
-                subCategoryTitle: HomeCubit
+                    .categoryId;
+                HomeCubit
+                    .get(context)
+                    .selectedSubCategoryId = HomeCubit
                     .get(context)
                     .listFeedsSearch
                     .firstWhere((element) => element.itemId == itemId)
-                    .supCategoryTitle,
-                itemName: HomeCubit
-                    .get(context)
-                    .listFeedsSearch
-                    .firstWhere((element) => element.itemId == itemId)
-                    .itemTitle,
-                itemDescription: HomeCubit
-                    .get(context)
-                    .listFeedsSearch
-                    .firstWhere((element) => element.itemId == itemId)
-                    .description ?? '',
-                itemPrice: HomeCubit
-                    .get(context)
-                    .listFeedsSearch
-                    .firstWhere((element) => element.itemId == itemId)
-                    .price,
+                    .supCategoryId;
+
+                navigateTo(context, FeedFoodDetailScreen(
+                  imagePath: HomeCubit
+                      .get(context)
+                      .listFeedsSearch
+                      .firstWhere((element) => element.itemId == itemId)
+                      .image,
+                  subCategoryTitle: HomeCubit
+                      .get(context)
+                      .listFeedsSearch
+                      .firstWhere((element) => element.itemId == itemId)
+                      .supCategoryTitle,
+                  itemName: HomeCubit
+                      .get(context)
+                      .listFeedsSearch
+                      .firstWhere((element) => element.itemId == itemId)
+                      .itemTitle,
+                  itemDescription: HomeCubit
+                      .get(context)
+                      .listFeedsSearch
+                      .firstWhere((element) => element.itemId == itemId)
+                      .description ?? '',
+                  itemPrice: HomeCubit
+                      .get(context)
+                      .listFeedsSearch
+                      .firstWhere((element) => element.itemId == itemId)
+                      .price,
 
 
-              ));
-            },
-            child: Container(
-              margin: const EdgeInsets.only(
-                  right: 15, left: 0, top: 25, bottom: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(blurRadius: 10, color: Constants.lighterGray)
-                ],
+                ));
+              },
+              child: Container(
+                margin: const EdgeInsets.only(
+                    right: 15, left: 0, top: 25, bottom: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(blurRadius: 10, color: Constants.lighterGray)
+                  ],
 
-                color: Constants.white,
-              ),
-              child: Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.topRight,
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                  color: Constants.white,
+                ),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.topRight,
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25, left: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 25, left: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.star,
+                                    color: Constants.primary,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  SizedBox(
+                                    // width: MediaQuery.of(context).size.width / 2.2,
+                                    height: 33,
+                                    child: PrimaryText(
+
+                                        text: name,
+                                        size: 22,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+
+                                ],
+                              ),
+                              const SizedBox(height: 15),
+
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.star,
-                                  color: Constants.primary,
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 10),
-                                SizedBox(
-                                  // width: MediaQuery.of(context).size.width / 2.2,
-                                  height: 33,
-                                  child: PrimaryText(
-
-                                      text: name,
-                                      size: 22,
-                                      fontWeight: FontWeight.w700),
-                                ),
-
-                              ],
+                            GestureDetector(
+                              onTap: () {
+                                HomeCubit
+                                    .get(context)
+                                    .listOrder
+                                    .add(HomeCubit
+                                    .get(context)
+                                    .listFeedsSearch
+                                    .firstWhere((element) =>
+                                element.itemId == itemId));
+                                HomeCubit.get(context).emit(
+                                    SearchSubCategoryState());
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 45, vertical: 20),
+                                decoration: const BoxDecoration(
+                                    color: Constants.primary,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    )),
+                                child: const Icon(Icons.add, size: 20),
+                              ),
                             ),
-                            const SizedBox(height: 15),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/dollar.svg',
+                                        color: Constants.tertiary,
+                                        width: 15,
+                                      ),
+                                      PrimaryText(
+                                        text: itemPrice.toString(),
+                                        size: 20,
+                                        fontWeight: FontWeight.w700,
+                                        color: Constants.tertiary,
+                                        height: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  // const SizedBox(
+                                  //   width: 30,
+                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState((){
+                                              if(value != 0 )
+                                              {
+                                                value = value - 1;
+                                              }
+
+                                            });
+
+                                          },
+                                          child: const CircleAvatar(
+                                            radius: 15,
+                                            backgroundColor: Colors.blueAccent,
+                                            child: Text('-', style: TextStyle(
+                                                fontSize: 25, color: Colors.white),),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(value.toString() ?? '1'),
+                                        const SizedBox(width: 10),
+
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState((){
+                                              if(value != 50){
+                                                value = value + 1;
+                                              }
+
+                                            });
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 15,
+                                            backgroundColor: Colors.blueAccent
+                                                .withOpacity(0.9),
+                                            child: const Text('+', style: TextStyle(
+                                                fontSize: 22, color: Colors.white),),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
 
                           ],
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              HomeCubit
-                                  .get(context)
-                                  .listOrder
-                                  .add(HomeCubit
-                                  .get(context)
-                                  .listFeedsSearch
-                                  .firstWhere((element) =>
-                              element.itemId == itemId));
-                              HomeCubit.get(context).emit(
-                                  SearchSubCategoryState());
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 45, vertical: 20),
-                              decoration: const BoxDecoration(
-                                  color: Constants.primary,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  )),
-                              child: const Icon(Icons.add, size: 20),
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/dollar.svg',
-                                color: Constants.tertiary,
-                                width: 15,
-                              ),
-                              PrimaryText(
-                                text: itemPrice.toString(),
-                                size: 20,
-                                fontWeight: FontWeight.w700,
-                                color: Constants.tertiary,
-                                height: 1,
-                              ),
-                              const SizedBox(
-                                width: 35,
-                              ),
-                              SizedBox(
-
-                                height: 40,
-                                // width: 100,
-                                child: Row(
-                                  children: [
-
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState((){
-                                          if(value != 0 )
-                                          {
-                                            value = value - 1;
-                                          }
-
-                                        });
-
-                                      },
-                                      child: const CircleAvatar(
-                                        radius: 20,
-                                        backgroundColor: Colors.blueAccent,
-                                        child: Text('-', style: TextStyle(
-                                            fontSize: 25, color: Colors.white),),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(value.toString() ?? '1'),
-                                    const SizedBox(width: 10),
-
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState((){
-                                          if(value != 50){
-                                            value = value + 1;
-                                          }
-
-                                        });
-                                      },
-                                      child: CircleAvatar(
-                                        radius: 20,
-                                        backgroundColor: Colors.blueAccent
-                                            .withOpacity(0.9),
-                                        child: const Text('+', style: TextStyle(
-                                            fontSize: 22, color: Colors.white),),
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-
-                        ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: 100,
-                    width: 100,
-                    transform: Matrix4.translationValues(15.0, -20.0, 0.0,),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(color: Colors.grey[300],
-                              blurRadius: 20,
-                              spreadRadius: 5)
-                        ]),
-                    child: Hero(
-                      tag: imagePath,
-                      child: Image.network(imagePath, width: MediaQuery
-                          .of(context)
-                          .size
-                          .width / 2.9),
+                      ],
                     ),
-                  ),
-                ],
+                    Container(
+                      height: 100,
+                      width: 100,
+                      transform: Matrix4.translationValues(15.0, -20.0, 0.0,),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          boxShadow: [
+                            BoxShadow(color: Colors.grey[300],
+                                blurRadius: 20,
+                                spreadRadius: 5)
+                          ]),
+                      child: Hero(
+                        tag: imagePath,
+                        child: Image.network(imagePath, width: MediaQuery
+                            .of(context)
+                            .size
+                            .width / 2.9),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+
+
             ),
-
-
           );
         });
   }

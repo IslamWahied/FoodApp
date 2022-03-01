@@ -217,56 +217,63 @@ Widget itemCard({int itemId,String imagePath,
                       height: 20,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            HomeCubit
-                                .get(context)
-                                .listOrder
-                                .add(HomeCubit
-                                .get(context)
-                                .listFeedsSearch
-                                .firstWhere((element) =>
-                            element.itemId == itemId));
-                            HomeCubit.get(context).emit(
-                                SearchSubCategoryState());
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 45, vertical: 20),
-                            decoration: const BoxDecoration(
-                                color: Constants.primary,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                )),
-                            child: const Icon(Icons.add, size: 20),
-                          ),
-                        ),
-                        const SizedBox(width: 15),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            SvgPicture.asset(
-                              'assets/dollar.svg',
-                              color: Constants.tertiary,
-                              width: 15,
+                            GestureDetector(
+                              onTap: () {
+                                HomeCubit
+                                    .get(context)
+                                    .listOrder
+                                    .add(HomeCubit
+                                    .get(context)
+                                    .listFeedsSearch
+                                    .firstWhere((element) =>
+                                element.itemId == itemId));
+                                HomeCubit.get(context).emit(
+                                    SearchSubCategoryState());
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 45, vertical: 20),
+                                decoration: const BoxDecoration(
+                                    color: Constants.primary,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    )),
+                                child: const Icon(Icons.add, size: 20),
+                              ),
                             ),
-                            PrimaryText(
-                              text: itemPrice.toString(),
-                              size: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Constants.tertiary,
-                              height: 1,
+                            SizedBox(width: 10,),
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/dollar.svg',
+                                  color: Constants.tertiary,
+                                  width: 15,
+                                ),
+                                PrimaryText(
+                                  text: itemPrice.toString(),
+                                  size: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: Constants.tertiary,
+                                  height: 1,
+                                ),
+                              ],
                             ),
-                            const SizedBox(
-                              width: 35,
-                            ),
-                            SizedBox(
+                          ],
+                        ),
+                        Row(
 
-                              height: 40,
-                              // width: 100,
+                          children: [
+
+
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
 
                                   GestureDetector(
@@ -281,7 +288,7 @@ Widget itemCard({int itemId,String imagePath,
 
                                     },
                                     child: const CircleAvatar(
-                                      radius: 20,
+                                      radius: 15,
                                       backgroundColor: Colors.blueAccent,
                                       child: Text('-', style: TextStyle(
                                           fontSize: 25, color: Colors.white),),
@@ -291,7 +298,7 @@ Widget itemCard({int itemId,String imagePath,
                                   Text(value.toString() ?? '1'),
                                   const SizedBox(width: 10),
 
-  GestureDetector(
+                                   GestureDetector(
   onTap: () {
         setState((){
           if(value != 50){
@@ -301,7 +308,7 @@ Widget itemCard({int itemId,String imagePath,
         });
         },
                                     child: CircleAvatar(
-                                      radius: 20,
+                                      radius: 15,
                                       backgroundColor: Colors.blueAccent
                                           .withOpacity(0.9),
                                       child: const Text('+', style: TextStyle(

@@ -26,6 +26,7 @@ class HomeLayout extends StatelessWidget {
                 extendBody: true,
                 body: cubit.screens[cubit.currentIndex],
                 bottomNavigationBar: BottomAppBar(
+
                   shape: const CircularNotchedRectangle(),
                   notchMargin: 0.01,
                   clipBehavior: Clip.antiAlias,
@@ -40,6 +41,8 @@ class HomeLayout extends StatelessWidget {
                                 width: 0.5,
                               ))),
                       child: BottomNavigationBar(
+                        // enableFeedback: false,
+                        type: BottomNavigationBarType.fixed,
                         onTap: (value) {
                           cubit.changeCurrentIndex(value);
                         },
