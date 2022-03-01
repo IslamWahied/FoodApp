@@ -6,6 +6,7 @@ import 'package:elomda/models/category/SupCategory.dart';
 import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/categoryModel.dart';
 import 'package:elomda/models/category/itemModel.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +23,7 @@ class UploadProducts extends Cubit<UploadProductsState> {
   var UploadProduct_formKey = GlobalKey<FormState>();
   var txtUploadTitle = TextEditingController();
   var txtUploadPrice = TextEditingController();
+  var txtUploadOldPrice = TextEditingController();
   var txtUploadCategory = TextEditingController();
   var txtUploadDescription = TextEditingController();
 
@@ -37,6 +39,11 @@ class UploadProducts extends Cubit<UploadProductsState> {
   int selectedTypeItemId = 1;
   int selectedCategoryId = 0;
   int selectedSupCategoryId = 0;
+
+  bool isAvailable = true;
+  bool isPopular = false;
+  bool isDiscount = false;
+  double oldPrice = 0;
 
   String categoryValue;
   File finalPickedProductImage;
@@ -59,6 +66,33 @@ class UploadProducts extends Cubit<UploadProductsState> {
     checkIsUploadValid(context);
     emit(UploadProductsCameraUploadImageState());
   }
+
+  changeIsAvailableState({bool value})
+  {
+    isAvailable = value;
+    emit(RefreshState());
+  }
+
+  changeIsPopular({bool value})
+  {
+    isPopular = value;
+    emit(RefreshState());
+  }
+
+  changeIsDiscount({bool value})
+  {
+    isDiscount = value;
+    emit(RefreshState());
+  }
+
+
+bool isOldPrice = false;
+  changeIsOldPrice({bool value})
+  {
+    isOldPrice = value;
+    emit(RefreshState());
+  }
+
 
   bool isStartUpload = false;
   List  ingredients = [
@@ -107,6 +141,7 @@ class UploadProducts extends Cubit<UploadProductsState> {
                 categoryId: HomeCubit.get(context).listCategory.isEmpty ? 1 : HomeCubit.get(context).listCategory.length + 1,
                 image: value,
                 isDeleted: 0,
+                isAvailable: isAvailable,
                 categoryTitle:  txtUploadTitle.text
             );
             FirebaseFirestore.instance
@@ -161,6 +196,7 @@ class UploadProducts extends Cubit<UploadProductsState> {
                 HomeCubit.get(context).listSubCategory.isEmpty ? 1 : HomeCubit.get(context).listSubCategory.length + 1,
                 image: value,
                 isDeleted: 0,
+                isAvailable: isAvailable,
                 categoryTitle: HomeCubit.get(context).listCategory.firstWhere((element) => element.categoryId == selectedCategoryId &&
                     element.isDeleted == 0)
                     .categoryTitle,
@@ -232,7 +268,15 @@ class UploadProducts extends Cubit<UploadProductsState> {
                   supCategoryTitle: HomeCubit.get(context).listSubCategory.firstWhere((element) => element.supCategoryId == selectedSupCategoryId && element.isDeleted == 0).subCategoryTitle??'' ,
                   categoryTitle: HomeCubit.get(context).listCategory.firstWhere((element) => element.categoryId == selectedCategoryId && element.isDeleted == 0).categoryTitle??'',
                   price: double.parse(txtUploadPrice.text)??0,
-                  itemTitle: txtUploadTitle.text??''
+                  itemTitle: txtUploadTitle.text??'',
+                isAvailable: isAvailable,
+
+                isDiscount: isDiscount,
+                isPopular: isPopular,
+                oldPrice: oldPrice,
+                orderCount: 0,
+                userMobile: Global.mobile??'',
+                userName: Global.userName??''
               );
               FirebaseFirestore.instance
                   .collection('Items')
@@ -322,7 +366,12 @@ class UploadProducts extends Cubit<UploadProductsState> {
                 supCategoryTitle: '',
                 categoryTitle:  '',
                 price: double.parse(txtUploadPrice.text) ?? 0,
-                itemTitle: txtUploadTitle.text ?? ''
+                itemTitle: txtUploadTitle.text ?? '',
+                isDiscount: isDiscount,
+                isPopular: isPopular,
+                oldPrice: oldPrice,
+                orderCount: 0,
+
             );
             FirebaseFirestore.instance
                 .collection('Additions')

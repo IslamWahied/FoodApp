@@ -55,6 +55,7 @@ class OrderDetailScreen extends StatelessWidget {
                 children: const [
                   PrimaryText(
                     text: 'حذف',
+                    color: Constants.white,
                     fontWeight: FontWeight.w600,
                     size: 18,
                   ),

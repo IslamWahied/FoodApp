@@ -5,7 +5,13 @@ class Category {
   int isDeleted;
   String createdDate;
   String image;
-  Category({this.categoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted});
+  bool isAvailable;
+
+
+
+
+
+  Category({this.isAvailable,this.categoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted});
 
   Category.fromJson(Map<String, dynamic> json)
   {
@@ -14,6 +20,7 @@ class Category {
     createdDate = json['createdDate'];
     image = json['image'];
     isDeleted = json['isDeleted'];
+    isAvailable = json['isAvailable']??true;
   }
 
   Map<String, dynamic> toMap()
@@ -24,7 +31,8 @@ class Category {
       'categoryId':categoryId,
       'createdDate':createdDate,
       'image':image,
-      'isDeleted':isDeleted
+      'isDeleted':isDeleted,
+      'isAvailable':isAvailable??true
 
     };
   }

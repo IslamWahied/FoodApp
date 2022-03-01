@@ -11,8 +11,14 @@ class AdditionsModel {
   String supCategoryTitle;
   String image;
   double price;
+  double oldPrice;
   String createdDate;
   int isDeleted;
+  int orderCount;
+  bool isAvailable;
+  bool isPopular;
+  bool isDiscount;
+
 
 
   AdditionsModel({
@@ -25,8 +31,13 @@ class AdditionsModel {
     this.supCategoryTitle,
     this.image,
     this.price,
+    this.oldPrice,
     this.createdDate,
     this.isDeleted,
+    this.orderCount,
+    this.isAvailable,
+    this.isPopular,
+    this.isDiscount,
   });
 
   AdditionsModel.fromJson(Map<String, dynamic> json)
@@ -42,24 +53,14 @@ class AdditionsModel {
     price = json['price'];
     createdDate = json['createdDate'];
     isDeleted = json['isDeleted'];
+    orderCount = json['orderCount']??0;
+    oldPrice = json['oldPrice']??0;
+    isAvailable = json['isAvailable']??true;
+    isPopular = json['isPopular']??false;
+    isDiscount = json['isDiscount']??false;
 
   }
 
-  AdditionsModel.to(Map<String, dynamic> json)
-  {
-    itemTitle = json['itemTitle'];
-    categoryId = json['categoryId'];
-    itemId = json['itemId'];
-    supCategoryId = json['supCategoryId'];
-    categoryTitle = json['categoryTitle'];
-    description = json['description']??'';
-    supCategoryTitle = json['supCategoryTitle'];
-    image = json['image'];
-    price = json['price'];
-    createdDate = json['createdDate'];
-    isDeleted = json['isDeleted'];
-
-  }
 
 
 
@@ -79,6 +80,12 @@ class AdditionsModel {
       'price':price,
       'createdDate':createdDate,
       'isDeleted':isDeleted,
+
+      'oldPrice':oldPrice??0,
+      'orderCount':orderCount??0,
+      'isAvailable':isAvailable??true,
+      'isPopular':isPopular??false,
+      'isDiscount':isDiscount??false,
     };
   }
 

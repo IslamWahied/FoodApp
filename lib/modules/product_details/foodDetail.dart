@@ -1,5 +1,6 @@
 // @dart=2.9
 
+import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/shared/components/componant.dart';
@@ -345,7 +346,14 @@ Padding customAppBar({BuildContext context,String title}) {
 
         Text(title??'',style: const TextStyle( fontSize: 25,
             fontWeight: FontWeight.w600,color: AppColors.black,overflow: TextOverflow.ellipsis),),
-        SizedBox(width:MediaQuery.of(context).size.width * 0.01 ,),
+
+
+        Padding(
+          padding: const EdgeInsets.only(right: 10,top: 15),
+          child:   Badge(
+              badgeContent: Text(HomeCubit.get(context).listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
+              child: Image.asset('assets/shoppingcart.png',width: 30)),
+        ),
         // Container(
         //   padding: const EdgeInsets.all(10),
         //   decoration: BoxDecoration(

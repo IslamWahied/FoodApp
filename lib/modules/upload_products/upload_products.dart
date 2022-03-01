@@ -249,8 +249,7 @@ class UploadProductForm extends StatelessWidget {
                             height: 50,
                             child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
+                                itemBuilder: (context, index) => GestureDetector(
                                       onTap: () {
                                         cubit.onChangeTypeItemId(listItemTypeCategory[index].id,context);
                                       },
@@ -335,8 +334,89 @@ class UploadProductForm extends StatelessWidget {
                           ),
 
                           const SizedBox(
-                            height: 30,
+                            height: 15,
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: <Widget>[
+                                  Checkbox(
+                                    value: cubit.isAvailable,
+                                    onChanged: (bool value) {
+                                      cubit.changeIsAvailableState(value: value);
+                                    },
+                                  ), //Checkbox
+
+                                  const Text(
+                                    'Available',
+                                    style: TextStyle(fontSize: 15.0),
+                                  ), //Text
+
+                                ],
+                              ),
+                              if (cubit.selectedTypeItemId == 3  )
+                              Column(
+                                children: <Widget>[
+                                  Checkbox(
+                                    value: cubit.isPopular,
+                                    onChanged: (bool value) {
+                                      cubit.changeIsPopular(value: value);
+                                    },
+                                  ), //Checkbox
+                                  const Text(
+                                    'Popular',
+                                    style: TextStyle(fontSize: 15.0),
+                                  ), //Text
+
+                                ], //<Widget>[]
+                              ),
+                              if (cubit.selectedTypeItemId == 3  )
+                              Column(
+                                children: <Widget>[
+                                   //SizedBox
+
+                                  Checkbox(
+                                    value: cubit.isDiscount,
+                                    onChanged: (bool value) {
+                                      cubit.changeIsDiscount(value: value);
+
+
+                                    },
+                                  ),
+
+                                  const Text(
+                                    'Discount',
+                                    style: TextStyle(fontSize: 15.0),
+                                  ), //Text
+//Checkbox
+                                ], //<Widget>[]
+                              ),
+                            ],
+                          ), //Row
+                          const SizedBox(height: 30),
+                          if (cubit.isDiscount)
+                            Flexible(
+                              flex: 1,
+                              child: TextFormField(
+
+                                controller: cubit.txtUploadOldPrice,
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  cubit.checkIsUploadValid(context);
+                                },
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]')),
+                                ],
+                                decoration: const InputDecoration(
+                                  labelText: 'Old Price \$',
+
+                                ),
+
+                              ),
+                            ),
+                          const SizedBox(height: 30),
                           if (cubit.selectedTypeItemId == 2 || cubit.selectedTypeItemId == 3  )
                             SizedBox(
                                 height: MediaQuery

@@ -12,13 +12,22 @@ class ItemModel {
   int itemId;
   int supCategoryId;
   String categoryTitle;
-
   String description;
   String supCategoryTitle;
   String image;
-  double price;
   String createdDate;
+  double price;
+
   int isDeleted;
+
+  double oldPrice;
+  int orderCount;
+  bool isAvailable;
+  bool isPopular;
+  bool isDiscount;
+
+
+
   List<AdditionsModel> additionsList;
 
   ItemModel( {
@@ -36,6 +45,11 @@ class ItemModel {
     this.createdDate,
     this.isDeleted,
     this.additionsList,
+    this.orderCount,
+    this.isAvailable,
+    this.isPopular,
+    this.isDiscount,
+    this.oldPrice,
   });
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
@@ -58,6 +72,15 @@ class ItemModel {
         isDeleted : json['isDeleted'],
         userMobile : json['userMobile']??'',
         userName : json['userName']??'',
+
+        orderCount : json['orderCount']??0,
+        isAvailable : json['isAvailable']??true,
+        isPopular : json['isPopular']??false,
+        isDiscount : json['isDiscount']??false,
+        oldPrice : json['oldPrice']??0,
+
+
+
       additionsList: customList
     );
   }
@@ -77,6 +100,15 @@ class ItemModel {
       'isDeleted':isDeleted,
       'userMobile':userMobile??'',
       'userName':userName??'',
+
+      'orderCount':orderCount??0,
+      'oldPrice':oldPrice??0,
+      'isAvailable':isAvailable??true,
+      'isPopular':isPopular??false,
+      'isDiscount':isDiscount??false,
+
+
+
       'AdditionsList': additionsList.map((e) => e.toMap())?.toList(),
     };
   }
