@@ -63,7 +63,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
   TextEditingController txtItemControl = TextEditingController();
   TextEditingController txtFeedControl = TextEditingController();
 
-String  getSumPrice(){
+  getTotalPrice(){
   double orderPrice = 0;
   for (var element in listOrder) {
     orderPrice += element.price;
@@ -79,6 +79,12 @@ String  getSumPrice(){
 
 
   }
+
+ addNewItemToCartFromItemScreen({context, itemId}){
+
+   HomeCubit.get(context).listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId));
+   HomeCubit.get(context).emit(SearchSubCategoryState());
+ }
 
 
 

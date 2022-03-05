@@ -213,8 +213,7 @@ Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double item
                           children: [
                             GestureDetector(
                               onTap: (){
-                                HomeCubit.get(context).listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId));
-
+                                HomeCubit.get(context).addNewItemToCartFromItemScreen(context: context,itemId: itemId);
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(

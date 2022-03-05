@@ -246,7 +246,7 @@ Widget itemCard({int itemId,String imagePath,
                                 child: const Icon(Icons.add, size: 20),
                               ),
                             ),
-                            SizedBox(width: 10,),
+                            const SizedBox(width: 10,),
                             Row(
                               children: [
                                 SvgPicture.asset(

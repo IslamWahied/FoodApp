@@ -52,7 +52,7 @@ class OrderScreen extends StatelessWidget {
                               width: 15,
                             ),
                             PrimaryText(
-                              text: cubit.getSumPrice()??'0',
+                              text: cubit.getTotalPrice()??'0',
                               size: 30,
                               fontWeight: FontWeight.w700,
                               color: Constants.tertiary,
@@ -71,7 +71,7 @@ class OrderScreen extends StatelessWidget {
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
-                        primary:cubit.getSumPrice() == '0' || cubit.getSumPrice() == null? Colors.yellowAccent[200] : Constants.primary,
+                        primary:cubit.getTotalPrice() == '0' || cubit.getTotalPrice() == null? Colors.yellowAccent[200] : Constants.primary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         padding:

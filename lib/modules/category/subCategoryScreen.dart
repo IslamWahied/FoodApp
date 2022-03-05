@@ -26,19 +26,19 @@ class subCategoryScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           centerTitle: false,
           leadingWidth: 0,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20,top: 15),
-              child:   Badge(
-                  badgeContent: Text(cubit.listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
-                  child: Image.asset('assets/shoppingcart.png',width: 30)),
-            ),
-          ],
+          // actions: [
+          //   Padding(
+          //     padding: const EdgeInsets.only(right: 20,top: 15),
+          //     child:   Badge(
+          //         badgeContent: Text(cubit.listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
+          //         child: Image.asset('assets/shoppingcart.png',width: 30)),
+          //   ),
+          // ],
           iconTheme: const IconThemeData(
               color: Constants.black
           ),
 
-          title:customAppBar(context: context,title: categoryTitle) ,
+          title:customAppBar(context: context,title: categoryTitle,) ,
         ),
       backgroundColor:Constants.white,
         body: SafeArea(
