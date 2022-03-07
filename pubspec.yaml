@@ -61,6 +61,7 @@ dependencies:
   dropdown_search: ^2.0.1
   badges: ^2.0.2
   cart_stepper: ^2.0.2
+  firebase_messaging: ^11.2.8
 
 
 dev_dependencies:

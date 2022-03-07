@@ -145,6 +145,7 @@ Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double item
             HomeCubit.get(context).selectedItemId = itemId;
 
             navigateTo(context, FoodDetail(
+              orderCount:value??1 ,
               imagePath:imagePath,
               subCategoryTitle:subCategoryTitle,
               itemName:name ,
@@ -213,7 +214,7 @@ Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double item
                           children: [
                             GestureDetector(
                               onTap: (){
-                                HomeCubit.get(context).addNewItemToCartFromItemScreen(context: context,itemId: itemId);
+                                HomeCubit.get(context).addNewItemToCartFromItemScreen(orderCount: value,itemId: itemId);
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
@@ -227,10 +228,20 @@ Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double item
                                 child: const Icon(Icons.add, size: 20),
                               ),
                             ),
-                            const SizedBox(width: 20),
+                            const SizedBox(width: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                if(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId).isDiscount)
+                                  PrimaryText(
+                                    isDiscount: true,
+                                    text: HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId).oldPrice.toString(),
+                                    size: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Constants.lighterGray,
+
+                                    height: 1,
+                                  ),
                                 SvgPicture.asset(
                                   'assets/dollar.svg',
                                   color: Constants.tertiary,

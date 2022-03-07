@@ -7,6 +7,7 @@ import 'package:elomda/styles/colors.dart';
 import 'package:elomda/shared/network/Dio_Helper/Dio_Helper.dart';
 import 'package:elomda/shared/network/local/shared_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -56,8 +57,8 @@ Future<void> main() async {
     showOnBoarding = true;
   }
 
-
-
+//   String token = await FirebaseMessaging.instance.getToken();
+// print(token);
 
     runApp(MyApp(userName: userName,mobile: mobile , departmentId: departmentId ,showOnBoarding: showOnBoarding,isUserLogin: isUserLogin,));
 

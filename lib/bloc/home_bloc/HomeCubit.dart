@@ -8,9 +8,15 @@ import 'package:elomda/models/category/additionsModel.dart';
 
 import 'package:elomda/models/category/categoryModel.dart';
 import 'package:elomda/models/category/itemModel.dart';
+import 'package:elomda/modules/cart/cart_screen.dart';
 
 import 'package:elomda/modules/category/subCategoryScreen.dart';
+import 'package:elomda/modules/feeds/feeds_screen.dart';
+import 'package:elomda/modules/home/home_screen.dart';
 import 'package:elomda/modules/item/items.dart';
+import 'package:elomda/modules/search/search_screen.dart';
+import 'package:elomda/modules/user_info/user_info_screen.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +25,26 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class HomeCubit extends Cubit<HomeScreenState> {
   HomeCubit() : super(HomeScreenStateInitState());
+
+
+  int currentIndex = 0;
+  List screens = [
+    const HomeScreen(),
+    const FeedScreen(),
+    SearchScreen(),
+    const OrderScreen(isShowNavBar: false),
+    UserInfoScreen()
+  ];
+
+  void changeCurrentIndex(int value) {
+    currentIndex = value;
+
+    emit(SearchSubCategoryState());
+  }
+
+  // Change Theme Mode
+
+  bool isDarkTheme = false;
 
   static HomeCubit get(context) => BlocProvider.of(context);
   int selectedCategoryId = 0;
@@ -65,26 +91,118 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   getTotalPrice(){
   double orderPrice = 0;
+  // for (var element in listOrder) {
+  //   orderPrice += element.price;
+  //   for (var element in element.additionsList) {
+  //     orderPrice += element.price;
+  //   }
+  //   return orderPrice.toString();
+  // }
+
+
   for (var element in listOrder) {
-    orderPrice += element.price;
-    for (var element in element.additionsList) {
+    for( int i = 0 ; i < element.orderCount; i++ ) {
       orderPrice += element.price;
+      for (var element2 in element.additionsList) {
+        orderPrice += element2.price;
+
+      }
     }
-    return orderPrice.toString();
-  }
-
-
-
-
-
 
   }
 
- addNewItemToCartFromItemScreen({context, itemId}){
+  return orderPrice.toString();
 
-   HomeCubit.get(context).listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId));
-   HomeCubit.get(context).emit(SearchSubCategoryState());
+  }
+
+ addNewItemToCartFromItemScreen({itemId,orderCount}){
+    var newlist = listItemsSearch.firstWhere((element) => element.itemId == itemId);
+    var model = ItemModel(
+      orderCount:orderCount ,
+      oldPrice:newlist.oldPrice ,
+      itemTitle:newlist.itemTitle ,
+      itemId: newlist.itemId,
+      isPopular: newlist.isPopular,
+      isDiscount:newlist.isDiscount ,
+      isDeleted: newlist.isDeleted,
+      isAvailable: newlist.isAvailable,
+      image:newlist.image ,
+      description:newlist.description ,
+      createdDate:newlist.createdDate ,
+      categoryTitle: newlist.categoryTitle,
+      categoryId:newlist.categoryId ,
+      additionsList: listOfSelectedAdditions.toList(),
+      price:newlist.price ,
+        supCategoryId:newlist.supCategoryId,
+
+      supCategoryTitle:newlist.supCategoryTitle ,
+      userMobile:newlist.userMobile ,
+      userName: newlist.userName
+    );
+    listOrder.add(model);
+    listOfSelectedAdditions = [];
+   emit(SearchSubCategoryState());
  }
+
+  addNewItemToCartFromHomeScreen({itemId,orderCount}){
+    var newlist = popularFoodList.firstWhere((element) => element.itemId == itemId);
+    var model = ItemModel(
+        orderCount:orderCount ,
+        oldPrice:newlist.oldPrice ,
+        itemTitle:newlist.itemTitle ,
+        itemId: newlist.itemId,
+        isPopular: newlist.isPopular,
+        isDiscount:newlist.isDiscount ,
+        isDeleted: newlist.isDeleted,
+        isAvailable: newlist.isAvailable,
+        image:newlist.image ,
+        description:newlist.description ,
+        createdDate:newlist.createdDate ,
+        categoryTitle: newlist.categoryTitle,
+        categoryId:newlist.categoryId ,
+        additionsList: listOfSelectedAdditions.toList(),
+        price:newlist.price ,
+        supCategoryId:newlist.supCategoryId,
+
+        supCategoryTitle:newlist.supCategoryTitle ,
+        userMobile:newlist.userMobile ,
+        userName: newlist.userName
+    );
+    listOrder.add(model);
+    listOfSelectedAdditions = [];
+    emit(SearchSubCategoryState());
+  }
+
+  addNewItemToCartFromFeedsScreen({itemId,orderCount}){
+    var newlist = listFeedsSearch.firstWhere((element) => element.itemId == itemId);
+    var model = ItemModel(
+        orderCount:orderCount ,
+        oldPrice:newlist.oldPrice ,
+        itemTitle:newlist.itemTitle ,
+        itemId: newlist.itemId,
+        isPopular: newlist.isPopular,
+        isDiscount:newlist.isDiscount ,
+        isDeleted: newlist.isDeleted,
+        isAvailable: newlist.isAvailable,
+        image:newlist.image ,
+        description:newlist.description ,
+        createdDate:newlist.createdDate ,
+        categoryTitle: newlist.categoryTitle,
+        categoryId:newlist.categoryId ,
+        additionsList: listOfSelectedAdditions.toList(),
+        price:newlist.price ,
+        supCategoryId:newlist.supCategoryId,
+
+        supCategoryTitle:newlist.supCategoryTitle ,
+        userMobile:newlist.userMobile ,
+        userName: newlist.userName
+    );
+
+    listOrder.add(model);
+    listOfSelectedAdditions = [];
+    emit(SearchSubCategoryState());
+  }
+
 
 
 
@@ -127,7 +245,19 @@ class HomeCubit extends Cubit<HomeScreenState> {
     });
   }
 
+  addFavorite({int itemId}){
+    // FirebaseFirestore.instance.collection('favorite').doc(Global.mobile).set(model.toMap()).then((value) {
+    //
+    //
+    //
+    // }).catchError((e){
+    //   if (kDebugMode) {
+    //     print(e);
+    //   }
+    // });
 
+
+  }
 
   selectCategory(categoryId,context) async {
 selectedSubCategoryId = 0;

@@ -15,32 +15,6 @@ class HomeLayoutCubit extends Cubit<HomeLayoutState> {
 
   static HomeLayoutCubit get(BuildContext context) => BlocProvider.of(context);
 
-  int currentIndex = 0;
-  List screens = [
-    const HomeScreen(),
-    const FeedScreen(),
-    SearchScreen(),
-    const OrderScreen(),
-    UserInfoScreen()
-  ];
 
-  void changeCurrentIndex(int value) {
-    currentIndex = value;
 
-    emit(HomeChangeBottomNavState());
-  }
-
-  // Change Theme Mode
-
-  bool isDarkTheme = false;
-
-  // void mode({bool fromShared}) {
-  //   if (fromShared != null) {
-  //     isDarkTheme = fromShared;
-  //     emit(HomeChangeThemeState());
-  //   } else {
-  //     isDarkTheme = !isDarkTheme;
-
-  //   }
-  // }
 }

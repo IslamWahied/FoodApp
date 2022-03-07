@@ -1,8 +1,11 @@
 
 // @dart=2.9
+import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
+import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/bloc/home_layout_bloc/cubit.dart';
 import 'package:elomda/bloc/home_layout_bloc/state.dart';
+import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,10 +21,10 @@ class HomeLayout extends StatelessWidget {
           HomeCubit.get(context).getItems();
           HomeCubit.get(context).getAdditions();
 
-          return BlocConsumer<HomeLayoutCubit, HomeLayoutState>(
-            listener: (BuildContext context, HomeLayoutState state) {},
-            builder: (BuildContext context, HomeLayoutState state) {
-              var cubit = HomeLayoutCubit.get(context);
+          return BlocConsumer<HomeCubit, HomeScreenState>(
+            listener: (BuildContext context, HomeScreenState state) {},
+            builder: (BuildContext context, HomeScreenState state) {
+              var cubit = HomeCubit.get(context);
               return Scaffold(
                 extendBody: true,
                 body: cubit.screens[cubit.currentIndex],
@@ -52,27 +55,32 @@ class HomeLayout extends StatelessWidget {
                         unselectedItemColor: Colors.grey,
                         selectedItemColor: Colors.deepOrange,
                         currentIndex: cubit.currentIndex,
-                        items: const [
-                          BottomNavigationBarItem(
+                        items:  [
+                          const BottomNavigationBarItem(
                             icon: Icon(Icons.home),
                             label: 'Home',
                           ),
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.rss_feed),
-                            label: 'Feeds',
+                           const BottomNavigationBarItem(
+                            icon: Icon(Icons.favorite),
+                            label: 'Favorite',
                           ),
-                          BottomNavigationBarItem(
+                          const BottomNavigationBarItem(
                             activeIcon: null,
                             icon: Icon(null),
                             label: 'Search',
                           ),
                           BottomNavigationBarItem(
-                            icon: Icon(
-                              Icons.shopping_bag,
+                            icon: Badge(
+                              showBadge:HomeCubit.get(context).listOrder.isNotEmpty && HomeCubit.get(context).listOrder.length != null ,
+                              badgeContent: Text(HomeCubit.get(context).listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
+                              child: const Icon(
+                                Icons.shopping_bag,
+                              ),
                             ),
                             label: 'Cart',
+
                           ),
-                          BottomNavigationBarItem(
+                          const BottomNavigationBarItem(
                             icon: Icon(Icons.person),
                             label: 'User',
                           ),

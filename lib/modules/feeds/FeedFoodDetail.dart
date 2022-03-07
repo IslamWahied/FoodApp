@@ -2,7 +2,7 @@
 
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/shared/components/componant.dart';
+import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 
 
@@ -16,8 +16,13 @@ class FeedFoodDetailScreen extends StatelessWidget {
   final String subCategoryTitle;
   final  String itemDescription ;
   final double itemPrice;
+  final double oldPrice;
+  final int index;
+  final int orderCount;
+  final bool isDiscount;
 
-  const  FeedFoodDetailScreen({this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
+
+  const  FeedFoodDetailScreen({this.orderCount,this.isDiscount,this.oldPrice,this.index,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +49,9 @@ class FeedFoodDetailScreen extends StatelessWidget {
                 minWidth: MediaQuery.of(context).size.width - 40),
             child: ElevatedButton(
               onPressed: ()  {
-                cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+
+                cubit.addNewItemToCartFromFeedsScreen(itemId: cubit.selectedItemId,orderCount:orderCount??1 );
+                // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
 
               },
               child: Row(
@@ -107,6 +114,19 @@ class FeedFoodDetailScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
+
+                                  if(isDiscount)
+                                    PrimaryText(
+                                      isDiscount: true,
+                                      text:  oldPrice.toString(),
+                                      size: 20,
+                                      fontWeight: FontWeight.w700,
+                                      color: Constants.lighterGray,
+
+                                      height: 1,
+                                    ),
+
+
                                   SvgPicture.asset(
                                     'assets/dollar.svg',
                                     color: Constants.tertiary,
@@ -187,11 +207,11 @@ class FeedFoodDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+                    if(cubit.listFeedsSearch[index].additionsList.isNotEmpty)
                       const SizedBox(
                         height: 50,
                       ),
-                    if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+                    if(cubit.listFeedsSearch[index].additionsList.isNotEmpty)
                       const PrimaryText(
                           text: 'الاضافات',
                           fontWeight: FontWeight.w700,
@@ -204,22 +224,22 @@ class FeedFoodDetailScreen extends StatelessWidget {
                 ),
               ),
 
-              if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+              if(cubit.listFeedsSearch[index].additionsList.isNotEmpty)
                 SizedBox(
                   height: 150,
 
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.length??0,
+                    itemCount: cubit.listFeedsSearch[index].additionsList.length??0,
                     itemBuilder: (context, index) => Padding(
                       padding: EdgeInsets.only(left: index == 0 ? 20 : 0,top: 10,bottom: 20),
                       child:
                       additionCard(
-                          imagePath: cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList[index].image
+                          imagePath: cubit.listFeedsSearch[this.index].additionsList[index].image
                           ,context: context,
                           cubit: cubit,
 
-                          additionId:cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList[index].itemId
+                          additionId:cubit.listFeedsSearch[this.index].additionsList[index].itemId
                       ),
                     ),
                   ),

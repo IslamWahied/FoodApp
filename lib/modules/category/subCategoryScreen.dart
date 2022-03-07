@@ -1,5 +1,5 @@
 //@dart=2.9
-import 'package:badges/badges.dart';
+
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';

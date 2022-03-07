@@ -1,12 +1,16 @@
 // @dart=2.9
 
+
+
+
+
 import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/shared/components/componant.dart';
+import 'package:elomda/modules/cart/cart_screen.dart';
+import 'package:elomda/shared/components/Componant.dart';
+import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,8 +21,9 @@ class FoodDetail extends StatelessWidget {
   final String subCategoryTitle;
   final  String itemDescription ;
   final double itemPrice;
+  final int orderCount;
 
- const  FoodDetail({this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
+ const  FoodDetail({this.orderCount,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +51,8 @@ class FoodDetail extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
 
-                cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
-
+                // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+                cubit.addNewItemToCartFromItemScreen(itemId: cubit.selectedItemId,orderCount:orderCount??1 );
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -109,6 +114,16 @@ class FoodDetail extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
+                                  if(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).isDiscount)
+                                    PrimaryText(
+                                      isDiscount: true,
+                                      text: HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).oldPrice.toString(),
+                                      size: 25,
+                                      fontWeight: FontWeight.w700,
+                                      color: Constants.lighterGray,
+
+                                      height: 1,
+                                    ),
                                   SvgPicture.asset(
                                     'assets/dollar.svg',
                                     color: Constants.tertiary,
@@ -281,6 +296,11 @@ additionId:cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+
+
+
+
+
                       SvgPicture.asset(
                         'assets/dollar.svg',
                         color: Constants.tertiary,
@@ -348,11 +368,17 @@ Padding customAppBar({BuildContext context,String title}) {
             fontWeight: FontWeight.w600,color: AppColors.black,overflow: TextOverflow.ellipsis),),
 
 
-        Padding(
-          padding: const EdgeInsets.only(right: 10,top: 15),
-          child:   Badge(
-              badgeContent: Text(HomeCubit.get(context).listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
-              child: Image.asset('assets/shoppingcart.png',width: 30)),
+        InkWell(
+          onTap: (){
+            navigatTo(context,  const OrderScreen( isShowNavBar: true,));
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10,top: 15),
+            child:   Badge(
+                badgeContent: Text(HomeCubit.get(context).listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
+                child: Image.asset('assets/shoppingcart.png',width: 30)),
+          ),
         ),
         // Container(
         //   padding: const EdgeInsets.all(10),

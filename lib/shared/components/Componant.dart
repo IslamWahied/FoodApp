@@ -138,9 +138,11 @@ class PrimaryText extends StatelessWidget {
   final Color color;
   final String text;
   final double height;
+  final bool isDiscount;
 
    const PrimaryText( {
     this.text,
+    this.isDiscount = false,
     this.fontWeight = FontWeight.w400,
     this.color = Constants.secondary,
     this.size = 20,
@@ -151,7 +153,9 @@ class PrimaryText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+
       style: TextStyle(
+        decoration:isDiscount? TextDecoration.lineThrough:TextDecoration.none,
         overflow: TextOverflow.ellipsis,
         color: color,
         height: height,

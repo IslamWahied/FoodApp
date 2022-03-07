@@ -2,8 +2,9 @@
 
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/shared/components/componant.dart';
-import 'package:elomda/shared/network/local/helper.dart';
+import 'package:elomda/models/category/additionsModel.dart';
+import 'package:elomda/shared/components/Componant.dart';
+
 import 'package:elomda/styles/colors.dart';
 
 
@@ -13,12 +14,16 @@ import 'package:flutter_svg/svg.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   final String imagePath;
+  final bool isDiscount;
   final String itemName;
   final String subCategoryTitle;
   final  String itemDescription ;
   final double itemPrice;
+  final double oldPrice;
+  final List<AdditionsModel> additionsList;
+  final int index;
 
-  const  OrderDetailScreen({this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
+  const  OrderDetailScreen({this.additionsList,this.oldPrice,this.isDiscount,this.index,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,7 @@ class OrderDetailScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
 
-        return Scaffold(
+        return   Scaffold(
           appBar: AppBar(
             elevation: 0,
             automaticallyImplyLeading: false,
@@ -44,10 +49,10 @@ class OrderDetailScreen extends StatelessWidget {
             constraints: BoxConstraints(
                 minWidth: MediaQuery.of(context).size.width - 40),
             child: ElevatedButton(
-              onPressed: ()  {
+              onPressed: ()  async {
 
-                cubit.listOrder.removeWhere((element) => element.itemId == cubit.selectedItemId);
-                cubit.emit(SearchSubCategoryState());
+                 cubit.listOrder.removeWhere((item) => item ==  cubit.listOrder[index]);
+                  cubit.emit(SearchSubCategoryState());
                 Navigator.pop(context);
               },
               child: Row(
@@ -78,7 +83,7 @@ class OrderDetailScreen extends StatelessWidget {
             children: [
               // customAppBar(context),
               Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 25),
+                padding:  const EdgeInsets.only(left: 20, right: 20, top: 25),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -89,7 +94,8 @@ class OrderDetailScreen extends StatelessWidget {
                       children: [
 
                         Hero(
-                          tag: imagePath,
+
+                          tag: imagePath??'',
                           child: Container(
                             decoration: BoxDecoration(
                               boxShadow: [
@@ -100,7 +106,7 @@ class OrderDetailScreen extends StatelessWidget {
                             ),
                             height: 200,
                             width: 170,
-                            child: Image.network(imagePath, fit: BoxFit.cover),
+                            child: Image.network(imagePath??'', fit: BoxFit.cover),
                           ),
                         ),
                         Column(
@@ -111,6 +117,17 @@ class OrderDetailScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
+
+                                  if(isDiscount)
+                                    PrimaryText(
+                                      isDiscount: true,
+                                      text: oldPrice.toString()??'',
+                                      size: 20,
+                                      fontWeight: FontWeight.w700,
+                                      color: Constants.lighterGray,
+
+                                      height: 1,
+                                    ),
                                   SvgPicture.asset(
                                     'assets/dollar.svg',
                                     color: Constants.tertiary,
@@ -191,11 +208,11 @@ class OrderDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+                    if(additionsList.isNotEmpty)
                       const SizedBox(
                         height: 50,
                       ),
-                    if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+                    if(additionsList.isNotEmpty)
                       const PrimaryText(
                           text: 'الاضافات',
                           fontWeight: FontWeight.w700,
@@ -208,22 +225,22 @@ class OrderDetailScreen extends StatelessWidget {
                 ),
               ),
 
-              if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+              if(additionsList.isNotEmpty)
                 SizedBox(
                   height: 150,
 
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.length??0,
+                    itemCount:  additionsList.length??0,
                     itemBuilder: (context, index) => Padding(
                       padding: EdgeInsets.only(left: index == 0 ? 20 : 0,top: 10,bottom: 20),
                       child:
                       additionCard(
-                          imagePath: cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList[index].image
+                          imagePath: additionsList[index].image
                           ,context: context,
                           cubit: cubit,
 
-                          additionId:cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList[index].itemId
+                          additionId: additionsList[index].itemId
                       ),
                     ),
                   ),
@@ -310,7 +327,7 @@ class OrderDetailScreen extends StatelessWidget {
                   ),
                 ],
               )),
-          if(cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId))
+          // if(cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId))
             const Positioned(
                 top: -10,
                 right: 10,
