@@ -4,9 +4,9 @@ class LoginInitState extends LoginState {}
 
 class LoginLoadingState extends LoginState {}
 class LoginSuccessState extends LoginState {}
-class LoginErorrState extends LoginState {
-  String erorr ;
-  LoginErorrState(this.erorr);
+class LoginErrorState extends LoginState {
+  String error ;
+  LoginErrorState(this.error);
 }
 
 class ChangeInScreenState extends LoginState {}

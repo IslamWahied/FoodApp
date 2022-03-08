@@ -14,3 +14,5 @@ class UploadProductsSelectCategoryState extends UploadProductsState {}
 class UploadProductsAddCategoryState extends UploadProductsState {}
 
 class UploadProductsCantAddCategoryState extends UploadProductsState {}
+class onChangeTypeItemIdState extends UploadProductsState {}
+class RefreshState extends UploadProductsState {}

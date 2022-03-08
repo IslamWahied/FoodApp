@@ -1,29 +1,29 @@
 // @dart=2.9
 
-
-
-
-
-import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/shared/components/Componant.dart';
-import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-class FoodDetail extends StatelessWidget {
+class FeedFoodDetailScreen extends StatelessWidget {
   final String imagePath;
   final String itemName;
+  final int itemId;
   final String subCategoryTitle;
   final  String itemDescription ;
   final double itemPrice;
+  final double oldPrice;
+  final int index;
   final int orderCount;
+  final bool isDiscount;
 
- const  FoodDetail({this.orderCount,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
+
+  const  FeedFoodDetailScreen({this.itemId,this.orderCount,this.isDiscount,this.oldPrice,this.index,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +49,11 @@ class FoodDetail extends StatelessWidget {
             constraints: BoxConstraints(
                 minWidth: MediaQuery.of(context).size.width - 40),
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: ()  {
 
+                cubit.addNewItemToCartFromFeedsScreen(itemId: cubit.selectedItemId,orderCount:orderCount??1 );
                 // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
-                cubit.addNewItemToCartFromItemScreen(itemId: cubit.selectedItemId,orderCount:orderCount??1 );
+
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -71,7 +72,7 @@ class FoodDetail extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                   textStyle: const TextStyle(
                       fontSize: 30, fontWeight: FontWeight.bold)),
             ),
@@ -114,16 +115,19 @@ class FoodDetail extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  if(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).isDiscount)
+
+                                  if(isDiscount)
                                     PrimaryText(
                                       isDiscount: true,
-                                      text: HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).oldPrice.toString(),
-                                      size: 25,
+                                      text:  oldPrice.toString(),
+                                      size: 20,
                                       fontWeight: FontWeight.w700,
                                       color: Constants.lighterGray,
 
                                       height: 1,
                                     ),
+
+
                                   SvgPicture.asset(
                                     'assets/dollar.svg',
                                     color: Constants.tertiary,
@@ -144,7 +148,7 @@ class FoodDetail extends StatelessWidget {
                               height: 20,
                             ),
                             const PrimaryText(
-                              text: 'التوصيل في',
+                                text: 'التوصيل في',
                                 fontWeight: FontWeight.w700,
                                 size: 22
                             ),
@@ -156,7 +160,7 @@ class FoodDetail extends StatelessWidget {
                               height: 8,
                             ),
                             const PrimaryText(
-                                text: '30 دقيقة',
+                              text: '30 دقيقة',
                               color: Constants.secondary,
                               size: 20,
                               fontWeight: FontWeight.w500,
@@ -170,50 +174,50 @@ class FoodDetail extends StatelessWidget {
                     const SizedBox(
                       height: 40,
                     ),
-                     if( itemDescription != null && itemDescription.trim() != ''  )
-                    const PrimaryText(
-                        text: 'الوصف',
-                        fontWeight: FontWeight.w700,
-                        size: 22),
+                    if( itemDescription != null && itemDescription.trim() != ''  )
+                      const PrimaryText(
+                          text: 'الوصف',
+                          fontWeight: FontWeight.w700,
+                          size: 22),
                     const SizedBox(
                       height: 10,
                     ),
 
 
-                     SizedBox(
-                       width: MediaQuery.of(context).size.width ,
-                         height: 100,
-                       child: SingleChildScrollView(
-                         child: Text(
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width ,
+                      height: 100,
+                      child: SingleChildScrollView(
+                        child: Text(
 
-                           itemDescription??'',
+                          itemDescription??'',
 
-                      textDirection: TextDirection.rtl,
-                      textAlign:TextAlign.right ,
-                      style:   const TextStyle(
+                          textDirection: TextDirection.rtl,
+                          textAlign:TextAlign.right ,
+                          style:   const TextStyle(
 
 
-                             color:  Constants.secondary,
+                            color:  Constants.secondary,
 
-                             fontFamily: 'Poppins',
-                             fontSize: 20,
+                            fontFamily: 'Poppins',
+                            fontSize: 20,
 
-                             fontWeight: FontWeight.w500,
-                           ),
+                            fontWeight: FontWeight.w500,
+                          ),
 
+                        ),
+                      ),
                     ),
-                       ),
-                     ),
-if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
-                  const SizedBox(
-                      height: 50,
-                    ),
-                    if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
-                    const PrimaryText(
-                        text: 'الاضافات',
-                        fontWeight: FontWeight.w700,
-                        size: 22),
-                    // if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+                    if(cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
+                      const SizedBox(
+                        height: 50,
+                      ),
+                    if(cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
+                      const PrimaryText(
+                          text: 'الاضافات',
+                          fontWeight: FontWeight.w700,
+                          size: 22),
+                    // if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
                     // const SizedBox(
                     //   height: 15,
                     // ),
@@ -221,27 +225,27 @@ if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selecte
                 ),
               ),
 
-              if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
-              SizedBox(
-                height: 150,
+              if(cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
+                SizedBox(
+                  height: 150,
 
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.length??0,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.only(left: index == 0 ? 20 : 0,top: 10,bottom: 20),
-                    child:
-                    additionCard(
-                        imagePath: cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList[index].image
-                    ,context: context,
-                      cubit: cubit,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: cubit.listFeedsSearch.firstWhere((element) => element.itemId == itemId).additionsList.length??0,
+                    itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.only(left: index == 0 ? 20 : 0,top: 10,bottom: 20),
+                      child:
+                      additionCard(
+                          imagePath: cubit.listFeedsSearch.firstWhere((element) => element.itemId == itemId).additionsList[index].image
+                          ,context: context,
+                          cubit: cubit,
 
-additionId:cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList[index].itemId
+                          additionId:cubit.listFeedsSearch.firstWhere((element) => element.itemId == itemId).additionsList[index].itemId
+                      ),
                     ),
                   ),
                 ),
-              ),
-              // if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+              // if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
               // const SizedBox(
               //   height: 100,
               // )
@@ -296,11 +300,6 @@ additionId:cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-
-
-
-
-
                       SvgPicture.asset(
                         'assets/dollar.svg',
                         color: Constants.tertiary,
@@ -357,7 +356,7 @@ Padding customAppBar({BuildContext context,String title}) {
 
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Constants.primary,
+                color: Constants.primary,
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(width: 1, color: Colors.grey[400])),
             child: const Icon(Icons.chevron_left),
@@ -366,20 +365,7 @@ Padding customAppBar({BuildContext context,String title}) {
 
         Text(title??'',style: const TextStyle( fontSize: 25,
             fontWeight: FontWeight.w600,color: AppColors.black,overflow: TextOverflow.ellipsis),),
-
-
-        InkWell(
-          onTap: (){
-            navigatTo(context,  const OrderScreen( isShowNavBar: true,));
-
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(right: 10,top: 15),
-            child:   Badge(
-                badgeContent: Text(HomeCubit.get(context).listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
-                child: Image.asset('assets/shoppingcart.png',width: 30)),
-          ),
-        ),
+        SizedBox(width:MediaQuery.of(context).size.width * 0.05 ,),
         // Container(
         //   padding: const EdgeInsets.all(10),
         //   decoration: BoxDecoration(

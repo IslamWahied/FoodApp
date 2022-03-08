@@ -6,7 +6,7 @@ class HomeInitialState extends HomeLayoutState {}
 
 // Home Layout
 
-class HomeChangeBottmNavState extends HomeLayoutState {}
+class HomeChangeBottomNavState extends HomeLayoutState {}
 class HomeChangeThemeState extends HomeLayoutState {}
 
 class HomeAddCartItemState extends HomeLayoutState {}

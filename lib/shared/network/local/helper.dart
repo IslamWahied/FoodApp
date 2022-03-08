@@ -1,10 +1,13 @@
 // @dart=2.9
 
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+
+
+
 
 Future<void> writeToFile(ByteData data, String path) {
   final buffer = data.buffer;
@@ -44,14 +47,48 @@ void NavigatToAndReplace(context,widget)
 //   }
 //
 // }
+// void showToast({
+//   @required String text,
+//   @required ToastStates state,
+// }) =>
+//     Fluttertoast.showToast(
+//       msg: text,
+//       toastLength: Toast.LENGTH_LONG,
+//       gravity: ToastGravity.BOTTOM,
+//       timeInSecForIosWeb: 5,
+//       backgroundColor: Colors.green,
+//       textColor: Colors.white,
+//       fontSize: 16.0,
+//     );
 
-List<String> cardColor = [
-  "#5EB6E4",
-  "#A24DC2",
-  "#CF0072",
-  "#6ABE2B",
-  "#FB7545",
-  "#5B1F69",
-  "#5EB6E4",
-  "#355C7D"
-];
+// enum
+enum ToastStates { SUCCESS, ERROR, WARNING }
+
+Color chooseToastColor(ToastStates state) {
+  Color color;
+
+  switch (state) {
+    case ToastStates.SUCCESS:
+      color = Colors.green;
+      break;
+    case ToastStates.ERROR:
+      color = Colors.red;
+      break;
+    case ToastStates.WARNING:
+      color = Colors.amber;
+      break;
+  }
+
+  return color;
+}
+
+// List<String> cardColor = [
+//   "#5EB6E4",
+//   "#A24DC2",
+//   "#CF0072",
+//   "#6ABE2B",
+//   "#FB7545",
+//   "#5B1F69",
+//   "#5EB6E4",
+//   "#355C7D"
+// ];

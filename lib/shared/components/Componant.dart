@@ -1,9 +1,9 @@
 // @dart=2.9
-// ignore_for_file: constant_identifier_names
+
 
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 
 void navigateTo(context, widget) {
   Navigator.push(
@@ -58,19 +58,19 @@ Widget defultTextFormFaild(
   );
 }
 
-void showToast({
-  @required String text,
-  @required ToastState state,
-}) {
-  Fluttertoast.showToast(
-      msg: text,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 5,
-      backgroundColor: chooseToastColor(state),
-      textColor: Colors.white,
-      fontSize: 16.0);
-}
+// void showToast({
+//   @required String text,
+//   @required ToastState state,
+// }) {
+//   Fluttertoast.showToast(
+//       msg: text,
+//       toastLength: Toast.LENGTH_LONG,
+//       gravity: ToastGravity.BOTTOM,
+//       timeInSecForIosWeb: 5,
+//       backgroundColor: chooseToastColor(state),
+//       textColor: Colors.white,
+//       fontSize: 16.0);
+// }
 
 enum ToastState { SUCCESS, ERROR, WARNING }
 
@@ -123,16 +123,26 @@ void showDialogAlairt(context, String title, String subtitle, Function fuc) {
         );
       });
 }
-
+class AppColors {
+  static const white = Colors.white;
+  static const secondary = Color(0xff323335);
+  static const lightGray = Color(0xffc0c1c3);
+  static const lighterGray = Color(0xffe0e0e0);
+  static const black = Colors.black;
+  static const primary = Color(0xfffdc912);
+  static const tertiary = Color(0xffff36b6b);
+}
 class PrimaryText extends StatelessWidget {
   final double size;
   final FontWeight fontWeight;
   final Color color;
   final String text;
   final double height;
+  final bool isDiscount;
 
-   const PrimaryText({
+   const PrimaryText( {
     this.text,
+    this.isDiscount = false,
     this.fontWeight = FontWeight.w400,
     this.color = Constants.secondary,
     this.size = 20,
@@ -143,11 +153,15 @@ class PrimaryText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+
       style: TextStyle(
+        decoration:isDiscount? TextDecoration.lineThrough:TextDecoration.none,
+        overflow: TextOverflow.ellipsis,
         color: color,
         height: height,
         fontFamily: 'Poppins',
         fontSize: size,
+
         fontWeight: fontWeight,
       ),
     );

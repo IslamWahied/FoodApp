@@ -1,39 +1,39 @@
-// @dart=2.9
+//@dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:elomda/home_layout/home_layout.dart';
+import 'package:elomda/models/user/user_model.dart';
+import 'package:elomda/modules/home/home_screen.dart';
+import 'package:elomda/modules/login/activationCodeScreen.dart';
 
-import 'package:elomda/modules/login/login_screen.dart';
+import 'package:elomda/modules/login/register_screen.dart';
+import 'package:elomda/modules/upload_products/upload_products.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/network/local/helper.dart';
+import 'package:elomda/shared/network/local/shared_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-
-
 import 'loginState.dart';
-
-
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitState());
   static LoginCubit get(context) => BlocProvider.of(context);
 
-   bool isVaild = false;
-   bool VerifiedisVaild = false;
- //
- //  final GlobalKey<ScaffoldState> scaffoldLoginKey = GlobalKey<ScaffoldState>();
- //  final GlobalKey<ScaffoldState> scaffoldVerifiedKey = GlobalKey<ScaffoldState>();
- //
- //
- //  final GlobalKey<FormState> loginFormGlobalKey = GlobalKey<FormState>();
- //  final GlobalKey<FormState> VerifiedFormGlobalKey = GlobalKey<FormState>();
- //
-   RoundedLoadingButtonController loginbtnController = RoundedLoadingButtonController();
- //  RoundedLoadingButtonController VerifiedbtnController = RoundedLoadingButtonController();
- //
+   bool isValid = false;
+   bool verifiedIsValid = false;
+
+    final GlobalKey<ScaffoldState> scaffoldLoginKey = GlobalKey<ScaffoldState>();
+   final GlobalKey<ScaffoldState> scaffoldVerifiedKey = GlobalKey<ScaffoldState>();
+
+   RoundedLoadingButtonController loginBtnController = RoundedLoadingButtonController();
+    RoundedLoadingButtonController verifiedBtnController = RoundedLoadingButtonController();
+
     TextEditingController textMobileControl = TextEditingController();
    TextEditingController textVerifiedCodeControl = TextEditingController();
- //  TextEditingController txtRegisterUserNameControl = TextEditingController();
+    TextEditingController txtRegisterUserNameControl = TextEditingController();
  //
  //
  //  // var listproduct = products.toList();
@@ -42,243 +42,247 @@ class LoginCubit extends Cubit<LoginState> {
  //
  //
  //  var listUserType = userType.toList();
- //  String userTypeSelectedName = '';
- //  int userTypeSelectedId = 0;
- //
-  getActivationCode(context) async {
-    loginbtnController.start();
-    emit(LoginLoadingState());
+   String departMentSelectedName = '';
+  int departmentId = 0;
 
+
+
+  String verificationCode = '';
+  getActivationCode(context) async {
+
+    // navigatTo(context, const ActivationCodeScreen());
+
+    loginBtnController.start();
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber:'+2'+textMobileControl.text,
 
       verificationCompleted: (PhoneAuthCredential credential) {
-         ;
 
-         loginbtnController.success();
-         loginbtnController.reset();
+        loginBtnController.success();
+        loginBtnController.reset();
 
         emit(LoginSuccessState());
       },
       verificationFailed: (FirebaseAuthException e) {
 
-        loginbtnController.error();
-        loginbtnController.reset();
-        emit(LoginErorrState(e.message));
+        loginBtnController.error();
+        loginBtnController.reset();
+        emit(LoginErrorState(e.message));
       },
       codeSent: (String verificationId, int resendToken) {
 
-        VerificationCode = verificationId;
-        loginbtnController.success();
+        verificationCode = verificationId;
+        loginBtnController.success();
+        loginBtnController.reset();
         navigatTo(context, const ActivationCodeScreen());
         emit(LoginSuccessState());
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
     );
-    // loginbtnController.reset();
-    // NavigatTo(context, VerifiedScreen());
+
 
   }
- //
-    String VerificationCode = '';
- //
- //  activationNumber(context) async {
- //
- //    // NavigatToAndReplace(context, RegisterScreen());
- //
- //   debugPrintThrottled(VerificationCode);PhoneAuthCredential phoneAuthCredential =
- //   await PhoneAuthProvider.credential(verificationId: VerificationCode, smsCode: textVerifiedCodeControl.text);
- //    signInWithPhoneAuthCredential(phoneAuthCredential,context);
- //  }
- //
- //
- //  void signInWithPhoneAuthCredential(phoneAuthCredential,context) async {
- //
- //    try {
- //      final authCredential = await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
- //
- //
- //      if(authCredential.user != null){
- //
- //
- //       await  CachHelper.SetData( key: 'Mobile',value: textMobileControl.text);
- //
- //          NavigatTo(context, RegisterScreen());
- //      }
- //
- //    } on FirebaseAuthException catch (e) {
- //
- //
- //      scaffoldVerifiedKey.currentState.showSnackBar(SnackBar(
- //          backgroundColor: Colors.red,
- //          content: Text(
- //            e.message.toString(),
- //            textAlign: TextAlign.center,
- //          ),
- //          shape: RoundedRectangleBorder(
- //              borderRadius: BorderRadius.all(Radius.circular(30))),
- //          behavior: SnackBarBehavior.floating,
- //          padding: EdgeInsets.all(10.0),
- //          duration: Duration(milliseconds: 2000)));
- //
- //
- //    }
- //  }
-  VerifiedchangVaildState() {
+  activationNumber(context) async {
+
+    //  navigatTo(context, const RegisterScreen());
+
+   // debugPrintThrottled(verificationCode);
+   PhoneAuthCredential phoneAuthCredential =
+   PhoneAuthProvider.credential(verificationId: verificationCode, smsCode: textVerifiedCodeControl.text);
+    signInWithPhoneAuthCredential(phoneAuthCredential,context);
+  }
+
+  signInWithPhoneAuthCredential(phoneAuthCredential,context) async {
+
+    try {
+      final authCredential = await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
+      if(authCredential.user != null){
+       await  CachHelper.SetData( key: 'mobile',value: textMobileControl.text);
+        navigatTo(context, const RegisterScreen());
+       // navigatTo(context, const HomeScreen());
+      }
+    } on FirebaseAuthException catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            e.message.toString(),
+            textAlign: TextAlign.center,
+          ),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30))),
+          behavior: SnackBarBehavior.floating,
+          padding: const EdgeInsets.all(10.0),
+          duration: const Duration(milliseconds: 2000)));
+
+
+    }
+  }
+
+
+
+
+
+
+
+
+  verifiedChangValidState() {
     if(textVerifiedCodeControl.text.trim() != '' &&  textVerifiedCodeControl.text !=null )
     {
-      VerifiedisVaild = true;
+      verifiedIsValid = true;
     }
     else
     {
-      VerifiedisVaild = false;
+      verifiedIsValid = false;
     }
     emit(LoginSuccessState());
   }
- //
-  changVaildState() {
+
+  changValidState() {
     if(textMobileControl.text.trim() != '' && textMobileControl.text.length == 11 && textMobileControl.text !=null  )
     {
-      isVaild = true;
+      isValid = true;
     }
     else
     {
-      isVaild = false;
+      isValid = false;
     }
     emit(LoginSuccessState());
   }
- //
- //
- //
- //  bool  RegisterVaild  = false;
- //  changeRegisterVaildState()
- //  {
- //    if(txtRegisterUserNameControl.text.trim() != '' && txtRegisterUserNameControl.text !=  null &&
- //
- //        floorSelectedId != 0 && floorSelectedId != null &&
- //        userTypeSelectedId != 0 && userTypeSelectedId != null
- //
- //    )
- //    {
- //      RegisterVaild = true;
- //    }
- //    else
- //    {
- //      RegisterVaild = false;
- //    }
- //    emit(LoginSuccessState());
- //  }
- //
- //
- //
- //
- //  registerAndLogin(context) async {
- //
- //    // Check If User not Created
- //
- //    // if true
- //
- //    // Save User Date
- //        // 1 - Mobile
- //        // 2 - UserName
- //        // 3 - TitlJop
- //        // 4 - TitlJop
- //
- //   Global.Mobile = textMobileControl.text;
- //   Global.userName = txtRegisterUserNameControl.text;
- //   Global.UserType = userTypeSelectedId.toString();
- //
- //
- //
- //   await CachHelper.SetData(key: 'Mobile', value: Global.Mobile);
- //   await CachHelper.SetData(key: 'UserName', value: Global.userName);
- //   await CachHelper.SetData(key: 'UserType', value: Global.UserType);
- //   await CachHelper.SetData(key: 'showOnboarding', value: false);
- //   await CachHelper.SetData(key: 'isUserLogined', value: true);
- //
- //   UserModel model =  UserModel(
- //     floorId: floorSelectedId,
- //     image: '',
- //     isAdmin: false,
- //     jopTypeId:userTypeSelectedId ,
- //     mobile: Global.Mobile,
- //     userName: Global.userName
- //   );
- //
- //
- //
- //   FirebaseFirestore.instance.collection('User').doc(Global.Mobile).get().then((value) {
- //
- //     userModel =   UserModel.fromJson(value.data());
- //
- //     if(userModel.mobile != null)
- //       {
- //         restLoginCubit();
- //         HomeCubit.get(context).getUserFavourit();
- //         NavigatToAndReplace(context, LayOutScreen());
- //       }
- //     else
- //       {
- //         FirebaseFirestore.instance.collection('User').doc(Global.Mobile).set(model.toMap()).then((value) {
- //           restLoginCubit();
- //           NavigatToAndReplace(context, LayOutScreen());
- //
- //         }).catchError((e){
- //           print(e);
- //         });
- //       }
- //
- //
- //
- //
- //   }).catchError((erorr){
- //
- //     FirebaseFirestore.instance.collection('User').doc(Global.Mobile).set(model.toMap()).then((value) {
- //       restLoginCubit();
- //       NavigatToAndReplace(context, LayOutScreen());
- //     }).catchError((e){
- //       print(e);
- //     });
- //   });
- //
- //  }
- //
- //
- //
- //
- //
- //
- // Future restLoginCubit() {
- //    txtRegisterUserNameControl.text = '';
- //    textMobileControl.text = '';
- //      textVerifiedCodeControl.text = '';
- //        RegisterVaild = false;
- //        VerifiedisVaild = false;
- //        isVaild = false;
-     //  VerificationCode = '';
- //      floorSelectedName = '';
- //      floorSelectedId = 0;
- //      userTypeSelectedName = '';
- //      userTypeSelectedId = 0;
- //    emit(ChangeInScreenState());
- //  }
- //
- //  UserModel userModel;
- //
- //  getUserData() {
- //    FirebaseFirestore.instance.collection('User').doc(Global.Mobile).get().then((value) {
- //
- //      userModel =   UserModel.fromJson(value.data());
- //
- //      print(value.data());
- //
- //
- //    }).catchError((erorr){
- //      print(erorr);
- //    });
- //
- //
- //  }
+
+   bool  registerValid  = false;
+  changeRegisterValidState()
+  {
+    if(txtRegisterUserNameControl.text.trim() != ''
+    //     && txtRegisterUserNameControl.text !=  null
+    //  &&
+    //
+    // departmentId != 0 && departmentId != null
+
+    )
+    {
+      registerValid = true;
+    }
+    else
+    {
+      registerValid = false;
+    }
+    emit(LoginSuccessState());
+  }
+
+  registerAndLogin(context) async {
+
+    // Check If User not Created
+
+    // if true
+
+    // Save User Date
+        // 1 - Mobile
+        // 2 - UserName
+        // 3 - departmentId
+
+   Global.mobile = textMobileControl.text;
+   Global.userName = txtRegisterUserNameControl.text;
+   Global.departmentId = departmentId.toString();
+
+
+
+   await CachHelper.SetData(key: 'mobile', value: Global.mobile);
+   await CachHelper.SetData(key: 'userName', value: Global.userName);
+   // await CachHelper.SetData(key: 'departmentId', value: Global.departmentId);
+   await CachHelper.SetData(key: 'showOnBoarding', value: false);
+   await CachHelper.SetData(key: 'isUserLogin', value: true);
+
+
+   UserModel model =  UserModel(
+     image: '',
+     isAdmin: false,
+     departmentId:departmentId??1 ,
+     mobile: Global.mobile,
+     userName: Global.userName,
+     fireBaseToken: Global.fireBaseToken,
+   );
+
+
+
+   FirebaseFirestore.instance.collection('User').doc(Global.mobile).get().then((value) {
+
+     userModel = UserModel.fromJson(value.data());
+
+     if(userModel.mobile != null)
+       {
+         restLoginCubit();
+         // HomeCubit.get(context).getUserFavourite();
+         NavigatToAndReplace(context, const UploadProductForm());
+      //   NavigatToAndReplace(context, const HomeLayout());
+       }
+     else
+       {
+         FirebaseFirestore.instance.collection('User').doc(Global.mobile).set(model.toMap()).then((value) {
+           restLoginCubit();
+           NavigatToAndReplace(context, const HomeLayout());
+
+         }).catchError((e){
+           if (kDebugMode) {
+             print(e);
+           }
+         });
+       }
+
+
+
+
+   }).catchError((error){
+
+     FirebaseFirestore.instance.collection('User').doc(Global.mobile).set(model.toMap()).then((value) {
+       restLoginCubit();
+       NavigatToAndReplace(context, const HomeLayout());
+     }).catchError((e){
+       if (kDebugMode) {
+         print(e);
+       }
+     });
+   });
+
+  }
+
+
+
+
+
+
+  restLoginCubit() {
+    txtRegisterUserNameControl.text = '';
+    textMobileControl.text = '';
+      textVerifiedCodeControl.text = '';
+        registerValid = false;
+        verifiedIsValid = false;
+        isValid = false;
+      verificationCode = '';
+      departMentSelectedName = '';
+      departmentId = 0;
+    emit(ChangeInScreenState());
+  }
+
+   UserModel userModel;
+  getUserData() {
+    FirebaseFirestore.instance.collection('User').doc(Global.mobile).get().then((value) {
+
+      userModel =   UserModel.fromJson(value.data());
+
+      if (kDebugMode) {
+        print(value.data());
+      }
+
+
+    }).catchError((error){
+      if (kDebugMode) {
+        print(error);
+      }
+    });
+
+
+  }
 
 }
 
