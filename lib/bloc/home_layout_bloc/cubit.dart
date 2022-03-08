@@ -22,7 +22,7 @@ class HomeLayoutCubit extends Cubit<HomeLayoutState> {
   int currentIndex = 0;
   List screens = [
     HomeScreen(),
-    FeedsScreen(),
+
     SearchScreen(),
     Cart(),
     UserInfoScreen()

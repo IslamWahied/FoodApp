@@ -52,7 +52,7 @@ class Cart_Empty extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.06,
           child: MaterialButton(
             onPressed: () {
-              navigateTo(context,  FeedsScreen());
+
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
