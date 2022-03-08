@@ -21,10 +21,11 @@ class OrderDetailScreen extends StatelessWidget {
   final  String itemDescription ;
   final double itemPrice;
   final double oldPrice;
+  final int orderCount;
   final List<AdditionsModel> additionsList;
   final int index;
 
-  const  OrderDetailScreen({this.additionsList,this.oldPrice,this.isDiscount,this.index,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
+  const  OrderDetailScreen({this.orderCount,this.additionsList,this.oldPrice,this.isDiscount,this.index,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,211 +47,336 @@ class OrderDetailScreen extends StatelessWidget {
 
             title:customAppBar(context: context,title: itemName) ,
           ),
-          floatingActionButton: ConstrainedBox(
-            constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width - 40),
-            child: ElevatedButton(
-              onPressed: ()  async {
+          // floatingActionButton: ConstrainedBox(
+          //   constraints: BoxConstraints(
+          //       minWidth: MediaQuery.of(context).size.width - 40),
+          //   child: ElevatedButton(
+          //     onPressed: ()  async {
+          //
+          //        cubit.listOrder.removeWhere((item) => item ==  cubit.listOrder[index]);
+          //         cubit.emit(SearchSubCategoryState());
+          //       Navigator.pop(context);
+          //     },
+          //     child: Row(
+          //       mainAxisSize: MainAxisSize.min,
+          //       children: const [
+          //         PrimaryText(
+          //           text: 'حذف',
+          //           color: Constants.white,
+          //           fontWeight: FontWeight.w600,
+          //           size: 18,
+          //         ),
+          //         SizedBox(width: 10,),
+          //         Icon(Icons.chevron_right)
+          //       ],
+          //     ),
+          //     style: ElevatedButton.styleFrom(
+          //         primary: Colors.red,
+          //         shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(10.0)),
+          //         padding:
+          //         const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          //         textStyle: const TextStyle(
+          //             fontSize: 30, fontWeight: FontWeight.bold)),
+          //   ),
+          // ),
+          // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                // customAppBar(context),
+                Padding(
+                  padding:  const EdgeInsets.only(left: 20, right: 20, top: 25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
 
-                 cubit.listOrder.removeWhere((item) => item ==  cubit.listOrder[index]);
-                  cubit.emit(SearchSubCategoryState());
-                Navigator.pop(context);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  PrimaryText(
-                    text: 'حذف',
-                    color: Constants.white,
-                    fontWeight: FontWeight.w600,
-                    size: 18,
-                  ),
-                  SizedBox(width: 10,),
-                  Icon(Icons.chevron_right)
-                ],
-              ),
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  textStyle: const TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.bold)),
-            ),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          body: ListView(
-            children: [
-              // customAppBar(context),
-              Padding(
-                padding:  const EdgeInsets.only(left: 20, right: 20, top: 25),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                          Hero(
 
-                        Hero(
-
-                          tag: imagePath??'',
-                          child: Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey[400], blurRadius: 30),
-                              ],
-                              borderRadius: BorderRadius.circular(100),
+                            tag: imagePath??'',
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.grey[400], blurRadius: 30),
+                                ],
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              height: 200,
+                              width: 170,
+                              child: Image.network(imagePath??'', fit: BoxFit.cover),
                             ),
-                            height: 200,
-                            width: 170,
-                            child: Image.network(imagePath??'', fit: BoxFit.cover),
                           ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              width: 160,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                width: 160,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
 
-                                  if(isDiscount)
+                                    if(isDiscount)
+                                      PrimaryText(
+                                        isDiscount: true,
+                                        text: oldPrice.toString()??'',
+                                        size: 20,
+                                        fontWeight: FontWeight.w700,
+                                        color: Constants.lighterGray,
+
+                                        height: 1,
+                                      ),
+                                    SvgPicture.asset(
+                                      'assets/dollar.svg',
+                                      color: Constants.tertiary,
+                                      width: 15,
+                                    ),
                                     PrimaryText(
-                                      isDiscount: true,
-                                      text: oldPrice.toString()??'',
-                                      size: 20,
+                                      text: itemPrice.toString() ,
+                                      size: 40,
                                       fontWeight: FontWeight.w700,
-                                      color: Constants.lighterGray,
-
+                                      color: Constants.tertiary,
                                       height: 1,
                                     ),
-                                  SvgPicture.asset(
-                                    'assets/dollar.svg',
-                                    color: Constants.tertiary,
-                                    width: 15,
-                                  ),
-                                  PrimaryText(
-                                    text: itemPrice.toString() ,
-                                    size: 40,
-                                    fontWeight: FontWeight.w700,
-                                    color: Constants.tertiary,
-                                    height: 1,
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
 
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            const PrimaryText(
-                                text: 'التوصيل في',
-                                fontWeight: FontWeight.w700,
-                                size: 22
-                            ),
-
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              const PrimaryText(
+                                  text: 'التوصيل في',
+                                  fontWeight: FontWeight.w700,
+                                  size: 22
+                              ),
 
 
 
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            const PrimaryText(
-                              text: '30 دقيقة',
-                              color: Constants.secondary,
-                              size: 20,
+
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              const PrimaryText(
+                                text: '30 دقيقة',
+                                color: Constants.secondary,
+                                size: 20,
+                                fontWeight: FontWeight.w500,
+
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      if( itemDescription != null && itemDescription.trim() != ''  )
+                        const PrimaryText(
+                            text: 'الوصف',
+                            fontWeight: FontWeight.w700,
+                            size: 22),
+                      const SizedBox(
+                        height: 10,
+                      ),
+
+
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width ,
+                        height: 100,
+                        child: SingleChildScrollView(
+                          child: Text(
+
+                            itemDescription??'',
+
+                            textDirection: TextDirection.rtl,
+                            textAlign:TextAlign.right ,
+                            style:   const TextStyle(
+
+
+                              color:  Constants.secondary,
+
+                              fontFamily: 'Poppins',
+                              fontSize: 20,
+
                               fontWeight: FontWeight.w500,
+                            ),
 
+                          ),
+                        ),
+                      ),
+                      if(additionsList.isNotEmpty)
+                        const SizedBox(
+                          height: 50,
+                        ),
+                      if(additionsList.isNotEmpty)
+                        const PrimaryText(
+                            text: 'الاضافات',
+                            fontWeight: FontWeight.w700,
+                            size: 22),
+                      // if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+                      // const SizedBox(
+                      //   height: 15,
+                      // ),
+                    ],
+                  ),
+                ),
+
+                if(additionsList.isNotEmpty)
+                  SizedBox(
+                    height: 150,
+
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount:  additionsList.length??0,
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.only(left: index == 0 ? 20 : 0,top: 10,bottom: 20),
+                        child:
+                        additionCard(
+                            imagePath: additionsList[index].image
+                            ,context: context,
+                            cubit: cubit,
+
+                            additionId: additionsList[index].itemId
+                        ),
+                      ),
+                    ),
+                  ),
+
+
+                Card(
+                  child: Column(
+                    children: [
+
+
+
+
+
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children:  [
+                            const Text('جنية',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black87)),
+                            Text((itemPrice * orderCount).toString(),style: const TextStyle(color: Colors.blue),),
+                            const Text('=',style: TextStyle(color: Colors.red),),
+
+                            Text(itemPrice.toString(),style: const TextStyle(color: Colors.blue),),
+
+                            const Text('x',style: TextStyle(color: Colors.red),),
+                            const SizedBox(
+                              width: 5,
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+
+                                Text(cubit.listOrder[index].orderCount.toString()??'',style: const TextStyle(fontWeight: FontWeight.w600,color: Colors.blue),),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                const Text(':العدد ',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
 
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    if( itemDescription != null && itemDescription.trim() != ''  )
-                      const PrimaryText(
-                          text: 'الوصف',
-                          fontWeight: FontWeight.w700,
-                          size: 22),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                      if(HomeCubit.get(context).listOrder[index].additionsList.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0,right: 25,bottom: 8,top: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children:  [
+                              Text('جنية',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black87)),
+                              SizedBox(
+                                width: 5,
+                              ),
 
-
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width ,
-                      height: 100,
-                      child: SingleChildScrollView(
-                        child: Text(
-
-                          itemDescription??'',
-
-                          textDirection: TextDirection.rtl,
-                          textAlign:TextAlign.right ,
-                          style:   const TextStyle(
-
-
-                            color:  Constants.secondary,
-
-                            fontFamily: 'Poppins',
-                            fontSize: 20,
-
-                            fontWeight: FontWeight.w500,
+                              Text(cubit.getTotalAddaitonlPriceForItem(index: index)??'0',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.blue),),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              const Text(': سعر الاضافات',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
+                            ],
                           ),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children:  [
+                            Text('جنية',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black87)),
+                            SizedBox(
+                              width: 5,
+                            ),
 
+                            Text(HomeCubit.get(context).getTotalPriceForItem(index: index)??'0',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.blue),),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            const Text(':الاجمالي',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
+                          ],
                         ),
                       ),
-                    ),
-                    if(additionsList.isNotEmpty)
-                      const SizedBox(
-                        height: 50,
-                      ),
-                    if(additionsList.isNotEmpty)
-                      const PrimaryText(
-                          text: 'الاضافات',
-                          fontWeight: FontWeight.w700,
-                          size: 22),
-                    // if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
-                    // const SizedBox(
-                    //   height: 15,
-                    // ),
-                  ],
-                ),
-              ),
 
-              if(additionsList.isNotEmpty)
-                SizedBox(
-                  height: 150,
-
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount:  additionsList.length??0,
-                    itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.only(left: index == 0 ? 20 : 0,top: 10,bottom: 20),
-                      child:
-                      additionCard(
-                          imagePath: additionsList[index].image
-                          ,context: context,
-                          cubit: cubit,
-
-                          additionId: additionsList[index].itemId
-                      ),
-                    ),
+                    ],
                   ),
                 ),
-              // if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
-              // const SizedBox(
-              //   height: 100,
-              // )
-            ],
+                SizedBox(height: 100,)
+                // if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+                // const SizedBox(
+                //   height: 100,
+                // )
+              ],
+            ),
+          ),
+          bottomSheet: BottomSheet(
+            enableDrag: false,
+
+            onClosing: (){},
+            builder: (context){
+
+              return SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: ()  async {
+
+                    cubit.listOrder.removeWhere((item) => item ==  cubit.listOrder[index]);
+                    cubit.emit(SearchSubCategoryState());
+                    Navigator.pop(context);
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      PrimaryText(
+                        text: 'حذف',
+                        color: Constants.white,
+                        fontWeight: FontWeight.w600,
+                        size: 18,
+                      ),
+                      SizedBox(width: 10,),
+                      Icon(Icons.chevron_right)
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                      textStyle: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold)),
+                ),
+              );
+            },
           ),
         );
       },

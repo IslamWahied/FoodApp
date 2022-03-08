@@ -52,41 +52,78 @@ class FeedFoodDetailScreen extends StatelessWidget {
             iconTheme: const IconThemeData(color: Constants.black),
             title: customAppBar(context: context, title: itemName),
           ),
-          floatingActionButton: ConstrainedBox(
-            constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width - 40),
-            child: ElevatedButton(
-              onPressed: () {
-                cubit.addNewItemToCartFromFeedsScreen(
-                    itemId: cubit.selectedItemId, orderCount: orderCount ?? 1);
-                // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  PrimaryText(
-                    text: 'اضافة الي طلباتي',
-                    fontWeight: FontWeight.w600,
-                    size: 18,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Icon(Icons.chevron_right)
-                ],
+          // floatingActionButton: ConstrainedBox(
+          //   constraints: BoxConstraints(
+          //       minWidth: MediaQuery.of(context).size.width - 40),
+          //   child: ElevatedButton(
+          //     onPressed: () {
+          //       cubit.addNewItemToCartFromFeedsScreen(
+          //           itemId: cubit.selectedItemId, orderCount: orderCount ?? 1);
+          //       // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+          //     },
+          //     child: Row(
+          //       mainAxisSize: MainAxisSize.min,
+          //       children: const [
+          //         PrimaryText(
+          //           text: 'اضافة الي طلباتي',
+          //           fontWeight: FontWeight.w600,
+          //           size: 18,
+          //         ),
+          //         SizedBox(
+          //           width: 10,
+          //         ),
+          //         Icon(Icons.chevron_right)
+          //       ],
+          //     ),
+          //     style: ElevatedButton.styleFrom(
+          //         primary: Constants.primary,
+          //         shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(10.0)),
+          //         padding:
+          //             const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          //         textStyle: const TextStyle(
+          //             fontSize: 30, fontWeight: FontWeight.bold)),
+          //   ),
+          // ),
+          // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          bottomSheet: BottomSheet(
+            enableDrag: false,
+            onClosing: (){},
+            builder: (context){
+              return SizedBox(
+                  width: double.infinity,
+              child:  ElevatedButton(
+                onPressed: () {
+                  cubit.addNewItemToCartFromFeedsScreen(
+                      itemId: cubit.selectedItemId, orderCount: orderCount ?? 1);
+                  // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    PrimaryText(
+                      text: 'اضافة الي طلباتي',
+                      fontWeight: FontWeight.w600,
+                      size: 18,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Icon(Icons.chevron_right)
+                  ],
+                ),
+                style: ElevatedButton.styleFrom(
+                    primary: Constants.primary,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    textStyle: const TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.bold)),
               ),
-              style: ElevatedButton.styleFrom(
-                  primary: Constants.primary,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  textStyle: const TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.bold)),
-            ),
+              );
+            },
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
           body: ListView(
             children: [
               // customAppBar(context),

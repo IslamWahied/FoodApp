@@ -238,6 +238,7 @@ closeOnScroll: false,
                 navigateTo(
                     context,
                     OrderDetailScreen(
+                      orderCount:cubit.listOrder[index].orderCount ,
                       additionsList: cubit.listOrder[index].additionsList??[],
                       isDiscount:cubit.listOrder[index].isDiscount ,
                       oldPrice: cubit.listOrder[index].oldPrice,
@@ -346,7 +347,7 @@ closeOnScroll: false,
                                     children: [
 
                                       PrimaryText(
-                                        text: HomeCubit.get(context).getTotalPriceForItem(index: index)??0,
+                                        text: HomeCubit.get(context).getTotalPriceForItem(index: index)??'0',
                                         size: 20,
                                         fontWeight: FontWeight.w700,
                                         color: Constants.tertiary,

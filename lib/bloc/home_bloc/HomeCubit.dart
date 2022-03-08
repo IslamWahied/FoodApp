@@ -112,7 +112,19 @@ String  getTotalPriceForItem({int index}){
   return price.toString();
 
   }
+  String  getTotalAddaitonlPriceForItem({int index}){
+    double price = 0;
 
+
+    for (var element in listOrder[index].additionsList) {
+      price = price +element.price;
+    }
+
+    price = price * listOrder[index].orderCount;
+    emit(SelectCategoryState());
+    return price.toString();
+
+  }
 
 
 sendOrder(){
