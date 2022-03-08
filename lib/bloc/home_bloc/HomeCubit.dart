@@ -1,12 +1,11 @@
 // @dart=2.9
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/models/category/SupCategory.dart';
 import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/categoryModel.dart';
 import 'package:elomda/models/category/itemModel.dart';
+import 'package:elomda/models/favourit/favouritModel.dart';
 import 'package:elomda/models/order/orderModel.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/category/subCategoryScreen.dart';
@@ -21,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-import '../../models/favourit/favouritModel.dart';
+
 
 class HomeCubit extends Cubit<HomeScreenState> {
   HomeCubit() : super(HomeScreenStateInitState());
@@ -84,52 +83,88 @@ class HomeCubit extends Cubit<HomeScreenState> {
   List<AdditionsModel> listAdditions = [];
 
 
-
-  TextEditingController txtSubCategoryControl = TextEditingController();
-  TextEditingController txtItemControl = TextEditingController();
-  TextEditingController txtFavouriteControl = TextEditingController();
-
-
-  sendOrder(){
+TextEditingController txtSubCategoryControl = TextEditingController();
+TextEditingController txtItemControl = TextEditingController();
+TextEditingController txtFavouriteControl = TextEditingController();
 
 
-
-    var model = OrderModel(
-      createdDate: DateTime.now().toString(),
-          isDeleted: 0,
-      listItemModel: listOrder
-    );
-
-    int OrderId = 1;
-
-    if(listAllOrders.isNotEmpty){
-      OrderId = listAllOrders.length + 1;
-    }
-
-
-    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList').doc().update(model.toJson()).then((value){
-
-
-    }).catchError((onError){
-
-
-
-      FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList').doc().set(model.toJson()).then((value) {
-
-
-
-
-      }).catchError(onError);
-
-
-
+List<OrderModel> listAllOrders = [] ;
+getOrders() async {
+    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList').snapshots().listen((event) {
+      listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
+      // print(listAllOrders.length);
+      emit(SelectCategoryState());
     });
+  }
 
 
-    listOrder = [];
-    emit(SelectCategoryState());
+
+String  getTotalPriceForItem({int index}){
+  double price = 0;
+
+
+  for (var element in listOrder[index].additionsList) {
+    price = price +element.price;
+  }
+  price = price +   listOrder[index].price;
+  price = price * listOrder[index].orderCount;
+  emit(SelectCategoryState());
+  return price.toString();
 
   }
+
+
+
+sendOrder(){
+
+if(listOrder.isNotEmpty){
+  double totalAdditionalPrice = 0;
+  double totalDiscountPrice = 0;
+  double orderPrice = 0;
+  double totalPrice = 0;
+
+
+  for (var element1 in listOrder) {
+    for (var element2 in element1.additionsList) {
+      totalAdditionalPrice = totalAdditionalPrice + element2.price;
+    }
+    totalDiscountPrice = totalDiscountPrice + (element1.price - element1.oldPrice);
+    orderPrice = element1.price;
+    totalPrice =  element1.price + totalDiscountPrice + totalAdditionalPrice;
+
+  }
+  var model = OrderModel(
+    createdDate: DateTime.now().toString(),
+    listItemModel: listOrder,
+    totalAdditionalPrice:totalAdditionalPrice,
+    totalDiscountPrice:totalDiscountPrice,
+    totalPrice:totalPrice,
+    orderPrice: orderPrice,
+
+    isDeleted: 0,
+  );
+  var orderId = 1;
+  if(listAllOrders.isNotEmpty){
+    orderId = listAllOrders.length + 1;
+  }
+
+  FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+  collection('orderList').doc(orderId.toString())
+      .update(model.toJson()).then((value){
+  }).catchError((onError){
+    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+    collection('orderList').doc(orderId.toString())
+        .set(model.toJson()).then((value) {
+    }).catchError(onError);
+  });
+  listOrder = [];
+  emit(SelectCategoryState());
+}
+
+
+
+  }
+
 
 
 
@@ -163,28 +198,28 @@ class HomeCubit extends Cubit<HomeScreenState> {
   }
 
  addNewItemToCartFromItemScreen({itemId,orderCount}){
-    var newlist = listItemsSearch.firstWhere((element) => element.itemId == itemId);
+    var newList = listItemsSearch.firstWhere((element) => element.itemId == itemId);
     var model = ItemModel(
       orderCount:orderCount ,
-      oldPrice:newlist.oldPrice ,
-      itemTitle:newlist.itemTitle ,
-      itemId: newlist.itemId,
-      isPopular: newlist.isPopular,
-      isDiscount:newlist.isDiscount ,
-      isDeleted: newlist.isDeleted,
-      isAvailable: newlist.isAvailable,
-      image:newlist.image ,
-      description:newlist.description ,
-      createdDate:newlist.createdDate ,
-      categoryTitle: newlist.categoryTitle,
-      categoryId:newlist.categoryId ,
+      oldPrice:newList.oldPrice ,
+      itemTitle:newList.itemTitle ,
+      itemId: newList.itemId,
+      isPopular: newList.isPopular,
+      isDiscount:newList.isDiscount ,
+      isDeleted: newList.isDeleted,
+      isAvailable: newList.isAvailable,
+      image:newList.image ,
+      description:newList.description ,
+      createdDate:newList.createdDate ,
+      categoryTitle: newList.categoryTitle,
+      categoryId:newList.categoryId ,
       additionsList: listOfSelectedAdditions.toList(),
-      price:newlist.price ,
-        supCategoryId:newlist.supCategoryId,
+      price:newList.price ,
+        supCategoryId:newList.supCategoryId,
 
-      supCategoryTitle:newlist.supCategoryTitle ,
-      userMobile:newlist.userMobile ,
-      userName: newlist.userName
+      supCategoryTitle:newList.supCategoryTitle ,
+      userMobile:newList.userMobile ,
+      userName: newList.userName
     );
     listOrder.add(model);
     listOfSelectedAdditions = [];
@@ -192,28 +227,27 @@ class HomeCubit extends Cubit<HomeScreenState> {
  }
 
   addNewItemToCartFromHomeScreen({itemId,orderCount}){
-    var newlist = popularFoodList.firstWhere((element) => element.itemId == itemId);
+    var newList = popularFoodList.firstWhere((element) => element.itemId == itemId);
     var model = ItemModel(
         orderCount:orderCount ,
-        oldPrice:newlist.oldPrice ,
-        itemTitle:newlist.itemTitle ,
-        itemId: newlist.itemId,
-        isPopular: newlist.isPopular,
-        isDiscount:newlist.isDiscount ,
-        isDeleted: newlist.isDeleted,
-        isAvailable: newlist.isAvailable,
-        image:newlist.image ,
-        description:newlist.description ,
-        createdDate:newlist.createdDate ,
-        categoryTitle: newlist.categoryTitle,
-        categoryId:newlist.categoryId ,
+        oldPrice:newList.oldPrice ,
+        itemTitle:newList.itemTitle ,
+        itemId: newList.itemId,
+        isPopular: newList.isPopular,
+        isDiscount:newList.isDiscount ,
+        isDeleted: newList.isDeleted,
+        isAvailable: newList.isAvailable,
+        image:newList.image ,
+        description:newList.description ,
+        createdDate:newList.createdDate ,
+        categoryTitle: newList.categoryTitle,
+        categoryId:newList.categoryId ,
         additionsList: listOfSelectedAdditions.toList(),
-        price:newlist.price ,
-        supCategoryId:newlist.supCategoryId,
-
-        supCategoryTitle:newlist.supCategoryTitle ,
-        userMobile:newlist.userMobile ,
-        userName: newlist.userName
+        price:newList.price ,
+        supCategoryId:newList.supCategoryId,
+        supCategoryTitle:newList.supCategoryTitle ,
+        userMobile:newList.userMobile ,
+        userName: newList.userName
     );
     listOrder.add(model);
     listOfSelectedAdditions = [];
@@ -221,28 +255,28 @@ class HomeCubit extends Cubit<HomeScreenState> {
   }
 
   addNewItemToCartFromFeedsScreen({itemId,orderCount}){
-    var newlist = listFeedsSearch.firstWhere((element) => element.itemId == itemId);
+    var newList = listFeedsSearch.firstWhere((element) => element.itemId == itemId);
     var model = ItemModel(
         orderCount:orderCount ,
-        oldPrice:newlist.oldPrice ,
-        itemTitle:newlist.itemTitle ,
-        itemId: newlist.itemId,
-        isPopular: newlist.isPopular,
-        isDiscount:newlist.isDiscount ,
-        isDeleted: newlist.isDeleted,
-        isAvailable: newlist.isAvailable,
-        image:newlist.image ,
-        description:newlist.description ,
-        createdDate:newlist.createdDate ,
-        categoryTitle: newlist.categoryTitle,
-        categoryId:newlist.categoryId ,
+        oldPrice:newList.oldPrice ,
+        itemTitle:newList.itemTitle ,
+        itemId: newList.itemId,
+        isPopular: newList.isPopular,
+        isDiscount:newList.isDiscount ,
+        isDeleted: newList.isDeleted,
+        isAvailable: newList.isAvailable,
+        image:newList.image ,
+        description:newList.description ,
+        createdDate:newList.createdDate ,
+        categoryTitle: newList.categoryTitle,
+        categoryId:newList.categoryId ,
         additionsList: listOfSelectedAdditions.toList(),
-        price:newlist.price ,
-        supCategoryId:newlist.supCategoryId,
+        price:newList.price ,
+        supCategoryId:newList.supCategoryId,
 
-        supCategoryTitle:newlist.supCategoryTitle ,
-        userMobile:newlist.userMobile ,
-        userName: newlist.userName
+        supCategoryTitle:newList.supCategoryTitle ,
+        userMobile:newList.userMobile ,
+        userName: newList.userName
     );
 
     listOrder.add(model);
@@ -261,14 +295,6 @@ class HomeCubit extends Cubit<HomeScreenState> {
   });
   }
 
-List<OrderModel> listAllOrders = [] ;
-  getOrders() async {
-    FirebaseFirestore.instance.collection('Order').doc(Global.mobile).collection('orderList').snapshots().listen((event) {
-      listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
-
-      emit(SelectCategoryState());
-    });
-  }
 
 
   getSubCategory() async {
@@ -322,7 +348,7 @@ List<OrderModel> listAllOrders = [] ;
         UesrMobile: Global.mobile
     );
 
-    print(model);
+
 
     FirebaseFirestore.instance.collection('Favourite').doc(Global.mobile).collection('ItemModel').doc(itemId.toString()).update(model.toMap()).then((value){
 
@@ -331,9 +357,10 @@ List<OrderModel> listAllOrders = [] ;
 
 
 
-      FirebaseFirestore.instance.collection('Favourite').doc(Global.mobile).collection('ItemModel').doc(itemId.toString()).set(model.toMap()).then((value) {
+      FirebaseFirestore.instance.collection('Favourite')
+          .doc(Global.mobile).collection('ItemModel').doc(itemId.toString()).set(model.toMap()).then((value) {
 
-        print('inserted');
+
 
 
       }).catchError(onError);
@@ -393,7 +420,8 @@ selectedItemId = 0;
   searchInSupCategory(String value){
   
     if(value.trim() != ''){
-      listSubCategorySearch = listSubCategory.where((element) =>   element.categoryId == selectedCategoryId   && element.subCategoryTitle.toLowerCase().contains(value.toLowerCase())).toList();
+      listSubCategorySearch = listSubCategory.where((element) =>   element.categoryId == selectedCategoryId   &&
+          element.subCategoryTitle.toLowerCase().contains(value.toLowerCase())).toList();
     }
     else{
       listSubCategorySearch = listSubCategory.where((element) => element.categoryId == selectedCategoryId).toList();
@@ -403,7 +431,8 @@ selectedItemId = 0;
   }
   searchInItems(String value){
     if(value.trim() != ''){
-      listItemsSearch = listItems.where((element) =>   element.supCategoryId == selectedSubCategoryId  && element.itemTitle.toLowerCase().contains(value.toLowerCase())).toList();
+      listItemsSearch = listItems.where((element) =>   element.supCategoryId == selectedSubCategoryId  &&
+          element.itemTitle.toLowerCase().contains(value.toLowerCase())).toList();
     }
     else{
       listItemsSearch = listItems.where((element) => element.supCategoryId == selectedSubCategoryId).toList();

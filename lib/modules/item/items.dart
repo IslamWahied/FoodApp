@@ -277,7 +277,7 @@ Widget itemCard({bool isFavourite,int itemId,String imagePath,String subCategory
                               GestureDetector(
                                 onTap: () {
                                   setState((){
-                                    if(value != 0 )
+                                    if(value != 1 )
                                     {
                                       value = value - 1;
                                     }

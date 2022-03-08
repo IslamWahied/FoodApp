@@ -3,14 +3,10 @@ import 'package:backdrop/backdrop.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/feeds/FeedFoodDetail.dart';
-
 import 'package:elomda/modules/home/backlayer.dart';
-import 'package:elomda/modules/product_details/foodDetail.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -205,7 +201,8 @@ class HomeScreen extends StatelessWidget {
         isFavourite
       }) {
     int value = 1;
-    return StatefulBuilder(builder: (context, setState) {
+    return StatefulBuilder(
+        builder: (context, setState) {
       return Padding(
         padding: const EdgeInsets.all(10.0),
         child: GestureDetector(
@@ -223,32 +220,14 @@ class HomeScreen extends StatelessWidget {
                 FeedFoodDetailScreen(
                   index: index,
                   orderCount: value,
-                  oldPrice:HomeCubit.get(context)
-                      .listFeedsSearch[index].oldPrice ,
-                  isDiscount: HomeCubit.get(context)
-                      .listFeedsSearch[index].isDiscount,
-                  imagePath: HomeCubit.get(context)
-                      .listFeedsSearch
-                      .firstWhere((element) => element.itemId == itemId)
-                      .image,
-                  subCategoryTitle: HomeCubit.get(context)
-                      .listFeedsSearch
-                      .firstWhere((element) => element.itemId == itemId)
-                      .supCategoryTitle,
-                  itemName: HomeCubit.get(context)
-                      .listFeedsSearch
-                      .firstWhere((element) => element.itemId == itemId)
-                      .itemTitle,
-                  itemDescription: HomeCubit.get(context)
-                          .listFeedsSearch
-                          .firstWhere((element) => element.itemId == itemId)
-                          .description ??
-                      '',
-
-                  itemPrice: HomeCubit.get(context)
-                      .listFeedsSearch
-                      .firstWhere((element) => element.itemId == itemId)
-                      .price,
+                  oldPrice:HomeCubit.get(context).listFeedsSearch[index].oldPrice ,
+                  isDiscount: HomeCubit.get(context).listFeedsSearch[index].isDiscount,
+                  imagePath: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).image,
+                  subCategoryTitle: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).supCategoryTitle,
+                  itemName: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).itemTitle,
+                  itemDescription: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).description ?? '',
+                  itemPrice: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).price,
+                  itemId:HomeCubit.get(context).listFeedsSearch[index].itemId,
                 ));
           },
           child: Container(
@@ -371,7 +350,7 @@ class HomeScreen extends StatelessWidget {
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          if (value != 0) {
+                                          if (value != 1) {
                                             value = value - 1;
                                           }
                                         });

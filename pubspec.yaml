@@ -62,6 +62,7 @@ dependencies:
   badges: ^2.0.2
   cart_stepper: ^2.0.2
   firebase_messaging: ^11.2.8
+  flutter_slidable: ^1.2.0
 
 
 dev_dependencies:

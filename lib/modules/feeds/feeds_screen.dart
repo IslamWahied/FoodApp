@@ -287,7 +287,7 @@ itemId:HomeCubit.get(context)
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    if (value != 0) {
+                                    if (value != 1) {
                                       value = value - 1;
                                     }
                                   });
