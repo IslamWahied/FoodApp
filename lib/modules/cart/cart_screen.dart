@@ -47,7 +47,7 @@ class OrderScreen extends StatelessWidget {
                       minWidth: MediaQuery.of(context).size.width - 40),
                   child: ElevatedButton(
                     onPressed: () {
-                      // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+                       cubit.sendOrder();
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

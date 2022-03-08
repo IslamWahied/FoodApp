@@ -13,6 +13,7 @@ import 'package:flutter_svg/svg.dart';
 class FeedFoodDetailScreen extends StatelessWidget {
   final String imagePath;
   final String itemName;
+  final int itemId;
   final String subCategoryTitle;
   final  String itemDescription ;
   final double itemPrice;
@@ -22,7 +23,7 @@ class FeedFoodDetailScreen extends StatelessWidget {
   final bool isDiscount;
 
 
-  const  FeedFoodDetailScreen({this.orderCount,this.isDiscount,this.oldPrice,this.index,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
+  const  FeedFoodDetailScreen({this.itemId,this.orderCount,this.isDiscount,this.oldPrice,this.index,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -207,11 +208,11 @@ class FeedFoodDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if(cubit.listFeedsSearch[index].additionsList.isNotEmpty)
+                    if(cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
                       const SizedBox(
                         height: 50,
                       ),
-                    if(cubit.listFeedsSearch[index].additionsList.isNotEmpty)
+                    if(cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
                       const PrimaryText(
                           text: 'الاضافات',
                           fontWeight: FontWeight.w700,
@@ -224,22 +225,22 @@ class FeedFoodDetailScreen extends StatelessWidget {
                 ),
               ),
 
-              if(cubit.listFeedsSearch[index].additionsList.isNotEmpty)
+              if(cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
                 SizedBox(
                   height: 150,
 
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: cubit.listFeedsSearch[index].additionsList.length??0,
+                    itemCount: cubit.listFeedsSearch.firstWhere((element) => element.itemId == itemId).additionsList.length??0,
                     itemBuilder: (context, index) => Padding(
                       padding: EdgeInsets.only(left: index == 0 ? 20 : 0,top: 10,bottom: 20),
                       child:
                       additionCard(
-                          imagePath: cubit.listFeedsSearch[this.index].additionsList[index].image
+                          imagePath: cubit.listFeedsSearch.firstWhere((element) => element.itemId == itemId).additionsList[index].image
                           ,context: context,
                           cubit: cubit,
 
-                          additionId:cubit.listFeedsSearch[this.index].additionsList[index].itemId
+                          additionId:cubit.listFeedsSearch.firstWhere((element) => element.itemId == itemId).additionsList[index].itemId
                       ),
                     ),
                   ),

@@ -44,7 +44,7 @@ Future<void> main() async {
     isUserLogin = true;
     Global.mobile = mobile;
     Global.userName = userName;
-     Global.departmentId = departmentId;
+     // Global.departmentId = departmentId;
 
   }
   else{
@@ -57,8 +57,9 @@ Future<void> main() async {
     showOnBoarding = true;
   }
 
-//   String token = await FirebaseMessaging.instance.getToken();
-// print(token);
+  String token = await FirebaseMessaging.instance.getToken();
+
+   Global.fireBaseToken = token??'';
 
     runApp(MyApp(userName: userName,mobile: mobile , departmentId: departmentId ,showOnBoarding: showOnBoarding,isUserLogin: isUserLogin,));
 
@@ -95,8 +96,6 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => UploadProducts()),
           BlocProvider(create: (context) => HomeLayoutCubit()),
           BlocProvider(create: (context) => HomeCubit()),
-          // BlocProvider(create: (context) => HomeCubit()..getUserFavourit()),
-          // BlocProvider(create: (context) => SocialCubit()),
         ],
         child: MaterialApp(
           theme: Constants.lightTheme,
@@ -105,7 +104,7 @@ class MyApp extends StatelessWidget {
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
           home:  const HomeLayout(),
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-       //   home:const LoginScreen(),
+        //    home:const LoginScreen(),
           // home:VerifiedScreen(),
        //  home:const RegisterScreen(),
         ));

@@ -112,6 +112,7 @@ class ItemsScreen extends StatelessWidget {
                           scrollDirection: Axis.vertical,
                           itemCount: cubit.listItemsSearch.length??0,
                           itemBuilder: (context, index) => itemCard(
+                            isFavourite:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == cubit.listItemsSearch[index].itemId && element.isFavourit)?true:false ,
                             itemId:cubit.listItemsSearch[index].itemId ,
                               itemPrice:cubit.listItemsSearch[index].price ,
                             subCategoryTitle: cubit.listItemsSearch[index].supCategoryTitle,
@@ -135,7 +136,7 @@ class ItemsScreen extends StatelessWidget {
         });
   }
 }
-Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double itemPrice ,String name, String itemDescription, String star, context,double itemsPrice}) {
+Widget itemCard({bool isFavourite,int itemId,String imagePath,String subCategoryTitle,double itemPrice ,String name, String itemDescription, String star, context,double itemsPrice}) {
   int value = 1;
   return StatefulBuilder(
       builder: (context, setState) {
@@ -177,17 +178,23 @@ Widget itemCard({int itemId,String imagePath,String subCategoryTitle,double item
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 25, left: 20),
+                      padding: const EdgeInsets.only(top: 20, left: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children:  [
-                              const Icon(
-                                Icons.star,
-                                color: Constants.primary,
-                                size: 20,
-                              ),
+                              GestureDetector(
+                                  onTap: (){
+                                    HomeCubit.get(context).changeItemFavouriteState(itemId:itemId,isFavourite:isFavourite);
+                                  },
+                                  child: isFavourite?  const Icon(Icons.favorite,color: Colors.red,size: 25,) :const Icon(Icons.favorite_border,size: 25)),
+
+                              // const Icon(
+                              //   Icons.star,
+                              //   color: Constants.primary,
+                              //   size: 20,
+                              // ),
                               const SizedBox(width: 10),
                               SizedBox(
                                 // width: MediaQuery.of(context).size.width / 2.2,

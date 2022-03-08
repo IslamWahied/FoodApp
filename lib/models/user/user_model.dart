@@ -7,6 +7,7 @@ class UserModel
   int departmentId;
   String mobile;
   String userName;
+  String fireBaseToken;
 
 
   UserModel({
@@ -16,6 +17,7 @@ class UserModel
 
     this.mobile,
     this.userName,
+    this.fireBaseToken,
   });
 
   UserModel.fromJson(Map<String, dynamic> json)
@@ -26,6 +28,7 @@ class UserModel
 
     mobile = json['mobile'];
     userName = json['userName'];
+    fireBaseToken = json['fireBaseToken']??'';
   }
 
   Map<String, dynamic> toMap()
@@ -36,6 +39,7 @@ class UserModel
       'isAdmin':isAdmin,
 
       'mobile':mobile,
+      'fireBaseToken':fireBaseToken??'',
       'userName':userName,
     };
   }

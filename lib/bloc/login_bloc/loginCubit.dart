@@ -98,8 +98,8 @@ class LoginCubit extends Cubit<LoginState> {
       final authCredential = await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
       if(authCredential.user != null){
        await  CachHelper.SetData( key: 'mobile',value: textMobileControl.text);
-     //  navigatTo(context, const RegisterScreen());
-       navigatTo(context, const HomeScreen());
+        navigatTo(context, const RegisterScreen());
+       // navigatTo(context, const HomeScreen());
       }
     } on FirebaseAuthException catch (e) {
 
@@ -153,10 +153,11 @@ class LoginCubit extends Cubit<LoginState> {
    bool  registerValid  = false;
   changeRegisterValidState()
   {
-    if(txtRegisterUserNameControl.text.trim() != '' && txtRegisterUserNameControl.text !=  null
-     &&
-
-    departmentId != 0 && departmentId != null
+    if(txtRegisterUserNameControl.text.trim() != ''
+    //     && txtRegisterUserNameControl.text !=  null
+    //  &&
+    //
+    // departmentId != 0 && departmentId != null
 
     )
     {
@@ -188,16 +189,18 @@ class LoginCubit extends Cubit<LoginState> {
 
    await CachHelper.SetData(key: 'mobile', value: Global.mobile);
    await CachHelper.SetData(key: 'userName', value: Global.userName);
-   await CachHelper.SetData(key: 'departmentId', value: Global.departmentId);
+   // await CachHelper.SetData(key: 'departmentId', value: Global.departmentId);
    await CachHelper.SetData(key: 'showOnBoarding', value: false);
    await CachHelper.SetData(key: 'isUserLogin', value: true);
+
 
    UserModel model =  UserModel(
      image: '',
      isAdmin: false,
-     departmentId:departmentId ,
+     departmentId:departmentId??1 ,
      mobile: Global.mobile,
      userName: Global.userName,
+     fireBaseToken: Global.fireBaseToken,
    );
 
 

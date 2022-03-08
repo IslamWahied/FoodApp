@@ -117,6 +117,7 @@ class HomeScreen extends StatelessWidget {
                             cubit.popularFoodList.length,
                             (index) => itemCard(
                               index: index,
+                              isFavourite:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == cubit.popularFoodList[index].itemId && element.isFavourit)?true:false,
                               itemId: cubit.popularFoodList[index].itemId,
                               context: context,
                               imagePath: cubit.popularFoodList[index].image,
@@ -200,7 +201,9 @@ class HomeScreen extends StatelessWidget {
         int index,
       String itemDescription,
       String star,
-      context}) {
+      context,
+        isFavourite
+      }) {
     int value = 1;
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
@@ -267,17 +270,24 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 25, left: 20),
+                      padding: const EdgeInsets.only(top: 20, left: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              const Icon(
-                                Icons.star,
-                                color: Constants.primary,
-                                size: 20,
-                              ),
+                              // const Icon(
+                              //   Icons.star,
+                              //   color: Constants.primary,
+                              //   size: 20,
+                              // ),
+                              GestureDetector(
+                                onTap: (){
+                                  HomeCubit.get(context).changeItemFavouriteState(itemId:itemId,isFavourite:isFavourite);
+                                },
+                                child: isFavourite?  const Icon(Icons.favorite,color: Colors.red,size: 25,) :const Icon(Icons.favorite_border,size: 25)),
+
+
                               const SizedBox(width: 10),
                               SizedBox(
                                 // width: MediaQuery.of(context).size.width / 2.2,
@@ -287,9 +297,7 @@ class HomeScreen extends StatelessWidget {
                                     size: 22,
                                     fontWeight: FontWeight.w700),
                               ),
-                              IconButton(onPressed: (){
-                                HomeCubit.get(context).addFavorite(itemId:itemId);
-                              }, icon: Icon(Icons.favorite_border))
+
                             ],
                           ),
                           const SizedBox(height: 15),

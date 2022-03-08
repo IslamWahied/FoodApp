@@ -1,15 +1,14 @@
 // @dart=2.9
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
-import 'package:elomda/bloc/Upload_products/upload_products_state.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/models/category/SupCategory.dart';
 import 'package:elomda/models/category/additionsModel.dart';
-
 import 'package:elomda/models/category/categoryModel.dart';
 import 'package:elomda/models/category/itemModel.dart';
+import 'package:elomda/models/order/orderModel.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
-
 import 'package:elomda/modules/category/subCategoryScreen.dart';
 import 'package:elomda/modules/feeds/feeds_screen.dart';
 import 'package:elomda/modules/home/home_screen.dart';
@@ -19,9 +18,10 @@ import 'package:elomda/modules/user_info/user_info_screen.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import '../../models/favourit/favouritModel.dart';
 
 class HomeCubit extends Cubit<HomeScreenState> {
   HomeCubit() : super(HomeScreenStateInitState());
@@ -30,7 +30,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
   int currentIndex = 0;
   List screens = [
     const HomeScreen(),
-    const FeedScreen(),
+     const FavouriteScreen(),
     SearchScreen(),
     const OrderScreen(isShowNavBar: false),
     UserInfoScreen()
@@ -87,7 +87,54 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   TextEditingController txtSubCategoryControl = TextEditingController();
   TextEditingController txtItemControl = TextEditingController();
-  TextEditingController txtFeedControl = TextEditingController();
+  TextEditingController txtFavouriteControl = TextEditingController();
+
+
+  sendOrder(){
+
+
+
+    var model = OrderModel(
+      createdDate: DateTime.now().toString(),
+          isDeleted: 0,
+      listItemModel: listOrder
+    );
+
+    int OrderId = 1;
+
+    if(listAllOrders.isNotEmpty){
+      OrderId = listAllOrders.length + 1;
+    }
+
+
+    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList').doc().update(model.toJson()).then((value){
+
+
+    }).catchError((onError){
+
+
+
+      FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList').doc().set(model.toJson()).then((value) {
+
+
+
+
+      }).catchError(onError);
+
+
+
+    });
+
+
+    listOrder = [];
+    emit(SelectCategoryState());
+
+  }
+
+
+
+
+
 
   getTotalPrice(){
   double orderPrice = 0;
@@ -214,6 +261,15 @@ class HomeCubit extends Cubit<HomeScreenState> {
   });
   }
 
+List<OrderModel> listAllOrders = [] ;
+  getOrders() async {
+    FirebaseFirestore.instance.collection('Order').doc(Global.mobile).collection('orderList').snapshots().listen((event) {
+      listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
+
+      emit(SelectCategoryState());
+    });
+  }
+
 
   getSubCategory() async {
     FirebaseFirestore.instance.collection('SubCategory').snapshots().listen((event) {
@@ -223,6 +279,15 @@ class HomeCubit extends Cubit<HomeScreenState> {
       emit(SelectCategoryState());
     });
   }
+
+  getFavourite() async {
+    FirebaseFirestore.instance.collection('Favourite').doc(Global.mobile).collection('ItemModel').snapshots().listen((event) {
+      listFavourite = event.docs.map((x) => FavouritModel.fromJson(x.data())).toList();
+
+      emit(SelectCategoryState());
+    });
+  }
+
 
 
 
@@ -245,19 +310,44 @@ class HomeCubit extends Cubit<HomeScreenState> {
     });
   }
 
-  addFavorite({int itemId}){
-    // FirebaseFirestore.instance.collection('favorite').doc(Global.mobile).set(model.toMap()).then((value) {
-    //
-    //
-    //
-    // }).catchError((e){
-    //   if (kDebugMode) {
-    //     print(e);
-    //   }
-    // });
+
+  List<FavouritModel> listFavourite;
+  changeItemFavouriteState({bool isFavourite = false, int itemId})
+  {
+
+
+    FavouritModel model =  FavouritModel(
+        isFavourit: !isFavourite,
+        ItemId: itemId,
+        UesrMobile: Global.mobile
+    );
+
+    print(model);
+
+    FirebaseFirestore.instance.collection('Favourite').doc(Global.mobile).collection('ItemModel').doc(itemId.toString()).update(model.toMap()).then((value){
+
+
+    }).catchError((onError){
+
+
+
+      FirebaseFirestore.instance.collection('Favourite').doc(Global.mobile).collection('ItemModel').doc(itemId.toString()).set(model.toMap()).then((value) {
+
+        print('inserted');
+
+
+      }).catchError(onError);
+
+
+
+    });
+
+
 
 
   }
+
+
 
   selectCategory(categoryId,context) async {
 selectedSubCategoryId = 0;

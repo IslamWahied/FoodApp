@@ -12,8 +12,8 @@ import 'package:flutter_svg/svg.dart';
 
 import 'FeedFoodDetail.dart';
 
-class FeedScreen extends StatelessWidget {
-  const FeedScreen({Key key}) : super(key: key);
+class FavouriteScreen extends StatelessWidget {
+  const FavouriteScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,74 +24,78 @@ class FeedScreen extends StatelessWidget {
           return SafeArea(
             child: Scaffold(
               backgroundColor: Constants.white,
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 15),
-                    child: Badge(
-                        badgeContent: Text(
-                          cubit.listOrder.length.toString() ?? '0',
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 11),
+              body: Visibility(
+                visible:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) ,
+                replacement: const Center(child: Text('No Favourite Data')),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20, top: 15),
+                      child: Badge(
+                          badgeContent: Text(
+                            cubit.listOrder.length.toString() ?? '0',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 11),
+                          ),
+                          child:
+                              Image.asset('assets/shoppingcart.png', width: 30)),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 20),
+                        const Icon(
+                          Icons.search,
+                          color: AppColors.secondary,
+                          size: 25,
                         ),
-                        child:
-                            Image.asset('assets/shoppingcart.png', width: 30)),
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(width: 20),
-                      const Icon(
-                        Icons.search,
-                        color: AppColors.secondary,
-                        size: 25,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                          child: TextField(
-                        controller: cubit.txtFeedControl,
-                        onChanged: (String value) {
-                          cubit.searchInFeeds(value);
-                        },
-                        decoration: const InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 2, color: AppColors.lighterGray)),
-                          hintText: 'Search..',
-                          hintStyle: TextStyle(
-                              color: AppColors.lightGray,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            child: TextField(
+                          controller: cubit.txtFavouriteControl,
+                          onChanged: (String value) {
+                            cubit.searchInFeeds(value);
+                          },
+                          decoration: const InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 2, color: AppColors.lighterGray)),
+                            hintText: 'Search..',
+                            hintStyle: TextStyle(
+                                color: AppColors.lightGray,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        )),
+                        const SizedBox(width: 20),
+                      ],
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount:cubit.listFavourite.isNotEmpty && cubit.listItems.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) &&cubit.listFavourite != [] ?cubit.listFavourite.where((element) => element.isFavourit).length:0  ,
+                          itemBuilder: (context, index) => itemCard(
+                            isFavourite:cubit.listFavourite[index].isFavourit ,
+                              itemId: cubit.listFavourite[index].ItemId,
+                              itemPrice:cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).price,
+                              subCategoryTitle:
+                              cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).supCategoryTitle,
+                              name:cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).itemTitle,
+                              context: context,
+                              imagePath: cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).image,
+                              itemsPrice:cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).price,
+                              star: '',
+                              itemDescription: cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).description ?? ''),
                         ),
-                      )),
-                      const SizedBox(width: 20),
-                    ],
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: cubit.listFeedsSearch.length ?? 0,
-                        itemBuilder: (context, index) => itemCard(
-                            itemId: cubit.listFeedsSearch[index].itemId,
-                            itemPrice: cubit.listFeedsSearch[index].price,
-                            subCategoryTitle:
-                                cubit.listFeedsSearch[index].supCategoryTitle,
-                            name: cubit.listFeedsSearch[index].itemTitle,
-                            context: context,
-                            imagePath: cubit.listFeedsSearch[index].image,
-                            itemsPrice: cubit.listFeedsSearch[index].price,
-                            star: '',
-                            itemDescription:
-                                cubit.listFeedsSearch[index].description ?? ''),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
@@ -107,6 +111,7 @@ Widget itemCard(
     String name,
     String itemDescription,
     String star,
+      bool isFavourite,
     context,
     double itemsPrice}) {
   int value = 1;
@@ -115,38 +120,48 @@ Widget itemCard(
       onTap: () {
         HomeCubit.get(context).selectedItemId = itemId;
         HomeCubit.get(context).selectedCategoryId = HomeCubit.get(context)
-            .listFeedsSearch
-            .firstWhere((element) => element.itemId == itemId)
-            .categoryId;
+        .listItems.firstWhere((element) => element.itemId == HomeCubit.get(context).listFavourite.firstWhere((element) => element.ItemId == itemId).ItemId).categoryId;
         HomeCubit.get(context).selectedSubCategoryId = HomeCubit.get(context)
-            .listFeedsSearch
-            .firstWhere((element) => element.itemId == itemId)
+            .listItems.firstWhere((element) => element.itemId == HomeCubit.get(context).listFavourite.firstWhere((element) => element.ItemId == itemId).ItemId)
             .supCategoryId;
 
         navigateTo(
             context,
             FeedFoodDetailScreen(
+              isDiscount: HomeCubit.get(context)
+                  .listItems
+                  .firstWhere((element) => element.itemId == itemId).isDiscount??false,
+itemId:HomeCubit.get(context)
+    .listItems
+    .firstWhere((element) => element.itemId == itemId)
+    .itemId ,
               imagePath: HomeCubit.get(context)
-                  .listFeedsSearch
+                  .listItems
                   .firstWhere((element) => element.itemId == itemId)
                   .image,
               subCategoryTitle: HomeCubit.get(context)
-                  .listFeedsSearch
+                  .listItems
                   .firstWhere((element) => element.itemId == itemId)
                   .supCategoryTitle,
               itemName: HomeCubit.get(context)
-                  .listFeedsSearch
+                  .listItems
                   .firstWhere((element) => element.itemId == itemId)
                   .itemTitle,
-              itemDescription: HomeCubit.get(context)
-                      .listFeedsSearch
-                      .firstWhere((element) => element.itemId == itemId)
+              itemDescription:  HomeCubit.get(context)
+                  .listItems
+                  .firstWhere((element) => element.itemId == itemId)
                       .description ??
                   '',
-              itemPrice: HomeCubit.get(context)
-                  .listFeedsSearch
+              itemPrice:  HomeCubit.get(context)
+                  .listItems
                   .firstWhere((element) => element.itemId == itemId)
                   .price,
+              oldPrice:  HomeCubit.get(context)
+                .listItems
+                .firstWhere((element) => element.itemId == itemId)
+                .oldPrice,
+              orderCount: value??1,
+
             ));
       },
       child: Container(
@@ -167,18 +182,26 @@ Widget itemCard(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 25, left: 20),
+                  padding: const EdgeInsets.only(top: 20, left: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          const Icon(
-                            Icons.star,
-                            color: Constants.primary,
-                            size: 20,
+                          // const Icon(
+                          //   Icons.star,
+                          //   color: Constants.primary,
+                          //   size: 20,
+                          // ),
+                          // const SizedBox(width: 10),
+                          GestureDetector(
+                              onTap: (){
+                                HomeCubit.get(context).changeItemFavouriteState(itemId:itemId,isFavourite:isFavourite);
+                              },
+                              child: isFavourite?  const Icon(Icons.favorite,color: Colors.red,size: 25,) :const Icon(Icons.favorite_border,size: 25)),
+                          const SizedBox(
+                            width: 5,
                           ),
-                          const SizedBox(width: 10),
                           SizedBox(
                             // width: MediaQuery.of(context).size.width / 2.2,
                             height: 33,
@@ -228,10 +251,10 @@ Widget itemCard(
                           children: [
 
 
-                            if(HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).isDiscount)
+                            if(HomeCubit.get(context).listItems.firstWhere((element) => element.itemId == itemId).isDiscount)
                               PrimaryText(
                                 isDiscount: true,
-                                text: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).oldPrice.toString(),
+                                text: HomeCubit.get(context).listItems.firstWhere((element) => element.itemId == itemId).oldPrice.toString(),
                                 size: 20,
                                 fontWeight: FontWeight.w700,
                                 color: Constants.lighterGray,

@@ -25,6 +25,7 @@ class ItemModel {
   bool isAvailable;
   bool isPopular;
   bool isDiscount;
+  bool isFavourite;
 
 
 
@@ -50,6 +51,7 @@ class ItemModel {
     this.isPopular,
     this.isDiscount,
     this.oldPrice,
+    this.isFavourite,
   });
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
@@ -77,6 +79,7 @@ class ItemModel {
         isAvailable : json['isAvailable']??true,
         isPopular : json['isPopular']??false,
         isDiscount : json['isDiscount']??false,
+        isFavourite : json['isFavourite']??false,
         oldPrice : json['oldPrice']??0,
 
 
@@ -105,6 +108,7 @@ class ItemModel {
       'oldPrice':oldPrice??0,
       'isAvailable':isAvailable??true,
       'isPopular':isPopular??false,
+      'isFavourite':isFavourite??false,
       'isDiscount':isDiscount??false,
 
 

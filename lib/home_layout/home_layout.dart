@@ -20,6 +20,8 @@ class HomeLayout extends StatelessWidget {
           HomeCubit.get(context).getSubCategory();
           HomeCubit.get(context).getItems();
           HomeCubit.get(context).getAdditions();
+          HomeCubit.get(context).getFavourite();
+          HomeCubit.get(context).getOrders();
 
           return BlocConsumer<HomeCubit, HomeScreenState>(
             listener: (BuildContext context, HomeScreenState state) {},
