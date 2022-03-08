@@ -53,12 +53,12 @@ class HomeLayout extends StatelessWidget {
                         unselectedItemColor: Colors.grey,
                         selectedItemColor: Colors.deepOrange,
                         currentIndex: cubit.currentIndex,
-                        items:  [
+                        items: [
                           const BottomNavigationBarItem(
                             icon: Icon(Icons.home),
                             label: 'Home',
                           ),
-                           const BottomNavigationBarItem(
+                          const BottomNavigationBarItem(
                             icon: Icon(Icons.favorite),
                             label: 'Favorite',
                           ),
@@ -69,8 +69,19 @@ class HomeLayout extends StatelessWidget {
                           ),
                           BottomNavigationBarItem(
                             icon: Badge(
-                              showBadge:HomeCubit.get(context).listOrder.isNotEmpty && HomeCubit.get(context).listOrder.length != null ,
-                              badgeContent: Text(HomeCubit.get(context).listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
+                              showBadge: HomeCubit
+                                  .get(context)
+                                  .listOrder
+                                  .isNotEmpty && HomeCubit
+                                  .get(context)
+                                  .listOrder
+                                  .length != null,
+                              badgeContent: Text(HomeCubit
+                                  .get(context)
+                                  .listOrder
+                                  .length
+                                  .toString() ?? '0', style: const TextStyle(
+                                  color: Colors.white, fontSize: 11),),
                               child: const Icon(
                                 Icons.shopping_bag,
                               ),

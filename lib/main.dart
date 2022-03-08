@@ -1,18 +1,22 @@
 // @dart=2.9
+// ignore_for_file: must_be_immutable
+
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
-import 'package:elomda/bloc/home_layout_bloc/cubit.dart';
+
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:elomda/shared/network/Dio_Helper/Dio_Helper.dart';
 import 'package:elomda/shared/network/local/shared_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import 'bloc/login_bloc/loginCubit.dart';
-import 'modules/login/login_screen.dart';
+
 import 'shared/Global.dart';
 
 //  https://flutterawesome.com/an-awesome-flutter-food-delivery-app-ui/
@@ -72,14 +76,14 @@ class MyApp extends StatelessWidget {
   String departmentId;
   bool isUserLogin;
   bool showOnBoarding;
-  MyApp({
+  MyApp({Key key,
     this.userName,
     this.mobile,
     this.departmentId,
     this.showOnBoarding,
     this.isUserLogin,
 
-});
+}) : super(key: key);
 
 
   // This widget is the root of your application.
@@ -94,7 +98,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => LoginCubit()),
           BlocProvider(create: (context) => UploadProducts()),
-          BlocProvider(create: (context) => HomeLayoutCubit()),
+
           BlocProvider(create: (context) => HomeCubit()),
         ],
         child: MaterialApp(

@@ -151,6 +151,67 @@ class OrderScreen extends StatelessWidget {
   }
 }
 
+Widget checkoutSection(context, double total) {
+  return Container(
+    decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: Colors.grey, width: 0.5))),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          const SizedBox(width: 5,),
+
+          Text(
+            'US \$${total.toStringAsFixed(3)}',
+            //${HomeLayoutCubit.get(context).totalAmount},
+            //textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Colors.blue, fontSize: 20, fontWeight: FontWeight.w500),
+          ),
+
+          const Text(
+            ' :الاجمالي ',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+       const SizedBox(width: 20,),
+          Expanded(
+            flex: 2,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.deepOrange
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    HomeCubit.get(context).sendOrder();
+                  },
+                  borderRadius: BorderRadius.circular(30),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'تاكيد الطلب',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 Widget itemCard(
     {
       int itemId,

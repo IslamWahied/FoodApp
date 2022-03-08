@@ -29,10 +29,10 @@ class HomeCubit extends Cubit<HomeScreenState> {
   int currentIndex = 0;
   List screens = [
     const HomeScreen(),
-     const FavouriteScreen(),
+    const FavouriteScreen(),
     SearchScreen(),
     const OrderScreen(isShowNavBar: false),
-    UserInfoScreen()
+    User_Info()
   ];
 
   void changeCurrentIndex(int value) {
@@ -49,7 +49,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
   int selectedCategoryId = 0;
   int selectedSubCategoryId = 0;
   int selectedItemId = 0;
-  List  foodCategoryList = [
+  List foodCategoryList = [
     {
       'imagePath': 'assets/pizza.svg',
       'name': 'Pizza',
@@ -70,7 +70,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   List<Category> listCategory = [];
 
-   List<SubCategory> listSubCategory = [];
+  List<SubCategory> listSubCategory = [];
   List<SubCategory> listSubCategorySearch = [];
 
   List<ItemModel> listItems = [];
@@ -82,35 +82,36 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   List<AdditionsModel> listAdditions = [];
 
+  TextEditingController txtSubCategoryControl = TextEditingController();
+  TextEditingController txtItemControl = TextEditingController();
+  TextEditingController txtFavouriteControl = TextEditingController();
 
-TextEditingController txtSubCategoryControl = TextEditingController();
-TextEditingController txtItemControl = TextEditingController();
-TextEditingController txtFavouriteControl = TextEditingController();
+  List<OrderModel> listAllOrders = [];
 
-
-List<OrderModel> listAllOrders = [] ;
-getOrders() async {
-    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList').snapshots().listen((event) {
-      listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
+  getOrders() async {
+    FirebaseFirestore.instance
+        .collection('Orders')
+        .doc(Global.mobile)
+        .collection('orderList')
+        .snapshots()
+        .listen((event) {
+      listAllOrders =
+          event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
       // print(listAllOrders.length);
       emit(SelectCategoryState());
     });
   }
 
+  String getTotalPriceForItem({int index}) {
+    double price = 0;
 
-
-String  getTotalPriceForItem({int index}){
-  double price = 0;
-
-
-  for (var element in listOrder[index].additionsList) {
-    price = price +element.price;
-  }
-  price = price +   listOrder[index].price;
-  price = price * listOrder[index].orderCount;
-  emit(SelectCategoryState());
-  return price.toString();
-
+    for (var element in listOrder[index].additionsList) {
+      price = price + element.price;
+    }
+    price = price + listOrder[index].price;
+    price = price * listOrder[index].orderCount;
+    emit(SelectCategoryState());
+    return price.toString();
   }
   String  getTotalAddaitonlPriceForItem({int index}){
     double price = 0;
@@ -127,13 +128,12 @@ String  getTotalPriceForItem({int index}){
   }
 
 
-sendOrder(){
-
-if(listOrder.isNotEmpty){
-  double totalAdditionalPrice = 0;
-  double totalDiscountPrice = 0;
-  double orderPrice = 0;
-  double totalPrice = 0;
+  sendOrder() {
+    if (listOrder.isNotEmpty) {
+      double totalAdditionalPrice = 0;
+      double totalDiscountPrice = 0;
+      double orderPrice = 0;
+      double totalPrice = 0;
 
 
   for (var element1 in listOrder) {
@@ -176,12 +176,6 @@ if(listOrder.isNotEmpty){
 
 
   }
-
-
-
-
-
-
 
   getTotalPrice(){
   double orderPrice = 0;
@@ -463,9 +457,7 @@ selectedItemId = 0;
     emit(SearchSubCategoryState());
   }
 
-
-
-  List  ingredients = [
+  List ingredients = [
     {
       'imagePath': 'assets/tomato.png',
     },
@@ -485,6 +477,4 @@ selectedItemId = 0;
       'imagePath': 'assets/onion.png',
     },
   ];
-
-
 }

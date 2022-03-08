@@ -3,8 +3,12 @@
 
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+
+import 'package:elomda/modules/cart/cart_screen.dart';
+
+import 'package:elomda/modules/feeds/feeds_screen.dart';
 import 'package:elomda/modules/upload_products/upload_products.dart';
-import 'package:elomda/shared/components/Componant.dart';
+import 'package:elomda/shared/components/componant.dart';
 import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,18 +20,13 @@ class BackLayerMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeScreenState>(
         builder: (context, state) {
-      //   var home_layout_bloc = HomeScreenCubit.get(context);
+          var cubit = HomeCubit.get(context);
           return Stack(
-
             fit: StackFit.expand,
             children: [
               Ink(
-                decoration: const BoxDecoration(
-
-                  color: Colors.black
-                ),
+                decoration: const BoxDecoration(color: Colors.black),
               ),
-
               SingleChildScrollView(
                 child: Container(
                   margin: const EdgeInsets.only(top: 10),
@@ -35,27 +34,20 @@ class BackLayerMenu extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                       const Center(
+                      const Center(
                         child: CircleAvatar(
-                          radius: 45,
-
-                          backgroundImage: NetworkImage(
+                            radius: 45,
+                            backgroundImage: NetworkImage(
                               'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg',
-                          )
-
-                        ),
-
-
-
-
+                            )),
                       ),
                       const SizedBox(height: 5.0),
                       content(context, () {
-                       // navigateTo(context, const Feeds());
+                        navigateTo(context, const FavouriteScreen());
                       }, 'Feeds', 0),
                       const SizedBox(height: 5.0),
                       content(context, () {
-                       // navigateTo(context, const Cart());
+                        navigateTo(context, const OrderScreen());
                       }, 'Cart', 1),
                       const SizedBox(height: 5.0),
                       content(context, () {
@@ -92,11 +84,15 @@ class BackLayerMenu extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               text,
-              style: const TextStyle(fontWeight: FontWeight.w700,color: Colors.white),
+              style: const TextStyle(
+                  fontWeight: FontWeight.w700, color: Colors.white),
               textAlign: TextAlign.center,
             ),
           ),
-          Icon(_contentIcons[index],color: Colors.deepOrange,)
+          Icon(
+            _contentIcons[index],
+            color: Colors.deepOrange,
+          )
         ],
       ),
     );
