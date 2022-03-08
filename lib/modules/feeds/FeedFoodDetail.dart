@@ -1,11 +1,9 @@
 // @dart=2.9
-
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/modules/product_details/foodDetail.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,15 +13,27 @@ class FeedFoodDetailScreen extends StatelessWidget {
   final String itemName;
   final int itemId;
   final String subCategoryTitle;
-  final  String itemDescription ;
+  final String itemDescription;
+
   final double itemPrice;
   final double oldPrice;
   final int index;
   final int orderCount;
   final bool isDiscount;
 
-
-  const  FeedFoodDetailScreen({this.itemId,this.orderCount,this.isDiscount,this.oldPrice,this.index,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
+  const FeedFoodDetailScreen(
+      {this.itemId,
+      this.orderCount,
+      this.isDiscount,
+      this.oldPrice,
+      this.index,
+      this.imagePath,
+      this.itemDescription,
+      this.subCategoryTitle,
+      this.itemName,
+      this.itemPrice,
+      Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,21 +49,17 @@ class FeedFoodDetailScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             centerTitle: false,
             leadingWidth: 0,
-            iconTheme: const IconThemeData(
-                color: Constants.black
-            ),
-
-            title:customAppBar(context: context,title: itemName) ,
+            iconTheme: const IconThemeData(color: Constants.black),
+            title: customAppBar(context: context, title: itemName),
           ),
           floatingActionButton: ConstrainedBox(
             constraints: BoxConstraints(
                 minWidth: MediaQuery.of(context).size.width - 40),
             child: ElevatedButton(
-              onPressed: ()  {
-
-                cubit.addNewItemToCartFromFeedsScreen(itemId: cubit.selectedItemId,orderCount:orderCount??1 );
+              onPressed: () {
+                cubit.addNewItemToCartFromFeedsScreen(
+                    itemId: cubit.selectedItemId, orderCount: orderCount ?? 1);
                 // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
-
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -63,7 +69,9 @@ class FeedFoodDetailScreen extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     size: 18,
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Icon(Icons.chevron_right)
                 ],
               ),
@@ -72,12 +80,13 @@ class FeedFoodDetailScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                   textStyle: const TextStyle(
                       fontSize: 30, fontWeight: FontWeight.bold)),
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
           body: ListView(
             children: [
               // customAppBar(context),
@@ -86,12 +95,10 @@ class FeedFoodDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         Hero(
                           tag: imagePath,
                           child: Container(
@@ -115,26 +122,22 @@ class FeedFoodDetailScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-
-                                  if(isDiscount)
+                                  if (isDiscount)
                                     PrimaryText(
                                       isDiscount: true,
-                                      text:  oldPrice.toString(),
+                                      text: oldPrice.toString(),
                                       size: 20,
                                       fontWeight: FontWeight.w700,
                                       color: Constants.lighterGray,
-
                                       height: 1,
                                     ),
-
-
                                   SvgPicture.asset(
                                     'assets/dollar.svg',
                                     color: Constants.tertiary,
                                     width: 15,
                                   ),
                                   PrimaryText(
-                                    text: itemPrice.toString() ,
+                                    text: itemPrice.toString(),
                                     size: 40,
                                     fontWeight: FontWeight.w700,
                                     color: Constants.tertiary,
@@ -143,19 +146,13 @@ class FeedFoodDetailScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-
                             const SizedBox(
                               height: 20,
                             ),
                             const PrimaryText(
                                 text: 'التوصيل في',
                                 fontWeight: FontWeight.w700,
-                                size: 22
-                            ),
-
-
-
-
+                                size: 22),
                             const SizedBox(
                               height: 8,
                             ),
@@ -164,7 +161,6 @@ class FeedFoodDetailScreen extends StatelessWidget {
                               color: Constants.secondary,
                               size: 20,
                               fontWeight: FontWeight.w500,
-
                             ),
                           ],
                         ),
@@ -174,45 +170,41 @@ class FeedFoodDetailScreen extends StatelessWidget {
                     const SizedBox(
                       height: 40,
                     ),
-                    if( itemDescription != null && itemDescription.trim() != ''  )
+                    if (itemDescription != null && itemDescription.trim() != '')
                       const PrimaryText(
-                          text: 'الوصف',
-                          fontWeight: FontWeight.w700,
-                          size: 22),
+                          text: 'الوصف', fontWeight: FontWeight.w700, size: 22),
                     const SizedBox(
                       height: 10,
                     ),
 
-
                     SizedBox(
-                      width: MediaQuery.of(context).size.width ,
+                      width: MediaQuery.of(context).size.width,
                       height: 100,
                       child: SingleChildScrollView(
                         child: Text(
-
-                          itemDescription??'',
-
+                          itemDescription ?? '',
                           textDirection: TextDirection.rtl,
-                          textAlign:TextAlign.right ,
-                          style:   const TextStyle(
-
-
-                            color:  Constants.secondary,
-
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            color: Constants.secondary,
                             fontFamily: 'Poppins',
                             fontSize: 20,
-
                             fontWeight: FontWeight.w500,
                           ),
-
                         ),
                       ),
                     ),
-                    if(cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
+                    if (cubit.listItems
+                        .firstWhere((element) => element.itemId == itemId)
+                        .additionsList
+                        .isNotEmpty)
                       const SizedBox(
                         height: 50,
                       ),
-                    if(cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
+                    if (cubit.listItems
+                        .firstWhere((element) => element.itemId == itemId)
+                        .additionsList
+                        .isNotEmpty)
                       const PrimaryText(
                           text: 'الاضافات',
                           fontWeight: FontWeight.w700,
@@ -225,23 +217,33 @@ class FeedFoodDetailScreen extends StatelessWidget {
                 ),
               ),
 
-              if(cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
+              if (cubit.listItems
+                  .firstWhere((element) => element.itemId == itemId)
+                  .additionsList
+                  .isNotEmpty)
                 SizedBox(
                   height: 150,
-
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: cubit.listFeedsSearch.firstWhere((element) => element.itemId == itemId).additionsList.length??0,
+                    itemCount: cubit.listFeedsSearch
+                            .firstWhere((element) => element.itemId == itemId)
+                            .additionsList
+                            .length ??
+                        0,
                     itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.only(left: index == 0 ? 20 : 0,top: 10,bottom: 20),
-                      child:
-                      additionCard(
-                          imagePath: cubit.listFeedsSearch.firstWhere((element) => element.itemId == itemId).additionsList[index].image
-                          ,context: context,
+                      padding: EdgeInsets.only(
+                          left: index == 0 ? 20 : 0, top: 10, bottom: 20),
+                      child: additionCard(
+                          imagePath: cubit.listFeedsSearch
+                              .firstWhere((element) => element.itemId == itemId)
+                              .additionsList[index]
+                              .image,
+                          context: context,
                           cubit: cubit,
-
-                          additionId:cubit.listFeedsSearch.firstWhere((element) => element.itemId == itemId).additionsList[index].itemId
-                      ),
+                          additionId: cubit.listFeedsSearch
+                              .firstWhere((element) => element.itemId == itemId)
+                              .additionsList[index]
+                              .itemId),
                     ),
                   ),
                 ),
@@ -255,15 +257,19 @@ class FeedFoodDetailScreen extends StatelessWidget {
       },
     );
   }
-  GestureDetector additionCard({String imagePath,int additionId,HomeCubit cubit,context}) {
+
+  GestureDetector additionCard(
+      {String imagePath, int additionId, HomeCubit cubit, context}) {
     return GestureDetector(
-      onTap: (){
-        if(cubit.listOfSelectedAdditions.any((element) => element.itemId ==additionId))
-        {
-          cubit.listOfSelectedAdditions.removeWhere((element) => element.itemId == additionId);
-        }
-        else{
-          cubit.listOfSelectedAdditions.add(HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId));
+      onTap: () {
+        if (cubit.listOfSelectedAdditions
+            .any((element) => element.itemId == additionId)) {
+          cubit.listOfSelectedAdditions
+              .removeWhere((element) => element.itemId == additionId);
+        } else {
+          cubit.listOfSelectedAdditions.add(HomeCubit.get(context)
+              .listAdditions
+              .firstWhere((element) => element.itemId == additionId));
         }
         cubit.emit(SelectCategoryState());
       },
@@ -271,19 +277,20 @@ class FeedFoodDetailScreen extends StatelessWidget {
         clipBehavior: Clip.none,
         alignment: Alignment.topRight,
         children: [
-
           Container(
-
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 9),
               margin: const EdgeInsets.only(
                 right: 20,
               ),
               decoration: BoxDecoration(
-                  borderRadius:  BorderRadius.only(
-                    bottomLeft:     const Radius.circular(20),
-                    bottomRight:     const Radius.circular(20),
-                    topLeft:  const Radius.circular(20),
-                    topRight: cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId)?  const Radius.circular(0)   :const Radius.circular(20),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: const Radius.circular(20),
+                    bottomRight: const Radius.circular(20),
+                    topLeft: const Radius.circular(20),
+                    topRight: cubit.listOfSelectedAdditions
+                            .any((element) => element.itemId == additionId)
+                        ? const Radius.circular(0)
+                        : const Radius.circular(20),
                   ),
                   color: Constants.white,
                   boxShadow: [
@@ -296,7 +303,9 @@ class FeedFoodDetailScreen extends StatelessWidget {
                     width: 110,
                     height: 50,
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -307,19 +316,31 @@ class FeedFoodDetailScreen extends StatelessWidget {
                         height: 10,
                       ),
                       PrimaryText(
-                        text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId).price.toString() ??0.toString(),
+                        text: HomeCubit.get(context)
+                                .listAdditions
+                                .firstWhere(
+                                    (element) => element.itemId == additionId)
+                                .price
+                                .toString() ??
+                            0.toString(),
                         size: 10,
                         fontWeight: FontWeight.w700,
                         color: Constants.tertiary,
                         height: 1,
                       ),
-
-
                     ],
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   PrimaryText(
-                    text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId).itemTitle.toString() ??''.toString(),
+                    text: HomeCubit.get(context)
+                            .listAdditions
+                            .firstWhere(
+                                (element) => element.itemId == additionId)
+                            .itemTitle
+                            .toString() ??
+                        ''.toString(),
                     size: 12,
                     fontWeight: FontWeight.w700,
                     color: Constants.darkBG,
@@ -327,54 +348,61 @@ class FeedFoodDetailScreen extends StatelessWidget {
                   ),
                 ],
               )),
-          if(cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId))
+          if (cubit.listOfSelectedAdditions
+              .any((element) => element.itemId == additionId))
             const Positioned(
                 top: -10,
                 right: 10,
-                child: Icon(Icons.check_circle,color: Colors.green,)),
-
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                )),
         ],
       ),
     );
   }
-
-
-
 }
-Padding customAppBar({BuildContext context,String title}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 0,
-      vertical: 10,
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Container(
-
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Constants.primary,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(width: 1, color: Colors.grey[400])),
-            child: const Icon(Icons.chevron_left),
-          ),
-        ),
-
-        Text(title??'',style: const TextStyle( fontSize: 25,
-            fontWeight: FontWeight.w600,color: AppColors.black,overflow: TextOverflow.ellipsis),),
-        SizedBox(width:MediaQuery.of(context).size.width * 0.05 ,),
-        // Container(
-        //   padding: const EdgeInsets.all(10),
-        //   decoration: BoxDecoration(
-        //     color: Constants.primary,
-        //     borderRadius: BorderRadius.circular(15),
-        //   ),
-        //   child: const Icon(Icons.star, color: Constants.white),
-        // ),
-      ],
-    ),
-  );
-}
+// Padding customAppBar({BuildContext context, String title}) {
+//   return Padding(
+//     padding: const EdgeInsets.symmetric(
+//       horizontal: 0,
+//       vertical: 10,
+//     ),
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         GestureDetector(
+//           onTap: () => Navigator.pop(context),
+//           child: Container(
+//             padding: const EdgeInsets.all(10),
+//             decoration: BoxDecoration(
+//                 color: Constants.primary,
+//                 borderRadius: BorderRadius.circular(15),
+//                 border: Border.all(width: 1, color: Colors.grey[400])),
+//             child: const Icon(Icons.chevron_left),
+//           ),
+//         ),
+//
+//         Text(
+//           title ?? '',
+//           style: const TextStyle(
+//               fontSize: 25,
+//               fontWeight: FontWeight.w600,
+//               color: AppColors.black,
+//               overflow: TextOverflow.ellipsis),
+//         ),
+//         SizedBox(
+//           width: MediaQuery.of(context).size.width * 0.05,
+//         ),
+//         // Container(
+//         //   padding: const EdgeInsets.all(10),
+//         //   decoration: BoxDecoration(
+//         //     color: Constants.primary,
+//         //     borderRadius: BorderRadius.circular(15),
+//         //   ),
+//         //   child: const Icon(Icons.star, color: Constants.white),
+//         // ),
+//       ],
+//     ),
+//   );
+// }

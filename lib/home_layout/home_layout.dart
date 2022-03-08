@@ -1,11 +1,7 @@
-
 // @dart=2.9
 import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/bloc/home_layout_bloc/cubit.dart';
-import 'package:elomda/bloc/home_layout_bloc/state.dart';
-import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -3,6 +3,7 @@
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/models/category/additionsModel.dart';
+import 'package:elomda/modules/product_details/foodDetail.dart';
 import 'package:elomda/shared/components/Componant.dart';
 
 import 'package:elomda/styles/colors.dart';
@@ -341,40 +342,40 @@ class OrderDetailScreen extends StatelessWidget {
 
 
 }
-Padding customAppBar({BuildContext context,String title}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 0,
-      vertical: 10,
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Container(
-
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Constants.primary,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(width: 1, color: Colors.grey[400])),
-            child: const Icon(Icons.chevron_left),
-          ),
-        ),
-
-        Text(title??'',style: const TextStyle( fontSize: 25,
-            fontWeight: FontWeight.w600,color: AppColors.black,overflow: TextOverflow.ellipsis),),
-        SizedBox(width:MediaQuery.of(context).size.width * 0.05 ,),
-        // Container(
-        //   padding: const EdgeInsets.all(10),
-        //   decoration: BoxDecoration(
-        //     color: Constants.primary,
-        //     borderRadius: BorderRadius.circular(15),
-        //   ),
-        //   child: const Icon(Icons.star, color: Constants.white),
-        // ),
-      ],
-    ),
-  );
-}
+// Padding customAppBar({BuildContext context,String title}) {
+//   return Padding(
+//     padding: const EdgeInsets.symmetric(
+//       horizontal: 0,
+//       vertical: 10,
+//     ),
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         GestureDetector(
+//           onTap: () => Navigator.pop(context),
+//           child: Container(
+//
+//             padding: const EdgeInsets.all(10),
+//             decoration: BoxDecoration(
+//                 color: Constants.primary,
+//                 borderRadius: BorderRadius.circular(15),
+//                 border: Border.all(width: 1, color: Colors.grey[400])),
+//             child: const Icon(Icons.chevron_left),
+//           ),
+//         ),
+//
+//         Text(title??'',style: const TextStyle( fontSize: 25,
+//             fontWeight: FontWeight.w600,color: AppColors.black,overflow: TextOverflow.ellipsis),),
+//         SizedBox(width:MediaQuery.of(context).size.width * 0.05 ,),
+//         // Container(
+//         //   padding: const EdgeInsets.all(10),
+//         //   decoration: BoxDecoration(
+//         //     color: Constants.primary,
+//         //     borderRadius: BorderRadius.circular(15),
+//         //   ),
+//         //   child: const Icon(Icons.star, color: Constants.white),
+//         // ),
+//       ],
+//     ),
+//   );
+// }
