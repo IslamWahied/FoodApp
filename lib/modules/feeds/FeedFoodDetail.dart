@@ -122,6 +122,7 @@ class FeedFoodDetailScreen extends StatelessWidget {
                         fontSize: 30, fontWeight: FontWeight.bold)),
               ),
               );
+
             },
           ),
           body: ListView(
