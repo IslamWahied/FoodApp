@@ -104,12 +104,17 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   String getTotalPriceForItem({int index}) {
     double price = 0;
-
-    for (var element in listOrder[index].additionsList) {
-      price = price + element.price;
+    try{
+      for (var element in listOrder[index].additionsList) {
+        price = price + element.price;
+      }
+      price = price + listOrder[index].price;
+      price = price * listOrder[index].orderCount;
     }
-    price = price + listOrder[index].price;
-    price = price * listOrder[index].orderCount;
+    catch(e){
+      price = 0;
+    }
+
     emit(SelectCategoryState());
     return price.toString();
   }

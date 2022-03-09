@@ -25,13 +25,23 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+   FirebaseMessaging.instance;
+
    await CachHelper.init();
     DioHelper.init();
 
    String mobile =  CachHelper.GetData(key: 'mobile');
     String userName = CachHelper.GetData(key: 'userName');
  String departmentId = CachHelper.GetData(key: 'departmentId');
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print('A new onMessageOpenedApp event was published!');
+    // Navigator.pushNamed(context, '/message',
+    //     arguments: MessageArguments(message, true));
+  });
+  FirebaseMessaging.onBackgroundMessage((message) {
+    print('onBackgroundMessage!');
 
+  });
 
     bool isUserLogin  = false;
 

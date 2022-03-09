@@ -101,15 +101,19 @@ class HomeLayout extends StatelessWidget {
                 floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterDocked,
                 floatingActionButton: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.deepOrange,
-                    onPressed: () {
-                      cubit.changeCurrentIndex(1);
-                    },
-                    child: const Icon(Icons.search_outlined),
-                    hoverElevation: 10,
-                    elevation: 4,
+                  padding: const EdgeInsets.all(2.0),
+                  child: CircleAvatar(
+                    radius: 32,
+                    backgroundColor: const Color(0xfffcfcff),
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.deepOrange,
+                      onPressed: () {
+                        cubit.changeCurrentIndex(1);
+                      },
+                      child: const Icon(Icons.search_outlined),
+                      hoverElevation: 10,
+                      elevation: 4,
+                    ),
                   ),
                 ),
               );

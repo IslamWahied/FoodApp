@@ -278,7 +278,7 @@ class OrderDetailScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
 
-                                Text(cubit.listOrder[index].orderCount.toString()??'',style: const TextStyle(fontWeight: FontWeight.w600,color: Colors.blue),),
+                                Text( orderCount.toString()??'1',style: const TextStyle(fontWeight: FontWeight.w600,color: Colors.blue),),
                                 const SizedBox(
                                   width: 10,
                                 ),
@@ -289,7 +289,7 @@ class OrderDetailScreen extends StatelessWidget {
                         ),
                       ),
 
-                      if(HomeCubit.get(context).listOrder[index].additionsList.isNotEmpty)
+                      if(additionsList.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0,right: 25,bottom: 8,top: 8),
                           child: Row(
