@@ -2,6 +2,7 @@
 import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,6 +14,7 @@ class HomeLayout extends StatelessWidget {
     return Builder(
         builder: (BuildContext context) {
           HomeCubit.get(context).getCategory();
+          HomeCubit.get(context).getUsers();
           HomeCubit.get(context).getSubCategory();
           HomeCubit.get(context).getItems();
           HomeCubit.get(context).getAdditions();
@@ -58,7 +60,10 @@ class HomeLayout extends StatelessWidget {
                             icon: Icon(Icons.home),
                             label: 'Home',
                           ),
-                          const BottomNavigationBarItem(
+                          cubit.listUser.firstWhere((element) => element.mobile == '01151816423').isAdmin?const BottomNavigationBarItem(
+                            icon: Icon(Icons.bookmark_border),
+                            label: 'Orders',
+                          ) : const BottomNavigationBarItem(
                             icon: Icon(Icons.favorite),
                             label: 'Favorite',
                           ),
@@ -108,7 +113,8 @@ class HomeLayout extends StatelessWidget {
                     child: FloatingActionButton(
                       backgroundColor: Colors.deepOrange,
                       onPressed: () {
-                        cubit.changeCurrentIndex(1);
+                          cubit.changeCurrentIndex(1);
+                         // cubit.sendNotifacation();
                       },
                       child: const Icon(Icons.search_outlined),
                       hoverElevation: 10,

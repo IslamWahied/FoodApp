@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/models/category/SupCategory.dart';
 import 'package:elomda/models/category/additionsModel.dart';
@@ -7,15 +8,17 @@ import 'package:elomda/models/category/categoryModel.dart';
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/models/favourit/favouritModel.dart';
 import 'package:elomda/models/order/orderModel.dart';
+import 'package:elomda/models/user/user_model.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/category/subCategoryScreen.dart';
-import 'package:elomda/modules/feeds/feeds_screen.dart';
+import 'package:elomda/modules/favourite/feeds_screen.dart';
 import 'package:elomda/modules/home/home_screen.dart';
 import 'package:elomda/modules/item/items.dart';
 import 'package:elomda/modules/search/search_screen.dart';
 import 'package:elomda/modules/user_info/user_info_screen.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -81,6 +84,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
   List<ItemModel> listOrder = [];
 
   List<AdditionsModel> listAdditions = [];
+  List<UserModel> listUser = [];
 
   TextEditingController txtSubCategoryControl = TextEditingController();
   TextEditingController txtItemControl = TextEditingController();
@@ -88,11 +92,12 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   List<OrderModel> listAllOrders = [];
 
+
+
+
+
   getOrders() async {
-    FirebaseFirestore.instance
-        .collection('Orders')
-        .doc(Global.mobile)
-        .collection('orderList')
+    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList')
         .snapshots()
         .listen((event) {
       listAllOrders =
@@ -151,13 +156,15 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   }
   var model = OrderModel(
+    userMobile: Global.mobile,
+    adminMobile:listUser[0].mobile ,
     createdDate: DateTime.now().toString(),
     listItemModel: listOrder,
     totalAdditionalPrice:totalAdditionalPrice,
     totalDiscountPrice:totalDiscountPrice,
     totalPrice:totalPrice,
     orderPrice: orderPrice,
-
+    orderState: 'New',
     isDeleted: 0,
   );
   var orderId = 1;
@@ -174,6 +181,14 @@ class HomeCubit extends Cubit<HomeScreenState> {
         .set(model.toJson()).then((value) {
     }).catchError(onError);
   });
+  // Send Notification For Admin
+
+      print( listUser[0].fireBaseToken);
+      sendNotificationToUserByToken(
+        messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
+        messageTitle: 'طلب جديد',
+        userToken: listUser[0].fireBaseToken
+      );
   listOrder = [];
   emit(SelectCategoryState());
 }
@@ -301,18 +316,20 @@ class HomeCubit extends Cubit<HomeScreenState> {
   getCategory() async {
     FirebaseFirestore.instance.collection('Category').snapshots().listen((event) {
     listCategory = event.docs.map((x) => Category.fromJson(x.data())).toList();
-
     emit(SelectCategoryState());
   });
   }
 
-
+  getUsers() async {
+    FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
+      listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
+      emit(SelectCategoryState());
+    });
+  }
 
   getSubCategory() async {
     FirebaseFirestore.instance.collection('SubCategory').snapshots().listen((event) {
       listSubCategory = event.docs.map((x) => SubCategory.fromJson(x.data())).toList();
-
-
       emit(SelectCategoryState());
     });
   }
@@ -320,20 +337,19 @@ class HomeCubit extends Cubit<HomeScreenState> {
   getFavourite() async {
     FirebaseFirestore.instance.collection('Favourite').doc(Global.mobile).collection('ItemModel').snapshots().listen((event) {
       listFavourite = event.docs.map((x) => FavouritModel.fromJson(x.data())).toList();
-
+      listFavourite.forEach((element) {print(element.toMap());});
       emit(SelectCategoryState());
     });
   }
 
 
 
-
   getItems() async {
     FirebaseFirestore.instance.collection('Items').snapshots().listen((event) {
-
       listItems = event.docs.map((x) => ItemModel.fromJson(x.data())).toList();
       listFeedsSearch = listItems;
       popularFoodList = listItems.where((element) => element.isPopular).toList();
+      // listItems.forEach((element) {print(element.toJson());});
       emit(SelectCategoryState());
     });
   }
@@ -348,7 +364,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
   }
 
 
-  List<FavouritModel> listFavourite;
+  List<FavouritModel> listFavourite = [];
   changeItemFavouriteState({bool isFavourite = false, int itemId})
   {
 
@@ -450,8 +466,6 @@ selectedItemId = 0;
     }
     emit(SearchSubCategoryState());
   }
-
-
   searchInFeeds(String value){
     if(value.trim() != ''){
       listFeedsSearch = listItems.where((element) =>   element.itemTitle.toLowerCase().contains(value.toLowerCase())).toList();
@@ -460,6 +474,52 @@ selectedItemId = 0;
       listFeedsSearch = listItems.toList();
     }
     emit(SearchSubCategoryState());
+  }
+
+  sendNotifacation(){
+
+
+    Dio dio;
+    dio = Dio(BaseOptions(
+        baseUrl: '',
+        receiveDataWhenStatusError: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AAAARcAtNzU:APA91bGKDZmMAXkV3mRi_5_BvnLmaxm2rZHF7JBskZcIIkbVx34kfjzoNB-iocOI4sI4uR8Bcg0WV1B84BJ_VHWzi7gPAlC943DuTIaQOswi3upbld6tqEdO4R732LzWqaIpluYNkM_w',
+        }));
+    var data = {
+      "notification": {"body": "this is a body","title": "this is a title"}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}, "to": Global.fireBaseToken
+    };
+    dio.post('https://fcm.googleapis.com/fcm/send', data: data).then((value) {
+
+      print(value.data());
+    });
+
+
+
+
+  }
+
+  sendNotificationToUserByToken({String messageTitle ,String messageBody,String userToken }){
+    Dio dio;
+    dio = Dio(BaseOptions(
+        baseUrl: '',
+        receiveDataWhenStatusError: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AAAARcAtNzU:APA91bGKDZmMAXkV3mRi_5_BvnLmaxm2rZHF7JBskZcIIkbVx34kfjzoNB-iocOI4sI4uR8Bcg0WV1B84BJ_VHWzi7gPAlC943DuTIaQOswi3upbld6tqEdO4R732LzWqaIpluYNkM_w',
+        }));
+    var data = {
+      "notification": {"body":messageTitle ,"title": messageTitle}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}, "to": userToken
+    };
+    dio.post('https://fcm.googleapis.com/fcm/send', data: data).then((value) {
+
+      print(value.data());
+    });
+  }
+
+  SendNotificationForAllUser(){
+
   }
 
   List ingredients = [

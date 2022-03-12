@@ -2,7 +2,7 @@
 import 'package:backdrop/backdrop.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/modules/feeds/FeedFoodDetail.dart';
+import 'package:elomda/modules/favourite/FeedFoodDetail.dart';
 import 'package:elomda/modules/home/backlayer.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
@@ -47,8 +47,10 @@ class HomeScreen extends StatelessWidget {
                         backgroundColor: Colors.white,
                         child: CircleAvatar(
                             radius: 13,
-                            backgroundImage: NetworkImage(
-                                'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')),
+                            backgroundImage: AssetImage('assets/person.jpg'),
+                            // NetworkImage(
+                            //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')
+                        ),
                       ))
                 ],
               ),

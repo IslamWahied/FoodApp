@@ -572,7 +572,7 @@ class UploadProductForm extends StatelessWidget {
                                     width: 2.0,
                                   ),
                                 ),
-                                labelText: 'Category',
+                                labelText: 'Description',
                                 labelStyle: const TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14),

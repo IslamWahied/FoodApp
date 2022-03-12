@@ -354,7 +354,8 @@ class OrderDetailScreen extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                    // mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       PrimaryText(
                         text: 'حذف',
@@ -362,8 +363,6 @@ class OrderDetailScreen extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         size: 18,
                       ),
-                      SizedBox(width: 10,),
-                      Icon(Icons.chevron_right)
                     ],
                   ),
                   style: ElevatedButton.styleFrom(

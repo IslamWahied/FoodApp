@@ -1,14 +1,14 @@
 // @dart=2.9
-// ignore_for_file: must_be_immutable
-
+import 'package:elomda/bloc/UpdateData/updateDataCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-
+import 'package:elomda/home_layout/home_layout.dart';
+import 'package:elomda/modules/Update_Data/UpdateData.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
-
-import 'package:elomda/modules/feeds/feeds_screen.dart';
+import 'package:elomda/modules/favourite/feeds_screen.dart';
 import 'package:elomda/modules/upload_products/upload_products.dart';
 import 'package:elomda/shared/components/componant.dart';
+import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,26 +37,35 @@ class BackLayerMenu extends StatelessWidget {
                       const Center(
                         child: CircleAvatar(
                             radius: 45,
-                            backgroundImage: NetworkImage(
-                              'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg',
-                            )),
+                            backgroundImage: AssetImage('assets/person.jpg'),
+
+                        ),
                       ),
                       const SizedBox(height: 5.0),
+
                       content(context, () {
-                        navigateTo(context, const FavouriteScreen());
-                      }, 'Feeds', 0),
-                      const SizedBox(height: 5.0),
-                      content(context, () {
-                        navigateTo(context, const OrderScreen());
+                        NavigatToAndReplace(context,  const HomeLayout());
+                        HomeCubit.get(context).changeCurrentIndex(3);
                       }, 'Cart', 1),
                       const SizedBox(height: 5.0),
                       content(context, () {
-                        //navigateTo(context, const WishList());
-                      }, 'Wishlist', 2),
+                        // navigateTo(context, const FavouriteScreen());
+                        NavigatToAndReplace(context,  const HomeLayout());
+                        HomeCubit.get(context).changeCurrentIndex(1);
+                      }, 'My Favorite', 2),
+                      const SizedBox(height: 5.0),
+
+                      content(context, () {
+                        UpdateDataCubit.get(context).restAfterUpload(context);
+                        UpdateDataCubit.get(context).selectedTypeItemId = 1;
+                        navigateTo(context, const UpdateDataScreen());
+                      }, 'Update product', 4),
+
                       const SizedBox(height: 5.0),
                       content(context, () {
                         navigateTo(context, const UploadProductForm());
-                      }, 'Upload a new product', 3),
+                      }, 'Upload a new product',3),
+
                     ],
                   ),
                 ),
@@ -71,7 +80,8 @@ class BackLayerMenu extends StatelessWidget {
     MyAppIcons.rss,
     MyAppIcons.bag,
     MyAppIcons.wishlist,
-    MyAppIcons.upload
+    MyAppIcons.upload,
+    MyAppIcons.upload_cloud,
   ];
 
   Widget content(BuildContext ctx, Function fct, String text, int index) {

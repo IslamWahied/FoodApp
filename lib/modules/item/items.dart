@@ -112,6 +112,7 @@ class ItemsScreen extends StatelessWidget {
                           scrollDirection: Axis.vertical,
                           itemCount: cubit.listItemsSearch.length??0,
                           itemBuilder: (context, index) => itemCard(
+                            isDiscount: cubit.listItemsSearch[index].isDiscount,
                             isFavourite:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == cubit.listItemsSearch[index].itemId && element.isFavourit)?true:false ,
                             itemId:cubit.listItemsSearch[index].itemId ,
                               itemPrice:cubit.listItemsSearch[index].price ,
@@ -136,7 +137,7 @@ class ItemsScreen extends StatelessWidget {
         });
   }
 }
-Widget itemCard({bool isFavourite,int itemId,String imagePath,String subCategoryTitle,double itemPrice ,String name, String itemDescription, String star, context,double itemsPrice}) {
+Widget itemCard({bool isFavourite,bool isDiscount,int itemId,String imagePath,String subCategoryTitle,double itemPrice ,String name, String itemDescription, String star, context,double itemsPrice}) {
   int value = 1;
   return StatefulBuilder(
       builder: (context, setState) {
@@ -146,7 +147,9 @@ Widget itemCard({bool isFavourite,int itemId,String imagePath,String subCategory
             HomeCubit.get(context).selectedItemId = itemId;
 
             navigateTo(context, FoodDetail(
+
               orderCount:value??1 ,
+              isDiscount:isDiscount ,
               imagePath:imagePath,
               subCategoryTitle:subCategoryTitle,
               itemName:name ,

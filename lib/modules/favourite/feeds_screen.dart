@@ -24,78 +24,86 @@ class FavouriteScreen extends StatelessWidget {
           return SafeArea(
             child: Scaffold(
               backgroundColor: Constants.white,
-              body: Visibility(
-                visible:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) ,
-                replacement: const Center(child: Text('No Favourite Data')),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20, top: 15),
-                      child: Badge(
-                          badgeContent: Text(
-                            cubit.listOrder.length.toString() ?? '0',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 11),
-                          ),
-                          child:
-                              Image.asset('assets/shoppingcart.png', width: 30)),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(width: 20),
-                        const Icon(
-                          Icons.search,
-                          color: AppColors.secondary,
-                          size: 25,
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20, top: 15),
+                    child: Badge(
+                        badgeContent: Text(
+                          cubit.listOrder.length.toString() ?? '0',
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 11),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                            child: TextField(
-                          controller: cubit.txtFavouriteControl,
-                          onChanged: (String value) {
-                            cubit.searchInFeeds(value);
-                          },
-                          decoration: const InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 2, color: AppColors.lighterGray)),
-                            hintText: 'Search..',
-                            hintStyle: TextStyle(
-                                color: AppColors.lightGray,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        )),
-                        const SizedBox(width: 20),
-                      ],
-                    ),
-                    Expanded(
+                        child:
+                            Image.asset('assets/shoppingcart.png', width: 30)),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: 20),
+                      const Icon(
+                        Icons.search,
+                        color: AppColors.secondary,
+                        size: 25,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                          child: TextField(
+                        controller: cubit.txtFavouriteControl,
+                        onChanged: (String value) {
+                          cubit.searchInFeeds(value);
+                        },
+                        decoration: const InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 2, color: AppColors.lighterGray)),
+                          hintText: 'Search..',
+                          hintStyle: TextStyle(
+                              color: AppColors.lightGray,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      )),
+                      const SizedBox(width: 20),
+                    ],
+                  ),
+                  Visibility(
+                    visible:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) ,
+                    replacement: const Expanded(child: Center(child: Text('No Favourite Data'))),
+                    child: Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
-                          itemCount:cubit.listFavourite.isNotEmpty && cubit.listItems.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) &&cubit.listFavourite != [] ?cubit.listFavourite.where((element) => element.isFavourit).length:0  ,
-                          itemBuilder: (context, index) => itemCard(
-                            isFavourite:cubit.listFavourite[index].isFavourit ,
-                              itemId: cubit.listFavourite[index].ItemId,
-                              itemPrice:cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).price,
-                              subCategoryTitle:
-                              cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).supCategoryTitle,
-                              name:cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).itemTitle,
-                              context: context,
-                              imagePath: cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).image,
-                              itemsPrice:cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).price,
-                              star: '',
-                              itemDescription: cubit.listItems.firstWhere((element) => element.itemId == cubit.listFavourite[index].ItemId).description ?? ''),
+                          itemCount:cubit.listFavourite.isNotEmpty && cubit.listItems.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) &&cubit.listFavourite != [] ?cubit.listFavourite.where((element) => element.isFavourit).toList().length:0  ,
+                          itemBuilder: (context, index) {
+                            var favModel = cubit.listFavourite.where((element) => element.isFavourit).toList()[index];
+                            print('favModel.toMap()');
+                            print(favModel.toMap());
+                            print('favModel.toMap()');
+                            return    itemCard(
+                                isFavourite:favModel.isFavourit ,
+                                itemId:favModel.ItemId,
+                                itemPrice:cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId).price??0,
+                                subCategoryTitle:
+                                cubit.listItems.firstWhere((element) => element.itemId ==  favModel.ItemId).supCategoryTitle,
+                                name:cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId).itemTitle,
+                                context: context,
+                                imagePath: cubit.listItems.firstWhere((element) => element.itemId ==  favModel.ItemId).image,
+                                itemsPrice:cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId).price,
+                                star: '',
+                                itemDescription: cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId).description ?? '');
+                          }
+
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );

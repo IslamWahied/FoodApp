@@ -4,16 +4,23 @@ import 'package:elomda/models/category/itemModel.dart';
 
 class OrderModel {
 
+  String userMobile;
+  String adminMobile;
+
   String createdDate;
   double totalAdditionalPrice;
   double totalDiscountPrice;
   double orderPrice;
   double totalPrice;
   int isDeleted;
+  String orderState;
   List<ItemModel> listItemModel;
 
   OrderModel(
       {
+        this.adminMobile,
+        this.orderState,
+        this.userMobile,
         this.orderPrice,
       this.createdDate,
       this.isDeleted,
@@ -29,6 +36,9 @@ class OrderModel {
     var customList = list.map((e) => ItemModel.fromJson(e)).toList();
 
     return OrderModel(
+        orderState: json['orderState'],
+        adminMobile: json['adminMobile'],
+        userMobile: json['userMobile'],
         createdDate: json['createdDate'],
         isDeleted: json['isDeleted'],
         orderPrice: json['orderPrice'],
@@ -40,6 +50,9 @@ class OrderModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'userMobile': userMobile,
+      'orderState': orderState,
+      'adminMobile': adminMobile,
       'orderPrice': orderPrice,
       'createdDate': createdDate,
       'isDeleted': isDeleted,

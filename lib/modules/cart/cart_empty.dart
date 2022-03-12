@@ -1,7 +1,4 @@
-// ignore_for_file: deprecated_member_use, camel_case_types, import_of_legacy_library_into_null_safe
 
-import 'package:elomda/modules/feeds/feeds_screen.dart';
-import 'package:elomda/shared/components/componant.dart';
 import 'package:flutter/material.dart';
 
 

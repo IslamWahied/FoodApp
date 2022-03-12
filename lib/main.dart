@@ -1,10 +1,12 @@
 // @dart=2.9
 // ignore_for_file: must_be_immutable
 
+import 'package:elomda/bloc/UpdateData/updateDataCubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 
 import 'package:elomda/home_layout/home_layout.dart';
+import 'package:elomda/modules/login/login_screen.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:elomda/shared/network/Dio_Helper/Dio_Helper.dart';
 import 'package:elomda/shared/network/local/shared_helper.dart';
@@ -33,12 +35,18 @@ Future<void> main() async {
    String mobile =  CachHelper.GetData(key: 'mobile');
     String userName = CachHelper.GetData(key: 'userName');
  String departmentId = CachHelper.GetData(key: 'departmentId');
+  FirebaseMessaging.onMessage.listen((event) {
+
+
+  });
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print('A new onMessageOpenedApp event was published!');
     // Navigator.pushNamed(context, '/message',
     //     arguments: MessageArguments(message, true));
   });
+
   FirebaseMessaging.onBackgroundMessage((message) {
+
     print('onBackgroundMessage!');
 
   });
@@ -72,7 +80,7 @@ Future<void> main() async {
   }
 
   String token = await FirebaseMessaging.instance.getToken();
-
+print(token);
    Global.fireBaseToken = token??'';
 
     runApp(MyApp(userName: userName,mobile: mobile , departmentId: departmentId ,showOnBoarding: showOnBoarding,isUserLogin: isUserLogin,));
@@ -108,7 +116,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => LoginCubit()),
           BlocProvider(create: (context) => UploadProducts()),
-
+          BlocProvider(create: (context) => UpdateDataCubit()),
           BlocProvider(create: (context) => HomeCubit()),
         ],
         child: MaterialApp(
@@ -116,9 +124,9 @@ class MyApp extends StatelessWidget {
           builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-          home:  const HomeLayout(),
+            home:  const HomeLayout(),
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-        //    home:const LoginScreen(),
+          // home:const LoginScreen(),
           // home:VerifiedScreen(),
        //  home:const RegisterScreen(),
         ));

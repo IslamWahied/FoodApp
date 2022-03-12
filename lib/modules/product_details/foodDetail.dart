@@ -1,20 +1,16 @@
 // @dart=2.9
-
-
-
-
-
 import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
+import 'package:elomda/modules/home/home_screen.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-
 class FoodDetail extends StatelessWidget {
   final String imagePath;
   final String itemName;
@@ -22,8 +18,9 @@ class FoodDetail extends StatelessWidget {
   final  String itemDescription ;
   final double itemPrice;
   final int orderCount;
+  final bool isDiscount;
 
- const  FoodDetail({this.orderCount,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
+ const  FoodDetail({this.isDiscount,this.orderCount,this.imagePath,this.itemDescription,this.subCategoryTitle,this.itemName,this.itemPrice,Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,38 +42,77 @@ class FoodDetail extends StatelessWidget {
 
             title:customAppBar(context: context,title: itemName) ,
           ),
-          floatingActionButton: ConstrainedBox(
-            constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width - 40),
-            child: ElevatedButton(
-              onPressed: () {
-
-                // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
-                cubit.addNewItemToCartFromItemScreen(itemId: cubit.selectedItemId,orderCount:orderCount??1 );
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  PrimaryText(
-                    text: 'اضافة الي طلباتي',
-                    fontWeight: FontWeight.w600,
-                    size: 18,
+          // floatingActionButton: ConstrainedBox(
+          //   constraints: BoxConstraints(
+          //       minWidth: MediaQuery.of(context).size.width - 40),
+          //   child: ElevatedButton(
+          //     onPressed: () {
+          //
+          //       // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+          //       cubit.addNewItemToCartFromItemScreen(itemId: cubit.selectedItemId,orderCount:orderCount??1 );
+          //     },
+          //     child: Row(
+          //       mainAxisSize: MainAxisSize.min,
+          //       children: const [
+          //         PrimaryText(
+          //           text: 'اضافة الي طلباتي',
+          //           fontWeight: FontWeight.w600,
+          //           size: 18,
+          //         ),
+          //         SizedBox(width: 10,),
+          //         Icon(Icons.chevron_right)
+          //       ],
+          //     ),
+          //     style: ElevatedButton.styleFrom(
+          //         primary: Constants.primary,
+          //         shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(10.0)),
+          //         padding:
+          //             const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          //         textStyle: const TextStyle(
+          //             fontSize: 30, fontWeight: FontWeight.bold)),
+          //   ),
+          // ),
+          // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          bottomSheet: BottomSheet(
+            enableDrag: false,
+            onClosing: (){},
+            builder: (context){
+              return SizedBox(
+                width: double.infinity,
+                child:  ElevatedButton(
+                  onPressed: () {
+                    cubit.addNewItemToCartFromFeedsScreen(
+                        itemId: cubit.selectedItemId, orderCount: orderCount ?? 1);
+                    // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      PrimaryText(
+                        text: 'اضافة الي طلباتي',
+                        fontWeight: FontWeight.w600,
+                        size: 18,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Icon(Icons.chevron_right)
+                    ],
                   ),
-                  SizedBox(width: 10,),
-                  Icon(Icons.chevron_right)
-                ],
-              ),
-              style: ElevatedButton.styleFrom(
-                  primary: Constants.primary,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  padding:
+                  style: ElevatedButton.styleFrom(
+                      primary: Constants.primary,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  textStyle: const TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.bold)),
-            ),
+                      textStyle: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold)),
+                ),
+              );
+
+            },
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           body: ListView(
             children: [
               // customAppBar(context),
@@ -114,7 +150,7 @@ class FoodDetail extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  if(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).isDiscount)
+                                  if(isDiscount)
                                     PrimaryText(
                                       isDiscount: true,
                                       text: HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).oldPrice.toString(),
@@ -370,8 +406,8 @@ Padding customAppBar({BuildContext context,String title}) {
 
         InkWell(
           onTap: (){
-            navigatTo(context,  const OrderScreen( isShowNavBar: true,));
-
+            NavigatToAndReplace(context,  const HomeLayout());
+HomeCubit.get(context).changeCurrentIndex(3);
           },
           child: Padding(
             padding: const EdgeInsets.only(right: 10,top: 15),
