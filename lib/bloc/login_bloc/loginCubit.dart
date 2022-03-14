@@ -43,7 +43,7 @@ class LoginCubit extends Cubit<LoginState> {
  //
  //  var listUserType = userType.toList();
    String departMentSelectedName = '';
-  int departmentId = 0;
+
 
 
 
@@ -183,7 +183,7 @@ class LoginCubit extends Cubit<LoginState> {
 
    Global.mobile = textMobileControl.text;
    Global.userName = txtRegisterUserNameControl.text;
-   Global.departmentId = departmentId.toString();
+   Global.departMent = departMentSelectedName;
 
 
 
@@ -197,7 +197,7 @@ class LoginCubit extends Cubit<LoginState> {
    UserModel model =  UserModel(
      image: '',
      isAdmin: false,
-     departmentId:departmentId??1 ,
+     departMent:'Programmer',
      mobile: Global.mobile,
      userName: Global.userName,
      fireBaseToken: Global.fireBaseToken,
@@ -260,7 +260,7 @@ class LoginCubit extends Cubit<LoginState> {
         isValid = false;
       verificationCode = '';
       departMentSelectedName = '';
-      departmentId = 0;
+
     emit(ChangeInScreenState());
   }
 

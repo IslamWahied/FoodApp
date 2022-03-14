@@ -4,17 +4,18 @@ class UserModel
 
   String image;
   bool isAdmin;
-  int departmentId;
+
   String mobile;
   String userName;
   String fireBaseToken;
+  String departMent;
 
 
   UserModel({
-    this.departmentId,
+
     this.image,
     this.isAdmin,
-
+    this.departMent,
     this.mobile,
     this.userName,
     this.fireBaseToken,
@@ -22,10 +23,10 @@ class UserModel
 
   UserModel.fromJson(Map<String, dynamic> json)
   {
-    departmentId = json['departmentId'];
+
     image = json['image'];
     isAdmin = json['isAdmin'];
-
+    departMent = json['departMent'];
     mobile = json['mobile'];
     userName = json['userName'];
     fireBaseToken = json['fireBaseToken']??'';
@@ -34,10 +35,9 @@ class UserModel
   Map<String, dynamic> toMap()
   {
     return {
-      'departmentId':departmentId,
+
       'image':image,
       'isAdmin':isAdmin,
-
       'mobile':mobile,
       'fireBaseToken':fireBaseToken??'',
       'userName':userName,

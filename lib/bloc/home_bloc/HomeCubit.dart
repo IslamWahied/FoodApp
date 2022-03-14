@@ -9,6 +9,11 @@ import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/models/favourit/favouritModel.dart';
 import 'package:elomda/models/order/orderModel.dart';
 import 'package:elomda/models/user/user_model.dart';
+import 'package:elomda/modules/Order/Admin/ArchiveScreen.dart';
+import 'package:elomda/modules/Order/Admin/canceledOrder.dart';
+import 'package:elomda/modules/Order/Admin/doneOrder.dart';
+import 'package:elomda/modules/Order/Admin/newOrders.dart';
+import 'package:elomda/modules/Order/mainOrderScreen.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/category/subCategoryScreen.dart';
 import 'package:elomda/modules/favourite/feeds_screen.dart';
@@ -18,7 +23,6 @@ import 'package:elomda/modules/search/search_screen.dart';
 import 'package:elomda/modules/user_info/user_info_screen.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -30,12 +34,21 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
 
   int currentIndex = 0;
-  List screens = [
+  List adminScreens = [
+    const NewOrderScreen(),
+    const DoneOrderScreen(),
+    const CancelOrderScreen(),
+    User_Info(),
+
+  ];
+
+  List userScreens = [
     const HomeScreen(),
     const FavouriteScreen(),
     SearchScreen(),
     const OrderScreen(isShowNavBar: false),
-    User_Info()
+    User_Info(),
+
   ];
 
   void changeCurrentIndex(int value) {
@@ -72,29 +85,19 @@ class HomeCubit extends Cubit<HomeScreenState> {
   ];
 
   List<Category> listCategory = [];
-
   List<SubCategory> listSubCategory = [];
   List<SubCategory> listSubCategorySearch = [];
-
   List<ItemModel> listItems = [];
   List<ItemModel> popularFoodList = [];
   List<ItemModel> listItemsSearch = [];
-
   List<ItemModel> listFeedsSearch = [];
   List<ItemModel> listOrder = [];
-
   List<AdditionsModel> listAdditions = [];
   List<UserModel> listUser = [];
-
   TextEditingController txtSubCategoryControl = TextEditingController();
   TextEditingController txtItemControl = TextEditingController();
   TextEditingController txtFavouriteControl = TextEditingController();
-
   List<OrderModel> listAllOrders = [];
-
-
-
-
 
   getOrders() async {
     FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList')
@@ -106,7 +109,6 @@ class HomeCubit extends Cubit<HomeScreenState> {
       emit(SelectCategoryState());
     });
   }
-
   String getTotalPriceForItem({int index}) {
     double price = 0;
     try{
@@ -154,6 +156,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
     orderPrice = element1.price;
     totalPrice =  element1.price + totalDiscountPrice + totalAdditionalPrice;
 
+
   }
   var model = OrderModel(
     userMobile: Global.mobile,
@@ -163,6 +166,8 @@ class HomeCubit extends Cubit<HomeScreenState> {
     totalAdditionalPrice:totalAdditionalPrice,
     totalDiscountPrice:totalDiscountPrice,
     totalPrice:totalPrice,
+    userName: Global.userName,
+    departMent: Global.departMent??'Programmer',
     orderPrice: orderPrice,
     orderState: 'New',
     isDeleted: 0,
@@ -192,8 +197,6 @@ class HomeCubit extends Cubit<HomeScreenState> {
   listOrder = [];
   emit(SelectCategoryState());
 }
-
-
 
   }
 

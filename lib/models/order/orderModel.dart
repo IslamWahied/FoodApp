@@ -6,7 +6,10 @@ class OrderModel {
 
   String userMobile;
   String adminMobile;
+  String userName;
 
+
+String departMent;
   String createdDate;
   double totalAdditionalPrice;
   double totalDiscountPrice;
@@ -18,6 +21,7 @@ class OrderModel {
 
   OrderModel(
       {
+        this.userName,
         this.adminMobile,
         this.orderState,
         this.userMobile,
@@ -28,6 +32,7 @@ class OrderModel {
       this.totalAdditionalPrice,
       this.totalDiscountPrice,
       this.totalPrice,
+      this.departMent,
       });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -36,12 +41,14 @@ class OrderModel {
     var customList = list.map((e) => ItemModel.fromJson(e)).toList();
 
     return OrderModel(
+        userName: json['userName'],
         orderState: json['orderState'],
         adminMobile: json['adminMobile'],
         userMobile: json['userMobile'],
         createdDate: json['createdDate'],
         isDeleted: json['isDeleted'],
         orderPrice: json['orderPrice'],
+        departMent: json['departMent'],
         totalAdditionalPrice: json['totalAdditionalPrice'] ?? 0,
         totalDiscountPrice: json['totalDiscountPrice'] ?? 0,
         totalPrice: json['totalPrice'] ?? 0,
@@ -50,10 +57,12 @@ class OrderModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'userName': userName,
       'userMobile': userMobile,
       'orderState': orderState,
       'adminMobile': adminMobile,
       'orderPrice': orderPrice,
+      'departMent': departMent,
       'createdDate': createdDate,
       'isDeleted': isDeleted,
       'totalAdditionalPrice': totalAdditionalPrice ?? 0,

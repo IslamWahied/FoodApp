@@ -17,15 +17,14 @@ class ItemModel {
   String image;
   String createdDate;
   double price;
-
   int isDeleted;
-
   double oldPrice;
   int orderCount;
   bool isAvailable;
   bool isPopular;
   bool isDiscount;
   bool isFavourite;
+  String orderState;
 
 
 
@@ -52,6 +51,7 @@ class ItemModel {
     this.isDiscount,
     this.oldPrice,
     this.isFavourite,
+    this.orderState
   });
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
@@ -74,6 +74,7 @@ class ItemModel {
         isDeleted : json['isDeleted'],
         userMobile : json['userMobile']??'',
         userName : json['userName']??'',
+        orderState : json['orderState']??'New',
 
         orderCount : json['orderCount']??0,
         isAvailable : json['isAvailable']??true,
@@ -110,6 +111,7 @@ class ItemModel {
       'isPopular':isPopular??false,
       'isFavourite':isFavourite??false,
       'isDiscount':isDiscount??false,
+      'orderState':orderState??'New',
 
 
 
