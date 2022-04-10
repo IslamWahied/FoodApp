@@ -117,7 +117,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => LoginCubit()),
           BlocProvider(create: (context) => UploadProducts()),
           BlocProvider(create: (context) => UpdateDataCubit()),
-          BlocProvider(create: (context) => HomeCubit()),
+          BlocProvider(create: (context) => HomeCubit()..getOrders()..getCategory()..getUsers()..getSubCategory()..getItems()..getAdditions()..getFavourite()),
         ],
         child: MaterialApp(
           theme: Constants.lightTheme,

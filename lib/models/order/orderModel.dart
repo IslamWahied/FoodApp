@@ -36,9 +36,10 @@ String departMent;
       });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
-    List<dynamic> list = json['AdditionsList'] ?? [];
 
-    var customList = list.map((e) => ItemModel.fromJson(e)).toList();
+    List<dynamic> listItemlist = json['listItemModel'] ?? [];
+
+    var customList = listItemlist.map((e) => ItemModel.fromJson(e)).toList();
 
     return OrderModel(
         userName: json['userName'],
@@ -52,7 +53,8 @@ String departMent;
         totalAdditionalPrice: json['totalAdditionalPrice'] ?? 0,
         totalDiscountPrice: json['totalDiscountPrice'] ?? 0,
         totalPrice: json['totalPrice'] ?? 0,
-        listItemModel: customList);
+        listItemModel: customList
+    );
   }
 
   Map<String, dynamic> toJson() {

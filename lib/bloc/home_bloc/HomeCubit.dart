@@ -36,7 +36,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
   int currentIndex = 0;
   List adminScreens = [
     const NewOrderScreen(),
-    const DoneOrderScreen(),
+    const PreparedOrderScreen(),
     const CancelOrderScreen(),
     User_Info(),
 
@@ -103,9 +103,10 @@ class HomeCubit extends Cubit<HomeScreenState> {
     FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList')
         .snapshots()
         .listen((event) {
-      listAllOrders =
-          event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
-      // print(listAllOrders.length);
+
+
+      listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
+      // listAllOrders.forEach((element) {print(element.toJson());});
       emit(SelectCategoryState());
     });
   }

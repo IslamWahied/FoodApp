@@ -11,20 +11,13 @@ class HomeLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Builder(
-        builder: (BuildContext context) {
-          HomeCubit.get(context).getCategory();
-          HomeCubit.get(context).getUsers();
-          HomeCubit.get(context).getSubCategory();
-          HomeCubit.get(context).getItems();
-          HomeCubit.get(context).getAdditions();
-          HomeCubit.get(context).getFavourite();
-          HomeCubit.get(context).getOrders();
+
 
           return BlocConsumer<HomeCubit, HomeScreenState>(
             listener: (BuildContext context, HomeScreenState state) {},
             builder: (BuildContext context, HomeScreenState state) {
               var cubit = HomeCubit.get(context);
+
               return Scaffold(
                 extendBody: true,
                 body:Global.isAdmin? cubit.adminScreens[cubit.currentIndex]:cubit.userScreens[cubit.currentIndex],
@@ -192,7 +185,7 @@ class HomeLayout extends StatelessWidget {
                       backgroundColor: Colors.deepOrange,
                       onPressed: () {
                           cubit.changeCurrentIndex(1);
-                         // cubit.sendNotifacation();
+                         // cubit.sendNotification();
                       },
                       child: const Icon(Icons.search_outlined),
                       hoverElevation: 10,
@@ -203,6 +196,5 @@ class HomeLayout extends StatelessWidget {
               );
             },
           );
-        });
+        }
   }
-}

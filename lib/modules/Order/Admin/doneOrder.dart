@@ -1,29 +1,278 @@
 // @dart=2.9
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
+import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
-class DoneOrderScreen extends StatelessWidget {
-  const DoneOrderScreen({Key key}) : super(key: key);
+import 'newOrders.dart';
+
+class PreparedOrderScreen extends StatelessWidget {
+  const PreparedOrderScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(),
-      body: Conditional.single(
+    return BlocConsumer<HomeCubit, HomeScreenState>(
+      builder: (context, state) {
+        var cubit = HomeCubit.get(context);
+        var newOrderList = cubit.listAllOrders.where((element) =>element.orderState.toLowerCase() == 'Prepared'.toLowerCase()).toList();
+        return SafeArea(
+          child: Scaffold(
+
+            body: Conditional.single(
+              context: context,
+              conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'Prepared'.toLowerCase()).toList().isNotEmpty,
+              widgetBuilder: (BuildContext context) {
+                return ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(),
+                  itemCount: newOrderList.length,
+                  itemBuilder: (context, index) {
+                    var orderModel = newOrderList[index];
+
+                    // print(orderModel.toJson());
+                    return StatefulBuilder(builder: (context, setState) {
+                      return Slidable(
+
+                        closeOnScroll: false,
+
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: [
+                            SizedBox(
+                              height: 150,
+                              width: 80,
+                              child: SlidableAction(
+                                // An action can be bigger than the others.
+                                flex: 1,
+                                onPressed: (context) {
+                                  // HomeCubit.get(context).listOrder.removeWhere(
+                                  // (item) => item == HomeCubit.get(context).listOrder[index]);
+                                },
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                                icon: Icons.check,
+                                label: 'Done',
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            SizedBox(
+                              height: 150,
+                              width: 80,
+                              child: SlidableAction(
+                                // An action can be bigger than the others.
+                                flex: 1,
+                                onPressed: (context) {
+                                  // HomeCubit.get(context).listOrder.removeWhere(
+                                  // (item) => item == HomeCubit.get(context).listOrder[index]);
+                                },
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                                icon: Icons.archive,
+                                label: 'Delete',
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // component is not dragged.
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 200,
+                            child: Card(
+                              elevation: 2,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(orderModel.userName ?? ''),
+                                            Baseline(
+                                                baseline: 25.0,
+                                                baselineType:
+                                                TextBaseline.alphabetic,
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.only(
+                                                      left: 3),
+                                                  child: Text(
+                                                      orderModel.departMent ??
+                                                          '',
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.grey,
+                                                        fontWeight:
+                                                        FontWeight.w400,
+                                                        //    fontFamily: 'Raleway'
+                                                        // fontFamily: 'Elshan'
+                                                        // fontFamily: 'Elshan'
+                                                      )),
+                                                )),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: 80,
+                                          height: 30,
+                                          child: Card(
+                                            color: Colors.orange,
+                                            child: Center(
+                                                child: Text(
+                                                  orderModel.orderState ?? '',
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                )),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Text(
+                                              'OrderCount : ',
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: 17),
+                                            ),
+                                            Text(
+                                              '20',
+                                              style: TextStyle(fontSize: 17),
+                                            )
+                                          ],
+                                        ),
+                                        Text(
+                                          orderModel.createdDate ?? '',
+                                          style: TextStyle(
+                                              fontSize: 13.5,
+                                              color: Colors.grey[600]),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    const Spacer(),
+                                    const Divider(),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              'Total : ',
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: 17),
+                                            ),
+                                            Text(
+                                              orderModel.totalPrice.toString() ??
+                                                  '0',
+                                              style: const TextStyle(
+                                                  fontSize: 17),
+                                            ),
+                                          ],
+                                        ),
+                                        TextButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                  useSafeArea: true,
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                        content: SingleChildScrollView(
+                                                          child: Column(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                            children: [
+                                                              Row(
+                                                                crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                                mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                                children: const [
+                                                                  Text(
+                                                                    'Order Detail',
+                                                                    style: TextStyle(
+                                                                        color:
+                                                                        Colors.blue,
+                                                                        fontSize: 16),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 10,
+                                                              ),
 
 
-        conditionBuilder: (BuildContext context) => HomeCubit.get(context).listOrder.where((element) => element.orderState.toLowerCase() == 'New' ).isNotEmpty,
-        widgetBuilder: (BuildContext context) {
-          return ListView(
-            children: const [
-              Text('Done'),
-            ],
-          );
-        },
-        context: context,
-        fallbackBuilder: (BuildContext context) => const Center(child: Text('No Orders')),
-      ),
+
+                                                              SizedBox(
+                                                                width: MediaQuery.of(context).size.width * 0.7,
+                                                                height: 200,
+                                                                child:   ListView.separated(
+
+                                                                    itemBuilder: (context,index)=>orderModelCard(orderModel.listItemModel[index],context), separatorBuilder:(context,index)=> const SizedBox(height: 10),
+
+                                                                    itemCount: orderModel.listItemModel.length),
+                                                              ),
+
+
+
+                                                              const Divider(),
+                                                              TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child:
+                                                                  const Text(
+                                                                    'Close',
+                                                                    style: TextStyle(
+                                                                        color:
+                                                                        Colors.red),
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ));
+                                            },
+                                            child: const Text('Details'))
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+                  },
+
+                );
+              },
+
+              fallbackBuilder: (BuildContext context) => const Center(child: Text('No Orders')),
+            ),
+          ),
+        );
+      },
+      listener: (context, state) => {},
     );
   }
 }
+
