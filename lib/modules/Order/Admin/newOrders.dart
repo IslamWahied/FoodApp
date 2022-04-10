@@ -66,8 +66,8 @@ class NewOrderScreen extends StatelessWidget {
                                   // An action can be bigger than the others.
                                   flex: 1,
                                   onPressed: (context) {
-                                    // HomeCubit.get(context).listOrder.removeWhere(
-                                    // (item) => item == HomeCubit.get(context).listOrder[index]);
+                                    cubit.listAllOrders.firstWhere((element) =>element == orderModel).orderState = 'Canceled';
+                                    cubit.emit(SelectCategoryState());
                                   },
                                   backgroundColor: Colors.red,
                                   foregroundColor: Colors.white,

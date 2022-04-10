@@ -50,7 +50,7 @@ class HomeLayout extends StatelessWidget {
                         selectedItemColor: Colors.deepOrange,
                         currentIndex: cubit.currentIndex,
                         selectedLabelStyle: const TextStyle(
-                          fontSize: 12.5
+                          fontSize: 10.0
                         ),
                         iconSize: 20,
                         items: [
@@ -80,6 +80,12 @@ class HomeLayout extends StatelessWidget {
 
                           const BottomNavigationBarItem(
                             icon: Icon(Icons.bookmark_border),
+                            label: 'تحت التجهيز',
+
+                          ),
+
+                          const BottomNavigationBarItem(
+                            icon: Icon(Icons.done_outline),
                             label: 'تم التسليم',
 
                           ),

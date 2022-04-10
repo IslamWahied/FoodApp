@@ -1,31 +1,28 @@
 // @dart=2.9
-
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/models/category/additionsModel.dart';
-import 'package:elomda/models/category/itemModel.dart';
-import 'package:elomda/models/order/orderModel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class DoneOrderScreen extends StatelessWidget {
-  const DoneOrderScreen({Key key}) : super(key: key);
+import 'newOrders.dart';
+
+class PreparedOrderScreen extends StatelessWidget {
+  const PreparedOrderScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeScreenState>(
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
-        var newOrderList = cubit.listAllOrders.where((element) =>element.orderState.toLowerCase() == 'Done'.toLowerCase()).toList();
+        var newOrderList = cubit.listAllOrders.where((element) =>element.orderState.toLowerCase() == 'Prepared'.toLowerCase()).toList();
         return SafeArea(
           child: Scaffold(
 
             body: Conditional.single(
               context: context,
-              conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'Done'.toLowerCase()).toList().isNotEmpty,
+              conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'Prepared'.toLowerCase()).toList().isNotEmpty,
               widgetBuilder: (BuildContext context) {
                 return ListView.separated(
                   separatorBuilder: (context, index) => const SizedBox(),
@@ -37,46 +34,46 @@ class DoneOrderScreen extends StatelessWidget {
                     return StatefulBuilder(builder: (context, setState) {
                       return Slidable(
 
-                        // closeOnScroll: false,
+                        closeOnScroll: false,
 
-                        // endActionPane: ActionPane(
-                        //   motion: const ScrollMotion(),
-                        //   children: [
-                        //     SizedBox(
-                        //       height: 150,
-                        //       width: 80,
-                        //       child: SlidableAction(
-                        //         // An action can be bigger than the others.
-                        //         flex: 1,
-                        //         onPressed: (context) {
-                        //           cubit.listAllOrders.firstWhere((element) =>element == orderModel).orderState = 'Prepared';
-                        //           cubit.emit(SelectCategoryState());
-                        //         },
-                        //         backgroundColor: Colors.green,
-                        //         foregroundColor: Colors.white,
-                        //         icon: Icons.check,
-                        //         label: 'Done',
-                        //       ),
-                        //     ),
-                        //     const SizedBox(width: 5),
-                        //     SizedBox(
-                        //       height: 150,
-                        //       width: 80,
-                        //       child: SlidableAction(
-                        //         // An action can be bigger than the others.
-                        //         flex: 1,
-                        //         onPressed: (context) {
-                        //           cubit.listAllOrders.firstWhere((element) =>element == orderModel).orderState = 'Canceled';
-                        //           cubit.emit(SelectCategoryState());
-                        //         },
-                        //         backgroundColor: Colors.red,
-                        //         foregroundColor: Colors.white,
-                        //         icon: Icons.archive,
-                        //         label: 'Delete',
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: [
+                            SizedBox(
+                              height: 150,
+                              width: 80,
+                              child: SlidableAction(
+                                // An action can be bigger than the others.
+                                flex: 1,
+                                onPressed: (context) {
+                                  cubit.listAllOrders.firstWhere((element) =>element == orderModel).orderState = 'Done';
+                                  cubit.emit(SelectCategoryState());
+                                },
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                                icon: Icons.check,
+                                label: 'Done',
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            SizedBox(
+                              height: 150,
+                              width: 80,
+                              child: SlidableAction(
+                                // An action can be bigger than the others.
+                                flex: 1,
+                                onPressed: (context) {
+                                  cubit.listAllOrders.firstWhere((element) =>element == orderModel).orderState = 'Canceled';
+                                  cubit.emit(SelectCategoryState());
+                                },
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                                icon: Icons.archive,
+                                label: 'Delete',
+                              ),
+                            ),
+                          ],
+                        ),
 
                         // component is not dragged.
                         child: Padding(
@@ -126,7 +123,7 @@ class DoneOrderScreen extends StatelessWidget {
                                           width: 80,
                                           height: 30,
                                           child: Card(
-                                            color: Colors.green,
+                                            color: Colors.orange,
                                             child: Center(
                                                 child: Text(
                                                   orderModel.orderState ?? '',
@@ -279,55 +276,3 @@ class DoneOrderScreen extends StatelessWidget {
   }
 }
 
-Widget orderModelCard(ItemModel model,context) =>Card(
-  child:
-  Padding(
-    padding:
-    const EdgeInsets.all(10.0),
-    child:
-
-
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children:   [
-            Text(model.orderCount.toString()),
-            const Text('X'),
-            Text(model.itemTitle.toString()),
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        if(model.additionsList.isNotEmpty)
-          const Text(
-            ': الاضافات',
-            style: TextStyle(color: Colors.blue),
-          ),
-        if(model.additionsList.isNotEmpty)
-          SizedBox(
-            height: 30,
-            width: MediaQuery.of(context).size.width * 0.5,
-            child: Container(
-              // color: Colors.red,
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context,index){
-                    return  Text(
-                      model.additionsList[index].itemTitle??'' ,
-                      style: const TextStyle(fontSize: 14,),
-                    );
-                  },
-                  separatorBuilder: (context,index)=>index + 1 < model.additionsList.length ? const Text('  -  ',style: TextStyle(color: Colors.black),):const SizedBox(width: 5),
-                  itemCount: model.additionsList.length
-              ),
-            ),
-          )
-
-      ],
-    ),
-  ),
-);

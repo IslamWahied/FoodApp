@@ -11,6 +11,7 @@ import 'package:elomda/models/order/orderModel.dart';
 import 'package:elomda/models/user/user_model.dart';
 import 'package:elomda/modules/Order/Admin/ArchiveScreen.dart';
 import 'package:elomda/modules/Order/Admin/canceledOrder.dart';
+import 'package:elomda/modules/Order/Admin/PreparedOrder.dart';
 import 'package:elomda/modules/Order/Admin/doneOrder.dart';
 import 'package:elomda/modules/Order/Admin/newOrders.dart';
 import 'package:elomda/modules/Order/mainOrderScreen.dart';
@@ -37,6 +38,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
   List adminScreens = [
     const NewOrderScreen(),
     const PreparedOrderScreen(),
+    const DoneOrderScreen(),
     const CancelOrderScreen(),
     User_Info(),
 
