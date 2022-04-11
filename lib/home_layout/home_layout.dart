@@ -49,13 +49,15 @@ class HomeLayout extends StatelessWidget {
                         unselectedItemColor: Colors.grey,
                         selectedItemColor: Colors.deepOrange,
                         currentIndex: cubit.currentIndex,
+
                         selectedLabelStyle: const TextStyle(
-                          fontSize: 10.0
+                          fontSize: 12.5
                         ),
                         iconSize: 20,
                         items: [
 
                           BottomNavigationBarItem(
+
                             icon: Badge(
                               showBadge: HomeCubit
                                   .get(context)
@@ -96,10 +98,7 @@ class HomeLayout extends StatelessWidget {
                           ),
 
 
-                          const BottomNavigationBarItem(
-                            icon: Icon(Icons.person),
-                            label: 'الصفحة الشخصية',
-                          ),
+
 
                         ],
                       ),

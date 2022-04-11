@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-
-
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key key}) : super(key: key);
 
@@ -17,15 +15,12 @@ class RegisterScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: BlocConsumer<LoginCubit, LoginState>(
-        listener: (context, state)   {
-
-
-        },
+        listener: (context, state)   {},
         builder:(context, state) {
           var cubit = LoginCubit.get(context);
           return  SizedBox(
             height: double.infinity,
-            //decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/bg.png"), fit: BoxFit.cover)),
+
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -113,57 +108,7 @@ class RegisterScreen extends StatelessWidget {
                   const SizedBox(
                     height: 15,
                   ),
-                  // Container(
-                  //     height: 105,
-                  //     padding:  const EdgeInsets.symmetric(
-                  //       vertical: 20,
-                  //       horizontal: 30,
-                  //     ),
-                  //    child:
-                  //     DropdownSearch(
-                  //
-                  //       popupBackgroundColor:Colors.grey[250] ,
-                  //
-                  //       maxHeight: MediaQuery.of(context).size.height * 0.35,
-                  //       dropdownSearchDecoration: InputDecoration(
-                  //
-                  //         fillColor: Colors.white,
-                  //         focusedBorder: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.circular(25.0),
-                  //           borderSide: const BorderSide(
-                  //             color: Colors.black,
-                  //           ),
-                  //         ),
-                  //
-                  //
-                  //         border: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.circular(25.0),
-                  //           borderSide: const BorderSide(
-                  //             color: Colors.black,
-                  //             width: 2.0,
-                  //           ),
-                  //         ),
-                  //
-                  //         labelText: 'Department',
-                  //
-                  //         labelStyle: const TextStyle(
-                  //             color: Colors.black,
-                  //             fontWeight: FontWeight.w500,
-                  //             fontSize: 17),
-                  //       ),
-                  //
-                  //       selectedItem:cubit.departmantSelectedName??'' ,
-                  //
-                  //       showSearchBox: true,
-                  //       mode: Mode.MENU,
-                  //       items: listDepartment.map((e) => e.name).toList(),
-                  //       onChanged: (value) async {
-                  //         cubit.departmentId = listDepartment.firstWhere((element) => element.name == value ).id;
-                  //         cubit.changeRegisterValidState();
-                  //
-                  //       },
-                  //     )
-                  // ),
+
                   const SizedBox(
                     height: 30,
                   ),

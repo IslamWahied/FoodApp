@@ -36,7 +36,7 @@ Future<void> main() async {
     String userName = CachHelper.GetData(key: 'userName');
  String departmentId = CachHelper.GetData(key: 'departmentId');
   FirebaseMessaging.onMessage.listen((event) {
-
+print('onMessage');
 
   });
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -80,9 +80,9 @@ Future<void> main() async {
   }
 
   String token = await FirebaseMessaging.instance.getToken();
-print(token);
-   Global.fireBaseToken = token??'';
 
+   Global.fireBaseToken = token??'';
+print(Global.fireBaseToken);
     runApp(MyApp(userName: userName,mobile: mobile , departmentId: departmentId ,showOnBoarding: showOnBoarding,isUserLogin: isUserLogin,));
 
 }

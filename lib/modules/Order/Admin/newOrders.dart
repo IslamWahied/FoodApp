@@ -1,10 +1,12 @@
 // @dart=2.9
-
+import 'package:backdrop/backdrop.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/itemModel.dart';
-import 'package:elomda/models/order/orderModel.dart';
+import 'package:elomda/modules/home/adminBackLayer.dart';
+import 'package:elomda/modules/user_info/user_info_screen.dart';
+import 'package:elomda/shared/components/Componant.dart';
+import 'package:elomda/styles/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,205 +22,250 @@ class NewOrderScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         var newOrderList = cubit.listAllOrders.where((element) =>element.orderState.toLowerCase() == 'New'.toLowerCase()).toList();
-        return SafeArea(
-          child: Scaffold(
+        return Scaffold(
 
-            body: Conditional.single(
-              context: context,
-              conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).toList().isNotEmpty,
-              widgetBuilder: (BuildContext context) {
-                return ListView.separated(
-                    separatorBuilder: (context, index) => const SizedBox(),
-                    itemCount: newOrderList.length,
-                    itemBuilder: (context, index) {
-                      var orderModel = newOrderList[index];
+          body: Center(
+            child: BackdropScaffold(
+              onBackLayerConcealed: (){
+                cubit.isShowBackLayer = true;
+                cubit.emit(SelectCategoryState());
+              },
+              onBackLayerRevealed: (){
+                cubit.isShowBackLayer = false;
+                cubit.emit(SelectCategoryState());
+              },
 
-                      // print(orderModel.toJson());
-                      return StatefulBuilder(builder: (context, setState) {
-                        return Slidable(
+              frontLayerBackgroundColor: Constants.white,
+              headerHeight: MediaQuery.of(context).size.height * 0.45,
+              appBar: BackdropAppBar(
+                title: const Text("Home"),
+                leading: const BackdropToggleButton(
+                  icon: AnimatedIcons.home_menu,
+                  color: Colors.deepOrange,
+                ),
+                flexibleSpace: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                  ),
+                ),
+                actions: [
+                  cubit.isShowBackLayer?       IconButton(
+                      onPressed: () {
+                         navigateTo(context, User_Info());
+                      },
+                      padding: const EdgeInsets.all(10),
+                      icon: const CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 13,
+                          backgroundImage: AssetImage('assets/person.jpg'),
 
-                          closeOnScroll: false,
+                        ),
+                      )):const SizedBox(width: 1,)
+                ],
+              ),
+              backLayer: AdminBackLayerMenu(),
+              frontLayer:Conditional.single(
+                context: context,
+                conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).toList().isNotEmpty,
+                widgetBuilder: (BuildContext context) {
+                  return ListView.separated(
+                      separatorBuilder: (context, index) => const SizedBox(),
+                      itemCount: newOrderList.length,
+                      itemBuilder: (context, index) {
+                        var orderModel = newOrderList[index];
 
-                          endActionPane: ActionPane(
-                            motion: const ScrollMotion(),
-                            children: [
-                              SizedBox(
-                                height: 150,
-                                width: 80,
-                                child: SlidableAction(
-                                  // An action can be bigger than the others.
-                                  flex: 1,
-                                  onPressed: (context) {
-                                    cubit.listAllOrders.firstWhere((element) =>element == orderModel).orderState = 'Prepared';
-                                    cubit.emit(SelectCategoryState());
-                                  },
-                                  backgroundColor: Colors.green,
-                                  foregroundColor: Colors.white,
-                                  icon: Icons.check,
-                                  label: 'Done',
+
+                        return StatefulBuilder(builder: (context, setState) {
+                          return Slidable(
+
+                            closeOnScroll: false,
+
+                            endActionPane: ActionPane(
+                              motion: const ScrollMotion(),
+                              children: [
+                                SizedBox(
+                                  height: 150,
+                                  width: 80,
+                                  child: SlidableAction(
+                                    // An action can be bigger than the others.
+                                    flex: 1,
+                                    onPressed: (context) {
+                                      cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId).orderState = 'Prepared';
+                                      var x = cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId);
+                                      cubit.updateOrderState(orderModel: x);
+
+                                    },
+                                    backgroundColor: Colors.green,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.check,
+                                    label: 'تنفيذ',
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 5),
-                              SizedBox(
-                                height: 150,
-                                width: 80,
-                                child: SlidableAction(
-                                  // An action can be bigger than the others.
-                                  flex: 1,
-                                  onPressed: (context) {
-                                    cubit.listAllOrders.firstWhere((element) =>element == orderModel).orderState = 'Canceled';
-                                    cubit.emit(SelectCategoryState());
-                                  },
-                                  backgroundColor: Colors.red,
-                                  foregroundColor: Colors.white,
-                                  icon: Icons.archive,
-                                  label: 'Delete',
-                                ),
-                              ),
-                            ],
-                          ),
+                                const SizedBox(width: 5),
+                                SizedBox(
+                                  height: 150,
+                                  width: 80,
+                                  child: SlidableAction(
+                                    // An action can be bigger than the others.
+                                    flex: 1,
+                                    onPressed: (context) {
+                                      cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId).orderState = 'Canceled';
+                                      var x = cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId);
+                                      cubit.updateOrderState(orderModel: x);
 
-                          // component is not dragged.
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 200,
-                              child: Card(
-                                elevation: 2,
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(orderModel.userName ?? ''),
-                                              Baseline(
-                                                  baseline: 25.0,
-                                                  baselineType:
-                                                      TextBaseline.alphabetic,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 3),
-                                                    child: Text(
-                                                        orderModel.departMent ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                          fontSize: 10,
-                                                          color: Colors.grey,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          //    fontFamily: 'Raleway'
-                                                          // fontFamily: 'Elshan'
-                                                          // fontFamily: 'Elshan'
-                                                        )),
-                                                  )),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: 80,
-                                            height: 30,
-                                            child: Card(
-                                              color: Colors.red,
-                                              child: Center(
-                                                  child: Text(
-                                                    orderModel.orderState ?? '',
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              )),
+                                    },
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.archive,
+                                    label: 'حذف',
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            // component is not dragged.
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 200,
+                                child: Card(
+                                  elevation: 2,
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(orderModel.userName ?? ''),
+                                                Baseline(
+                                                    baseline: 25.0,
+                                                    baselineType:
+                                                        TextBaseline.alphabetic,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 3),
+                                                      child: Text(
+                                                          orderModel.departMent ??
+                                                              '',
+                                                          style: const TextStyle(
+                                                            fontSize: 10,
+                                                            color: Colors.grey,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            //    fontFamily: 'Raleway'
+                                                            // fontFamily: 'Elshan'
+                                                            // fontFamily: 'Elshan'
+                                                          )),
+                                                    )),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Divider(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: const [
-                                              Text(
-                                                'OrderCount : ',
-                                                style: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontSize: 17),
+                                            SizedBox(
+                                              width: 80,
+                                              height: 30,
+                                              child: Card(
+                                                color: Colors.red,
+                                                child: Center(
+                                                    child: Text(
+                                                      orderModel.orderState ?? '',
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                )),
                                               ),
-                                              Text(
-                                                '20',
-                                                style: TextStyle(fontSize: 17),
-                                              )
-                                            ],
-                                          ),
-                                          Text(
-                                            orderModel.createdDate ?? '',
-                                            style: TextStyle(
-                                                fontSize: 13.5,
-                                                color: Colors.grey[600]),
-                                          )
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      const Spacer(),
-                                      const Divider(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Text(
-                                                'Total : ',
-                                                style: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontSize: 17),
-                                              ),
-                                              Text(
-                                                orderModel.totalPrice.toString() ??
-                                                    '0',
-                                                style: const TextStyle(
-                                                    fontSize: 17),
-                                              ),
-                                            ],
-                                          ),
-                                          TextButton(
-                                              onPressed: () {
-                                                showDialog(
-                                                    useSafeArea: true,
-                                                    context: context,
-                                                    builder: (context) =>
-                                                            AlertDialog(
-                                                              content: SingleChildScrollView(
-                                                                child: Column(
-                                                                  mainAxisSize: MainAxisSize.min,
-                                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                                  children: [
-                                                                    Row(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: const [
-                                                                        Text(
-                                                                          'Order Detail',
-                                                                          style: TextStyle(
-                                                                              color:
-                                                                                  Colors.blue,
-                                                                              fontSize: 16),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height: 10,
-                                                                    ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Divider(),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: const [
+                                                Text(
+                                                  'OrderCount : ',
+                                                  style: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontSize: 17),
+                                                ),
+                                                Text(
+                                                  '20',
+                                                  style: TextStyle(fontSize: 17),
+                                                )
+                                              ],
+                                            ),
+                                            Text(
+                                              cubit.convertDateFormat(orderModel.createdDate) ?? '',
+                                              style: TextStyle(
+                                                  fontSize: 13.5,
+                                                  color: Colors.grey[600]),
+                                            )
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        const Spacer(),
+                                        const Divider(),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text(
+                                                  'Total : ',
+                                                  style: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontSize: 17),
+                                                ),
+                                                Text(
+                                                  orderModel.totalPrice.toString() ??
+                                                      '0',
+                                                  style: const TextStyle(
+                                                      fontSize: 17),
+                                                ),
+                                              ],
+                                            ),
+                                            TextButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                      useSafeArea: true,
+                                                      context: context,
+                                                      builder: (context) =>
+                                                              AlertDialog(
+                                                                content: SingleChildScrollView(
+                                                                  child: Column(
+                                                                    mainAxisSize: MainAxisSize.min,
+                                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                                    children: [
+                                                                      Row(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment
+                                                                                .start,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment
+                                                                                .center,
+                                                                        children: const [
+                                                                          Text(
+                                                                            'Order Detail',
+                                                                            style: TextStyle(
+                                                                                color:
+                                                                                    Colors.blue,
+                                                                                fontSize: 16),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        height: 10,
+                                                                      ),
 
 
 
@@ -234,42 +281,43 @@ SizedBox(
 
 
 
-                                                                    const Divider(),
-                                                                    TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                        child:
-                                                                            const Text(
-                                                                          'Close',
-                                                                          style: TextStyle(
-                                                                              color:
-                                                                                  Colors.red),
-                                                                        ))
-                                                                  ],
+                                                                      const Divider(),
+                                                                      TextButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.pop(
+                                                                                context);
+                                                                          },
+                                                                          child:
+                                                                              const Text(
+                                                                            'Close',
+                                                                            style: TextStyle(
+                                                                                color:
+                                                                                    Colors.red),
+                                                                          ))
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ));
-                                              },
-                                              child: const Text('Details'))
-                                        ],
-                                      ),
-                                    ],
+                                                              ));
+                                                },
+                                                child: const Text('Details'))
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      });
-                    },
+                          );
+                        });
+                      },
 
-                );
-              },
+                  );
+                },
 
-              fallbackBuilder: (BuildContext context) => const Center(child: Text('No Orders')),
+                fallbackBuilder: (BuildContext context) => const Center(child: Text('لا يوجد طلبات',style: TextStyle(color: Colors.red,fontSize: 18),)),
+              ),
             ),
           ),
         );

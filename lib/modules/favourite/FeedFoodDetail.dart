@@ -296,8 +296,7 @@ class FeedFoodDetailScreen extends StatelessWidget {
     );
   }
 
-  GestureDetector additionCard(
-      {String imagePath, int additionId, HomeCubit cubit, context}) {
+  GestureDetector additionCard({String imagePath, int additionId, HomeCubit cubit, context}) {
     return GestureDetector(
       onTap: () {
         if (cubit.listOfSelectedAdditions

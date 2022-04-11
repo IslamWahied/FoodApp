@@ -13,8 +13,8 @@ import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BackLayerMenu extends StatelessWidget {
-  BackLayerMenu({Key key}) : super(key: key);
+class UserBackLayerMenu extends StatelessWidget {
+  UserBackLayerMenu({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

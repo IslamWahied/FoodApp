@@ -9,12 +9,13 @@ import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/models/favourit/favouritModel.dart';
 import 'package:elomda/models/order/orderModel.dart';
 import 'package:elomda/models/user/user_model.dart';
-import 'package:elomda/modules/Order/Admin/ArchiveScreen.dart';
+
 import 'package:elomda/modules/Order/Admin/canceledOrder.dart';
 import 'package:elomda/modules/Order/Admin/PreparedOrder.dart';
 import 'package:elomda/modules/Order/Admin/doneOrder.dart';
 import 'package:elomda/modules/Order/Admin/newOrders.dart';
-import 'package:elomda/modules/Order/mainOrderScreen.dart';
+import 'package:elomda/modules/adminBackLayerOpations/sendNotifacation.dart';
+
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/category/subCategoryScreen.dart';
 import 'package:elomda/modules/favourite/feeds_screen.dart';
@@ -27,13 +28,14 @@ import 'package:elomda/shared/components/Componant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
 
 
 
 class HomeCubit extends Cubit<HomeScreenState> {
   HomeCubit() : super(HomeScreenStateInitState());
 
-
+  bool isShowBackLayer = true;
   int currentIndex = 0;
   List adminScreens = [
     const NewOrderScreen(),
@@ -41,6 +43,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
     const DoneOrderScreen(),
     const CancelOrderScreen(),
     User_Info(),
+    const SendNotifacationScreen()
 
   ];
 
@@ -52,7 +55,30 @@ class HomeCubit extends Cubit<HomeScreenState> {
     User_Info(),
 
   ];
+  convertDateFormat(String date) {
+    if (date != null) {
+      try {
+        String dateAfterFormat =
+        DateFormat("dd-MM-yyyy").format(DateTime.parse(date));
+        String today = DateFormat("dd-MM-yyyy").format(DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day));
+        String yesterday = DateFormat("dd-MM-yyyy").format(DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day - 1));
 
+        if (dateAfterFormat == yesterday) {
+          return 'Yesterday';
+        } else if (dateAfterFormat == today) {
+          return 'Today';
+        } else {
+          return dateAfterFormat;
+        }
+      } catch (e) {
+        return '';
+      }
+    } else {
+      return '';
+    }
+  }
   void changeCurrentIndex(int value) {
     currentIndex = value;
 
@@ -161,7 +187,12 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
 
   }
+      var orderId = 1;
+      if(listAllOrders.isNotEmpty){
+        orderId = listAllOrders.length + 1;
+      }
   var model = OrderModel(
+    orderId:orderId ,
     userMobile: Global.mobile,
     adminMobile:listUser[0].mobile ,
     createdDate: DateTime.now().toString(),
@@ -175,10 +206,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
     orderState: 'New',
     isDeleted: 0,
   );
-  var orderId = 1;
-  if(listAllOrders.isNotEmpty){
-    orderId = listAllOrders.length + 1;
-  }
+
 
   FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
   collection('orderList').doc(orderId.toString())
@@ -202,6 +230,20 @@ class HomeCubit extends Cubit<HomeScreenState> {
 }
 
   }
+
+
+  updateOrderState({OrderModel orderModel}){
+    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+    collection('orderList').doc(orderModel.orderId.toString())
+        .update(orderModel.toJson()).then((value){
+    }).catchError((onError){
+      FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+      collection('orderList').doc(orderModel.orderId.toString())
+          .set(orderModel.toJson()).then((value) {
+      }).catchError(onError);
+    });
+  }
+
 
   getTotalPrice(){
   double orderPrice = 0;
@@ -506,7 +548,7 @@ selectedItemId = 0;
 
   }
 
-  sendNotificationToUserByToken({String messageTitle ,String messageBody,String userToken }){
+   sendNotificationToUserByToken({String messageTitle ,String messageBody,String userToken }){
     Dio dio;
     dio = Dio(BaseOptions(
         baseUrl: '',
@@ -524,8 +566,34 @@ selectedItemId = 0;
     });
   }
 
-  SendNotificationForAllUser(){
+  SendNotificationForAllUser({String messageTitle ,String messageBody }) async {
 
+
+    for (var element in listUser)  {
+      print( element.fireBaseToken);
+      print( element.fireBaseToken);
+  await    sendNotificationToUserByToken(messageTitle:messageTitle,messageBody: messageBody,userToken: element.fireBaseToken);
+    }
+
+    // Dio dio;
+    // dio = Dio(BaseOptions(
+    //     baseUrl: '',
+    //     receiveDataWhenStatusError: true,
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': 'key=AAAARcAtNzU:APA91bGKDZmMAXkV3mRi_5_BvnLmaxm2rZHF7JBskZcIIkbVx34kfjzoNB-iocOI4sI4uR8Bcg0WV1B84BJ_VHWzi7gPAlC943DuTIaQOswi3upbld6tqEdO4R732LzWqaIpluYNkM_w',
+    //     }));
+    // var data = {
+    //   "notification": {"body":messageTitle ,"title": messageTitle}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}
+    // };
+    // dio.post('https://fcm.googleapis.com/fcm/send', data: data).then((value) {
+    //
+    //   print('value.data()');
+    //   print(value.data());
+    //   print('value.data()');
+    // }).catchError((onError){
+    //   print(onError);
+    // });
   }
 
   List ingredients = [

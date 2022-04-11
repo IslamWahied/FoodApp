@@ -3,7 +3,8 @@ import 'package:backdrop/backdrop.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/favourite/FeedFoodDetail.dart';
-import 'package:elomda/modules/home/backlayer.dart';
+import 'package:elomda/modules/home/Userbacklayer.dart';
+import 'package:elomda/modules/popularFood/popularFoodDetailScreen.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key key}) : super(key: key);
+  const   HomeScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +49,12 @@ class HomeScreen extends StatelessWidget {
                         child: CircleAvatar(
                             radius: 13,
                             backgroundImage: AssetImage('assets/person.jpg'),
-                            // NetworkImage(
-                            //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')
+
                         ),
                       ))
                 ],
               ),
-              backLayer: BackLayerMenu(),
+              backLayer: UserBackLayerMenu(),
               frontLayer: ListView(
                 children: [
                   Padding(
@@ -118,14 +118,14 @@ class HomeScreen extends StatelessWidget {
                               isFavourite:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == cubit.popularFoodList[index].itemId && element.isFavourit)?true:false,
                               itemId: cubit.popularFoodList[index].itemId,
                               context: context,
+
                               imagePath: cubit.popularFoodList[index].image,
                               itemDescription: cubit.popularFoodList[index].description,
                               itemPrice: cubit.popularFoodList[index].price,
                               name: cubit.popularFoodList[index].itemTitle,
                               star: '5',
 
-                              subCategoryTitle:
-                                  cubit.popularFoodList[index].supCategoryTitle,
+                              subCategoryTitle: cubit.popularFoodList[index].supCategoryTitle,
                             ),
                           ),
                         ),
@@ -191,7 +191,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget itemCard(
-      {int itemId,
+      {
+        int itemId,
       String imagePath,
       String subCategoryTitle,
       double itemPrice,
@@ -209,27 +210,25 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: GestureDetector(
           onTap: () {
+
             HomeCubit.get(context).selectedItemId = itemId;
-            HomeCubit.get(context).selectedCategoryId = HomeCubit.get(context).listFeedsSearch
-                .firstWhere((element) => element.itemId == itemId).categoryId;
-            HomeCubit.get(context).selectedSubCategoryId =
-                HomeCubit.get(context)
-                    .listFeedsSearch[index]
-                    .supCategoryId;
+            HomeCubit.get(context).selectedCategoryId = HomeCubit.get(context).popularFoodList[index].categoryId;
+            HomeCubit.get(context).selectedSubCategoryId = HomeCubit.get(context).popularFoodList[index].supCategoryId;
 
             navigateTo(
                 context,
-                FeedFoodDetailScreen(
+                popularFoodDetailScreen(
                   index: index,
                   orderCount: value,
-                  oldPrice:HomeCubit.get(context).listFeedsSearch[index].oldPrice ,
-                  isDiscount: HomeCubit.get(context).listFeedsSearch[index].isDiscount,
-                  imagePath: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).image,
-                  subCategoryTitle: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).supCategoryTitle,
-                  itemName: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).itemTitle,
-                  itemDescription: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).description ?? '',
-                  itemPrice: HomeCubit.get(context).listFeedsSearch.firstWhere((element) => element.itemId == itemId).price,
-                  itemId:HomeCubit.get(context).listFeedsSearch[index].itemId,
+                  oldPrice:HomeCubit.get(context).popularFoodList[index].oldPrice ,
+
+                  isDiscount: HomeCubit.get(context).popularFoodList[index].isDiscount,
+                  imagePath:HomeCubit.get(context).popularFoodList[index].image,
+                  subCategoryTitle:HomeCubit.get(context).popularFoodList[index].supCategoryTitle,
+                  itemName: HomeCubit.get(context).popularFoodList[index].itemTitle,
+                  itemDescription:HomeCubit.get(context).popularFoodList[index].description ?? '',
+                  itemPrice: HomeCubit.get(context).popularFoodList[index].price,
+                  itemId:HomeCubit.get(context).popularFoodList[index].itemId,
                 ));
           },
           child: Container(

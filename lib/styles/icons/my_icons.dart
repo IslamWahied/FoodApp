@@ -15,4 +15,9 @@ class MyAppIcons {
   static IconData wishlist = Ionicons.ios_heart_empty;
   static IconData upload = Feather.upload;
   static IconData upload_cloud = Feather.upload_cloud;
+  static IconData sendNotifacation = Feather.send;
+  static IconData edit = Feather.edit;
+  static IconData delete = Feather.delete;
+  static IconData customerAcount = Feather.activity;
+  static IconData myAcount = Feather.briefcase;
 }

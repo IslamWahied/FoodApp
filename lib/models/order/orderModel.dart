@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'package:elomda/models/category/itemModel.dart';
 
 class OrderModel {
-
+  int orderId;
   String userMobile;
   String adminMobile;
   String userName;
 
-
-String departMent;
+  String departMent;
   String createdDate;
   double totalAdditionalPrice;
   double totalDiscountPrice;
@@ -19,29 +18,29 @@ String departMent;
   String orderState;
   List<ItemModel> listItemModel;
 
-  OrderModel(
-      {
-        this.userName,
-        this.adminMobile,
-        this.orderState,
-        this.userMobile,
-        this.orderPrice,
-      this.createdDate,
-      this.isDeleted,
-      this.listItemModel,
-      this.totalAdditionalPrice,
-      this.totalDiscountPrice,
-      this.totalPrice,
-      this.departMent,
-      });
+  OrderModel({
+    this.orderId,
+    this.userName,
+    this.adminMobile,
+    this.orderState,
+    this.userMobile,
+    this.orderPrice,
+    this.createdDate,
+    this.isDeleted,
+    this.listItemModel,
+    this.totalAdditionalPrice,
+    this.totalDiscountPrice,
+    this.totalPrice,
+    this.departMent,
+  });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
-
     List<dynamic> listItemlist = json['listItemModel'] ?? [];
 
     var customList = listItemlist.map((e) => ItemModel.fromJson(e)).toList();
 
     return OrderModel(
+        orderId: json['orderId'],
         userName: json['userName'],
         orderState: json['orderState'],
         adminMobile: json['adminMobile'],
@@ -59,6 +58,7 @@ String departMent;
 
   Map<String, dynamic> toJson() {
     return {
+      'orderId': orderId,
       'userName': userName,
       'userMobile': userMobile,
       'orderState': orderState,
