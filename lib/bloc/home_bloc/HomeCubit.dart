@@ -5,6 +5,8 @@ import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/models/category/SupCategory.dart';
 import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/categoryModel.dart';
+
+
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/models/favourit/favouritModel.dart';
 import 'package:elomda/models/order/orderModel.dart';
@@ -25,17 +27,26 @@ import 'package:elomda/modules/search/search_screen.dart';
 import 'package:elomda/modules/user_info/user_info_screen.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as sd;
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 
 
 class HomeCubit extends Cubit<HomeScreenState> {
   HomeCubit() : super(HomeScreenStateInitState());
 
+  TextEditingController sendMessageTextControl = TextEditingController();
+  TextEditingController titleTextControl = TextEditingController();
+  TextEditingController txtUpdateCustomerBalance = TextEditingController();
+  FocusNode sendMessageNode = FocusNode();
+
   bool isShowBackLayer = true;
+  bool isValidSendNotiBottom = false;
   int currentIndex = 0;
   List adminScreens = [
     const NewOrderScreen(),
@@ -59,10 +70,10 @@ class HomeCubit extends Cubit<HomeScreenState> {
     if (date != null) {
       try {
         String dateAfterFormat =
-        DateFormat("dd-MM-yyyy").format(DateTime.parse(date));
-        String today = DateFormat("dd-MM-yyyy").format(DateTime(
+        sd.DateFormat("dd - MM - yyyy").format(DateTime.parse(date));
+        String today = sd.DateFormat("dd - MM - yyyy").format(DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day));
-        String yesterday = DateFormat("dd-MM-yyyy").format(DateTime(
+        String yesterday = sd.DateFormat("dd - MM - yyyy").format(DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day - 1));
 
         if (dateAfterFormat == yesterday) {
@@ -79,6 +90,124 @@ class HomeCubit extends Cubit<HomeScreenState> {
       return '';
     }
   }
+  RoundedLoadingButtonController loginUpdateCustomerBalance = RoundedLoadingButtonController();
+  void modalBottomSheetMenu(context){
+    showModalBottomSheet(
+        context: context,
+        builder: (builder){
+          return Container(
+            height: 400.0,
+            color: Colors.transparent, //could change this to Color(0xFF737373),
+            //so you don't have to change MaterialApp canvasColor
+            child: Container(
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:   BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0))),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Column(
+                      children: [
+                        TextFormField(
+textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.end,
+                            controller: txtUpdateCustomerBalance,
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                           emit(SearchSubCategoryState());
+                          },
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9]')),
+                          ],
+                          decoration:   InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.circular(25.0),
+                              borderSide: const BorderSide(
+                                color: Colors.black,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.circular(25.0),
+                              borderSide: const BorderSide(
+                                color: Colors.black,
+                                width: 2.0,
+                              ),
+                            ),
+                            labelText: 'المبلغ',
+                            alignLabelWithHint: true,
+
+                          ),
+
+                        ),
+
+                        SizedBox(
+                          width: 200,
+                          height: 100,
+                          child: RoundedLoadingButton(
+                              height: 60,
+                              controller: loginUpdateCustomerBalance,
+                              successColor: Colors.green,
+                              color:txtUpdateCustomerBalance.text != null &&  txtUpdateCustomerBalance.text.trim() != '' ? Colors.blue : Colors.grey[500],
+                              disabledColor: Colors.grey,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    'تاكيد',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                              animateOnTap: false,
+                              onPressed: () {
+
+                                if (txtUpdateCustomerBalance.text != null &&  txtUpdateCustomerBalance.text.trim() != '' ) {
+                                   updateCustomerBalance(context: context);
+                                }
+                              }),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+          );
+        }
+    );
+  }
+
+
+  void updateCustomerBalance({BuildContext context}){
+    Navigator.pop(context);
+    UserModel model = listUser.firstWhere((element) => element.mobile == selectedUserId);
+   double newBalance =   model.currentBalance +   double.parse(txtUpdateCustomerBalance.text);
+     model.currentBalance = newBalance;
+
+    FirebaseFirestore.instance.collection('User').doc(selectedUserId).update(model.toMap()).then((value) {
+
+      sendNotificationToUserByToken(
+        userToken: listUser.firstWhere((element) => element.mobile == selectedUserId).fireBaseToken,
+        messageBody: 'تم اضافة ${double.parse(txtUpdateCustomerBalance.text)} جنية الي حسابك رصيد حسابك الان  ${newBalance} ',
+        messageTitle: ' اضافة ${txtUpdateCustomerBalance.text +' ' + ' جنية '}في المحفظة '
+      );
+
+      txtUpdateCustomerBalance.clear();
+
+    }).catchError((e){
+      if (kDebugMode) {
+        print(e);
+
+      }
+    });
+
+  }
+
   void changeCurrentIndex(int value) {
     currentIndex = value;
 
@@ -89,10 +218,19 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   bool isDarkTheme = false;
 
+
+  String selectedUserId = '';
+
   static HomeCubit get(context) => BlocProvider.of(context);
   int selectedCategoryId = 0;
   int selectedSubCategoryId = 0;
   int selectedItemId = 0;
+
+  List<String> departMentList = [
+    'برمجه',
+    'IT'
+  ];
+
   List foodCategoryList = [
     {
       'imagePath': 'assets/pizza.svg',
@@ -112,7 +250,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
     },
   ];
 
-  List<Category> listCategory = [];
+  List<CategoryModel> listCategory = [];
   List<SubCategory> listSubCategory = [];
   List<SubCategory> listSubCategorySearch = [];
   List<ItemModel> listItems = [];
@@ -126,6 +264,16 @@ class HomeCubit extends Cubit<HomeScreenState> {
   TextEditingController txtItemControl = TextEditingController();
   TextEditingController txtFavouriteControl = TextEditingController();
   List<OrderModel> listAllOrders = [];
+
+
+ String getTotalCustomerOrdersPrice(){
+   double total = 0;
+   listAllOrders.where((element) => element.userMobile == selectedUserId).forEach((element2) {
+
+     total += element2.totalPrice - element2.totalDiscountPrice;
+   });
+    return total.toString();
+  }
 
   getOrders() async {
     FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList')
@@ -170,64 +318,73 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
 
   sendOrder() {
-    if (listOrder.isNotEmpty) {
-      double totalAdditionalPrice = 0;
-      double totalDiscountPrice = 0;
-      double orderPrice = 0;
-      double totalPrice = 0;
+   try{
+     if (listOrder.isNotEmpty) {
+       double totalAdditionalPrice = 0;
+       double totalDiscountPrice = 0;
+       double orderPrice = 0;
+       double totalPrice = 0;
 
 
-  for (var element1 in listOrder) {
-    for (var element2 in element1.additionsList) {
-      totalAdditionalPrice = totalAdditionalPrice + element2.price;
-    }
-    totalDiscountPrice = totalDiscountPrice + (element1.price - element1.oldPrice);
-    orderPrice = element1.price;
-    totalPrice =  element1.price + totalDiscountPrice + totalAdditionalPrice;
+       for (var element1 in listOrder) {
+         for (var element2 in element1.additionsList) {
+           totalAdditionalPrice = totalAdditionalPrice + element2.price;
+         }
+         totalDiscountPrice = totalDiscountPrice + (element1.price - element1.oldPrice);
+         orderPrice = element1.price;
+         totalPrice =  element1.price + totalDiscountPrice + totalAdditionalPrice;
 
 
-  }
-      var orderId = 1;
-      if(listAllOrders.isNotEmpty){
-        orderId = listAllOrders.length + 1;
-      }
-  var model = OrderModel(
-    orderId:orderId ,
-    userMobile: Global.mobile,
-    adminMobile:listUser[0].mobile ,
-    createdDate: DateTime.now().toString(),
-    listItemModel: listOrder,
-    totalAdditionalPrice:totalAdditionalPrice,
-    totalDiscountPrice:totalDiscountPrice,
-    totalPrice:totalPrice,
-    userName: Global.userName,
-    departMent: Global.departMent??'Programmer',
-    orderPrice: orderPrice,
-    orderState: 'New',
-    isDeleted: 0,
-  );
+       }
+       var orderId = 1;
+       if(listAllOrders.isNotEmpty){
+         orderId = listAllOrders.length + 1;
+       }
+       var model = OrderModel(
+         orderId:orderId ,
+
+         userMobile: Global.mobile,
+         adminMobile:listUser[0].mobile ,
+         createdDate: DateTime.now().toString(),
+         listItemModel: listOrder,
+         totalAdditionalPrice:totalAdditionalPrice,
+         totalDiscountPrice:totalDiscountPrice,
+         totalPrice:totalPrice,
+         userName: Global.userName,
+         departMent: Global.departMent??'Programmer',
+         orderPrice: orderPrice,
+         orderState: 'New',
+
+         isDeleted: 0,
+
+       );
 
 
-  FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
-  collection('orderList').doc(orderId.toString())
-      .update(model.toJson()).then((value){
-  }).catchError((onError){
-    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
-    collection('orderList').doc(orderId.toString())
-        .set(model.toJson()).then((value) {
-    }).catchError(onError);
-  });
-  // Send Notification For Admin
+       FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+       collection('orderList').doc(orderId.toString())
+           .update(model.toJson()).then((value){
+       }).catchError((onError){
+         FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+         collection('orderList').doc(orderId.toString())
+             .set(model.toJson()).then((value) {
+         }).catchError(onError);
+       });
+       // Send Notification For Admin
 
-      print( listUser[0].fireBaseToken);
-      sendNotificationToUserByToken(
-        messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
-        messageTitle: 'طلب جديد',
-        userToken: listUser[0].fireBaseToken
-      );
-  listOrder = [];
-  emit(SelectCategoryState());
-}
+       print( listUser[0].fireBaseToken);
+       sendNotificationToUserByToken(
+           messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
+           messageTitle: 'طلب جديد',
+           userToken: listUser[0].fireBaseToken
+       );
+       listOrder = [];
+       emit(SelectCategoryState());
+     }
+   }
+   catch(e){
+     print(e);
+   }
+
 
   }
 
@@ -304,6 +461,8 @@ class HomeCubit extends Cubit<HomeScreenState> {
     var newList = popularFoodList.firstWhere((element) => element.itemId == itemId);
     var model = ItemModel(
         orderCount:orderCount ,
+        isFavourite:newList.isFavourite ,
+        orderState: 'New',
         oldPrice:newList.oldPrice ,
         itemTitle:newList.itemTitle ,
         itemId: newList.itemId,
@@ -332,6 +491,8 @@ class HomeCubit extends Cubit<HomeScreenState> {
     var newList = listFeedsSearch.firstWhere((element) => element.itemId == itemId);
     var model = ItemModel(
         orderCount:orderCount ,
+        isFavourite:newList.isFavourite ,
+        orderState: 'New',
         oldPrice:newList.oldPrice ,
         itemTitle:newList.itemTitle ,
         itemId: newList.itemId,
@@ -363,7 +524,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   getCategory() async {
     FirebaseFirestore.instance.collection('Category').snapshots().listen((event) {
-    listCategory = event.docs.map((x) => Category.fromJson(x.data())).toList();
+    listCategory = event.docs.map((x) => CategoryModel.fromJson(x.data())).toList();
     emit(SelectCategoryState());
   });
   }
@@ -371,7 +532,10 @@ class HomeCubit extends Cubit<HomeScreenState> {
   getUsers() async {
     FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
       listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
+      print(listUser.first.userName);
       emit(SelectCategoryState());
+    }).onError((handleError){
+      print(handleError);
     });
   }
 
@@ -385,7 +549,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
   getFavourite() async {
     FirebaseFirestore.instance.collection('Favourite').doc(Global.mobile).collection('ItemModel').snapshots().listen((event) {
       listFavourite = event.docs.map((x) => FavouritModel.fromJson(x.data())).toList();
-      listFavourite.forEach((element) {print(element.toMap());});
+
       emit(SelectCategoryState());
     });
   }
@@ -549,6 +713,11 @@ selectedItemId = 0;
   }
 
    sendNotificationToUserByToken({String messageTitle ,String messageBody,String userToken }){
+
+    // print(messageTitle);
+    // print(messageBody);
+    // print(userToken);
+
     Dio dio;
     dio = Dio(BaseOptions(
         baseUrl: '',
@@ -558,43 +727,29 @@ selectedItemId = 0;
           'Authorization': 'key=AAAARcAtNzU:APA91bGKDZmMAXkV3mRi_5_BvnLmaxm2rZHF7JBskZcIIkbVx34kfjzoNB-iocOI4sI4uR8Bcg0WV1B84BJ_VHWzi7gPAlC943DuTIaQOswi3upbld6tqEdO4R732LzWqaIpluYNkM_w',
         }));
     var data = {
-      "notification": {"body":messageTitle ,"title": messageTitle}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}, "to": userToken
+      "notification": {"body":messageBody ,"title": messageTitle}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}, "to": userToken
     };
     dio.post('https://fcm.googleapis.com/fcm/send', data: data).then((value) {
 
       print(value.data());
+    }).catchError((onError){
+      print(onError);
     });
   }
 
-  SendNotificationForAllUser({String messageTitle ,String messageBody }) async {
-
-
+  sendNotificationForAllUser() async {
     for (var element in listUser)  {
-      print( element.fireBaseToken);
-      print( element.fireBaseToken);
-  await    sendNotificationToUserByToken(messageTitle:messageTitle,messageBody: messageBody,userToken: element.fireBaseToken);
+      await    sendNotificationToUserByToken(messageTitle:titleTextControl.text,messageBody:sendMessageTextControl.text,userToken: element.fireBaseToken);
     }
 
-    // Dio dio;
-    // dio = Dio(BaseOptions(
-    //     baseUrl: '',
-    //     receiveDataWhenStatusError: true,
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'Authorization': 'key=AAAARcAtNzU:APA91bGKDZmMAXkV3mRi_5_BvnLmaxm2rZHF7JBskZcIIkbVx34kfjzoNB-iocOI4sI4uR8Bcg0WV1B84BJ_VHWzi7gPAlC943DuTIaQOswi3upbld6tqEdO4R732LzWqaIpluYNkM_w',
-    //     }));
-    // var data = {
-    //   "notification": {"body":messageTitle ,"title": messageTitle}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}
-    // };
-    // dio.post('https://fcm.googleapis.com/fcm/send', data: data).then((value) {
-    //
-    //   print('value.data()');
-    //   print(value.data());
-    //   print('value.data()');
-    // }).catchError((onError){
-    //   print(onError);
-    // });
+    sendMessageTextControl.clear();
+    titleTextControl.clear();
+    emit(SelectCategoryState());
+
   }
+
+  RoundedLoadingButtonController sendNotifactionBtnController = RoundedLoadingButtonController();
+  RoundedLoadingButtonController callBtnController = RoundedLoadingButtonController();
 
   List ingredients = [
     {

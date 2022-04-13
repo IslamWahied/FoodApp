@@ -8,6 +8,7 @@ import 'package:elomda/modules/home/home_screen.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -416,6 +417,8 @@ HomeCubit.get(context).changeCurrentIndex(3);
                 child: Image.asset('assets/shoppingcart.png',width: 30)),
           ),
         ),
+        if(!isShowCarShop)
+        const SizedBox(width: 1,)
         // Container(
         //   padding: const EdgeInsets.all(10),
         //   decoration: BoxDecoration(

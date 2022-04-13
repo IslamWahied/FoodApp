@@ -4,6 +4,7 @@ import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/favourite/feeds_screen.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
@@ -276,9 +277,24 @@ class User_Info extends StatelessWidget {
                                 ),
                               ),
                             ),
+
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                splashColor: Theme.of(context).splashColor,
+                                child: ListTile(
+                                  onTap: () async {
+                                    Global.isAdmin = !Global.isAdmin;
+                                    HomeCubit.get(context).emit(SearchSubCategoryState());
+                                  },
+                                  title:Global.isAdmin? const Text('التحويل الي مستخدم'):const Text('التحويل الي مدير'),
+                                  leading: const Icon(Icons.exit_to_app_rounded),
+                                ),
+                              ),
+                            ),
                             const SizedBox(
                               height: 85,
-                            )
+                            ),
                           ],
                         ),
                       ),

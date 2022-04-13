@@ -4,6 +4,7 @@ import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/Update_Data/UpdateData.dart';
+import 'package:elomda/modules/adminBackLayerOpations/customerAccount/customerAccount.dart';
 import 'package:elomda/modules/adminBackLayerOpations/sendNotifacation.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/favourite/feeds_screen.dart';
@@ -63,7 +64,9 @@ class AdminBackLayerMenu extends StatelessWidget {
                     //
                     // const SizedBox(height: 5.0),
                     content(context, () {
-                      navigateTo(context, const UploadProductForm());
+                      cubit.selectedUserId = '';
+
+                      navigateTo(context, const CustomerAccountScreen());
                     }, 'حسابات العملاء',3),
 
 

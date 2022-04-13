@@ -2,7 +2,7 @@
 class Global {
   static String mobile = '01151816423';
   static String userName = 'islam';
-  static String departMent = 'Programmer';
+  static int departMent = 0;
   static String fireBaseToken;
-  static bool isAdmin = true;
+  static bool isAdmin = false;
 }

@@ -116,6 +116,7 @@ class HomeScreen extends StatelessWidget {
                             (index) => itemCard(
                               index: index,
                               isFavourite:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == cubit.popularFoodList[index].itemId && element.isFavourit)?true:false,
+
                               itemId: cubit.popularFoodList[index].itemId,
                               context: context,
 

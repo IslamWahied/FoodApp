@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/models/user/user_model.dart';
@@ -183,7 +184,7 @@ class LoginCubit extends Cubit<LoginState> {
 
    Global.mobile = textMobileControl.text;
    Global.userName = txtRegisterUserNameControl.text;
-   Global.departMent = departMentSelectedName;
+   Global.departMent = HomeCubit.get(context).departMentList.indexWhere((element) => element == departMentSelectedName);
 
 
 
@@ -197,7 +198,7 @@ class LoginCubit extends Cubit<LoginState> {
    UserModel model =  UserModel(
      image: '',
      isAdmin: false,
-     departMent:'Programmer',
+     departmentId:0,
      mobile: Global.mobile,
      userName: Global.userName,
      fireBaseToken: Global.fireBaseToken,

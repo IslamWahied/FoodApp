@@ -466,6 +466,7 @@ class UploadProductForm extends StatelessWidget {
                                       : '',
                                   showSearchBox: true,
                                   mode: Mode.BOTTOM_SHEET,
+
                                   items: HomeCubit.get(context).listCategory.where((
                                       element) => element.isDeleted == 0)
                                       .map((e) => e.categoryTitle)

@@ -5,6 +5,7 @@ import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/models/category/SupCategory.dart';
 import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/categoryModel.dart';
+
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -137,7 +138,7 @@ bool isOldPrice = false;
           value.ref.getDownloadURL().then((value) {
             //emit(SocialUploadProfileImageSuccessState());
 
-            Category model = Category(
+            CategoryModel model = CategoryModel(
                 createdDate: DateTime.now().toString(),
                 categoryId: HomeCubit.get(context).listCategory.isEmpty ? 1 : HomeCubit.get(context).listCategory.length + 1,
                 image: value,

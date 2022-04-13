@@ -1,5 +1,5 @@
 // @dart=2.9
-class Category {
+class CategoryModel {
   String categoryTitle;
   int categoryId;
   int isDeleted;
@@ -11,9 +11,9 @@ class Category {
 
 
 
-  Category({this.isAvailable,this.categoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted});
+  CategoryModel({this.isAvailable,this.categoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted});
 
-  Category.fromJson(Map<String, dynamic> json)
+  CategoryModel.fromJson(Map<String, dynamic> json)
   {
     categoryTitle = json['categoryTitle'];
     categoryId = json['categoryId'];

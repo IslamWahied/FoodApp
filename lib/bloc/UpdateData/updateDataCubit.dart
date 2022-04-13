@@ -144,7 +144,7 @@ class UpdateDataCubit extends Cubit<UploadDataState> {
           value.ref.getDownloadURL().then((value) {
             emit(refershState());
 
-            Category model = Category(
+            CategoryModel model = CategoryModel(
                 createdDate: DateTime.now().toString(),
                 categoryId: selectedCategoryId,
                 image: value,
@@ -369,7 +369,7 @@ class UpdateDataCubit extends Cubit<UploadDataState> {
 
 
 
-            Category model = Category(
+        CategoryModel model = CategoryModel(
                 createdDate: DateTime.now().toString(),
                 categoryId: selectedCategoryId,
                 image: prodeuctImageUrl??'',

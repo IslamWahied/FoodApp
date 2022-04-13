@@ -1,5 +1,5 @@
 // @dart=2.9
-// ignore_for_file: must_be_immutable
+
 
 import 'package:elomda/bloc/UpdateData/updateDataCubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
@@ -21,7 +21,7 @@ import 'bloc/login_bloc/loginCubit.dart';
 
 import 'shared/Global.dart';
 
-//  https://flutterawesome.com/an-awesome-flutter-food-delivery-app-ui/
+
 
 Future<void> main() async {
 
@@ -126,7 +126,7 @@ class MyApp extends StatelessWidget {
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
             home:  const HomeLayout(),
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-          // home:const LoginScreen(),
+         //  home:const LoginScreen(),
           // home:VerifiedScreen(),
        //  home:const RegisterScreen(),
         ));

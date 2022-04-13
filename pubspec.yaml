@@ -66,6 +66,7 @@ dependencies:
   flutter_slidable: ^1.2.0
   flutter_conditional_rendering: ^2.0.0
   list_tile_switch:
+  url_launcher: ^6.0.0
 
 
 dev_dependencies:
@@ -104,6 +105,9 @@ flutter:
         - asset: fonts/Poppins-Medium.ttf
         - asset: fonts/Poppins-SemiBold.ttf
         - asset: fonts/Poppins-Bold.ttf
+    - family: IconBroken
+      fonts:
+        - asset: assets/fonts/icons.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
