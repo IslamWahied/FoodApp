@@ -2,6 +2,7 @@
 import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/bloc/login_bloc/loginCubit.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -110,7 +111,7 @@ class HomeLayout extends StatelessWidget {
                   notchMargin: 0.01,
                   clipBehavior: Clip.antiAlias,
                   child: SizedBox(
-                    height: kBottomNavigationBarHeight * 0.98,
+                    height: kBottomNavigationBarHeight * 1.12,
                     child: Container(
                       decoration: const BoxDecoration(
                           color: Colors.white,
@@ -133,21 +134,21 @@ class HomeLayout extends StatelessWidget {
                         items: [
                           const BottomNavigationBarItem(
                             icon: Icon(Icons.home),
-                            label: 'Home',
+                            label: 'الرئيسية',
                           ),
-                          cubit.listUser.isNotEmpty &&   cubit.listUser.firstWhere((element) => element.mobile == '01151816423').isAdmin?
+                          LoginCubit.get(context).listUser.isNotEmpty &&   LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == Global.mobile).isAdmin?
                           const BottomNavigationBarItem(
                             icon: Icon(Icons.bookmark_border),
-                            label: 'Orders',
+                            label: 'الطلبات',
                           ) :
                           const BottomNavigationBarItem(
                             icon: Icon(Icons.favorite),
-                            label: 'Favorite',
+                            label: 'المفضل',
                           ),
                           const BottomNavigationBarItem(
                             activeIcon: null,
                             icon: Icon(null),
-                            label: 'Search',
+                            label: 'بحث',
                           ),
                           BottomNavigationBarItem(
                             icon: Badge(
@@ -168,12 +169,12 @@ class HomeLayout extends StatelessWidget {
                                 Icons.shopping_bag,
                               ),
                             ),
-                            label: 'Cart',
+                            label: 'الطلبات',
 
                           ),
                           const BottomNavigationBarItem(
-                            icon: Icon(Icons.person),
-                            label: 'User',
+                            icon: Icon(Icons.settings),
+                            label: 'الاعدادات',
                           ),
                         ],
                       ),

@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/bloc/login_bloc/loginCubit.dart';
 import 'package:elomda/models/category/SupCategory.dart';
 import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/categoryModel.dart';
@@ -10,6 +11,7 @@ import 'package:elomda/models/category/categoryModel.dart';
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/models/favourit/favouritModel.dart';
 import 'package:elomda/models/order/orderModel.dart';
+import 'package:elomda/models/project/projectModel.dart';
 import 'package:elomda/models/user/user_model.dart';
 
 import 'package:elomda/modules/Order/Admin/canceledOrder.dart';
@@ -185,14 +187,14 @@ textDirection: TextDirection.rtl,
 
   void updateCustomerBalance({BuildContext context}){
     Navigator.pop(context);
-    UserModel model = listUser.firstWhere((element) => element.mobile == selectedUserId);
+    UserModel model = LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == selectedUserId);
    double newBalance =   model.currentBalance +   double.parse(txtUpdateCustomerBalance.text);
      model.currentBalance = newBalance;
 
     FirebaseFirestore.instance.collection('User').doc(selectedUserId).update(model.toMap()).then((value) {
 
       sendNotificationToUserByToken(
-        userToken: listUser.firstWhere((element) => element.mobile == selectedUserId).fireBaseToken,
+        userToken:  LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == selectedUserId).fireBaseToken,
         messageBody: 'تم اضافة ${double.parse(txtUpdateCustomerBalance.text)} جنية الي حسابك رصيد حسابك الان  ${newBalance} ',
         messageTitle: ' اضافة ${txtUpdateCustomerBalance.text +' ' + ' جنية '}في المحفظة '
       );
@@ -207,8 +209,43 @@ textDirection: TextDirection.rtl,
     });
 
   }
-
+String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديدة';
   void changeCurrentIndex(int value) {
+
+    if(Global.isAdmin){
+      if(value == 0){
+          selectedTab = 'طلبات جديدة';
+      }
+      else if(value == 1){
+        selectedTab = 'تحت التجهيز';
+      }
+      else if(value == 2){
+        selectedTab = 'تم التوصيل';
+      }
+      else if(value == 3){
+        selectedTab = 'الاوردرات السابقة';
+      }
+    }
+    else{
+
+      if(value == 0){
+        selectedTab = 'القائمة الرئيسية';
+      }
+      else if(value == 1){
+        selectedTab = 'المفضل';
+      }
+      else if(value == 2){
+        selectedTab = 'بحث';
+      }
+      else if(value == 3){
+        selectedTab = 'الطلبات';
+      }
+      else if(value == 4){
+        selectedTab = 'الاعدادات';
+      }
+    }
+
+
     currentIndex = value;
 
     emit(SearchSubCategoryState());
@@ -259,7 +296,7 @@ textDirection: TextDirection.rtl,
   List<ItemModel> listFeedsSearch = [];
   List<ItemModel> listOrder = [];
   List<AdditionsModel> listAdditions = [];
-  List<UserModel> listUser = [];
+
   TextEditingController txtSubCategoryControl = TextEditingController();
   TextEditingController txtItemControl = TextEditingController();
   TextEditingController txtFavouriteControl = TextEditingController();
@@ -317,7 +354,7 @@ textDirection: TextDirection.rtl,
   }
 
 
-  sendOrder() {
+  sendOrder(context) {
    try{
      if (listOrder.isNotEmpty) {
        double totalAdditionalPrice = 0;
@@ -344,7 +381,7 @@ textDirection: TextDirection.rtl,
          orderId:orderId ,
 
          userMobile: Global.mobile,
-         adminMobile:listUser[0].mobile ,
+         adminMobile:LoginCubit.get(context).listUser[0].mobile ,
          createdDate: DateTime.now().toString(),
          listItemModel: listOrder,
          totalAdditionalPrice:totalAdditionalPrice,
@@ -371,11 +408,11 @@ textDirection: TextDirection.rtl,
        });
        // Send Notification For Admin
 
-       print( listUser[0].fireBaseToken);
+       print( LoginCubit.get(context).listUser[0].fireBaseToken);
        sendNotificationToUserByToken(
            messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
            messageTitle: 'طلب جديد',
-           userToken: listUser[0].fireBaseToken
+           userToken:  LoginCubit.get(context).listUser[0].fireBaseToken
        );
        listOrder = [];
        emit(SelectCategoryState());
@@ -529,15 +566,6 @@ textDirection: TextDirection.rtl,
   });
   }
 
-  getUsers() async {
-    FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
-      listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
-      print(listUser.first.userName);
-      emit(SelectCategoryState());
-    }).onError((handleError){
-      print(handleError);
-    });
-  }
 
   getSubCategory() async {
     FirebaseFirestore.instance.collection('SubCategory').snapshots().listen((event) {
@@ -553,6 +581,10 @@ textDirection: TextDirection.rtl,
       emit(SelectCategoryState());
     });
   }
+
+
+
+
 
 
 
@@ -737,8 +769,8 @@ selectedItemId = 0;
     });
   }
 
-  sendNotificationForAllUser() async {
-    for (var element in listUser)  {
+  sendNotificationForAllUser(context) async {
+    for (var element in  LoginCubit.get(context).listUser)  {
       await    sendNotificationToUserByToken(messageTitle:titleTextControl.text,messageBody:sendMessageTextControl.text,userToken: element.fireBaseToken);
     }
 

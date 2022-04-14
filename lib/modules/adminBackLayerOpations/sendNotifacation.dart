@@ -165,7 +165,7 @@ class SendNotifacationScreen extends StatelessWidget {
                             &&
                                 cubit.titleTextControl.text != null && cubit.titleTextControl.text.trim() != ''
                             ) {
-                             cubit.sendNotificationForAllUser();
+                             cubit.sendNotificationForAllUser(context);
                             }
                           }),
                     ),

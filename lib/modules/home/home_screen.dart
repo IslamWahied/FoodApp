@@ -5,6 +5,7 @@ import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/favourite/FeedFoodDetail.dart';
 import 'package:elomda/modules/home/Userbacklayer.dart';
 import 'package:elomda/modules/popularFood/popularFoodDetailScreen.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class HomeScreen extends StatelessWidget {
               frontLayerBackgroundColor: Constants.white,
               headerHeight: MediaQuery.of(context).size.height * 0.45,
               appBar: BackdropAppBar(
-                title: const Text("Home"),
+                title:   Text(cubit.selectedTab),
                 leading: const BackdropToggleButton(
                   icon: AnimatedIcons.home_menu,
                   color: Colors.deepOrange,
@@ -43,10 +44,19 @@ class HomeScreen extends StatelessWidget {
                         // navigateTo(context, User_Info());
                       },
                       padding: const EdgeInsets.all(10),
-                      icon: const CircleAvatar(
+                      icon:   CircleAvatar(
                         radius: 15,
                         backgroundColor: Colors.white,
-                        child: CircleAvatar(
+                        child:Global.imageUrl != null?
+                        CircleAvatar(
+                          radius: 30.0,
+                          backgroundImage:
+                          NetworkImage(Global.imageUrl),
+                          backgroundColor: Colors.transparent,
+                        )
+
+                       :
+                        const CircleAvatar(
                             radius: 13,
                             backgroundImage: AssetImage('assets/person.jpg'),
 

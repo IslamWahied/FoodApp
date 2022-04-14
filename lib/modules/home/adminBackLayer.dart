@@ -35,9 +35,16 @@ class AdminBackLayerMenu extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Center(
+                Global.imageUrl != null?    Center(
+                  child: CircleAvatar(
+                    radius: 60.0,
+                    backgroundImage:
+                    NetworkImage(Global.imageUrl),
+                    backgroundColor: Colors.transparent,
+                  ),
+                )   : const Center(
                       child: CircleAvatar(
-                        radius: 40,
+                        radius: 60,
                         backgroundImage: AssetImage('assets/person.jpg'),
 
                       ),

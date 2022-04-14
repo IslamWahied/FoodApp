@@ -45,7 +45,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                       margin: const EdgeInsets.only(bottom: 20),
                       child: TextFormField(
-
+maxLength: 11,
 
                         controller: cubit.textMobileControl,
                         keyboardType: TextInputType.phone,
@@ -57,9 +57,10 @@ class LoginScreen extends StatelessWidget {
                             color: Color(0xff000912),
                           ),
                         ),
+
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(vertical: 25),
-                          hintText: "Mobile",
+                          hintText: "الموبيل",
                           hintStyle: TextStyle(
                             color: Color(0xffA6B0BD),
                           ),
@@ -100,7 +101,7 @@ class LoginScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
                               Text(
-                                'Activation',
+                                'الحصول علي كود',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
                                 textAlign: TextAlign.center,

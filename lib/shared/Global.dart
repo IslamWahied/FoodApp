@@ -1,8 +1,12 @@
 // @dart=2.9
 class Global {
-  static String mobile = '01151816423';
-  static String userName = 'islam';
+  static String mobile ;
+  static String imageUrl ;
+  static String projectImageUrl ;
+  static String userName ;
+
   static int departMent = 0;
+  static int id = 0;
   static String fireBaseToken;
   static bool isAdmin = false;
 }

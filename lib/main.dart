@@ -5,7 +5,6 @@ import 'package:elomda/bloc/UpdateData/updateDataCubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 
-import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/login/login_screen.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:elomda/shared/network/Dio_Helper/Dio_Helper.dart';
@@ -34,20 +33,20 @@ Future<void> main() async {
 
    String mobile =  CachHelper.GetData(key: 'mobile');
     String userName = CachHelper.GetData(key: 'userName');
- String departmentId = CachHelper.GetData(key: 'departmentId');
+ int departmentId = CachHelper.GetData(key: 'departmentId');
   FirebaseMessaging.onMessage.listen((event) {
-print('onMessage');
+  // print('onMessage');
 
   });
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print('A new onMessageOpenedApp event was published!');
+    // print('A new onMessageOpenedApp event was published!');
     // Navigator.pushNamed(context, '/message',
     //     arguments: MessageArguments(message, true));
   });
 
   FirebaseMessaging.onBackgroundMessage((message) {
 
-    print('onBackgroundMessage!');
+    // print('onBackgroundMessage!');
 
   });
 
@@ -59,7 +58,7 @@ print('onMessage');
 
   if(
   mobile != null && mobile.trim() != '' &&
-      departmentId != null && departmentId.trim() != '' &&
+      departmentId != null  &&
       userName !=null   && userName.trim() != ''
   ){
 
@@ -82,7 +81,7 @@ print('onMessage');
   String token = await FirebaseMessaging.instance.getToken();
 
    Global.fireBaseToken = token??'';
-print(Global.fireBaseToken);
+
     runApp(MyApp(userName: userName,mobile: mobile , departmentId: departmentId ,showOnBoarding: showOnBoarding,isUserLogin: isUserLogin,));
 
 }
@@ -91,7 +90,7 @@ class MyApp extends StatelessWidget {
 
   String userName;
   String mobile;
-  String departmentId;
+  int departmentId;
   bool isUserLogin;
   bool showOnBoarding;
   MyApp({Key key,
@@ -114,21 +113,21 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => LoginCubit()),
+          BlocProvider(create: (context) => LoginCubit()..getAllProjects()..getUsers()),
           BlocProvider(create: (context) => UploadProducts()),
           BlocProvider(create: (context) => UpdateDataCubit()),
-          BlocProvider(create: (context) => HomeCubit()..getOrders()..getCategory()..getUsers()..getSubCategory()..getItems()..getAdditions()..getFavourite()),
+          BlocProvider(create: (context) => HomeCubit()..getOrders()..getCategory()..getSubCategory()..getItems()..getAdditions()..getFavourite()),
         ],
         child: MaterialApp(
           theme: Constants.lightTheme,
           builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-            home:  const HomeLayout(),
+           // home:  const HomeLayout(),
           //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-         //  home:const LoginScreen(),
+          home:const LoginScreen(),
           // home:VerifiedScreen(),
-       //  home:const RegisterScreen(),
+      //   home:  const AccountTypeScreen(),
         ));
 
 

@@ -2,16 +2,15 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/bloc/login_bloc/loginCubit.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
-import 'package:elomda/styles/icons/icon_broken.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'CustomerOrder.dart';
 
 class CustomerAccountScreen extends StatelessWidget {
@@ -83,7 +82,7 @@ class CustomerAccountScreen extends StatelessWidget {
                                 fontSize: 20),
                           ),
                           selectedItem: cubit.selectedUserId.trim() !=
-                              '' ? cubit.listUser
+                              '' ? LoginCubit.get(context).listUser
                               .firstWhere((element) =>
                           element.mobile == cubit.selectedUserId)
                               .userName
@@ -91,11 +90,11 @@ class CustomerAccountScreen extends StatelessWidget {
                           showSearchBox: true,
                           mode: Mode.BOTTOM_SHEET,
 
-                          items: cubit.listUser.map((e) => e.userName).toList(),
+                          items: LoginCubit.get(context).listUser.map((e) => e.userName).toList(),
                           onChanged: (value) async {
                            if(value != null)
                              {
-                               cubit.selectedUserId = cubit.listUser.firstWhere((element) => element.userName.toLowerCase()  == value.toString().toLowerCase()).mobile ;
+                               cubit.selectedUserId = LoginCubit.get(context).listUser.firstWhere((element) => element.userName.toLowerCase()  == value.toString().toLowerCase()).mobile ;
                              }else{
                              cubit.selectedUserId = '';
 
@@ -200,7 +199,7 @@ color: Colors.white,
                                                       width: 15,
                                                     ),
                                                     PrimaryText(
-                                                      text:cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).currentBalance.toString()??'0' ,
+                                                      text:LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).currentBalance.toString()??'0' ,
                                                       size: 25,
                                                       fontWeight: FontWeight.w700,
                                                       color: Constants.tertiary,
@@ -241,7 +240,7 @@ mainAxisAlignment: MainAxisAlignment.end,
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
-                                            Text(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId != null?cubit.departMentList[cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId]:'',style: const TextStyle(color: Colors.blueAccent,fontSize: 16),),
+                                            Text(LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId != null?cubit.departMentList[LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId]:'',style: const TextStyle(color: Colors.blueAccent,fontSize: 16),),
                                             const Text('  :  '),
                                             Text('القسم',style: TextStyle(fontSize: 16,color: Colors.grey[600],fontWeight:FontWeight.w600)),
 
@@ -250,7 +249,7 @@ mainAxisAlignment: MainAxisAlignment.end,
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
-                                            Text(cubit.convertDateFormat(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).createdDate)??'',style: TextStyle(color: Colors.blueAccent,fontSize: 16),),
+                                            Text(cubit.convertDateFormat(LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).createdDate)??'',style: TextStyle(color: Colors.blueAccent,fontSize: 16),),
                                             // const Text('  :  '),
                                             Text('تاريخ الانضمام',style: TextStyle(fontSize: 16,color: Colors.grey[600],fontWeight:FontWeight.w600)),
 
@@ -314,9 +313,9 @@ mainAxisAlignment: MainAxisAlignment.end,
                               CircleAvatar(
                                 radius: 32,
                                 backgroundColor: Colors.grey[50],
-                                child:cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image != null && cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image.trim() != '' ? CircleAvatar(
+                                child:LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image != null && LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image.trim() != '' ? CircleAvatar(
                                   radius: 28,
-                                  backgroundImage: NetworkImage(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image),
+                                  backgroundImage: NetworkImage(LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image),
 
                                 ): const CircleAvatar(
                                   radius: 28,
@@ -325,7 +324,7 @@ mainAxisAlignment: MainAxisAlignment.end,
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              Text(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName??'',style: TextStyle(fontSize: 20,color: Colors.grey),)
+                              Text(LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName??'',style: TextStyle(fontSize: 20,color: Colors.grey),)
                             ],
                           ),
                         ),

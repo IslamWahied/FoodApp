@@ -1,7 +1,10 @@
 //@dart=2.9
+import 'package:backdrop/backdrop.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/modules/home/adminBackLayer.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
+import 'package:elomda/shared/Global.dart';
 
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
@@ -25,209 +28,179 @@ class OrderScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = HomeCubit.get(context);
-          return SafeArea(
-            bottom: false,
-            child: Scaffold(
-              extendBody: true,
-              appBar: isShowNavBar != false
-                  ? AppBar(
-                      elevation: 0,
-                      automaticallyImplyLeading: false,
-                      backgroundColor: Colors.transparent,
-                      centerTitle: false,
-                      leadingWidth: 0,
-                      iconTheme: const IconThemeData(color: Constants.black),
-                      title: customAppBar(context: context, title: ''),
-                    )
-                  : AppBar(
-                      elevation: 0,
-                      backgroundColor: Colors.transparent,
-                    ),
-              // floatingActionButton: Padding(
-              //   padding: const EdgeInsets.only(bottom: 25),
-              //   child: ConstrainedBox(
-              //     constraints: BoxConstraints(
-              //         minWidth: MediaQuery.of(context).size.width - 40),
-              //     child: ElevatedButton(
-              //       onPressed: () {
-              //          cubit.sendOrder();
-              //       },
-              //       child: Row(
-              //         mainAxisSize: MainAxisSize.min,
-              //         children: [
-              //           Row(
-              //             mainAxisAlignment: MainAxisAlignment.start,
-              //             children: [
-              //               SvgPicture.asset(
-              //                 'assets/dollar.svg',
-              //                 color: Constants.tertiary,
-              //                 width: 15,
-              //               ),
-              //               PrimaryText(
-              //                 text: cubit.getTotalPrice() ?? '0',
-              //                 size: 30,
-              //                 fontWeight: FontWeight.w700,
-              //                 color: Constants.tertiary,
-              //                 height: 1,
-              //               ),
-              //             ],
-              //           ),
-              //           const SizedBox(
-              //             width: 10,
-              //           ),
-              //           const PrimaryText(
-              //             text: 'تاكيد الطلب',
-              //             fontWeight: FontWeight.w600,
-              //             size: 18,
-              //           ),
-              //           const SizedBox(
-              //             width: 10,
-              //           ),
-              //           const Icon(
-              //             Icons.chevron_right,
-              //             color: Constants.black,
-              //           )
-              //         ],
-              //       ),
-              //       style: ElevatedButton.styleFrom(
-              //           primary: cubit.getTotalPrice() == '0' ||
-              //                   cubit.getTotalPrice() == null
-              //               ? Colors.yellowAccent[200]
-              //               : Constants.primary,
-              //           shape: RoundedRectangleBorder(
-              //               borderRadius: BorderRadius.circular(10.0)),
-              //           padding: const EdgeInsets.symmetric(
-              //               horizontal: 50, vertical: 20),
-              //           textStyle: const TextStyle(
-              //               fontSize: 30, fontWeight: FontWeight.bold)),
-              //     ),
-              //   ),
-              // ),
-              // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          return BackdropScaffold(
+            onBackLayerConcealed: (){
+              cubit.isShowBackLayer = true;
+              cubit.emit(SelectCategoryState());
+            },
+            onBackLayerRevealed: (){
+              cubit.isShowBackLayer = false;
+              cubit.emit(SelectCategoryState());
+            },
 
-              bottomSheet: BottomSheet(
-                onClosing: () {},
-                enableDrag: false,
-                builder: (context) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 55),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          cubit.sendOrder();
-                        },
-                        child: Row(
-                          // mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/dollar.svg',
-                                  color: Constants.tertiary,
-                                  width: 15,
+            frontLayerBackgroundColor: Constants.white,
+            headerHeight: MediaQuery.of(context).size.height * 0.45,
+            appBar: BackdropAppBar(
+              title:   Text( cubit.selectedTab),
+              leading: const BackdropToggleButton(
+                icon: AnimatedIcons.home_menu,
+                color: Colors.deepOrange,
+              ),
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                ),
+              ),
+              actions: [
+                cubit.isShowBackLayer?        IconButton(
+                    onPressed: () {
+                      // navigateTo(context, User_Info());
+                    },
+                    padding: const EdgeInsets.all(10),
+                    icon:   CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.white,
+                      child:Global.imageUrl != null?
+                      CircleAvatar(
+                        radius: 30.0,
+                        backgroundImage:
+                        NetworkImage(Global.imageUrl),
+                        backgroundColor: Colors.transparent,
+                      )
+
+                          :
+                      const CircleAvatar(
+                        radius: 13,
+                        backgroundImage: AssetImage('assets/person.jpg'),
+
+                      ),
+                    )):const SizedBox(width: 1,)
+
+              ],
+            ),
+            backLayer: AdminBackLayerMenu(),
+            bottomSheet: BottomSheet(
+              onClosing: () {},
+              enableDrag: false,
+              builder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 55),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        cubit.sendOrder(context);
+                      },
+                      child: Row(
+                        // mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/dollar.svg',
+                                color: Constants.tertiary,
+                                width: 15,
+                              ),
+                              PrimaryText(
+                                text: cubit.getTotalPrice() ?? '0',
+                                size: 30,
+                                fontWeight: FontWeight.w700,
+                                color: Constants.tertiary,
+                                height: 1,
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: const [
+                                SizedBox(
+                                  width: 20,
                                 ),
                                 PrimaryText(
-                                  text: cubit.getTotalPrice() ?? '0',
-                                  size: 30,
-                                  fontWeight: FontWeight.w700,
-                                  color: Constants.tertiary,
-                                  height: 1,
+                                  text: 'تاكيد الطلب',
+                                  fontWeight: FontWeight.w600,
+                                  size: 18,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: Constants.black,
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: const [
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  PrimaryText(
-                                    text: 'تاكيد الطلب',
-                                    fontWeight: FontWeight.w600,
-                                    size: 18,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Icon(
-                                    Icons.chevron_right,
-                                    color: Constants.black,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            primary: cubit.getTotalPrice() == '0' ||
-                                    cubit.getTotalPrice() == null
-                                ? Colors.yellowAccent[200]
-                                : Constants.primary,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 50, vertical: 20),
-                            textStyle: const TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold)),
+                          )
+                        ],
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          primary: cubit.getTotalPrice() == '0' ||
+                                  cubit.getTotalPrice() == null
+                              ? Colors.yellowAccent[200]
+                              : Constants.primary,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 20),
+                          textStyle: const TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                );
+              },
+            ),
+            frontLayer:Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: cubit.listOrder.isEmpty
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.start,
+              children: [
+                Visibility(
+                    visible:
+                    cubit.listOrder.isNotEmpty && cubit.listOrder != [],
+                    replacement: const Center(
+                      child: Text(
+                        'لايوجد طلبات مضافة',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w500),
                       ),
                     ),
-                  );
-                },
-              ),
-              backgroundColor: Constants.white,
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: cubit.listOrder.isEmpty
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.start,
-                children: [
-                  Visibility(
-                      visible:
-                          cubit.listOrder.isNotEmpty && cubit.listOrder != [],
-                      replacement: const Center(
-                        child: Text(
-                          'لايوجد طلبات مضافة',
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w500),
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: cubit.listOrder.length ?? 0,
+                          itemBuilder: (context, index) => itemCard(
+                              itemId: cubit.listOrder[index].itemId,
+                              isFavourite: cubit.listFavourite.isNotEmpty &&
+                                  cubit.listFavourite.any((element) =>
+                                  element.ItemId ==
+                                      cubit.listOrder[index].itemId &&
+                                      element.isFavourit)
+                                  ? true
+                                  : false,
+                              itemPrice: cubit.listOrder[index].price,
+                              index: index,
+                              subCategoryTitle:
+                              cubit.listOrder[index].supCategoryTitle,
+                              name: cubit.listOrder[index].itemTitle,
+                              context: context,
+                              imagePath: cubit.listOrder[index].image,
+                              itemsPrice: cubit.listOrder[index].price,
+                              star: '',
+                              itemDescription:
+                              cubit.listOrder[index].description ?? ''),
                         ),
                       ),
-                      child: Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            itemCount: cubit.listOrder.length ?? 0,
-                            itemBuilder: (context, index) => itemCard(
-                                itemId: cubit.listOrder[index].itemId,
-                                isFavourite: cubit.listFavourite.isNotEmpty &&
-                                        cubit.listFavourite.any((element) =>
-                                            element.ItemId ==
-                                                cubit.listOrder[index].itemId &&
-                                            element.isFavourit)
-                                    ? true
-                                    : false,
-                                itemPrice: cubit.listOrder[index].price,
-                                index: index,
-                                subCategoryTitle:
-                                    cubit.listOrder[index].supCategoryTitle,
-                                name: cubit.listOrder[index].itemTitle,
-                                context: context,
-                                imagePath: cubit.listOrder[index].image,
-                                itemsPrice: cubit.listOrder[index].price,
-                                star: '',
-                                itemDescription:
-                                    cubit.listOrder[index].description ?? ''),
-                          ),
-                        ),
-                      )),
-                ],
-              ),
+                    )),
+              ],
             ),
+
           );
         });
   }
@@ -269,7 +242,7 @@ Widget checkoutSection(context, double total) {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    HomeCubit.get(context).sendOrder();
+                    HomeCubit.get(context).sendOrder(context);
                   },
                   borderRadius: BorderRadius.circular(30),
                   child: const Padding(

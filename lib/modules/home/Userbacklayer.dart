@@ -7,6 +7,7 @@ import 'package:elomda/modules/Update_Data/UpdateData.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/favourite/feeds_screen.dart';
 import 'package:elomda/modules/upload_products/upload_products.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/icons/my_icons.dart';
@@ -34,8 +35,13 @@ class UserBackLayerMenu extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Center(
-                        child: CircleAvatar(
+                        Center(
+                        child: Global.imageUrl != null?  CircleAvatar(
+                          radius: 30.0,
+                          backgroundImage:
+                          NetworkImage(Global.imageUrl),
+                          backgroundColor: Colors.transparent,
+                        ):const CircleAvatar(
                             radius: 45,
                             backgroundImage: AssetImage('assets/person.jpg'),
 
@@ -55,16 +61,16 @@ class UserBackLayerMenu extends StatelessWidget {
                       }, 'My Favorite', 2),
                       const SizedBox(height: 5.0),
 
-                      content(context, () {
-                        UpdateDataCubit.get(context).restAfterUpload(context);
-                        UpdateDataCubit.get(context).selectedTypeItemId = 1;
-                        navigateTo(context, const UpdateDataScreen());
-                      }, 'Update product', 4),
-
-                      const SizedBox(height: 5.0),
-                      content(context, () {
-                        navigateTo(context, const UploadProductForm());
-                      }, 'Upload a new product',3),
+                      // content(context, () {
+                      //   UpdateDataCubit.get(context).restAfterUpload(context);
+                      //   UpdateDataCubit.get(context).selectedTypeItemId = 1;
+                      //   navigateTo(context, const UpdateDataScreen());
+                      // }, 'Update product', 4),
+                      //
+                      // const SizedBox(height: 5.0),
+                      // content(context, () {
+                      //   navigateTo(context, const UploadProductForm());
+                      // }, 'Upload a new product',3),
 
                     ],
                   ),

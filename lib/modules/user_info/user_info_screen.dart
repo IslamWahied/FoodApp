@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/bloc/login_bloc/loginCubit.dart';
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/favourite/feeds_screen.dart';
@@ -36,7 +37,7 @@ class User_Info extends StatelessWidget {
                     SliverAppBar(
                       // leading: Icon(Icons.ac_unit_outlined),
                       automaticallyImplyLeading: false,
-                      expandedHeight: 200,
+                      expandedHeight: 400,
                       centerTitle: true,
 
                       elevation: 0,
@@ -60,7 +61,7 @@ class User_Info extends StatelessWidget {
                                   Container(
                                     height: kToolbarHeight / 1.8,
                                     width: kToolbarHeight / 1.8,
-                                    decoration: const BoxDecoration(
+                                    decoration:   BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
                                           color: Colors.white,
@@ -70,17 +71,7 @@ class User_Info extends StatelessWidget {
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                           fit: BoxFit.fitWidth,
-                                          image:AssetImage('assets/person.jpg'),
-                                          // NetworkImage(
-                                          //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')
-
-                                          //
-                                          // cubit.user_info_finalPickedImage ==
-                                          //     null
-                                          //     ? NetworkImage(cubit.image ??
-                                          //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')
-                                          //     : FileImage(
-                                          //     cubit.user_info_finalPickedImage),
+                                          image:Global.imageUrl != null? NetworkImage(Global.imageUrl):const AssetImage('assets/person.jpg'),
 
                                           ),
                                     ),
@@ -88,8 +79,8 @@ class User_Info extends StatelessWidget {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  const Text(
-                                    'Anonymous',
+                                    Text(
+                                    Global.userName??'',
                                     style: TextStyle(
                                         fontSize: 20.0, color: Colors.white),
                                   ),
@@ -98,9 +89,9 @@ class User_Info extends StatelessWidget {
                             ),
                             background: Stack(
                               alignment: Alignment.bottomRight,
-                              children: const [
+                              children:   [
                                 Image(
-                                  image: AssetImage('assets/person.jpg'),
+                                  image: Global.imageUrl != null? NetworkImage(Global.imageUrl):const AssetImage('assets/person.jpg'),
                                   // NetworkImage(
                                   //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg'),
                                   fit: BoxFit.fitWidth,
@@ -177,31 +168,31 @@ class User_Info extends StatelessWidget {
                               thickness: 1,
                               color: Colors.grey,
                             ),
-                            Container(
-                              child: userTile(
-                                'البريد الالكتروني',
-                                "IslamWaheed@gmail.com",
-                                Icons.email,
-                              ),
-                            ),
+                            // Container(
+                            //   child: userTile(
+                            //     'البريد الالكتروني',
+                            //     "IslamWaheed@gmail.com",
+                            //     Icons.email,
+                            //   ),
+                            // ),
                             Container(
                               child: userTile(
                                 'رقم التليفون',
-                                '01018419831',
+                                Global.mobile,
                                 Icons.phone,
                               ),
                             ),
-                            Container(
-                              child: userTile(
-                                'العنوان',
-                                "القطامية امام الاتحادية موقعه الجمل",
-                                Icons.local_shipping,
-                              ),
-                            ),
+                            // Container(
+                            //   child: userTile(
+                            //     'العنوان',
+                            //     "القطامية امام الاتحادية موقعه الجمل",
+                            //     Icons.local_shipping,
+                            //   ),
+                            // ),
                             Container(
                               child: userTile(
                                 'تاريخ الانضمام',
-                                '22/2/2022',
+                           HomeCubit.get(context).convertDateFormat(LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == Global.mobile).createdDate),
                                 Icons.watch_later,
                               ),
                             ),

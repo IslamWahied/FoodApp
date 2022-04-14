@@ -4,6 +4,7 @@ class UserModel
 
   String image;
   bool isAdmin;
+  bool isActive;
 double currentBalance ;
   String mobile;
   String userName;
@@ -22,6 +23,7 @@ double currentBalance ;
     this.fireBaseToken,
     this.createdDate,
     this.currentBalance,
+    this.isActive,
   });
 
   UserModel.fromJson(Map<String, dynamic> json)
@@ -35,6 +37,7 @@ double currentBalance ;
     userName = json['userName'];
     fireBaseToken = json['fireBaseToken']??'';
     createdDate = json['createdDate']??'';
+    isActive = json['isActive']??'';
   }
 
   Map<String, dynamic> toMap()
@@ -49,6 +52,7 @@ double currentBalance ;
       'fireBaseToken':fireBaseToken??'',
       'userName':userName,
       'createdDate':createdDate,
+      'isActive':isActive,
     };
   }
 }

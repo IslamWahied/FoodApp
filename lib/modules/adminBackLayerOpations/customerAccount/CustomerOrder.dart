@@ -2,6 +2,7 @@
 
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/bloc/login_bloc/loginCubit.dart';
 import 'package:elomda/modules/Order/Admin/newOrders.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
 import 'package:elomda/styles/colors.dart';
@@ -34,7 +35,7 @@ class CustomerOrdersScreen extends StatelessWidget {
               centerTitle: false,
               leadingWidth: 0,
               iconTheme: const IconThemeData(color: Constants.black),
-              title: customAppBar(context: context, title: '${cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName??'العميل'}  طلبات  ',isShowCarShop: false),
+              title: customAppBar(context: context, title: '${LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName??'العميل'}  طلبات  ',isShowCarShop: false),
             ),
 
               body:Conditional.single(
