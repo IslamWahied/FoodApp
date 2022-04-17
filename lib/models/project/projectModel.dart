@@ -8,6 +8,7 @@ class Project{
   String image;
   String projectMobile;
   bool isActive;
+
   Project({
     this.name,
     this.id,

@@ -52,13 +52,13 @@ class UserBackLayerMenu extends StatelessWidget {
                       content(context, () {
                         NavigatToAndReplace(context,  const HomeLayout());
                         HomeCubit.get(context).changeCurrentIndex(3);
-                      }, 'Cart', 1),
+                      }, 'عربة التسوق', 1),
                       const SizedBox(height: 5.0),
                       content(context, () {
                         // navigateTo(context, const FavouriteScreen());
                         NavigatToAndReplace(context,  const HomeLayout());
                         HomeCubit.get(context).changeCurrentIndex(1);
-                      }, 'My Favorite', 2),
+                      }, 'المفضل', 2),
                       const SizedBox(height: 5.0),
 
                       // content(context, () {

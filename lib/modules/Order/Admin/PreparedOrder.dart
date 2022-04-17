@@ -4,6 +4,7 @@ import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/home/adminBackLayer.dart';
 import 'package:elomda/modules/user_info/user_info_screen.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class PreparedOrderScreen extends StatelessWidget {
               frontLayerBackgroundColor: Constants.white,
               headerHeight: MediaQuery.of(context).size.height * 0.45,
               appBar: BackdropAppBar(
-                title: const Text("Home"),
+                title:   Text(cubit.selectedTab),
                 leading: const BackdropToggleButton(
                   icon: AnimatedIcons.home_menu,
                   color: Colors.deepOrange,
@@ -47,18 +48,43 @@ class PreparedOrderScreen extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                actions: <Widget>[
-                  cubit.isShowBackLayer?      IconButton(
+                actions: [
+                  cubit.isShowBackLayer?       IconButton(
                       onPressed: () {
-                          navigateTo(context, User_Info());
+                        navigateTo(context, User_Info());
                       },
-                      padding: const EdgeInsets.all(10),
-                      icon:   const CircleAvatar(
+                      padding:   const EdgeInsets.all(10),
+                      icon:   CircleAvatar(
                         radius: 15,
                         backgroundColor: Colors.white,
-                        child: CircleAvatar(
+                        child: Global.imageUrl != null &&Global.imageUrl.trim()  != ''?
+                        SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: FadeInImage(
+                              height: 50,
+                              width: 50,
+                              fadeInDuration: const Duration(milliseconds: 500),
+                              fadeInCurve: Curves.easeInExpo,
+                              fadeOutCurve: Curves.easeOutExpo,
+                              placeholder: const AssetImage("assets/person.jpg"),
+                              image: NetworkImage(Global.imageUrl
+                              ),
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return const CircleAvatar(
+                                  radius: 13,
+                                  backgroundImage: AssetImage('assets/person.jpg'),
+
+                                );
+                              },
+                              fit: BoxFit.cover),
+                        )
+
+
+                            :
+                        const CircleAvatar(
                           radius: 13,
-                          backgroundImage:AssetImage('assets/person.jpg'),
+                          backgroundImage: AssetImage('assets/person.jpg'),
 
                         ),
                       )):const SizedBox(width: 1,)

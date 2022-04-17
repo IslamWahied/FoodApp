@@ -4,6 +4,7 @@
 import 'package:elomda/bloc/UpdateData/updateDataCubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
+import 'package:elomda/home_layout/home_layout.dart';
 
 import 'package:elomda/modules/login/login_screen.dart';
 import 'package:elomda/styles/colors.dart';
@@ -18,6 +19,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'bloc/login_bloc/loginCubit.dart';
 
+import 'bloc/register_Bloc/registerBloc.dart';
+
 import 'shared/Global.dart';
 
 
@@ -31,9 +34,8 @@ Future<void> main() async {
    await CachHelper.init();
     DioHelper.init();
 
-   String mobile =  CachHelper.GetData(key: 'mobile');
-    String userName = CachHelper.GetData(key: 'userName');
- int departmentId = CachHelper.GetData(key: 'departmentId');
+
+ // fire base
   FirebaseMessaging.onMessage.listen((event) {
   // print('onMessage');
 
@@ -43,46 +45,34 @@ Future<void> main() async {
     // Navigator.pushNamed(context, '/message',
     //     arguments: MessageArguments(message, true));
   });
-
   FirebaseMessaging.onBackgroundMessage((message) {
 
     // print('onBackgroundMessage!');
 
   });
+  Global.fireBaseToken = await FirebaseMessaging.instance.getToken()??'';
 
-    bool isUserLogin  = false;
+bool isUserLogin =   await CachHelper.GetData(key: 'isUserLogin')??false;
+String mobile =   await CachHelper.GetData(key: 'mobile')??'';
 
-   bool showOnBoarding  = CachHelper.GetData(key: 'showOnBoarding') != null || CachHelper.GetData(key: 'showOnBoarding') == false ? false :true ;
-
-
-
-  if(
-  mobile != null && mobile.trim() != '' &&
-      departmentId != null  &&
-      userName !=null   && userName.trim() != ''
-  ){
-
-    isUserLogin = true;
-    Global.mobile = mobile;
-    Global.userName = userName;
-     // Global.departmentId = departmentId;
-
-  }
-  else{
-    isUserLogin = false;
+  if(isUserLogin && mobile.trim() != ''){
+  Global.isAdmin =  false;
+  Global.mobile =  mobile;
+  Global.userName =  await CachHelper.GetData(key: 'userName');
+  Global.departMent =  await CachHelper.GetData(key: 'departmentId');
+  Global.imageUrl =  await CachHelper.GetData(key: 'imageUrl');
   }
 
 
-  if(showOnBoarding == null && showOnBoarding != false )
-  {
-    showOnBoarding = true;
-  }
 
-  String token = await FirebaseMessaging.instance.getToken();
 
-   Global.fireBaseToken = token??'';
 
-    runApp(MyApp(userName: userName,mobile: mobile , departmentId: departmentId ,showOnBoarding: showOnBoarding,isUserLogin: isUserLogin,));
+
+
+
+
+
+  runApp(MyApp(isUserLogin:isUserLogin ));
 
 }
 
@@ -92,12 +82,10 @@ class MyApp extends StatelessWidget {
   String mobile;
   int departmentId;
   bool isUserLogin;
-  bool showOnBoarding;
+
   MyApp({Key key,
-    this.userName,
-    this.mobile,
-    this.departmentId,
-    this.showOnBoarding,
+
+
     this.isUserLogin,
 
 }) : super(key: key);
@@ -113,21 +101,19 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => LoginCubit()..getAllProjects()..getUsers()),
+          BlocProvider(create: (context) => LoginCubit()),
           BlocProvider(create: (context) => UploadProducts()),
           BlocProvider(create: (context) => UpdateDataCubit()),
-          BlocProvider(create: (context) => HomeCubit()..getOrders()..getCategory()..getSubCategory()..getItems()..getAdditions()..getFavourite()),
+          BlocProvider(create: (context) => RegisterCubit()..getAllProjects()),
+          BlocProvider(create: (context) => HomeCubit()..getUsers()..getOrders()..getCategory()..getSubCategory()..getItems()..getAdditions()..getFavourite()),
         ],
         child: MaterialApp(
           theme: Constants.lightTheme,
           builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,
-          //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-           // home:  const HomeLayout(),
-          //home:showOnboarding? FirstHomeScreen(): isUserLogined?  LayOutScreen() : LoginScreen(),
-          home:const LoginScreen(),
-          // home:VerifiedScreen(),
-      //   home:  const AccountTypeScreen(),
+
+          home:isUserLogin?const HomeLayout() : const LoginScreen(),
+
         ));
 
 

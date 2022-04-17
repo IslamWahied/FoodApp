@@ -35,7 +35,7 @@ class CustomerOrdersScreen extends StatelessWidget {
               centerTitle: false,
               leadingWidth: 0,
               iconTheme: const IconThemeData(color: Constants.black),
-              title: customAppBar(context: context, title: '${LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName??'العميل'}  طلبات  ',isShowCarShop: false),
+              title: customAppBar(context: context, title: '${cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName??'العميل'}  طلبات  ',isShowCarShop: false),
             ),
 
               body:Conditional.single(

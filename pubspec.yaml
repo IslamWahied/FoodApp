@@ -67,6 +67,9 @@ dependencies:
   flutter_conditional_rendering: ^2.0.0
   list_tile_switch:
   url_launcher: ^6.0.0
+  pin_code_fields: ^7.4.0
+  hexcolor: ^2.0.0
+  flutter_countdown_timer: ^4.1.0
 
 
 dev_dependencies:

@@ -6,7 +6,7 @@ class Global {
   static String userName ;
 
   static int departMent = 0;
-  static int id = 0;
+  static int projectId = 0;
   static String fireBaseToken;
   static bool isAdmin = false;
 }

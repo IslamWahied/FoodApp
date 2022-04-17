@@ -1,6 +1,9 @@
 // @dart=2.9
 import 'package:elomda/bloc/login_bloc/loginCubit.dart';
 import 'package:elomda/bloc/login_bloc/loginState.dart';
+import 'package:elomda/bloc/register_Bloc/registerBloc.dart';
+import 'package:elomda/bloc/register_Bloc/registerState.dart';
+import 'package:elomda/modules/login/ProjectInfoRegisterScreen.dart';
 import 'package:elomda/modules/login/register_screen.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
 import 'package:elomda/shared/network/local/helper.dart';
@@ -26,9 +29,9 @@ class AccountTypeScreen  extends StatelessWidget {
 
         title:customAppBar(context: context,title: '',isShowCarShop: false) ,
       ),
-      body: BlocConsumer<LoginCubit,LoginState>(
+      body: BlocConsumer<RegisterCubit,RegisterState>(
         builder: (context, state)  {
-          var cubit = LoginCubit.get(context);
+          var cubit = RegisterCubit.get(context);
           return Column(
 
             children:
@@ -45,7 +48,7 @@ class AccountTypeScreen  extends StatelessWidget {
                         GestureDetector(
                     onTap: (){
                 cubit.isAdmin  = false;
-                cubit.emit(ChangeInScreenState());
+                cubit.emit(RegisterChangeInScreenState());
                 },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +72,7 @@ class AccountTypeScreen  extends StatelessWidget {
                                   color:!cubit.isAdmin? Colors.yellow:Colors.grey[400],
                                 ),
                               ),
-                              Text('عميل',style: TextStyle(fontSize: 18),)
+                              const Text('عميل',style: TextStyle(fontSize: 18),)
                             ],
                           ),
                         ),
@@ -82,7 +85,7 @@ class AccountTypeScreen  extends StatelessWidget {
                         child:  GestureDetector(
                           onTap: (){
                             cubit.isAdmin  = true;
-                            cubit.emit(ChangeInScreenState());
+                            cubit.emit(RegisterChangeInScreenState());
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +129,10 @@ class AccountTypeScreen  extends StatelessWidget {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        navigatTo(context, const RegisterScreen());
+
+                        navigatTo(context , const RegisterScreen());
+
+
                       },
                       child: Container(
 

@@ -2,11 +2,15 @@
 import 'package:backdrop/backdrop.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/bloc/login_bloc/loginCubit.dart';
+import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/favourite/FeedFoodDetail.dart';
 import 'package:elomda/modules/home/Userbacklayer.dart';
 import 'package:elomda/modules/popularFood/popularFoodDetailScreen.dart';
+import 'package:elomda/modules/user_info/user_info_screen.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
+import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +45,8 @@ class HomeScreen extends StatelessWidget {
                 actions: <Widget>[
                   IconButton(
                       onPressed: () {
-                        // navigateTo(context, User_Info());
+                        NavigatToAndReplace(context,  const HomeLayout());
+                        HomeCubit.get(context).changeCurrentIndex(4);
                       },
                       padding: const EdgeInsets.all(10),
                       icon:   CircleAvatar(
@@ -54,7 +59,6 @@ class HomeScreen extends StatelessWidget {
                           NetworkImage(Global.imageUrl),
                           backgroundColor: Colors.transparent,
                         )
-
                        :
                         const CircleAvatar(
                             radius: 13,

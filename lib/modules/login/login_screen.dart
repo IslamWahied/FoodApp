@@ -16,7 +16,7 @@ class LoginScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = LoginCubit.get(context);
         return Scaffold(
-          key: cubit.scaffoldLoginKey,
+
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: SafeArea(
@@ -27,7 +27,7 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     Image.asset('assets/foodLogo.jpg'),
                     const SizedBox(
-                      height: 50,
+                      height: 40,
                     ),
                     Container(
                       decoration: const BoxDecoration(
@@ -44,7 +44,8 @@ class LoginScreen extends StatelessWidget {
                         ],
                       ),
                       margin: const EdgeInsets.only(bottom: 20),
-                      child: TextFormField(
+                      child:
+                      TextFormField(
 maxLength: 11,
 
                         controller: cubit.textMobileControl,
@@ -52,15 +53,15 @@ maxLength: 11,
                         obscureText: false,
                         style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 17,
                             fontWeight: FontWeight.w400,
                             color: Color(0xff000912),
                           ),
                         ),
 
                         decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 25),
-                          hintText: "الموبيل",
+                          contentPadding: EdgeInsets.symmetric(vertical: 18),
+                          hintText: "رقم الموبيل",
                           hintStyle: TextStyle(
                             color: Color(0xffA6B0BD),
                           ),
@@ -149,7 +150,7 @@ maxLength: 11,
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               behavior: SnackBarBehavior.floating,
               padding: const EdgeInsets.all(10.0),
-              duration: const Duration(milliseconds: 2000)));
+              duration: const Duration(milliseconds: 5000)));
         }
       },
     );

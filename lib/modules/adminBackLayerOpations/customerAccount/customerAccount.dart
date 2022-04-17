@@ -82,7 +82,7 @@ class CustomerAccountScreen extends StatelessWidget {
                                 fontSize: 20),
                           ),
                           selectedItem: cubit.selectedUserId.trim() !=
-                              '' ? LoginCubit.get(context).listUser
+                              '' ? cubit.listUser
                               .firstWhere((element) =>
                           element.mobile == cubit.selectedUserId)
                               .userName
@@ -90,11 +90,11 @@ class CustomerAccountScreen extends StatelessWidget {
                           showSearchBox: true,
                           mode: Mode.BOTTOM_SHEET,
 
-                          items: LoginCubit.get(context).listUser.map((e) => e.userName).toList(),
+                          items:cubit.listUser.map((e) => e.userName).toList(),
                           onChanged: (value) async {
                            if(value != null)
                              {
-                               cubit.selectedUserId = LoginCubit.get(context).listUser.firstWhere((element) => element.userName.toLowerCase()  == value.toString().toLowerCase()).mobile ;
+                               cubit.selectedUserId = cubit.listUser.firstWhere((element) => element.userName.toLowerCase()  == value.toString().toLowerCase()).mobile ;
                              }else{
                              cubit.selectedUserId = '';
 
@@ -199,7 +199,7 @@ color: Colors.white,
                                                       width: 15,
                                                     ),
                                                     PrimaryText(
-                                                      text:LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).currentBalance.toString()??'0' ,
+                                                      text:cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).currentBalance.toString()??'0' ,
                                                       size: 25,
                                                       fontWeight: FontWeight.w700,
                                                       color: Constants.tertiary,
@@ -240,7 +240,7 @@ mainAxisAlignment: MainAxisAlignment.end,
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
-                                            Text(LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId != null?cubit.departMentList[LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId]:'',style: const TextStyle(color: Colors.blueAccent,fontSize: 16),),
+                                            Text(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId != null?cubit.departMentList[cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId]:'',style: const TextStyle(color: Colors.blueAccent,fontSize: 16),),
                                             const Text('  :  '),
                                             Text('القسم',style: TextStyle(fontSize: 16,color: Colors.grey[600],fontWeight:FontWeight.w600)),
 
@@ -249,7 +249,7 @@ mainAxisAlignment: MainAxisAlignment.end,
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
-                                            Text(cubit.convertDateFormat(LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).createdDate)??'',style: TextStyle(color: Colors.blueAccent,fontSize: 16),),
+                                            Text(cubit.convertDateFormat(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).createdDate)??'',style: TextStyle(color: Colors.blueAccent,fontSize: 16),),
                                             // const Text('  :  '),
                                             Text('تاريخ الانضمام',style: TextStyle(fontSize: 16,color: Colors.grey[600],fontWeight:FontWeight.w600)),
 
@@ -313,9 +313,9 @@ mainAxisAlignment: MainAxisAlignment.end,
                               CircleAvatar(
                                 radius: 32,
                                 backgroundColor: Colors.grey[50],
-                                child:LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image != null && LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image.trim() != '' ? CircleAvatar(
+                                child:cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image != null && cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image.trim() != '' ? CircleAvatar(
                                   radius: 28,
-                                  backgroundImage: NetworkImage(LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image),
+                                  backgroundImage: NetworkImage(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image),
 
                                 ): const CircleAvatar(
                                   radius: 28,
@@ -324,7 +324,7 @@ mainAxisAlignment: MainAxisAlignment.end,
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              Text(LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName??'',style: TextStyle(fontSize: 20,color: Colors.grey),)
+                              Text(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName??'',style: TextStyle(fontSize: 20,color: Colors.grey),)
                             ],
                           ),
                         ),

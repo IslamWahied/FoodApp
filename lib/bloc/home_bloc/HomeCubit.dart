@@ -25,10 +25,13 @@ import 'package:elomda/modules/category/subCategoryScreen.dart';
 import 'package:elomda/modules/favourite/feeds_screen.dart';
 import 'package:elomda/modules/home/home_screen.dart';
 import 'package:elomda/modules/item/items.dart';
+import 'package:elomda/modules/login/login_screen.dart';
 import 'package:elomda/modules/search/search_screen.dart';
 import 'package:elomda/modules/user_info/user_info_screen.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
+import 'package:elomda/shared/network/local/helper.dart';
+import 'package:elomda/shared/network/local/shared_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,19 +75,19 @@ class HomeCubit extends Cubit<HomeScreenState> {
     if (date != null) {
       try {
         String dateAfterFormat =
-        sd.DateFormat("dd - MM - yyyy").format(DateTime.parse(date));
-        String today = sd.DateFormat("dd - MM - yyyy").format(DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day));
-        String yesterday = sd.DateFormat("dd - MM - yyyy").format(DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day - 1));
+        sd.DateFormat("dd/MM/yyyy").format(DateTime.parse(date));
+        // String today = sd.DateFormat("dd / MM / yyyy").format(DateTime(
+        //     DateTime.now().year, DateTime.now().month, DateTime.now().day));
+        // String yesterday = sd.DateFormat("dd / MM / yyyy").format(DateTime(
+        //     DateTime.now().year, DateTime.now().month, DateTime.now().day - 1));
 
-        if (dateAfterFormat == yesterday) {
-          return 'Yesterday';
-        } else if (dateAfterFormat == today) {
-          return 'Today';
-        } else {
+        // if (dateAfterFormat == yesterday) {
+        //   return 'Yesterday';
+        // } else if (dateAfterFormat == today) {
+        //   return 'Today';
+        // } else {
           return dateAfterFormat;
-        }
+        // }
       } catch (e) {
         return '';
       }
@@ -187,14 +190,14 @@ textDirection: TextDirection.rtl,
 
   void updateCustomerBalance({BuildContext context}){
     Navigator.pop(context);
-    UserModel model = LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == selectedUserId);
+    UserModel model =  listUser.firstWhere((element) => element.mobile == selectedUserId);
    double newBalance =   model.currentBalance +   double.parse(txtUpdateCustomerBalance.text);
      model.currentBalance = newBalance;
 
     FirebaseFirestore.instance.collection('User').doc(selectedUserId).update(model.toMap()).then((value) {
 
       sendNotificationToUserByToken(
-        userToken:  LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == selectedUserId).fireBaseToken,
+        userToken: listUser.firstWhere((element) => element.mobile == selectedUserId).fireBaseToken,
         messageBody: 'تم اضافة ${double.parse(txtUpdateCustomerBalance.text)} جنية الي حسابك رصيد حسابك الان  ${newBalance} ',
         messageTitle: ' اضافة ${txtUpdateCustomerBalance.text +' ' + ' جنية '}في المحفظة '
       );
@@ -220,7 +223,7 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
         selectedTab = 'تحت التجهيز';
       }
       else if(value == 2){
-        selectedTab = 'تم التوصيل';
+        selectedTab = 'تم التسليم';
       }
       else if(value == 3){
         selectedTab = 'الاوردرات السابقة';
@@ -381,7 +384,7 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
          orderId:orderId ,
 
          userMobile: Global.mobile,
-         adminMobile:LoginCubit.get(context).listUser[0].mobile ,
+         adminMobile: listUser[0].mobile ,
          createdDate: DateTime.now().toString(),
          listItemModel: listOrder,
          totalAdditionalPrice:totalAdditionalPrice,
@@ -408,11 +411,11 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
        });
        // Send Notification For Admin
 
-       print( LoginCubit.get(context).listUser[0].fireBaseToken);
+       print( listUser[0].fireBaseToken);
        sendNotificationToUserByToken(
            messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
            messageTitle: 'طلب جديد',
-           userToken:  LoginCubit.get(context).listUser[0].fireBaseToken
+           userToken:  listUser[0].fireBaseToken
        );
        listOrder = [];
        emit(SelectCategoryState());
@@ -770,7 +773,7 @@ selectedItemId = 0;
   }
 
   sendNotificationForAllUser(context) async {
-    for (var element in  LoginCubit.get(context).listUser)  {
+    for (var element in  listUser)  {
       await    sendNotificationToUserByToken(messageTitle:titleTextControl.text,messageBody:sendMessageTextControl.text,userToken: element.fireBaseToken);
     }
 
@@ -803,4 +806,27 @@ selectedItemId = 0;
       'imagePath': 'assets/onion.png',
     },
   ];
+
+  List<UserModel> listUser = [];
+
+  getUsers() async {
+    FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
+      listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
+
+      emit(SelectCategoryState());
+    }).onError((handleError) {
+      print(handleError);
+    });
+  }
+  logOut(context)
+  async {
+    await CachHelper.SetData(key: 'mobile', value: '');
+    await CachHelper.SetData(key: 'isUserLogin', value: false);
+    await CachHelper.SetData(key: 'isAdmin', value: false);
+    await CachHelper.SetData(key: 'imageUrl', value: '');
+    await CachHelper.SetData(key: 'userName', value: '');
+    await CachHelper.SetData(key: 'departmentId', value: 0);
+    currentIndex = 0;
+    NavigatToAndReplace(context, const LoginScreen());
+  }
 }

@@ -45,7 +45,7 @@ class CancelOrderScreen extends StatelessWidget {
                   frontLayerBackgroundColor: Constants.white,
                   headerHeight: MediaQuery.of(context).size.height * 0.45,
                   appBar: BackdropAppBar(
-                    title: const Text("Home"),
+                    title:   Text(cubit.selectedTab),
                     leading: const BackdropToggleButton(
                       icon: AnimatedIcons.home_menu,
                       color: Colors.deepOrange,

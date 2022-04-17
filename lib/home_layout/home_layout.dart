@@ -60,15 +60,14 @@ class HomeLayout extends StatelessWidget {
                           BottomNavigationBarItem(
 
                             icon: Badge(
-                              showBadge: HomeCubit
-                                  .get(context)
+                              showBadge:cubit
                                   .listOrder
                                   .isNotEmpty && HomeCubit
                                   .get(context)
                                   .listOrder
                                   .length != null,
-                              badgeContent: Text(HomeCubit
-                                  .get(context)
+                              badgeContent: Text(
+                             cubit
                                   .listOrder
                                   .length
                                   .toString() ?? '0', style: const TextStyle(
@@ -136,7 +135,7 @@ class HomeLayout extends StatelessWidget {
                             icon: Icon(Icons.home),
                             label: 'الرئيسية',
                           ),
-                          LoginCubit.get(context).listUser.isNotEmpty &&   LoginCubit.get(context).listUser.firstWhere((element) => element.mobile == Global.mobile).isAdmin?
+                          cubit.listUser.isNotEmpty &&  Global.isAdmin?
                           const BottomNavigationBarItem(
                             icon: Icon(Icons.bookmark_border),
                             label: 'الطلبات',
