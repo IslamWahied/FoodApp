@@ -80,7 +80,7 @@ class FavouriteScreen extends StatelessWidget {
             backLayer: UserBackLayerMenu(),
             frontLayer:Conditional.single(
               context: context,
-              conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).toList().isNotEmpty,
+              conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase() &&  element.projectId == Global.projectId).toList().isNotEmpty,
               widgetBuilder: (BuildContext context) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -130,29 +130,29 @@ class FavouriteScreen extends StatelessWidget {
                       ],
                     ),
                     Visibility(
-                      visible:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) ,
+                      visible:cubit.listFavourite.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit &&  element.projectId == Global.projectId) ,
                       replacement: const Expanded(child: Center(child: Text('No Favourite Data'))),
                       child: Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: ListView.builder(
                               scrollDirection: Axis.vertical,
-                              itemCount:cubit.listFavourite.isNotEmpty && cubit.listItems.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) &&cubit.listFavourite != [] ?cubit.listFavourite.where((element) => element.isFavourit).toList().length:0  ,
+                              itemCount:cubit.listFavourite.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty && cubit.listItems.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty && cubit.listFavourite.where((element) =>   element.projectId == Global.projectId).toList().any((element) => element.isFavourit) &&cubit.listFavourite != [] ?cubit.listFavourite.where((element) => element.isFavourit &&  element.projectId == Global.projectId).toList().length:0  ,
                               itemBuilder: (context, index) {
                                 var favModel = cubit.listFavourite.where((element) => element.isFavourit).toList()[index];
 
                                 return    itemCard(
                                     isFavourite:favModel.isFavourit ,
                                     itemId:favModel.ItemId,
-                                    itemPrice:cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId).price??0,
+                                    itemPrice:cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId &&  element.projectId == Global.projectId).price??0,
                                     subCategoryTitle:
-                                    cubit.listItems.firstWhere((element) => element.itemId ==  favModel.ItemId).supCategoryTitle,
-                                    name:cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId).itemTitle,
+                                    cubit.listItems.firstWhere((element) => element.itemId ==  favModel.ItemId &&  element.projectId == Global.projectId).supCategoryTitle,
+                                    name:cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId &&  element.projectId == Global.projectId).itemTitle,
                                     context: context,
-                                    imagePath: cubit.listItems.firstWhere((element) => element.itemId ==  favModel.ItemId).image,
-                                    itemsPrice:cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId).price,
+                                    imagePath: cubit.listItems.firstWhere((element) => element.itemId ==  favModel.ItemId &&  element.projectId == Global.projectId).image,
+                                    itemsPrice:cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId &&  element.projectId == Global.projectId).price,
                                     star: '',
-                                    itemDescription: cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId).description ?? '');
+                                    itemDescription: cubit.listItems.firstWhere((element) => element.itemId == favModel.ItemId &&  element.projectId == Global.projectId).description ?? '');
                               }
 
                           ),
@@ -188,9 +188,9 @@ Widget itemCard(
       onTap: () {
         HomeCubit.get(context).selectedItemId = itemId;
         HomeCubit.get(context).selectedCategoryId = HomeCubit.get(context)
-        .listItems.firstWhere((element) => element.itemId == HomeCubit.get(context).listFavourite.firstWhere((element) => element.ItemId == itemId).ItemId).categoryId;
+        .listItems.firstWhere((element) => element.itemId == HomeCubit.get(context).listFavourite.firstWhere((element) => element.ItemId == itemId &&  element.projectId == Global.projectId).ItemId).categoryId;
         HomeCubit.get(context).selectedSubCategoryId = HomeCubit.get(context)
-            .listItems.firstWhere((element) => element.itemId == HomeCubit.get(context).listFavourite.firstWhere((element) => element.ItemId == itemId).ItemId)
+            .listItems.firstWhere((element) => element.itemId == HomeCubit.get(context).listFavourite.firstWhere((element) => element.ItemId == itemId &&  element.projectId == Global.projectId).ItemId)
             .supCategoryId;
 
         navigateTo(
@@ -198,35 +198,35 @@ Widget itemCard(
             FeedFoodDetailScreen(
               isDiscount: HomeCubit.get(context)
                   .listItems
-                  .firstWhere((element) => element.itemId == itemId).isDiscount??false,
+                  .firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).isDiscount??false,
 itemId:HomeCubit.get(context)
     .listItems
-    .firstWhere((element) => element.itemId == itemId)
+    .firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId)
     .itemId ,
               imagePath: HomeCubit.get(context)
                   .listItems
-                  .firstWhere((element) => element.itemId == itemId)
+                  .firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId)
                   .image,
               subCategoryTitle: HomeCubit.get(context)
                   .listItems
-                  .firstWhere((element) => element.itemId == itemId)
+                  .firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId)
                   .supCategoryTitle,
               itemName: HomeCubit.get(context)
                   .listItems
-                  .firstWhere((element) => element.itemId == itemId)
+                  .firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId)
                   .itemTitle,
               itemDescription:  HomeCubit.get(context)
                   .listItems
-                  .firstWhere((element) => element.itemId == itemId)
+                  .firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId)
                       .description ??
                   '',
               itemPrice:  HomeCubit.get(context)
                   .listItems
-                  .firstWhere((element) => element.itemId == itemId)
+                  .firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId)
                   .price,
               oldPrice:  HomeCubit.get(context)
                 .listItems
-                .firstWhere((element) => element.itemId == itemId)
+                .firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId)
                 .oldPrice,
               orderCount: value??1,
 
@@ -319,10 +319,10 @@ itemId:HomeCubit.get(context)
                           children: [
 
 
-                            if(HomeCubit.get(context).listItems.firstWhere((element) => element.itemId == itemId).isDiscount)
+                            if(HomeCubit.get(context).listItems.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).isDiscount)
                               PrimaryText(
                                 isDiscount: true,
-                                text: HomeCubit.get(context).listItems.firstWhere((element) => element.itemId == itemId).oldPrice.toString(),
+                                text: HomeCubit.get(context).listItems.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).oldPrice.toString(),
                                 size: 20,
                                 fontWeight: FontWeight.w700,
                                 color: Constants.lighterGray,

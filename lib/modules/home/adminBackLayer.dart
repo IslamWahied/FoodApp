@@ -13,6 +13,7 @@ import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/icons/my_icons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,9 +32,10 @@ class AdminBackLayerMenu extends StatelessWidget {
                 decoration: const BoxDecoration(color: Colors.black),
               ),
               SingleChildScrollView(
+                scrollDirection: Axis.vertical,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                 Global.imageUrl != null?    Center(
                   child: CircleAvatar(
@@ -56,8 +58,16 @@ class AdminBackLayerMenu extends StatelessWidget {
                       // HomeCubit.get(context).changeCurrentIndex(3);
                     }, 'ارسال عرض', 0),
                     const SizedBox(height: 5.0),
+
                     content(context, () {
-                      // navigateTo(context, const FavouriteScreen());
+                      navigateTo(context,  const UploadProductForm());
+                      // HomeCubit.get(context).changeCurrentIndex(3);
+                    }, 'اضافة منتج', 0),
+                    const SizedBox(height: 5.0),
+
+
+                    content(context, () {
+
                       navigateTo(context,  const UpdateDataScreen());
                       HomeCubit.get(context).changeCurrentIndex(1);
                     }, 'تعديل منتجات', 1),

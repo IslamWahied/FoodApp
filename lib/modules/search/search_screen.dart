@@ -79,7 +79,7 @@ class SearchScreen extends StatelessWidget {
             backLayer: UserBackLayerMenu(),
             frontLayer:Conditional.single(
               context: context,
-              conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).toList().isNotEmpty,
+              conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase() &&  element.projectId == Global.projectId).toList().isNotEmpty,
               widgetBuilder: (BuildContext context) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -129,20 +129,20 @@ class SearchScreen extends StatelessWidget {
                       ],
                     ),
                     Visibility(
-                      visible:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) ,
+                      visible:cubit.listFavourite.where((element) => element.projectId == Global.projectId).toList().isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit &&  element.projectId == Global.projectId) ,
                       replacement: const Expanded(child: Center(child: Text('No Favourite Data'))),
                       child: Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: ListView.builder(
                               scrollDirection: Axis.vertical,
-                              itemCount:cubit.listFavourite.isNotEmpty && cubit.listItems.isNotEmpty && cubit.listFavourite.any((element) => element.isFavourit) &&cubit.listFavourite != [] ?cubit.listFavourite.where((element) => element.isFavourit).toList().length:0  ,
+                              itemCount:cubit.listFavourite.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty && cubit.listItems.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty && cubit.listFavourite.where((element) =>   element.projectId == Global.projectId).toList().any((element) => element.isFavourit) &&cubit.listFavourite != [] ?cubit.listFavourite.where((element) => element.isFavourit &&  element.projectId == Global.projectId).toList().length:0  ,
                               itemBuilder: (context, index) {
                                 var favModel = cubit.listFavourite.where((
-                                    element) => element.isFavourit)
+                                    element) => element.isFavourit &&  element.projectId == Global.projectId)
                                     .toList()[index];
 
-                                return Text('');
+                                return const Text('d');
                               }
                           ),
                         ),

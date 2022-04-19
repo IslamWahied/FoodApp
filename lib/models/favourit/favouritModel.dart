@@ -4,6 +4,7 @@ class FavouritModel
   String UesrMobile;
   int ItemId;
   bool isFavourit;
+  int projectId;
 
 
 
@@ -11,6 +12,7 @@ class FavouritModel
     this.UesrMobile,
     this.ItemId,
     this.isFavourit,
+    this.projectId
 
   });
 
@@ -19,6 +21,7 @@ class FavouritModel
     UesrMobile = json['UesrMobile'];
     ItemId = json['ItemId'];
     isFavourit = json['isFavourit'];
+    projectId = json['projectId'];
   }
 
   Map<String, dynamic> toMap()
@@ -27,6 +30,7 @@ class FavouritModel
       'UesrMobile':UesrMobile,
       'ItemId':ItemId,
       'isFavourit':isFavourit,
+      'projectId':projectId,
     };
   }
 }

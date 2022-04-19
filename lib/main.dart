@@ -1,6 +1,5 @@
 // @dart=2.9
 
-
 import 'package:elomda/bloc/UpdateData/updateDataCubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
@@ -23,22 +22,17 @@ import 'bloc/register_Bloc/registerBloc.dart';
 
 import 'shared/Global.dart';
 
-
-
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-   FirebaseMessaging.instance;
+  await Firebase.initializeApp();
+  FirebaseMessaging.instance;
 
-   await CachHelper.init();
-    DioHelper.init();
+  await CachHelper.init();
+  DioHelper.init();
 
-
- // fire base
+  // fire base
   FirebaseMessaging.onMessage.listen((event) {
-  // print('onMessage');
-
+    // print('onMessage');
   });
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     // print('A new onMessageOpenedApp event was published!');
@@ -46,76 +40,70 @@ Future<void> main() async {
     //     arguments: MessageArguments(message, true));
   });
   FirebaseMessaging.onBackgroundMessage((message) {
-
     // print('onBackgroundMessage!');
-
   });
-  Global.fireBaseToken = await FirebaseMessaging.instance.getToken()??'';
+  Global.fireBaseToken = await FirebaseMessaging.instance.getToken() ?? '';
 
-bool isUserLogin =   await CachHelper.GetData(key: 'isUserLogin')??false;
-String mobile =   await CachHelper.GetData(key: 'mobile')??'';
+  bool isUserLogin = await CachHelper.GetData(key: 'isUserLogin') ?? false;
+  bool isAdmin = await CachHelper.GetData(key: 'isAdmin') ?? false;
+  String mobile = await CachHelper.GetData(key: 'mobile') ?? '';
 
-  if(isUserLogin && mobile.trim() != ''){
-  Global.isAdmin =  false;
-  Global.mobile =  mobile;
-  Global.userName =  await CachHelper.GetData(key: 'userName');
-  Global.departMent =  await CachHelper.GetData(key: 'departmentId');
-  Global.imageUrl =  await CachHelper.GetData(key: 'imageUrl');
+  int projectId = await CachHelper.GetData(key: 'ProjectId') ?? 0;
+
+  print('projectId');
+  print(projectId);
+  print('projectId');
+
+  if (isUserLogin && mobile.trim() != '') {
+    Global.isAdmin = isAdmin ?? false;
+    Global.mobile = mobile;
+    Global.projectId = projectId ?? 0;
+    Global.userName = await CachHelper.GetData(key: 'userName');
+    Global.departMent = await CachHelper.GetData(key: 'departmentId');
+    Global.imageUrl = await CachHelper.GetData(key: 'imageUrl');
   }
 
-
-
-
-
-
-
-
-
-
-  runApp(MyApp(isUserLogin:isUserLogin ));
-
+  runApp(MyApp(isUserLogin: isUserLogin));
 }
 
 class MyApp extends StatelessWidget {
-
   String userName;
   String mobile;
   int departmentId;
   bool isUserLogin;
 
-  MyApp({Key key,
-
-
+  MyApp({
+    Key key,
     this.isUserLogin,
-
-}) : super(key: key);
-
+  }) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-
-
-
-
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => LoginCubit()),
           BlocProvider(create: (context) => UploadProducts()),
           BlocProvider(create: (context) => UpdateDataCubit()),
           BlocProvider(create: (context) => RegisterCubit()..getAllProjects()),
-          BlocProvider(create: (context) => HomeCubit()..getUsers()..getOrders()..getCategory()..getSubCategory()..getItems()..getAdditions()..getFavourite()),
+          BlocProvider(
+              create: (context) => HomeCubit()
+                ..getAllProjects()
+                ..getUsers()
+                ..getOrders()
+                ..getCategory()
+                ..getSubCategory()
+                ..getItems()
+                ..getAdditions()
+                ..getFavourite()),
         ],
         child: MaterialApp(
           theme: Constants.lightTheme,
           builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,
 
-          home:isUserLogin?const HomeLayout() : const LoginScreen(),
-
+          //  home:isUserLogin?const HomeLayout() : const LoginScreen(),
+          home: isUserLogin ? const HomeLayout() : const LoginScreen(),
         ));
-
-
   }
 }

@@ -97,7 +97,10 @@ class HomeLayout extends StatelessWidget {
                             label: 'تم الالغاء',
                           ),
 
-
+                          const BottomNavigationBarItem(
+                            icon: Icon(Icons.settings),
+                            label: 'الاعدادات',
+                          ),
 
 
                         ],

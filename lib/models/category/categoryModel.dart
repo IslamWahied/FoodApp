@@ -6,12 +6,13 @@ class CategoryModel {
   String createdDate;
   String image;
   bool isAvailable;
+  int projectId;
 
 
 
 
 
-  CategoryModel({this.isAvailable,this.categoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted});
+  CategoryModel({this.isAvailable,this.categoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted,this.projectId});
 
   CategoryModel.fromJson(Map<String, dynamic> json)
   {
@@ -21,6 +22,7 @@ class CategoryModel {
     image = json['image'];
     isDeleted = json['isDeleted'];
     isAvailable = json['isAvailable']??true;
+    projectId = json['projectId']??true;
   }
 
   Map<String, dynamic> toMap()
@@ -32,7 +34,8 @@ class CategoryModel {
       'createdDate':createdDate,
       'image':image,
       'isDeleted':isDeleted,
-      'isAvailable':isAvailable??true
+      'isAvailable':isAvailable??true,
+      'projectId':projectId??0
 
     };
   }

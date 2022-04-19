@@ -143,6 +143,7 @@ bool isOldPrice = false;
                 categoryId: HomeCubit.get(context).listCategory.isEmpty ? 1 : HomeCubit.get(context).listCategory.length + 1,
                 image: value,
                 isDeleted: 0,
+                projectId: Global.projectId,
                 isAvailable: isAvailable,
                 categoryTitle:  txtUploadTitle.text
             );
@@ -197,6 +198,7 @@ bool isOldPrice = false;
                 supCategoryId:
                 HomeCubit.get(context).listSubCategory.isEmpty ? 1 : HomeCubit.get(context).listSubCategory.length + 1,
                 image: value,
+                projectId: Global.projectId,
                 isDeleted: 0,
                 isAvailable: isAvailable,
                 categoryTitle: HomeCubit.get(context).listCategory.firstWhere((element) => element.categoryId == selectedCategoryId &&
@@ -264,6 +266,8 @@ bool isOldPrice = false;
                   categoryId: selectedCategoryId,
                   supCategoryId: selectedSupCategoryId,
                   image: value,
+
+                  projectId:  Global.projectId,
                   isDeleted: 0,
                   additionsList:  listOfSelectedAdditions.toList(),
                   description: txtUploadDescription.text??'',
@@ -364,7 +368,7 @@ bool isOldPrice = false;
                 image: value,
                 isDeleted: 0,
                 description: '',
-
+              projectId:  Global.projectId,
                 supCategoryTitle: '',
                 categoryTitle:  '',
                 price: double.parse(txtUploadPrice.text) ?? 0,

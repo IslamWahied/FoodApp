@@ -25,7 +25,7 @@ class DoneOrderScreen extends StatelessWidget {
     return BlocConsumer<HomeCubit, HomeScreenState>(
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
-        var newOrderList = cubit.listAllOrders.where((element) =>element.orderState.toLowerCase() == 'Done'.toLowerCase()).toList();
+        var newOrderList = cubit.listAllOrders.where((element) =>element.orderState.toLowerCase() == 'Done'.toLowerCase()  && element.projectId == Global.projectId).toList();
         return Scaffold(
 
           body: Center(
@@ -40,7 +40,7 @@ class DoneOrderScreen extends StatelessWidget {
                 cubit.emit(SelectCategoryState());
               },
               frontLayerBackgroundColor: Constants.white,
-              headerHeight: MediaQuery.of(context).size.height * 0.45,
+              headerHeight: MediaQuery.of(context).size.height * 0.35,
               appBar: BackdropAppBar(
                 title:   Text(cubit.selectedTab),
                 leading: const BackdropToggleButton(
@@ -97,7 +97,7 @@ class DoneOrderScreen extends StatelessWidget {
               backLayer: AdminBackLayerMenu(),
               frontLayer: Conditional.single(
     context: context,
-    conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).toList().isNotEmpty,
+    conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()  && element.projectId == Global.projectId).toList().isNotEmpty,
     widgetBuilder: (BuildContext context) {
       return ListView.separated(
           separatorBuilder: (context, index) => const SizedBox(),
@@ -292,7 +292,7 @@ class DoneOrderScreen extends StatelessWidget {
                                                           },
                                                           child:
                                                           const Text(
-                                                            'Close',
+                                                            'الغاء',
                                                             style: TextStyle(
                                                                 color:
                                                                 Colors.red),

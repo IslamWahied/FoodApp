@@ -2,6 +2,7 @@
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
+import 'package:elomda/shared/Global.dart';
 
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
@@ -110,19 +111,19 @@ class ItemsScreen extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
-                          itemCount: cubit.listItemsSearch.length??0,
+                          itemCount: cubit.listItemsSearch.where((element) =>   element.projectId == Global.projectId).toList().length??0,
                           itemBuilder: (context, index) => itemCard(
-                            isDiscount: cubit.listItemsSearch[index].isDiscount,
-                            isFavourite:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == cubit.listItemsSearch[index].itemId && element.isFavourit)?true:false ,
-                            itemId:cubit.listItemsSearch[index].itemId ,
-                              itemPrice:cubit.listItemsSearch[index].price ,
-                            subCategoryTitle: cubit.listItemsSearch[index].supCategoryTitle,
-                              name:cubit.listItemsSearch[index].itemTitle,
+                            isDiscount: cubit.listItemsSearch.where((element) =>   element.projectId == Global.projectId).toList()[index].isDiscount,
+                            isFavourite:cubit.listFavourite.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == cubit.listItemsSearch[index].itemId && element.isFavourit &&  element.projectId == Global.projectId)?true:false ,
+                            itemId:cubit.listItemsSearch.where((element) =>   element.projectId == Global.projectId).toList()[index].itemId ,
+                              itemPrice:cubit.listItemsSearch.where((element) =>   element.projectId == Global.projectId).toList()[index].price ,
+                            subCategoryTitle: cubit.listItemsSearch.where((element) =>   element.projectId == Global.projectId).toList()[index].supCategoryTitle,
+                              name:cubit.listItemsSearch.where((element) =>   element.projectId == Global.projectId).toList()[index].itemTitle,
                               context: context,
-                              imagePath:  cubit.listItemsSearch[index].image,
-                              itemsPrice:  cubit.listItemsSearch[index].price,
+                              imagePath:  cubit.listItemsSearch.where((element) =>   element.projectId == Global.projectId).toList()[index].image,
+                              itemsPrice:  cubit.listItemsSearch.where((element) =>   element.projectId == Global.projectId).toList()[index].price,
                               star: '',
-                              itemDescription: cubit.listItemsSearch[index].description??''
+                              itemDescription: cubit.listItemsSearch.where((element) =>   element.projectId == Global.projectId).toList()[index].description??''
 
 
                           ),
@@ -242,10 +243,10 @@ Widget itemCard({bool isFavourite,bool isDiscount,int itemId,String imagePath,St
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                if(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId).isDiscount)
+                                if(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).isDiscount)
                                   PrimaryText(
                                     isDiscount: true,
-                                    text: HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId).oldPrice.toString(),
+                                    text: HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).oldPrice.toString(),
                                     size: 20,
                                     fontWeight: FontWeight.w700,
                                     color: Constants.lighterGray,

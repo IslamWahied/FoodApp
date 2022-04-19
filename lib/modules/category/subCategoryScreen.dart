@@ -3,6 +3,7 @@
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -86,12 +87,12 @@ class subCategoryScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 15),
 
                 children: List.generate(
-                  cubit.listSubCategorySearch.length,
+                  cubit.listSubCategorySearch.where((element) =>   element.projectId == Global.projectId).toList().length,
                       (index) =>
                     foodSubCategoryCard(
-                        imagePath: cubit.listSubCategorySearch[index].image,
-                        name: cubit.listSubCategorySearch[index].subCategoryTitle,
-                        supCategoryId: cubit.listSubCategorySearch[index].supCategoryId,
+                        imagePath: cubit.listSubCategorySearch.where((element) =>   element.projectId == Global.projectId).toList()[index].image,
+                        name: cubit.listSubCategorySearch.where((element) =>   element.projectId == Global.projectId).toList()[index].subCategoryTitle,
+                        supCategoryId: cubit.listSubCategorySearch.where((element) =>   element.projectId == Global.projectId).toList()[index].supCategoryId,
                         context: context
                     ),
                 ),

@@ -2,6 +2,7 @@
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -199,11 +200,11 @@ class popularFoodDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
+                    if (cubit.listItems.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).additionsList.isNotEmpty)
                       const SizedBox(
                         height: 50,
                       ),
-                    if (cubit.listItems.firstWhere((element) => element.itemId == itemId).additionsList.isNotEmpty)
+                    if (cubit.listItems.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).additionsList.isNotEmpty)
                       const PrimaryText(
                           text: 'الاضافات',
                           fontWeight: FontWeight.w700,
@@ -216,20 +217,20 @@ class popularFoodDetailScreen extends StatelessWidget {
                 ),
               ),
 
-              if (cubit.popularFoodList[index].additionsList.isNotEmpty)
+              if (cubit.popularFoodList.where((element) =>   element.projectId == Global.projectId).toList()[index].additionsList.isNotEmpty)
                 SizedBox(
                   height: 150,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: cubit.popularFoodList[index].additionsList.length ?? 0,
+                    itemCount: cubit.popularFoodList.where((element) =>   element.projectId == Global.projectId).toList()[index].additionsList.length ?? 0,
                     itemBuilder: (context, index2) => Padding(
                       padding: EdgeInsets.only(left: index2 == 0 ? 20 : 0, top: 10, bottom: 20),
                       child: additionCard(
 
-                          imagePath: cubit.popularFoodList[index].additionsList[index2].image,
+                          imagePath: cubit.popularFoodList.where((element) =>   element.projectId == Global.projectId).toList()[index].additionsList[index2].image,
                           context: context,
                           cubit: cubit,
-                          additionId:cubit.popularFoodList[index].additionsList[index2].itemId
+                          additionId:cubit.popularFoodList.where((element) =>   element.projectId == Global.projectId).toList()[index].additionsList[index2].itemId
                       ),
                     ),
                   ),
@@ -302,7 +303,7 @@ class popularFoodDetailScreen extends StatelessWidget {
                         height: 10,
                       ),
                       PrimaryText(
-                        text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId).price.toString() ??0.toString(),
+                        text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).price.toString() ??0.toString(),
                         size: 10,
                         fontWeight: FontWeight.w700,
                         color: Constants.tertiary,
@@ -314,7 +315,7 @@ class popularFoodDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 5,),
                   PrimaryText(
-                    text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId).itemTitle.toString() ??''.toString(),
+                    text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).itemTitle.toString() ??''.toString(),
                     size: 12,
                     fontWeight: FontWeight.w700,
                     color: Constants.darkBG,

@@ -7,7 +7,7 @@ class OrderModel {
   String userMobile;
   String adminMobile;
   String userName;
-
+int projectId;
   String departMent;
   String createdDate;
   double totalAdditionalPrice;
@@ -32,6 +32,7 @@ class OrderModel {
     this.totalDiscountPrice,
     this.totalPrice,
     this.departMent,
+    this.projectId
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -52,6 +53,7 @@ class OrderModel {
         totalAdditionalPrice: json['totalAdditionalPrice'] ?? 0,
         totalDiscountPrice: json['totalDiscountPrice'] ?? 0,
         totalPrice: json['totalPrice'] ?? 0,
+        projectId: json['projectId'] ?? 1,
         listItemModel: customList
     );
   }
@@ -70,6 +72,7 @@ class OrderModel {
       'totalAdditionalPrice': totalAdditionalPrice ?? 0,
       'totalDiscountPrice': totalDiscountPrice ?? 0,
       'totalPrice': totalPrice ?? 0,
+      'projectId': projectId ?? 1,
       'listItemModel': listItemModel.map((e) => e.toJson())?.toList(),
     };
   }

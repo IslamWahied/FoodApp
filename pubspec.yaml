@@ -70,6 +70,9 @@ dependencies:
   pin_code_fields: ^7.4.0
   hexcolor: ^2.0.0
   flutter_countdown_timer: ^4.1.0
+  responsive_grid_list: ^1.2.4
+  audioplayers: ^0.20.1
+
 
 
 dev_dependencies:

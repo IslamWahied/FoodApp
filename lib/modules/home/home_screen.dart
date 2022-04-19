@@ -25,131 +25,159 @@ class HomeScreen extends StatelessWidget {
       listener: (context, state) => () {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
-        return Scaffold(
-          backgroundColor: Constants.lightBG,
-          body: Center(
-            child: BackdropScaffold(
-              frontLayerBackgroundColor: Constants.white,
-              headerHeight: MediaQuery.of(context).size.height * 0.45,
-              appBar: BackdropAppBar(
-                title:   Text(cubit.selectedTab),
-                leading: const BackdropToggleButton(
-                  icon: AnimatedIcons.home_menu,
-                  color: Colors.deepOrange,
-                ),
-                flexibleSpace: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                  ),
-                ),
-                actions: <Widget>[
-                  IconButton(
-                      onPressed: () {
-                        NavigatToAndReplace(context,  const HomeLayout());
-                        HomeCubit.get(context).changeCurrentIndex(4);
-                      },
-                      padding: const EdgeInsets.all(10),
-                      icon:   CircleAvatar(
-                        radius: 15,
-                        backgroundColor: Colors.white,
-                        child:Global.imageUrl != null?
-                        CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage:
-                          NetworkImage(Global.imageUrl),
-                          backgroundColor: Colors.transparent,
-                        )
-                       :
-                        const CircleAvatar(
-                            radius: 13,
-                            backgroundImage: AssetImage('assets/person.jpg'),
+        return BackdropScaffold(
+          frontLayerBackgroundColor: Constants.white,
+          headerHeight: MediaQuery.of(context).size.height * 0.35,
+          appBar: BackdropAppBar(
+            title:   Text(cubit.selectedTab),
+            leading: const BackdropToggleButton(
+              icon: AnimatedIcons.home_menu,
+              color: Colors.deepOrange,
+            ),
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+            ),
+            actions: <Widget>[
+              IconButton(
+                  onPressed: () {
+                    NavigatToAndReplace(context,  const HomeLayout());
+                    HomeCubit.get(context).changeCurrentIndex(4);
+                  },
+                  padding: const EdgeInsets.all(10),
+                  icon:   CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.white,
+                    child:Global.imageUrl != null?
+                    CircleAvatar(
+                      radius: 30.0,
+                      backgroundImage:
+                      NetworkImage(Global.imageUrl),
+                      backgroundColor: Colors.transparent,
+                    )
+                        :
+                    const CircleAvatar(
+                      radius: 13,
+                      backgroundImage: AssetImage('assets/person.jpg'),
 
-                        ),
-                      ))
+                    ),
+                  ))
+            ],
+          ),
+          backLayer: UserBackLayerMenu(),
+          frontLayer: ListView(
+            children: [
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+
+                      IconButton(icon:const Icon(Icons.arrow_back) ,onPressed: (){
+                       Navigator.pop(context);
+                      }),
+                      const PrimaryText(
+                        text: 'رجوع',
+                        size: 22,
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              backLayer: UserBackLayerMenu(),
-              frontLayer: ListView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+
+                  children: [
+
+
+                    // const Padding(
+                    //   padding: EdgeInsets.only(left: 20),
+                    //   child: PrimaryText(
+                    //     text: 'Food',
+                    //     size: 22,
+                    //   ),
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: PrimaryText(
+
+                        text: cubit.listProject.firstWhere((element) => element.id == Global.projectId).name??'',
+                        height: 1.1,
+                        size: 42,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
+                    const SizedBox(height: 25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: const [
+                          Padding(
+                          padding: EdgeInsets.only(right: 20),
                           child: PrimaryText(
-                            text: 'Food',
-                            size: 22,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: PrimaryText(
-                            text: 'Elomda',
-                            height: 1.1,
-                            size: 42,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const SizedBox(height: 25),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: PrimaryText(
-                              text: 'Categories',
+                              text: 'التصنيفات',
                               fontWeight: FontWeight.w700,
                               size: 22),
-                        ),
-                        SizedBox(
-                          height: 240,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: cubit.listCategory.length ?? 0,
-                            itemBuilder: (context, index) => Padding(
-                              padding:
-                                  EdgeInsets.only(left: index == 0 ? 25 : 0),
-                              child: foodCategoryCard(
-                                  cubit.listCategory[index].image,
-                                  cubit.listCategory[index].categoryTitle,
-                                  cubit.listCategory[index].categoryId,
-                                  context),
-                            ),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20, top: 10),
-                          child: PrimaryText(
-                              text: 'Popular',
-                              fontWeight: FontWeight.w700,
-                              size: 22),
-                        ),
-                        Column(
-                          children: List.generate(
-                            cubit.popularFoodList.length,
-                            (index) => itemCard(
-                              index: index,
-                              isFavourite:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == cubit.popularFoodList[index].itemId && element.isFavourit)?true:false,
-
-                              itemId: cubit.popularFoodList[index].itemId,
-                              context: context,
-
-                              imagePath: cubit.popularFoodList[index].image,
-                              itemDescription: cubit.popularFoodList[index].description,
-                              itemPrice: cubit.popularFoodList[index].price,
-                              name: cubit.popularFoodList[index].itemTitle,
-                              star: '5',
-
-                              subCategoryTitle: cubit.popularFoodList[index].supCategoryTitle,
-                            ),
-                          ),
                         ),
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
+                    SizedBox(
+                      height: 240,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: cubit.listCategory.where((element) => element.projectId == Global.projectId).length ?? 0,
+                        itemBuilder: (context, index) => Padding(
+                          padding:
+                          EdgeInsets.only(left: index == 0 ? 25 : 0),
+                          child: foodCategoryCard(
+                              cubit.listCategory.where((element) => element.projectId == Global.projectId).toList()[index].image,
+                              cubit.listCategory.where((element) => element.projectId == Global.projectId).toList()[index].categoryTitle,
+                              cubit.listCategory.where((element) => element.projectId == Global.projectId).toList()[index].categoryId,
+                              context
+                          ),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.only(right: 20, top: 10),
+                          child: PrimaryText(
+                              text: 'الاكثر طالبا',
+                              fontWeight: FontWeight.w700,
+                              size: 22),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: List.generate(
+                        cubit.popularFoodList.where((element) => element.projectId == Global.projectId).length,
+                            (index) => itemCard(
+                          index: index,
+                          isFavourite:cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == cubit.popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].itemId && element.isFavourit)?true:false,
+
+                          itemId: cubit.popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].itemId,
+                          context: context,
+
+                          imagePath:cubit.popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].image,
+                          itemDescription: cubit.popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].description,
+                          itemPrice: cubit.popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].price,
+                          name:cubit.popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].itemTitle,
+                          star: '5',
+
+                          subCategoryTitle: cubit.popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].supCategoryTitle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
         );
       },
@@ -227,23 +255,23 @@ class HomeScreen extends StatelessWidget {
           onTap: () {
 
             HomeCubit.get(context).selectedItemId = itemId;
-            HomeCubit.get(context).selectedCategoryId = HomeCubit.get(context).popularFoodList[index].categoryId;
-            HomeCubit.get(context).selectedSubCategoryId = HomeCubit.get(context).popularFoodList[index].supCategoryId;
+            HomeCubit.get(context).selectedCategoryId = HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].categoryId;
+            HomeCubit.get(context).selectedSubCategoryId = HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].supCategoryId;
 
             navigateTo(
                 context,
                 popularFoodDetailScreen(
                   index: index,
                   orderCount: value,
-                  oldPrice:HomeCubit.get(context).popularFoodList[index].oldPrice ,
+                  oldPrice:HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].oldPrice ,
 
-                  isDiscount: HomeCubit.get(context).popularFoodList[index].isDiscount,
-                  imagePath:HomeCubit.get(context).popularFoodList[index].image,
-                  subCategoryTitle:HomeCubit.get(context).popularFoodList[index].supCategoryTitle,
-                  itemName: HomeCubit.get(context).popularFoodList[index].itemTitle,
-                  itemDescription:HomeCubit.get(context).popularFoodList[index].description ?? '',
-                  itemPrice: HomeCubit.get(context).popularFoodList[index].price,
-                  itemId:HomeCubit.get(context).popularFoodList[index].itemId,
+                  isDiscount: HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].isDiscount,
+                  imagePath:HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].image,
+                  subCategoryTitle:HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].supCategoryTitle,
+                  itemName: HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].itemTitle,
+                  itemDescription:HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].description ?? '',
+                  itemPrice: HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].price,
+                  itemId:HomeCubit.get(context).popularFoodList.where((element) => element.projectId == Global.projectId).toList()[index].itemId,
                 ));
           },
           child: Container(
@@ -332,10 +360,10 @@ class HomeScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
 
-                                  if(HomeCubit.get(context).popularFoodList.firstWhere((element) => element.itemId == itemId).isDiscount)
+                                  if(HomeCubit.get(context).popularFoodList.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).isDiscount)
                                     PrimaryText(
                                      isDiscount: true,
-                                      text: HomeCubit.get(context).popularFoodList.firstWhere((element) => element.itemId == itemId).oldPrice.toString(),
+                                      text: HomeCubit.get(context).popularFoodList.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).oldPrice.toString(),
                                       size: 20,
                                       fontWeight: FontWeight.w700,
                                       color: Constants.lighterGray,
@@ -445,113 +473,5 @@ class HomeScreen extends StatelessWidget {
     });
   }
 
-// Widget popularFoodCard({String imagePath, String name, String weight, String star, context}) {
-//   return GestureDetector(
-//     onTap: (){
-//
-//       navigateTo(context, FoodDetail(
-//         imagePath:imagePath ,
-//           itemPrice: 0,
-//         itemName: '',
-//         subCategoryTitle: '',
-//       )
-//       );
-//     },
-//     child: Container(
-//       margin: const EdgeInsets.only(right: 25, left: 20, top: 25),
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(20),
-//         boxShadow: const [
-//           BoxShadow(blurRadius: 10, color: Constants.lighterGray)
-//         ],
-//         color: Constants.white,
-//       ),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Padding(
-//                 padding: const EdgeInsets.only(top: 25, left: 20),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Row(
-//                       children: const [
-//                         Icon(
-//                           Icons.star,
-//                           color: Constants.primary,
-//                           size: 20,
-//                         ),
-//                         SizedBox(width: 10),
-//                         PrimaryText(
-//                           text: 'top of the week',
-//                           size: 16,
-//                         )
-//                       ],
-//                     ),
-//                     const SizedBox(height: 15),
-//                     SizedBox(
-//                       width: MediaQuery.of(context).size.width / 2.2,
-//                       child: PrimaryText(
-//                           text: name, size: 22, fontWeight: FontWeight.w700),
-//                     ),
-//                     PrimaryText(
-//                         text: weight, size: 18, color: Constants.lightGray),
-//                   ],
-//                 ),
-//               ),
-//               const SizedBox(
-//                 height: 20,
-//               ),
-//               Row(
-//                 children: [
-//                   Container(
-//                     padding: const EdgeInsets.symmetric(
-//                         horizontal: 45, vertical: 20),
-//                     decoration: const BoxDecoration(
-//                         color: Constants.primary,
-//                         borderRadius: BorderRadius.only(
-//                           bottomLeft: Radius.circular(20),
-//                           topRight: Radius.circular(20),
-//                         )),
-//                     child: const Icon(Icons.add, size: 20),
-//                   ),
-//                   const SizedBox(width: 20),
-//                   SizedBox(
-//                     child: Row(
-//                       children: [
-//                         const Icon(Icons.star, size: 12),
-//                         const SizedBox(width: 5),
-//                         PrimaryText(
-//                           text: star,
-//                           size: 18,
-//                           fontWeight: FontWeight.w600,
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//           Container(
-//             transform: Matrix4.translationValues(30.0, 25.0, 0.0),
-//             decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(50),
-//                 boxShadow: [
-//                   BoxShadow(color: Colors.grey[400], blurRadius: 20)
-//                 ]),
-//             child: Hero(
-//               tag: imagePath,
-//               child: Image.asset(imagePath,
-//                   width: MediaQuery.of(context).size.width / 2.9),
-//             ),
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
+
 }

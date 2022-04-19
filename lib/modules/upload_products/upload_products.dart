@@ -5,6 +5,7 @@ import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_state.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +36,7 @@ class UploadProductForm extends StatelessWidget {
                   color: Constants.black
               ),
 
-              title:customAppBar(context: context,title: '') ,
+              title:customAppBar(context: context,title: '',isShowCarShop: false) ,
             ),
             bottomSheet: GestureDetector(
               onTap: () {
@@ -455,25 +456,24 @@ class UploadProductForm extends StatelessWidget {
                                   selectedItem: cubit.selectedCategoryId !=
                                       0 && HomeCubit.get(context).listCategory
                                       .where((element) =>
-                                  element.isDeleted == 0)
+                                  element.isDeleted == 0  && element.projectId == Global.projectId)
                                       .isNotEmpty
                                       ? HomeCubit.get(context).listCategory
                                       .firstWhere((element) =>
                                   element.categoryId ==
                                       cubit.selectedCategoryId &&
-                                      element.isDeleted == 0)
+                                      element.isDeleted == 0  && element.projectId == Global.projectId)
                                       .categoryTitle
                                       : '',
                                   showSearchBox: true,
                                   mode: Mode.BOTTOM_SHEET,
 
-                                  items: HomeCubit.get(context).listCategory.where((
-                                      element) => element.isDeleted == 0)
+                                  items: HomeCubit.get(context).listCategory.where((element) => element.isDeleted == 0  && element.projectId == Global.projectId)
                                       .map((e) => e.categoryTitle)
                                       .toList(),
                                   onChanged: (value) async {
                                     cubit.selectedSupCategoryId = 0;
-                                    cubit.selectedCategoryId = HomeCubit.get(context).listCategory.firstWhere((element) => element.categoryTitle == value && element.isDeleted == 0).categoryId;
+                                    cubit.selectedCategoryId = HomeCubit.get(context).listCategory.firstWhere((element) => element.categoryTitle == value && element.isDeleted == 0  && element.projectId == Global.projectId).categoryId;
                                     if (cubit.selectedTypeItemId == 3) {
                                       cubit.getSubCategoryByCategoryId(cubit.selectedCategoryId);
                                     }
@@ -483,7 +483,9 @@ class UploadProductForm extends StatelessWidget {
 
                           if (cubit.selectedTypeItemId == 3)
                             const SizedBox(height: 25),
-                          if (cubit.selectedTypeItemId == 3 && HomeCubit.get(context).listSubCategory.isNotEmpty)
+
+                          if (cubit.selectedTypeItemId == 3 &&
+                              HomeCubit.get(context).listSubCategory.where((element) =>    element.projectId == Global.projectId).toList().isNotEmpty)
                             SizedBox(
                                 height: MediaQuery
                                     .of(context)
@@ -522,26 +524,26 @@ class UploadProductForm extends StatelessWidget {
                                   selectedItem: cubit.selectedSupCategoryId !=
                                       0 && HomeCubit.get(context).listSubCategory
                                       .where((element) =>
-                                  element.isDeleted == 0 &&element.categoryId == cubit.selectedCategoryId )
+                                  element.isDeleted == 0 &&element.categoryId == cubit.selectedCategoryId  && element.projectId == Global.projectId)
                                       .isNotEmpty &&
                                       cubit.selectedCategoryId != 0 &&
                                       cubit.selectedCategoryId != null ? HomeCubit.get(context).listSubCategory
                                       .firstWhere((element) =>
                                   element.supCategoryId ==
                                       cubit.selectedSupCategoryId &&
-                                      element.isDeleted == 0)
+                                      element.isDeleted == 0 && element.projectId == Global.projectId)
                                       .subCategoryTitle
                                       : '',
                                   showSearchBox: true,
                                   mode: Mode.BOTTOM_SHEET,
-                                  items: HomeCubit.get(context).listSubCategory.where((element) => element.isDeleted == 0 && element.categoryId == cubit.selectedCategoryId).map((e) => e.subCategoryTitle).toList(),
+                                  items: HomeCubit.get(context).listSubCategory.where((element) => element.isDeleted == 0 && element.categoryId == cubit.selectedCategoryId && element.projectId == Global.projectId).map((e) => e.subCategoryTitle).toList(),
                                   onChanged: (value) async {
-                                    cubit.selectedSupCategoryId = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0).supCategoryId;
+                                    cubit.selectedSupCategoryId = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0 && element.projectId == Global.projectId).supCategoryId;
 
                                     cubit.checkIsUploadValid(context);
                                   },
                                 )),
-                          if (cubit.selectedTypeItemId == 3 && HomeCubit.get(context).listSubCategory.isNotEmpty)
+                          if (cubit.selectedTypeItemId == 3 && HomeCubit.get(context).listSubCategory.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty)
                             const SizedBox(height: 25),
                           if (cubit.selectedTypeItemId == 3)
                             TextFormField(
@@ -582,22 +584,22 @@ class UploadProductForm extends StatelessWidget {
                                cubit.checkIsUploadValid(context);
                               },
                             ),
-                          if (cubit.selectedTypeItemId == 3 && HomeCubit.get(context).listAdditions.isNotEmpty)
+                          if (cubit.selectedTypeItemId == 3 && HomeCubit.get(context).listAdditions.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty)
                             const SizedBox(height: 30),
                           if (cubit.selectedTypeItemId == 3 )
                           SizedBox(
                             height: 120,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: HomeCubit.get(context).listAdditions.length??0,
+                              itemCount: HomeCubit.get(context).listAdditions.where((element) =>   element.projectId == Global.projectId).toList().length??0,
                               itemBuilder: (context, index) => Padding(
                                 padding: EdgeInsets.only(left: index == 0 ? 20 : 0,bottom: 7,top: 7),
                                 child:
-                                additionCard(imagePath: HomeCubit.get(context).listAdditions[index].image,additionId:HomeCubit.get(context).listAdditions[index].itemId,cubit: cubit,context: context),
+                                additionCard(imagePath: HomeCubit.get(context).listAdditions.where((element) =>   element.projectId == Global.projectId).toList()[index].image,additionId:HomeCubit.get(context).listAdditions.where((element) =>   element.projectId == Global.projectId).toList()[index].itemId,cubit: cubit,context: context),
                               ),
                             ),
                           ),
-                          if (cubit.selectedTypeItemId == 3  && HomeCubit.get(context).listAdditions.isNotEmpty)
+                          if (cubit.selectedTypeItemId == 3  && HomeCubit.get(context).listAdditions.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty)
                           const SizedBox(
                             height: 50,
                           )
@@ -620,12 +622,12 @@ class UploadProductForm extends StatelessWidget {
 GestureDetector additionCard({String imagePath,int additionId,UploadProducts cubit,context}) {
   return GestureDetector(
     onTap: (){
-      if(cubit.listOfSelectedAdditions.any((element) => element.itemId ==additionId))
+      if(cubit.listOfSelectedAdditions.any((element) => element.itemId ==additionId &&  element.projectId == Global.projectId))
       {
-        cubit.listOfSelectedAdditions.removeWhere((element) => element.itemId == additionId);
+        cubit.listOfSelectedAdditions.removeWhere((element) => element.itemId == additionId && element.projectId == Global.projectId);
       }
       else{
-        cubit.listOfSelectedAdditions.add(HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId));
+        cubit.listOfSelectedAdditions.add(HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId));
       }
       cubit.emit(UploadProductsCameraUploadImageState());
     },
@@ -645,7 +647,7 @@ GestureDetector additionCard({String imagePath,int additionId,UploadProducts cub
                   bottomLeft:     const Radius.circular(20),
                   bottomRight:     const Radius.circular(20),
                   topLeft:  const Radius.circular(20),
-                  topRight: cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId)?  const Radius.circular(0)   :const Radius.circular(20),
+                  topRight: cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId &&  element.projectId == Global.projectId)?  const Radius.circular(0)   :const Radius.circular(20),
                 ),
                 color: Constants.white,
                 boxShadow: [
@@ -669,7 +671,7 @@ GestureDetector additionCard({String imagePath,int additionId,UploadProducts cub
                       height: 10,
                     ),
                     PrimaryText(
-                      text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId).price.toString() ??0.toString(),
+                      text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).price.toString() ??0.toString(),
                       size: 12,
                       fontWeight: FontWeight.w700,
                       color: Constants.tertiary,
@@ -681,7 +683,7 @@ GestureDetector additionCard({String imagePath,int additionId,UploadProducts cub
                 ),
                 const SizedBox(height: 5,),
                 PrimaryText(
-                  text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId).itemTitle.toString() ??''.toString(),
+                  text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).itemTitle.toString() ??''.toString(),
                   size: 15,
                   fontWeight: FontWeight.w700,
                   color: Constants.darkBG,
@@ -689,7 +691,7 @@ GestureDetector additionCard({String imagePath,int additionId,UploadProducts cub
                 ),
               ],
             )),
-        if(cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId))
+        if(cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId &&  element.projectId == Global.projectId))
           const Positioned(
               top: -10,
               right: 10,

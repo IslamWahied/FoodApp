@@ -701,10 +701,10 @@ class UpdateDataCubit extends Cubit<UploadDataState> {
   onChangeSupCategory({context, value}){
     if( selectedTypeItemId == 2){
 
-      txtUploadTitle.text = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0).subCategoryTitle;
-      selectedSupCategoryId = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0).supCategoryId;
-      prodeuctImageUrl = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0).image;
-      isAvailable = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0).isAvailable;
+      txtUploadTitle.text = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).subCategoryTitle;
+      selectedSupCategoryId = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).supCategoryId;
+      prodeuctImageUrl = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).image;
+      isAvailable = HomeCubit.get(context).listSubCategory.firstWhere((element) => element.subCategoryTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).isAvailable;
       FocusScope.of(context).requestFocus(uploadTitleNode);
       txtUploadTitle.selection = TextSelection(
         baseOffset: 0,
@@ -718,16 +718,16 @@ class UpdateDataCubit extends Cubit<UploadDataState> {
   int selectItemId = 0;
   onChangeItems ({context, value}){
     if( selectedTypeItemId == 3){
-      selectItemId = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).itemId;
+      selectItemId = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0 &&  element.projectId == Global.projectId).itemId;
       txtUploadTitle.text = value??'';
-      txtUploadDescription.text = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).description??'';
-      txtUploadPrice.text = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).price.toString()??'0';
-      txtUploadOldPrice.text = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).oldPrice.toString()??'0';
-      isPopular = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).isPopular;
-      isDiscount = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).isDiscount;
+      txtUploadDescription.text = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).description??'';
+      txtUploadPrice.text = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).price.toString()??'0';
+      txtUploadOldPrice.text = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).oldPrice.toString()??'0';
+      isPopular = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).isPopular;
+      isDiscount = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).isDiscount;
 
-      prodeuctImageUrl = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).image;
-      isAvailable = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).isAvailable;
+      prodeuctImageUrl = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).image;
+      isAvailable = HomeCubit.get(context).listItems.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).isAvailable;
       FocusScope.of(context).requestFocus(uploadTitleNode);
       txtUploadTitle.selection = TextSelection(
         baseOffset: 0,
@@ -745,12 +745,12 @@ int  selectAdditionId = 0;
 
       if( selectedTypeItemId == 4){
 
-      txtUploadTitle.text =  HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).itemTitle;
+      txtUploadTitle.text =  HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0 &&  element.projectId == Global.projectId).itemTitle;
 
-txtUploadPrice.text = HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).price.toString()??'0';
-      selectAdditionId = HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).itemId;
-      prodeuctImageUrl = HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).image;
-      isAvailable = HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0).isAvailable;
+txtUploadPrice.text = HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0 &&  element.projectId == Global.projectId).price.toString()??'0';
+      selectAdditionId = HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).itemId;
+      prodeuctImageUrl = HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).image;
+      isAvailable = HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemTitle == value && element.isDeleted == 0&&  element.projectId == Global.projectId).isAvailable;
       FocusScope.of(context).requestFocus(uploadTitleNode);
       
       txtUploadTitle.selection = TextSelection(

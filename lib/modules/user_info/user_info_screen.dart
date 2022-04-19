@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/bloc/register_Bloc/registerBloc.dart';
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/favourite/feeds_screen.dart';
@@ -46,70 +47,83 @@ class User_Info extends StatelessWidget {
                           (BuildContext context, BoxConstraints constraints) {
                         top = constraints.biggest.height;
 
-                        return Container(
-                          decoration: const BoxDecoration(color: Colors.black),
-                          child: FlexibleSpaceBar(
-                            centerTitle: true,
-                            title: AnimatedOpacity(
-                              duration: const Duration(milliseconds: 300),
-                              opacity: top <= 110.0 ? 1.0 : 0,
-                              child: Row(
-                                children: [
-                                  const SizedBox(
-                                    width: 12,
-                                  ),
-                                  Container(
-                                    height: kToolbarHeight / 1.8,
-                                    width: kToolbarHeight / 1.8,
-                                    decoration:   BoxDecoration(
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.white,
-                                          blurRadius: 1.0,
+                        return Stack(
+                          children: [
+
+                            Container(
+                              decoration: const BoxDecoration(color: Colors.black),
+                              child: FlexibleSpaceBar(
+                                centerTitle: true,
+                                title: AnimatedOpacity(
+                                  duration: const Duration(milliseconds: 300),
+                                  opacity: top <= 110.0 ? 1.0 : 0,
+                                  child: Row(
+
+                                    children: [
+
+                                      const SizedBox(
+                                        width: 12,
+                                      ),
+                                      Container(
+                                        height: kToolbarHeight / 1.8,
+                                        width: kToolbarHeight / 1.8,
+                                        decoration:   BoxDecoration(
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.white,
+                                              blurRadius: 1.0,
+                                            ),
+                                          ],
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image:Global.imageUrl != null &&Global.imageUrl.trim() != ''? NetworkImage(Global.imageUrl):const AssetImage('assets/person.jpg'),
+                                              //
+
+                                              //
+                                              // cubit.user_info_finalPickedImage ==
+                                              //     null
+                                              //     ? NetworkImage(cubit.image ??
+                                              //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')
+                                              //     : FileImage(
+                                              //     cubit.user_info_finalPickedImage),
+
+                                              ),
                                         ),
-                                      ],
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image:Global.imageUrl != null &&Global.imageUrl.trim() != ''? NetworkImage(Global.imageUrl):const AssetImage('assets/person.jpg'),
-                                          //
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                        Text(
+                                        Global.userName,
+                                        style: const TextStyle(
+                                            fontSize: 20.0, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                background: Stack(
+                                  alignment: Alignment.bottomRight,
+                                  children:   [
 
-                                          //
-                                          // cubit.user_info_finalPickedImage ==
-                                          //     null
-                                          //     ? NetworkImage(cubit.image ??
-                                          //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')
-                                          //     : FileImage(
-                                          //     cubit.user_info_finalPickedImage),
+                                    Image(
 
-                                          ),
+                                      // image: AssetImage('assets/person.jpg'),
+                                        image:    NetworkImage(
+                                          Global.imageUrl),
+                                      fit: BoxFit.fitWidth,
+                                      width: double.infinity,
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                    Text(
-                                    Global.userName,
-                                    style: const TextStyle(
-                                        fontSize: 20.0, color: Colors.white),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                            background: Stack(
-                              alignment: Alignment.bottomRight,
-                              children:   [
-                                Image(
+                          // if(Global.isAdmin)
+                          //   IconButton(icon: const Icon(Icons.arrow_back,size: 30),color: Constants.black,onPressed: (){
+                          //     Navigator.pop(context);
+                          //   }),
 
-                                  // image: AssetImage('assets/person.jpg'),
-                                    image:    NetworkImage(
-                                      Global.imageUrl),
-                                  fit: BoxFit.fitWidth,
-                                  width: double.infinity,
-                                ),
-                              ],
-                            ),
-                          ),
+                          ],
                         );
                       }),
                     ),
@@ -190,6 +204,14 @@ class User_Info extends StatelessWidget {
                               child: userTile(
                                 'رقم التليفون',
                                 Global.mobile??'',
+                                Icons.phone,
+                              ),
+                            ),
+if(Global.isAdmin)
+                            Container(
+                              child: userTile(
+                                'الحالة',
+                                cubit.listProject.firstWhere((element) => element.id == Global.projectId).isActive? 'فعال' : 'غير فعال'??'',
                                 Icons.phone,
                               ),
                             ),

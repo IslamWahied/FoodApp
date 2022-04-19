@@ -23,7 +23,8 @@ class NewOrderScreen extends StatelessWidget {
     return BlocConsumer<HomeCubit, HomeScreenState>(
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
-        var newOrderList = cubit.listAllOrders.where((element) =>element.orderState.toLowerCase() == 'New'.toLowerCase()).toList();
+        var newOrderList = cubit.listAllOrders.where((element) =>element.orderState.toLowerCase() == 'New'.toLowerCase()  && element.projectId == Global.projectId).toList();
+
         return Scaffold(
 
           body: Center(
@@ -38,7 +39,7 @@ class NewOrderScreen extends StatelessWidget {
               },
 
               frontLayerBackgroundColor: Constants.white,
-              headerHeight: MediaQuery.of(context).size.height * 0.45,
+              headerHeight: MediaQuery.of(context).size.height * 0.35,
               appBar: BackdropAppBar(
                 title:   Text(cubit.selectedTab),
                 leading: const BackdropToggleButton(
@@ -95,7 +96,7 @@ class NewOrderScreen extends StatelessWidget {
               backLayer: AdminBackLayerMenu(),
               frontLayer:Conditional.single(
                 context: context,
-                conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).toList().isNotEmpty,
+                conditionBuilder: (BuildContext context) => cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()  && element.projectId == Global.projectId).toList().isNotEmpty,
                 widgetBuilder: (BuildContext context) {
                   return ListView.separated(
                       separatorBuilder: (context, index) => const SizedBox(),
@@ -119,15 +120,20 @@ class NewOrderScreen extends StatelessWidget {
                                     // An action can be bigger than the others.
                                     flex: 1,
                                     onPressed: (context) {
-                                      cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId).orderState = 'Prepared';
-                                      var x = cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId);
+
+                                      var x = cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId  && element.projectId == Global.projectId);
+
+
+                                      cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId  && element.projectId == Global.projectId).orderState = 'Prepared';
+
                                       cubit.updateOrderState(orderModel: x);
+
 
                                     },
                                     backgroundColor: Colors.green,
                                     foregroundColor: Colors.white,
                                     icon: Icons.check,
-                                    label: 'تنفيذ',
+                                    label: 'تجهيز',
                                   ),
                                 ),
                                 const SizedBox(width: 5),
@@ -138,15 +144,15 @@ class NewOrderScreen extends StatelessWidget {
                                     // An action can be bigger than the others.
                                     flex: 1,
                                     onPressed: (context) {
-                                      cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId).orderState = 'Canceled';
-                                      var x = cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId);
+                                      cubit.listAllOrders.firstWhere((element) =>  element.orderId == orderModel.orderId  && element.projectId == Global.projectId).orderState = 'New';
+                                      var x = cubit.listAllOrders.firstWhere((element) =>element.orderId == orderModel.orderId  && element.projectId == Global.projectId);
                                       cubit.updateOrderState(orderModel: x);
 
                                     },
                                     backgroundColor: Colors.red,
                                     foregroundColor: Colors.white,
                                     icon: Icons.archive,
-                                    label: 'حذف',
+                                    label: 'الغاء',
                                   ),
                                 ),
                               ],
@@ -327,7 +333,7 @@ SizedBox(
                                                                 ),
                                                               ));
                                                 },
-                                                child: const Text('Details'))
+                                                child: const Text('التفاصيل'))
                                           ],
                                         ),
                                       ],

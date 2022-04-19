@@ -18,6 +18,7 @@ class AdditionsModel {
   bool isAvailable;
   bool isPopular;
   bool isDiscount;
+  int projectId;
 
 
 
@@ -38,6 +39,7 @@ class AdditionsModel {
     this.isAvailable,
     this.isPopular,
     this.isDiscount,
+    this.projectId
   });
 
   AdditionsModel.fromJson(Map<String, dynamic> json)
@@ -58,6 +60,7 @@ class AdditionsModel {
     isAvailable = json['isAvailable']??true;
     isPopular = json['isPopular']??false;
     isDiscount = json['isDiscount']??false;
+    projectId = json['projectId']??1;
 
   }
 
@@ -86,6 +89,7 @@ class AdditionsModel {
       'isAvailable':isAvailable??true,
       'isPopular':isPopular??false,
       'isDiscount':isDiscount??false,
+      'projectId':projectId??1,
     };
   }
 

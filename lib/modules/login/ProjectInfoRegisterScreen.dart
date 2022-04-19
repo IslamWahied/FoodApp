@@ -330,12 +330,9 @@ class ProjectInfoRegisterScreen extends StatelessWidget {
 
                         onPressed: () {
                           if ( cubit.registerValid) {
-                            if(cubit.isAdmin){
+
                               cubit.registerAndLoginAdmin(context);
-                            }else
-                            {
-                              cubit.registerAndLoginUser(context);
-                            }
+
 
                           }
                         }),

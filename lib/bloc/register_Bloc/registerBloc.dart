@@ -59,16 +59,15 @@ class RegisterCubit extends Cubit<RegisterState> {
 
 
 
-        bool isOldUser = HomeCubit.get(context).listUser.any((element) =>
-            element.mobile == LoginCubit.get(context).textMobileControl.text);
+        bool isOldUser = HomeCubit.get(context).listUser.any((element) => element.mobile == Global.mobile);
 
         if (isOldUser) {
-          var userModel = HomeCubit.get(context).listUser.firstWhere(
-              (element) =>
-                  element.mobile ==
-                  LoginCubit.get(context).textMobileControl.text);
+
+          var userModel = HomeCubit.get(context).listUser.firstWhere((element) => element.mobile == LoginCubit.get(context).textMobileControl.text);
 
           Global.userName = userModel.userName;
+
+          Global.mobile = userModel.mobile;
 
           Global.isAdmin = userModel.isAdmin;
 
@@ -76,9 +75,17 @@ class RegisterCubit extends Cubit<RegisterState> {
 
           Global.departMent = userModel.departmentId;
 
+          if(userModel.isAdmin){
+
+            Global.projectId = HomeCubit.get(context).listProject.firstWhere((element) => element.adminMobile ==  Global.mobile).id;
+
+            await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
+          }
+
           await CachHelper.SetData(key: 'mobile', value: Global.mobile);
           await CachHelper.SetData(key: 'isUserLogin', value: true);
           await CachHelper.SetData(key: 'isAdmin', value: userModel.isAdmin);
+          await CachHelper.SetData(key: 'imageUrl', value: userModel.image);
           await CachHelper.SetData(key: 'imageUrl', value: userModel.image);
           await CachHelper.SetData(key: 'userName', value: userModel.userName);
           await CachHelper.SetData(key: 'departmentId', value: userModel.departmentId);
@@ -125,7 +132,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       }
     }
   }
-bool isAdmin  =false;
+    bool isAdmin  =false;
   File finalPickedUserImage;
   File finalPickedProjectImage;
 
@@ -173,6 +180,8 @@ bool isAdmin  =false;
 
   UserModel userModel;
   Project projectModel;
+
+
   registerAndLoginUser(context) async {
     rgisterBtnController.start();
     Global.userName = txtRegisterUserNameControl.text;
@@ -184,7 +193,9 @@ bool isAdmin  =false;
     await CachHelper.SetData(key: 'departmentId', value: Global.departMent);
     await CachHelper.SetData(key: 'showOnBoarding', value: false);
     await CachHelper.SetData(key: 'isUserLogin', value: true);
-    await CachHelper.SetData(key: 'isAdmin', value: isAdmin);
+    await CachHelper.SetData(key: 'isAdmin', value: false);
+
+    Global.isAdmin = false;
 
     FirebaseFirestore.instance
         .collection('User')
@@ -285,37 +296,11 @@ bool isAdmin  =false;
       });
     });
   }
-  //
-  // List<UserModel> listUser = [];
-  //
-  // getUsers() async {
-  //   FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
-  //     listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
-  //
-  //     emit(LoginSuccessState());
-  //   }).onError((handleError) {
-  //     print(handleError);
-  //   });
-  // }
-  String departMentSelectedName = '';
-  TextEditingController txtProjectMobileControl = TextEditingController();
-
-  List<Project> listProject = [];
-
-  getAllProjects() async {
-    FirebaseFirestore.instance
-        .collection('Projects')
-        .snapshots()
-        .listen((event) {
-      listProject = event.docs.map((x) => Project.fromJson(x.data())).toList();
-      emit(Refersh());
-    });
-  }
   registerAndLoginAdmin(context) async {
-
+    rgisterBtnController.start();
     Global.userName = txtRegisterUserNameControl.text;
     Global.departMent = HomeCubit.get(context).departMentList.indexWhere((element) => element == departMentSelectedName);
-
+    Global.isAdmin = true;
 
     await CachHelper.SetData(key: 'mobile', value: Global.mobile);
     await CachHelper.SetData(key: 'userName', value: Global.userName);
@@ -334,14 +319,14 @@ bool isAdmin  =false;
         .get()
         .then((value) async {
       userModel = UserModel.fromJson(value.data());
-      Global.imageUrl = userModel.image;
-      await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
+
       if (userModel.mobile != null) {
 
-        rgisterBtnController.success();
-        await Future.delayed(const Duration(seconds: 1));
-        rgisterBtnController.reset();
-        // NavigatToAndReplace(context, const HomeLayout());
+        Global.imageUrl = userModel.image;
+        await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
+
+
+
 
       } else {
         firebase_storage.FirebaseStorage.instance
@@ -369,16 +354,14 @@ bool isAdmin  =false;
                 .doc(Global.mobile)
                 .set(model.toMap())
                 .then((value) async {
-              rgisterBtnController.success();
-              await Future.delayed(const Duration(seconds: 1));
-              rgisterBtnController.reset();
+
 
             }).catchError((e) async {
               if (kDebugMode) {
 
 
 
-                rgisterBtnController.reset();
+
                 print(e);
               }
             });
@@ -412,20 +395,14 @@ bool isAdmin  =false;
               .set(model.toMap())
               .then((value) async {
 
-
-            rgisterBtnController.reset();
-            // NavigatToAndReplace(context, const HomeLayout());
           }).catchError((e) async {
             if (kDebugMode) {
-              rgisterBtnController.error();
 
-              rgisterBtnController.reset();
-              print(e);
             }
           });
         });
       });
-      });
+    });
 
 
 
@@ -435,47 +412,49 @@ bool isAdmin  =false;
         .doc(txtProjectMobileControl.text)
         .get()
         .then((value) async {
-          print('1');
-          print(value.data());
-          print('1');
-
 
       if (value.data() != null) {
         projectModel = Project.fromJson(value.data());
+
         Global.projectImageUrl = projectModel.image;
+        Global.projectId = projectModel.id;
+        await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
+
         await CachHelper.SetData(key: 'ProjectImageUrl', value: Global.projectImageUrl);
+
         rgisterBtnController.success();
         await Future.delayed(const Duration(seconds: 1));
         rgisterBtnController.reset();
-        print('2');
-        Global.isAdmin = isAdmin;
+
+        Global.isAdmin = true;
         NavigatToAndReplace(context, const HomeLayout());
 
       } else {
-        print('3');
+
         firebase_storage.FirebaseStorage.instance
             .ref()
             .child(
             'Project/${Uri.file(finalPickedProjectImage.path).pathSegments.last}')
             .putFile(finalPickedProjectImage)
             .then((value) {
-          print('4');
+
           value.ref.getDownloadURL().then((value) async {
 
             Global.projectImageUrl = value;
             Project model = Project(
-              isActive: false,
-              image: value,
+                isActive: false,
+                image: value,
 
-              createdDate: DateTime.now().toString(),
-             adminMobile: Global.mobile,
-              id:  1,
-              name: txtRegisterProjectNameControl.text,
-              projectMobile: txtProjectMobileControl.text
+                createdDate: DateTime.now().toString(),
+                adminMobile: Global.mobile,
+                id:  1,
+                name: txtRegisterProjectNameControl.text,
+                projectMobile: txtProjectMobileControl.text
             );
-            print('5');
+
             await CachHelper.SetData(key: 'ProjectImageUrl', value: Global.projectImageUrl);
-            print('6');
+            Global.projectId = 1;
+            await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
             FirebaseFirestore.instance
                 .collection('Projects')
                 .doc(Global.mobile)
@@ -483,8 +462,8 @@ bool isAdmin  =false;
                 .then((value) async {
               rgisterBtnController.success();
               await Future.delayed(const Duration(seconds: 1));
-              rgisterBtnController.reset();
-              Global.isAdmin = isAdmin;
+
+              Global.isAdmin = true;
               NavigatToAndReplace(context, const HomeLayout());
             }).catchError((e) async {
               if (kDebugMode) {
@@ -492,9 +471,9 @@ bool isAdmin  =false;
                 rgisterBtnController.error();
                 await Future.delayed(const Duration(seconds: 1));
                 rgisterBtnController.reset();
-                Global.isAdmin = isAdmin;
-                NavigatToAndReplace(context, const HomeLayout());
-                print(e);
+                // Global.isAdmin = true;
+                // NavigatToAndReplace(context, const HomeLayout());
+
               }
             });
           });
@@ -518,7 +497,8 @@ bool isAdmin  =false;
               name: txtRegisterProjectNameControl.text,
               projectMobile: txtProjectMobileControl.text
           );
-
+          Global.projectId = listProject.length + 1;
+          await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
           await CachHelper.SetData(key: 'ProjectImageUrl', value: Global.projectImageUrl);
           FirebaseFirestore.instance
               .collection('Projects')
@@ -528,19 +508,45 @@ bool isAdmin  =false;
             rgisterBtnController.success();
             await Future.delayed(const Duration(seconds: 1));
             rgisterBtnController.reset();
+            Global.isAdmin = true;
             NavigatToAndReplace(context, const HomeLayout());
           });
         });
       });
-      });
-
-
-
-
-
-
-
+    });
   }
+
+
+
+
+  //
+  // List<UserModel> listUser = [];
+  //
+  // getUsers() async {
+  //   FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
+  //     listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
+  //
+  //     emit(LoginSuccessState());
+  //   }).onError((handleError) {
+  //     print(handleError);
+  //   });
+  // }
+  String departMentSelectedName = '';
+  TextEditingController txtProjectMobileControl = TextEditingController();
+
+  List<Project> listProject = [];
+
+  getAllProjects() async {
+    FirebaseFirestore.instance
+        .collection('Projects')
+        .snapshots()
+        .listen((event) {
+      listProject = event.docs.map((x) => Project.fromJson(x.data())).toList();
+      emit(Refersh());
+    });
+  }
+
+
   RoundedLoadingButtonController rgisterBtnController = RoundedLoadingButtonController();
   void removeUploadImage(context) {
     finalPickedUserImage = null;

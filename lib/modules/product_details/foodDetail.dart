@@ -5,6 +5,7 @@ import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/home/home_screen.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
@@ -154,7 +155,7 @@ class FoodDetail extends StatelessWidget {
                                   if(isDiscount)
                                     PrimaryText(
                                       isDiscount: true,
-                                      text: HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).oldPrice.toString(),
+                                      text: HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId &&  element.projectId == Global.projectId).oldPrice.toString(),
                                       size: 25,
                                       fontWeight: FontWeight.w700,
                                       color: Constants.lighterGray,
@@ -241,11 +242,11 @@ class FoodDetail extends StatelessWidget {
                     ),
                        ),
                      ),
-if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId &&  element.projectId == Global.projectId).additionsList.isNotEmpty)
                   const SizedBox(
                       height: 50,
                     ),
-                    if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+                    if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId &&  element.projectId == Global.projectId).additionsList.isNotEmpty)
                     const PrimaryText(
                         text: 'الاضافات',
                         fontWeight: FontWeight.w700,
@@ -258,22 +259,22 @@ if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selecte
                 ),
               ),
 
-              if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
+              if(cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId &&  element.projectId == Global.projectId).additionsList.isNotEmpty)
               SizedBox(
                 height: 150,
 
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.length??0,
+                  itemCount: cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId &&  element.projectId == Global.projectId).additionsList.length??0,
                   itemBuilder: (context, index) => Padding(
                     padding: EdgeInsets.only(left: index == 0 ? 20 : 0,top: 10,bottom: 20),
                     child:
                     additionCard(
-                        imagePath: cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList[index].image
+                        imagePath: cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId &&  element.projectId == Global.projectId).additionsList[index].image
                     ,context: context,
                       cubit: cubit,
 
-additionId:cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList[index].itemId
+additionId:cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId &&  element.projectId == Global.projectId).additionsList[index].itemId
                     ),
                   ),
                 ),
@@ -291,12 +292,12 @@ additionId:cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit
   GestureDetector additionCard({String imagePath,int additionId,HomeCubit cubit,context}) {
     return GestureDetector(
       onTap: (){
-        if(cubit.listOfSelectedAdditions.any((element) => element.itemId ==additionId))
+        if(cubit.listOfSelectedAdditions.any((element) => element.itemId ==additionId &&  element.projectId == Global.projectId))
         {
-          cubit.listOfSelectedAdditions.removeWhere((element) => element.itemId == additionId);
+          cubit.listOfSelectedAdditions.removeWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId);
         }
         else{
-          cubit.listOfSelectedAdditions.add(HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId));
+          cubit.listOfSelectedAdditions.add(HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId));
         }
         cubit.emit(SelectCategoryState());
       },
@@ -316,7 +317,7 @@ additionId:cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit
                     bottomLeft:     const Radius.circular(20),
                     bottomRight:     const Radius.circular(20),
                     topLeft:  const Radius.circular(20),
-                    topRight: cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId)?  const Radius.circular(0)   :const Radius.circular(20),
+                    topRight: cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId )?  const Radius.circular(0)   :const Radius.circular(20),
                   ),
                   color: Constants.white,
                   boxShadow: [
@@ -345,7 +346,7 @@ additionId:cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit
                         height: 10,
                       ),
                       PrimaryText(
-                        text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId).price.toString() ??0.toString(),
+                        text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).price.toString() ??0.toString(),
                         size: 10,
                         fontWeight: FontWeight.w700,
                         color: Constants.tertiary,
@@ -357,7 +358,7 @@ additionId:cubit.listItemsSearch.firstWhere((element) => element.itemId == cubit
                   ),
                   const SizedBox(height: 5,),
                   PrimaryText(
-                    text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId).itemTitle.toString() ??''.toString(),
+                    text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).itemTitle.toString() ??''.toString(),
                     size: 12,
                     fontWeight: FontWeight.w700,
                     color: Constants.darkBG,
@@ -413,7 +414,7 @@ HomeCubit.get(context).changeCurrentIndex(3);
           child: Padding(
             padding: const EdgeInsets.only(right: 10,top: 15),
             child:   Badge(
-                badgeContent: Text(HomeCubit.get(context).listOrder.length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
+                badgeContent: Text(HomeCubit.get(context).listOrder.where((element) =>   element.projectId == Global.projectId).toList().length.toString()??'0',style: const TextStyle(color: Colors.white,fontSize: 11),),
                 child: Image.asset('assets/shoppingcart.png',width: 30)),
           ),
         ),

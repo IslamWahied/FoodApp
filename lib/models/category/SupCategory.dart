@@ -8,7 +8,8 @@ class SubCategory {
   String createdDate;
   String image;
   bool isAvailable;
-  SubCategory({this.isAvailable,this.subCategoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted,this.supCategoryId,this.categoryTitle});
+  int projectId;
+  SubCategory({this.isAvailable,this.subCategoryTitle,this.categoryId,this.createdDate,this.image,this.isDeleted,this.supCategoryId,this.categoryTitle,this.projectId});
 
   SubCategory.fromJson(Map<String, dynamic> json)
   {
@@ -20,6 +21,7 @@ class SubCategory {
     supCategoryId = json['supCategoryId'];
     categoryTitle = json['categoryTitle'];
     isAvailable = json['isAvailable']??true;
+    projectId = json['projectId']??1;
 
   }
 
@@ -35,6 +37,7 @@ class SubCategory {
       'supCategoryId':supCategoryId,
       'categoryTitle':categoryTitle,
       'isAvailable':isAvailable,
+      'projectId':projectId,
 
 
     };

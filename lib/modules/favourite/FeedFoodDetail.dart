@@ -2,6 +2,7 @@
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/product_details/foodDetail.dart';
+import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -232,15 +233,12 @@ class FeedFoodDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (cubit.listItems
-                        .firstWhere((element) => element.itemId == itemId)
-                        .additionsList
-                        .isNotEmpty)
+                    if (cubit.listItems.firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId).additionsList.isNotEmpty)
                       const SizedBox(
                         height: 50,
                       ),
                     if (cubit.listItems
-                        .firstWhere((element) => element.itemId == itemId)
+                        .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
                         .additionsList
                         .isNotEmpty)
                       const PrimaryText(
@@ -256,7 +254,7 @@ class FeedFoodDetailScreen extends StatelessWidget {
               ),
 
               if (cubit.listItems
-                  .firstWhere((element) => element.itemId == itemId)
+                  .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
                   .additionsList
                   .isNotEmpty)
                 SizedBox(
@@ -264,7 +262,7 @@ class FeedFoodDetailScreen extends StatelessWidget {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: cubit.listFeedsSearch
-                            .firstWhere((element) => element.itemId == itemId)
+                            .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
                             .additionsList
                             .length ??
                         0,
@@ -273,13 +271,13 @@ class FeedFoodDetailScreen extends StatelessWidget {
                           left: index == 0 ? 20 : 0, top: 10, bottom: 20),
                       child: additionCard(
                           imagePath: cubit.listFeedsSearch
-                              .firstWhere((element) => element.itemId == itemId)
+                              .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
                               .additionsList[index]
                               .image,
                           context: context,
                           cubit: cubit,
                           additionId: cubit.listFeedsSearch
-                              .firstWhere((element) => element.itemId == itemId)
+                              .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
                               .additionsList[index]
                               .itemId),
                     ),
@@ -299,14 +297,10 @@ class FeedFoodDetailScreen extends StatelessWidget {
   GestureDetector additionCard({String imagePath, int additionId, HomeCubit cubit, context}) {
     return GestureDetector(
       onTap: () {
-        if (cubit.listOfSelectedAdditions
-            .any((element) => element.itemId == additionId)) {
-          cubit.listOfSelectedAdditions
-              .removeWhere((element) => element.itemId == additionId);
+        if (cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId &&  element.projectId == Global.projectId)) {
+          cubit.listOfSelectedAdditions.removeWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId);
         } else {
-          cubit.listOfSelectedAdditions.add(HomeCubit.get(context)
-              .listAdditions
-              .firstWhere((element) => element.itemId == additionId));
+          cubit.listOfSelectedAdditions.add(HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId && element.projectId == Global.projectId));
         }
         cubit.emit(SelectCategoryState());
       },
@@ -385,8 +379,7 @@ class FeedFoodDetailScreen extends StatelessWidget {
                   ),
                 ],
               )),
-          if (cubit.listOfSelectedAdditions
-              .any((element) => element.itemId == additionId))
+          if (cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId && element.projectId == Global.projectId))
             const Positioned(
                 top: -10,
                 right: 10,
@@ -399,47 +392,4 @@ class FeedFoodDetailScreen extends StatelessWidget {
     );
   }
 }
-// Padding customAppBar({BuildContext context, String title}) {
-//   return Padding(
-//     padding: const EdgeInsets.symmetric(
-//       horizontal: 0,
-//       vertical: 10,
-//     ),
-//     child: Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         GestureDetector(
-//           onTap: () => Navigator.pop(context),
-//           child: Container(
-//             padding: const EdgeInsets.all(10),
-//             decoration: BoxDecoration(
-//                 color: Constants.primary,
-//                 borderRadius: BorderRadius.circular(15),
-//                 border: Border.all(width: 1, color: Colors.grey[400])),
-//             child: const Icon(Icons.chevron_left),
-//           ),
-//         ),
-//
-//         Text(
-//           title ?? '',
-//           style: const TextStyle(
-//               fontSize: 25,
-//               fontWeight: FontWeight.w600,
-//               color: AppColors.black,
-//               overflow: TextOverflow.ellipsis),
-//         ),
-//         SizedBox(
-//           width: MediaQuery.of(context).size.width * 0.05,
-//         ),
-//         // Container(
-//         //   padding: const EdgeInsets.all(10),
-//         //   decoration: BoxDecoration(
-//         //     color: Constants.primary,
-//         //     borderRadius: BorderRadius.circular(15),
-//         //   ),
-//         //   child: const Icon(Icons.star, color: Constants.white),
-//         // ),
-//       ],
-//     ),
-//   );
-// }
+

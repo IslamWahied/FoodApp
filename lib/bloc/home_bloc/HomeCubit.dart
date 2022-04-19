@@ -23,6 +23,7 @@ import 'package:elomda/modules/adminBackLayerOpations/sendNotifacation.dart';
 import 'package:elomda/modules/cart/cart_screen.dart';
 import 'package:elomda/modules/category/subCategoryScreen.dart';
 import 'package:elomda/modules/favourite/feeds_screen.dart';
+import 'package:elomda/modules/home/RestrantListScreen.dart';
 import 'package:elomda/modules/home/home_screen.dart';
 import 'package:elomda/modules/item/items.dart';
 import 'package:elomda/modules/login/login_screen.dart';
@@ -39,6 +40,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart' as sd;
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 
 
@@ -63,14 +65,31 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   ];
 
+  GlobalKey<NavigatorState> mAnavigatorkey = GlobalKey<NavigatorState>();
+
   List userScreens = [
-    const HomeScreen(),
+    const  RestrantListScreen (),
+
     const FavouriteScreen(),
     SearchScreen(),
     const OrderScreen(isShowNavBar: false),
     User_Info(),
 
   ];
+
+
+  List<Project> listProject = [];
+
+  getAllProjects() async {
+    FirebaseFirestore.instance
+        .collection('Projects')
+        .snapshots()
+        .listen((event) {
+      listProject = event.docs.map((x) => Project.fromJson(x.data())).toList();
+      emit(SearchSubCategoryState());
+    });
+  }
+
   convertDateFormat(String date) {
     if (date != null) {
       try {
@@ -226,7 +245,10 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
         selectedTab = 'تم التسليم';
       }
       else if(value == 3){
-        selectedTab = 'الاوردرات السابقة';
+        selectedTab = 'تم الالغاء';
+      }
+      else if(value == 4){
+        selectedTab = 'الاعدادات';
       }
     }
     else{
@@ -316,13 +338,15 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
   }
 
   getOrders() async {
-    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).collection('orderList')
-        .snapshots()
-        .listen((event) {
 
+    FirebaseFirestore.instance.collection('Orders').doc('1').collection('orderList')
+        .snapshots()
+        .listen((event) async {
+      AudioPlayer audioPlayer = AudioPlayer();
+      await audioPlayer.setUrl('messages.mp3');
 
       listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
-      // listAllOrders.forEach((element) {print(element.toJson());});
+
       emit(SelectCategoryState());
     });
   }
@@ -360,61 +384,79 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
   sendOrder(context) {
    try{
      if (listOrder.isNotEmpty) {
+
        double totalAdditionalPrice = 0;
+
        double totalDiscountPrice = 0;
+
        double orderPrice = 0;
+
        double totalPrice = 0;
 
 
+
        for (var element1 in listOrder) {
+
          for (var element2 in element1.additionsList) {
+
            totalAdditionalPrice = totalAdditionalPrice + element2.price;
          }
-         totalDiscountPrice = totalDiscountPrice + (element1.price - element1.oldPrice);
+         if(element1.isDiscount){
+           totalDiscountPrice = totalDiscountPrice + (element1.price - element1.oldPrice);
+         }
+
+
+
          orderPrice = element1.price;
+
          totalPrice =  element1.price + totalDiscountPrice + totalAdditionalPrice;
+
 
 
        }
        var orderId = 1;
+
        if(listAllOrders.isNotEmpty){
+
          orderId = listAllOrders.length + 1;
+
        }
        var model = OrderModel(
          orderId:orderId ,
-
+          projectId: Global.projectId,
          userMobile: Global.mobile,
-         adminMobile: listUser[0].mobile ,
+
+         adminMobile:'0',
          createdDate: DateTime.now().toString(),
          listItemModel: listOrder,
          totalAdditionalPrice:totalAdditionalPrice,
          totalDiscountPrice:totalDiscountPrice,
          totalPrice:totalPrice,
          userName: Global.userName,
-         departMent: Global.departMent??'Programmer',
+         departMent:'Programmer',
          orderPrice: orderPrice,
          orderState: 'New',
-
          isDeleted: 0,
 
        );
 
 
-       FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+       FirebaseFirestore.instance.collection('Orders').doc(Global.projectId.toString()).
        collection('orderList').doc(orderId.toString())
            .update(model.toJson()).then((value){
        }).catchError((onError){
-         FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+         FirebaseFirestore.instance.collection('Orders').doc(Global.projectId.toString()).
          collection('orderList').doc(orderId.toString())
              .set(model.toJson()).then((value) {
          }).catchError(onError);
        });
        // Send Notification For Admin
 
-       print( listUser[0].fireBaseToken);
+
        sendNotificationToUserByToken(
            messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
            messageTitle: 'طلب جديد',
+
            userToken:  listUser[0].fireBaseToken
        );
        listOrder = [];
@@ -430,11 +472,11 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
 
 
   updateOrderState({OrderModel orderModel}){
-    FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+    FirebaseFirestore.instance.collection('Orders').doc(Global.projectId.toString()).
     collection('orderList').doc(orderModel.orderId.toString())
         .update(orderModel.toJson()).then((value){
     }).catchError((onError){
-      FirebaseFirestore.instance.collection('Orders').doc(Global.mobile).
+      FirebaseFirestore.instance.collection('Orders').doc(Global.projectId.toString()).
       collection('orderList').doc(orderModel.orderId.toString())
           .set(orderModel.toJson()).then((value) {
       }).catchError(onError);
@@ -469,7 +511,7 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
   }
 
  addNewItemToCartFromItemScreen({itemId,orderCount}){
-    var newList = listItemsSearch.firstWhere((element) => element.itemId == itemId);
+    var newList = listItemsSearch.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId) ;
     var model = ItemModel(
       orderCount:orderCount ,
       oldPrice:newList.oldPrice ,
@@ -489,8 +531,11 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
         supCategoryId:newList.supCategoryId,
 
       supCategoryTitle:newList.supCategoryTitle ,
-      userMobile:newList.userMobile ,
-      userName: newList.userName
+
+      isFavourite:listFavourite.any((element) => element.ItemId == itemId && element.UesrMobile == Global.mobile &&  element.projectId == Global.projectId)? true:false??false ,
+      userMobile:Global.mobile ,
+      userName: Global.userName,
+      projectId: Global.projectId,
     );
     listOrder.add(model);
     listOfSelectedAdditions = [];
@@ -498,10 +543,10 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
  }
 
   addNewItemToCartFromHomeScreen({itemId,orderCount}){
-    var newList = popularFoodList.firstWhere((element) => element.itemId == itemId);
+    var newList = popularFoodList.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId);
     var model = ItemModel(
         orderCount:orderCount ,
-        isFavourite:newList.isFavourite ,
+
         orderState: 'New',
         oldPrice:newList.oldPrice ,
         itemTitle:newList.itemTitle ,
@@ -518,9 +563,12 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
         additionsList: listOfSelectedAdditions.toList(),
         price:newList.price ,
         supCategoryId:newList.supCategoryId,
-        supCategoryTitle:newList.supCategoryTitle ,
-        userMobile:newList.userMobile ,
-        userName: newList.userName
+        supCategoryTitle:newList.supCategoryTitle,
+
+      isFavourite:listFavourite.any((element) => element.ItemId == itemId && element.UesrMobile == Global.mobile &&  element.projectId == Global.projectId)? true:false??false ,
+      userMobile:Global.mobile ,
+      userName: Global.userName,
+      projectId: Global.projectId,
     );
     listOrder.add(model);
     listOfSelectedAdditions = [];
@@ -528,10 +576,10 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
   }
 
   addNewItemToCartFromFeedsScreen({itemId,orderCount}){
-    var newList = listFeedsSearch.firstWhere((element) => element.itemId == itemId);
+    var newList = listFeedsSearch.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId);
     var model = ItemModel(
         orderCount:orderCount ,
-        isFavourite:newList.isFavourite ,
+
         orderState: 'New',
         oldPrice:newList.oldPrice ,
         itemTitle:newList.itemTitle ,
@@ -550,8 +598,11 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
         supCategoryId:newList.supCategoryId,
 
         supCategoryTitle:newList.supCategoryTitle ,
-        userMobile:newList.userMobile ,
-        userName: newList.userName
+
+      isFavourite:listFavourite.any((element) => element.ItemId == itemId && element.UesrMobile == Global.mobile &&  element.projectId == Global.projectId)? true:false??false ,
+      userMobile:Global.mobile ,
+      userName: Global.userName,
+      projectId: Global.projectId,
     );
 
     listOrder.add(model);
@@ -559,16 +610,12 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
     emit(SearchSubCategoryState());
   }
 
-
-
-
   getCategory() async {
     FirebaseFirestore.instance.collection('Category').snapshots().listen((event) {
     listCategory = event.docs.map((x) => CategoryModel.fromJson(x.data())).toList();
     emit(SelectCategoryState());
   });
   }
-
 
   getSubCategory() async {
     FirebaseFirestore.instance.collection('SubCategory').snapshots().listen((event) {
@@ -585,21 +632,16 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
     });
   }
 
-
-
-
-
-
-
   getItems() async {
     FirebaseFirestore.instance.collection('Items').snapshots().listen((event) {
       listItems = event.docs.map((x) => ItemModel.fromJson(x.data())).toList();
-      listFeedsSearch = listItems;
-      popularFoodList = listItems.where((element) => element.isPopular).toList();
+      listFeedsSearch = listItems.where((element) =>   element.projectId == Global.projectId).toList();
+      popularFoodList = listItems.where((element) => element.isPopular &&  element.projectId == Global.projectId).toList();
       // listItems.forEach((element) {print(element.toJson());});
       emit(SelectCategoryState());
     });
   }
+
  List<AdditionsModel> listOfSelectedAdditions = [];
   getAdditions() async {
     FirebaseFirestore.instance.collection('Additions').snapshots().listen((event) {
@@ -655,10 +697,10 @@ selectedSubCategoryId = 0;
 selectedItemId = 0;
     selectedCategoryId = categoryId;
 
-    listSubCategorySearch = listSubCategory.where((element) => element.categoryId == categoryId).toList();
+    listSubCategorySearch = listSubCategory.where((element) => element.categoryId == categoryId &&  element.projectId == Global.projectId).toList();
 
     if(listSubCategorySearch.isNotEmpty){
-      navigateTo(context,   subCategoryScreen(categoryTitle: listCategory.firstWhere((element) => element.categoryId == selectedCategoryId).categoryTitle,));
+      navigateTo(context,   subCategoryScreen(categoryTitle: listCategory.firstWhere((element) => element.categoryId == selectedCategoryId &&  element.projectId == Global.projectId).categoryTitle,));
     }
     else{
       EasyLoading.showError('لا يوجد بيانات');
@@ -676,12 +718,12 @@ selectedItemId = 0;
     selectedSubCategoryId = supCategoryId;
 
 
-    listItemsSearch = listItems.where((element) => element.supCategoryId == supCategoryId).toList();
+    listItemsSearch = listItems.where((element) => element.supCategoryId == supCategoryId &&  element.projectId == Global.projectId).toList();
     emit(SelectCategoryState());
     if(listItemsSearch.isNotEmpty){
       txtSubCategoryControl.clear();
-      listSubCategorySearch = listSubCategory.where((element) => element.categoryId == selectedCategoryId).toList();
-      navigateTo(context,ItemsScreen(subcategoryTitle:listItems.firstWhere((element) => element.supCategoryId == supCategoryId).supCategoryTitle??''));
+      listSubCategorySearch = listSubCategory.where((element) => element.categoryId == selectedCategoryId &&  element.projectId == Global.projectId).toList();
+      navigateTo(context,ItemsScreen(subcategoryTitle:listItems.firstWhere((element) => element.supCategoryId == supCategoryId &&  element.projectId == Global.projectId).supCategoryTitle??''));
     }
     else{
       EasyLoading.showError('لا يوجد بيانات');
@@ -695,10 +737,10 @@ selectedItemId = 0;
   
     if(value.trim() != ''){
       listSubCategorySearch = listSubCategory.where((element) =>   element.categoryId == selectedCategoryId   &&
-          element.subCategoryTitle.toLowerCase().contains(value.toLowerCase())).toList();
+          element.subCategoryTitle.toLowerCase().contains(value.toLowerCase()) &&  element.projectId == Global.projectId).toList();
     }
     else{
-      listSubCategorySearch = listSubCategory.where((element) => element.categoryId == selectedCategoryId).toList();
+      listSubCategorySearch = listSubCategory.where((element) => element.categoryId == selectedCategoryId &&  element.projectId == Global.projectId).toList();
     }
 
     emit(SearchSubCategoryState());
@@ -706,19 +748,21 @@ selectedItemId = 0;
   searchInItems(String value){
     if(value.trim() != ''){
       listItemsSearch = listItems.where((element) =>   element.supCategoryId == selectedSubCategoryId  &&
-          element.itemTitle.toLowerCase().contains(value.toLowerCase())).toList();
+          element.itemTitle.toLowerCase().contains(value.toLowerCase())&&  element.projectId == Global.projectId).toList();
     }
     else{
-      listItemsSearch = listItems.where((element) => element.supCategoryId == selectedSubCategoryId).toList();
+      listItemsSearch = listItems.where((element) => element.supCategoryId == selectedSubCategoryId &&  element.projectId == Global.projectId).toList();
     }
     emit(SearchSubCategoryState());
   }
+
+
   searchInFeeds(String value){
     if(value.trim() != ''){
-      listFeedsSearch = listItems.where((element) =>   element.itemTitle.toLowerCase().contains(value.toLowerCase())).toList();
+      listFeedsSearch = listItems.where((element) =>   element.itemTitle.toLowerCase().contains(value.toLowerCase()) &&  element.projectId == Global.projectId).toList();
     }
     else{
-      listFeedsSearch = listItems.toList();
+      listFeedsSearch = listItems.where((element) =>   element.projectId == Global.projectId).toList();
     }
     emit(SearchSubCategoryState());
   }
@@ -739,7 +783,7 @@ selectedItemId = 0;
     };
     dio.post('https://fcm.googleapis.com/fcm/send', data: data).then((value) {
 
-      print(value.data());
+
     });
 
 
@@ -766,7 +810,6 @@ selectedItemId = 0;
     };
     dio.post('https://fcm.googleapis.com/fcm/send', data: data).then((value) {
 
-      print(value.data());
     }).catchError((onError){
       print(onError);
     });
