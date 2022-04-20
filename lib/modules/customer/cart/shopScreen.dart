@@ -16,10 +16,10 @@ import 'package:flutter_svg/svg.dart';
 
 import 'orderDetail.dart';
 
-class OrderScreen extends StatelessWidget {
+class ShopScreen extends StatelessWidget {
   final bool isShowNavBar;
 
-  const OrderScreen({this.isShowNavBar, Key key}) : super(key: key);
+  const ShopScreen({this.isShowNavBar, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,27 +57,31 @@ class OrderScreen extends StatelessWidget {
                 ),
                 actions: [
                   cubit.isShowBackLayer
-                      ? IconButton(
-                          onPressed: () {
-                            // navigateTo(context, User_Info());
-                          },
-                          padding: const EdgeInsets.all(10),
-                          icon: CircleAvatar(
-                            radius: 15,
-                            backgroundColor: Colors.white,
-                            child: Global.imageUrl != null
-                                ? CircleAvatar(
-                                    radius: 30.0,
-                                    backgroundImage:
-                                        NetworkImage(Global.imageUrl),
-                                    backgroundColor: Colors.transparent,
-                                  )
-                                : const CircleAvatar(
-                                    radius: 13,
-                                    backgroundImage:
-                                        AssetImage('assets/person.jpg'),
-                                  ),
-                          ))
+                      ? Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  // navigateTo(context, User_Info());
+                                },
+                                padding: const EdgeInsets.all(10),
+                                icon: CircleAvatar(
+                                  radius: 15,
+                                  backgroundColor: Colors.white,
+                                  child: Global.imageUrl != null
+                                      ? CircleAvatar(
+                                          radius: 30.0,
+                                          backgroundImage:
+                                              NetworkImage(Global.imageUrl),
+                                          backgroundColor: Colors.transparent,
+                                        )
+                                      : const CircleAvatar(
+                                          radius: 13,
+                                          backgroundImage:
+                                              AssetImage('assets/person.jpg'),
+                                        ),
+                                )),
+                          ],
+                        )
                       : const SizedBox(
                           width: 1,
                         )
@@ -483,7 +487,9 @@ class _TabsInTicketState extends State<TabsInCartScreen>
   void initState() {
     HomeCubit.get(context).tabController = TabController(length: 2, vsync: this)
       ..addListener(() {
-        setState(() {});
+        setState(() {
+          HomeCubit.get(context).emit(SearchSubCategoryState());
+        });
       });
 
     super.initState();
@@ -517,7 +523,7 @@ class _TabsInTicketState extends State<TabsInCartScreen>
                 tabs: const [
                   Tab(
                     child: Text(
-                      'الطلبات الحالية',
+                      'المشتريات',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),

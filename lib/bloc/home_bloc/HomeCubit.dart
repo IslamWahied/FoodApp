@@ -4,38 +4,27 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-
 import 'package:elomda/models/category/SupCategory.dart';
 import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/categoryModel.dart';
-
-
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/models/favourit/favouritModel.dart';
 import 'package:elomda/models/order/orderModel.dart';
 import 'package:elomda/models/project/projectModel.dart';
 import 'package:elomda/models/user/user_model.dart';
-
 import 'package:elomda/modules/admin/Order/Admin/PreparedOrder.dart';
 import 'package:elomda/modules/admin/Order/Admin/canceledOrder.dart';
 import 'package:elomda/modules/admin/Order/Admin/doneOrder.dart';
 import 'package:elomda/modules/admin/Order/Admin/newOrders.dart';
 import 'package:elomda/modules/admin/adminBackLayerOpations/sendNotifacation.dart';
-
-
-import 'package:elomda/modules/customer/cart/cart_screen.dart';
+import 'package:elomda/modules/customer/RestrantListScreen.dart';
+import 'package:elomda/modules/customer/cart/shopScreen.dart';
 import 'package:elomda/modules/customer/category/subCategoryScreen.dart';
 import 'package:elomda/modules/customer/favourite/feeds_screen.dart';
 import 'package:elomda/modules/customer/item/items.dart';
 import 'package:elomda/modules/customer/search/search_screen.dart';
-
-import 'package:elomda/modules/customer/RestrantListScreen.dart';
-
-
 import 'package:elomda/modules/login/login_screen.dart';
-
 import 'package:elomda/modules/user_info/user_info_screen.dart';
-
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
@@ -45,14 +34,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
-
 import 'package:intl/intl.dart' as sd;
-
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-
-
-
 
 class HomeCubit extends Cubit<HomeScreenState> {
   HomeCubit() : super(HomeScreenStateInitState());
@@ -61,6 +44,8 @@ class HomeCubit extends Cubit<HomeScreenState> {
   TextEditingController titleTextControl = TextEditingController();
   TextEditingController txtUpdateCustomerBalance = TextEditingController();
   FocusNode sendMessageNode = FocusNode();
+
+  TabController tabController;
 
   bool isShowBackLayer = true;
   bool isValidSendNotiBottom = false;
@@ -72,21 +57,17 @@ class HomeCubit extends Cubit<HomeScreenState> {
     const CancelOrderScreen(),
     const UserInformationScreen(),
     const SendNotifacationScreen()
-
   ];
 
   GlobalKey<NavigatorState> mAnavigatorkey = GlobalKey<NavigatorState>();
 
   List userScreens = [
-    const  RestrantListScreen (),
-
+    const RestrantListScreen(),
     const FavouriteScreen(),
     const SearchScreen(),
-    const OrderScreen(isShowNavBar: false),
+    const ShopScreen(),
     const UserInformationScreen(),
-
   ];
-
 
   List<Project> listProject = [];
 
@@ -104,7 +85,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
     if (date != null) {
       try {
         String dateAfterFormat =
-        sd.DateFormat("dd/MM/yyyy").format(DateTime.parse(date));
+            sd.DateFormat("dd/MM/yyyy").format(DateTime.parse(date));
         // String today = sd.DateFormat("dd / MM / yyyy").format(DateTime(
         //     DateTime.now().year, DateTime.now().month, DateTime.now().day));
         // String yesterday = sd.DateFormat("dd / MM / yyyy").format(DateTime(
@@ -115,7 +96,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
         // } else if (dateAfterFormat == today) {
         //   return 'Today';
         // } else {
-          return dateAfterFormat;
+        return dateAfterFormat;
         // }
       } catch (e) {
         return '';
@@ -124,11 +105,14 @@ class HomeCubit extends Cubit<HomeScreenState> {
       return '';
     }
   }
-  RoundedLoadingButtonController loginUpdateCustomerBalance = RoundedLoadingButtonController();
-  void modalBottomSheetMenu(context){
+
+  RoundedLoadingButtonController loginUpdateCustomerBalance =
+      RoundedLoadingButtonController();
+
+  void modalBottomSheetMenu(context) {
     showModalBottomSheet(
         context: context,
-        builder: (builder){
+        builder: (builder) {
           return Container(
             height: 400.0,
             color: Colors.transparent, //could change this to Color(0xFF737373),
@@ -136,7 +120,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
             child: Container(
                 decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius:   BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10.0),
                         topRight: Radius.circular(10.0))),
                 child: Center(
@@ -145,28 +129,25 @@ class HomeCubit extends Cubit<HomeScreenState> {
                     child: Column(
                       children: [
                         TextFormField(
-textDirection: TextDirection.rtl,
+                          textDirection: TextDirection.rtl,
                           textAlign: TextAlign.end,
-                            controller: txtUpdateCustomerBalance,
+                          controller: txtUpdateCustomerBalance,
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
-                           emit(SearchSubCategoryState());
+                            emit(SearchSubCategoryState());
                           },
                           inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'[0-9]')),
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                           ],
-                          decoration:   InputDecoration(
+                          decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(25.0),
                               borderSide: const BorderSide(
                                 color: Colors.black,
                               ),
                             ),
                             border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(25.0),
                               borderSide: const BorderSide(
                                 color: Colors.black,
                                 width: 2.0,
@@ -174,11 +155,8 @@ textDirection: TextDirection.rtl,
                             ),
                             labelText: 'المبلغ',
                             alignLabelWithHint: true,
-
                           ),
-
                         ),
-
                         SizedBox(
                           width: 200,
                           height: 100,
@@ -186,7 +164,10 @@ textDirection: TextDirection.rtl,
                               height: 60,
                               controller: loginUpdateCustomerBalance,
                               successColor: Colors.green,
-                              color:txtUpdateCustomerBalance.text != null &&  txtUpdateCustomerBalance.text.trim() != '' ? Colors.blue : Colors.grey[500],
+                              color: txtUpdateCustomerBalance.text != null &&
+                                      txtUpdateCustomerBalance.text.trim() != ''
+                                  ? Colors.blue
+                                  : Colors.grey[500],
                               disabledColor: Colors.grey,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -201,9 +182,10 @@ textDirection: TextDirection.rtl,
                               ),
                               animateOnTap: false,
                               onPressed: () {
-
-                                if (txtUpdateCustomerBalance.text != null &&  txtUpdateCustomerBalance.text.trim() != '' ) {
-                                   updateCustomerBalance(context: context);
+                                if (txtUpdateCustomerBalance.text != null &&
+                                    txtUpdateCustomerBalance.text.trim() !=
+                                        '') {
+                                  updateCustomerBalance(context: context);
                                 }
                               }),
                         ),
@@ -212,74 +194,67 @@ textDirection: TextDirection.rtl,
                   ),
                 )),
           );
-        }
-    );
+        });
   }
 
-
-  void updateCustomerBalance({BuildContext context}){
+  void updateCustomerBalance({BuildContext context}) {
     Navigator.pop(context);
-    UserModel model =  listUser.firstWhere((element) => element.mobile == selectedUserId);
-   double newBalance =   model.currentBalance +   double.parse(txtUpdateCustomerBalance.text);
-     model.currentBalance = newBalance;
+    UserModel model =
+        listUser.firstWhere((element) => element.mobile == selectedUserId);
+    double newBalance =
+        model.currentBalance + double.parse(txtUpdateCustomerBalance.text);
+    model.currentBalance = newBalance;
 
-    FirebaseFirestore.instance.collection('User').doc(selectedUserId).update(model.toMap()).then((value) {
-
+    FirebaseFirestore.instance
+        .collection('User')
+        .doc(selectedUserId)
+        .update(model.toMap())
+        .then((value) {
       sendNotificationToUserByToken(
-        userToken: listUser.firstWhere((element) => element.mobile == selectedUserId).fireBaseToken,
-        messageBody: 'تم اضافة ${double.parse(txtUpdateCustomerBalance.text)} جنية الي حسابك رصيد حسابك الان  ${newBalance} ',
-        messageTitle: ' اضافة ${txtUpdateCustomerBalance.text +' ' + ' جنية '}في المحفظة '
-      );
+          userToken: listUser
+              .firstWhere((element) => element.mobile == selectedUserId)
+              .fireBaseToken,
+          messageBody:
+              'تم اضافة ${double.parse(txtUpdateCustomerBalance.text)} جنية الي حسابك رصيد حسابك الان  ${newBalance} ',
+          messageTitle:
+              ' اضافة ${txtUpdateCustomerBalance.text + ' ' + ' جنية '}في المحفظة ');
 
       txtUpdateCustomerBalance.clear();
-
-    }).catchError((e){
+    }).catchError((e) {
       if (kDebugMode) {
         print(e);
-
       }
     });
-
   }
-String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديدة';
+
+  String selectedTab = !Global.isAdmin ? 'الرئيسية' : 'طلبات جديدة';
+
   void changeCurrentIndex(int value) {
-
-    if(Global.isAdmin){
-      if(value == 0){
-          selectedTab = 'طلبات جديدة';
-      }
-      else if(value == 1){
+    if (Global.isAdmin) {
+      if (value == 0) {
+        selectedTab = 'طلبات جديدة';
+      } else if (value == 1) {
         selectedTab = 'تحت التجهيز';
-      }
-      else if(value == 2){
+      } else if (value == 2) {
         selectedTab = 'تم التسليم';
-      }
-      else if(value == 3){
+      } else if (value == 3) {
         selectedTab = 'تم الالغاء';
-      }
-      else if(value == 4){
+      } else if (value == 4) {
         selectedTab = 'الاعدادات';
       }
-    }
-    else{
-
-      if(value == 0){
+    } else {
+      if (value == 0) {
         selectedTab = 'القائمة الرئيسية';
-      }
-      else if(value == 1){
+      } else if (value == 1) {
         selectedTab = 'المفضل';
-      }
-      else if(value == 2){
+      } else if (value == 2) {
         selectedTab = 'بحث';
-      }
-      else if(value == 3){
-        selectedTab = 'الطلبات';
-      }
-      else if(value == 4){
+      } else if (value == 3) {
+        selectedTab = 'المشتريات';
+      } else if (value == 4) {
         selectedTab = 'الاعدادات';
       }
     }
-
 
     currentIndex = value;
 
@@ -290,7 +265,6 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
 
   bool isDarkTheme = false;
 
-
   String selectedUserId = '';
 
   static HomeCubit get(context) => BlocProvider.of(context);
@@ -298,10 +272,7 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
   int selectedSubCategoryId = 0;
   int selectedItemId = 0;
 
-  List<String> departMentList = [
-    'برمجه',
-    'IT'
-  ];
+  List<String> departMentList = ['برمجه', 'IT'];
 
   List foodCategoryList = [
     {
@@ -337,303 +308,233 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
   TextEditingController txtFavouriteControl = TextEditingController();
   List<OrderModel> listAllOrders = [];
 
-
-
-
   ScrollController scrollController;
   var top = 0.0;
 
- String getTotalCustomerOrdersPrice(){
-   double total = 0;
-   listAllOrders.where((element) => element.userMobile == selectedUserId).forEach((element2) {
-
-     total += element2.totalPrice - element2.totalDiscountPrice;
-   });
+  String getTotalCustomerOrdersPrice() {
+    double total = 0;
+    listAllOrders
+        .where((element) => element.userMobile == selectedUserId)
+        .forEach((element2) {
+      total += element2.totalPrice - element2.totalDiscountPrice;
+    });
     return total.toString();
   }
 
-
-
-
-
-
   getOrders() async {
+    FirebaseFirestore.instance.collection('Orders').snapshots().listen((event) {
+      var x1 = listAllOrders
+              .where((element) =>
+                  element.orderState.toLowerCase() == 'New'.toLowerCase())
+              .length ??
+          0;
 
-    FirebaseFirestore.instance.collection('Orders').doc('1').collection('orderList')
-        .snapshots()
-        .listen((event) async {
+      listAllOrders =
+          event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
 
-      var x = listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).length;
-
-      listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
-      emit(SelectCategoryState());
-
-      if (x < listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).length ) {
-
+      var x2 = listAllOrders
+              .where((element) =>
+                  element.orderState.toLowerCase() == 'New'.toLowerCase())
+              .length ??
+          0;
+      if ((x1 < x2) && Global.isAdmin) {
         AssetsAudioPlayer.playAndForget(
           Audio("assets/audios/messages.mp3"),
           volume: 0.8,
-
-
         );
-
-
-
       }
+
+      emit(SelectCategoryState());
     });
- }
+  }
+
   String getTotalPriceForItem({int index}) {
     double price = 0;
-    try{
+    try {
       for (var element in listOrder[index].additionsList) {
         price = price + element.price;
       }
       price = price + listOrder[index].price;
       price = price * listOrder[index].orderCount;
-    }
-    catch(e){
+    } catch (e) {
       price = 0;
     }
 
     emit(SelectCategoryState());
     return price.toString();
   }
-  String  getTotalAddaitonlPriceForItem({int index}){
+
+  String getTotalAddaitonlPriceForItem({int index}) {
     double price = 0;
 
-
     for (var element in listOrder[index].additionsList) {
-      price = price +element.price;
+      price = price + element.price;
     }
 
     price = price * listOrder[index].orderCount;
     emit(SelectCategoryState());
     return price.toString();
-
   }
-
 
   sendOrder(context) {
-   try{
+    try {
+      if (listOrder.isNotEmpty) {
+        double totalAdditionalPrice = 0;
 
+        double totalDiscountPrice = 0;
 
-     if ( listOrder.isNotEmpty) {
+        double orderPrice = 0;
 
-       double totalAdditionalPrice = 0;
+        double totalPrice = 0;
 
-       double totalDiscountPrice = 0;
+        for (var element1 in listOrder) {
+          for (var element2 in element1.additionsList) {
+            totalAdditionalPrice = totalAdditionalPrice + element2.price;
+          }
+          if (element1.isDiscount) {
+            totalDiscountPrice =
+                totalDiscountPrice + (element1.price - element1.oldPrice);
+          }
 
-       double orderPrice = 0;
+          orderPrice = element1.price;
 
-       double totalPrice = 0;
+          totalPrice =
+              element1.price + totalDiscountPrice + totalAdditionalPrice;
+        }
+        var orderId = 1;
 
-
-
-       for (var element1 in listOrder) {
-
-         for (var element2 in element1.additionsList) {
-
-           totalAdditionalPrice = totalAdditionalPrice + element2.price;
-         }
-         if(element1.isDiscount){
-           totalDiscountPrice = totalDiscountPrice + (element1.price - element1.oldPrice);
-         }
-
-
-
-         orderPrice = element1.price;
-
-         totalPrice =  element1.price + totalDiscountPrice + totalAdditionalPrice;
-
-
-
-       }
-       var orderId = 1;
-
-       if(listAllOrders.isNotEmpty){
-
-         orderId = listAllOrders.length + 1;
-
-       }
-       var model = OrderModel(
-         orderId:orderId ,
+        if (listAllOrders.isNotEmpty) {
+          orderId = listAllOrders.length + 1;
+        }
+        var model = OrderModel(
+          orderId: orderId,
           projectId: Global.projectId,
-         userMobile: Global.mobile,
+          userMobile: Global.mobile,
+          adminMobile: '0',
+          createdDate: DateTime.now().toString(),
+          listItemModel: listOrder,
+          totalAdditionalPrice: totalAdditionalPrice,
+          totalDiscountPrice: totalDiscountPrice,
+          totalPrice: totalPrice,
+          userName: Global.userName,
+          departMent: 'Programmer',
+          orderPrice: orderPrice,
+          orderState: 'New',
+          isDeleted: 0,
+        );
 
-         adminMobile:'0',
-         createdDate: DateTime.now().toString(),
-         listItemModel: listOrder,
-         totalAdditionalPrice:totalAdditionalPrice,
-         totalDiscountPrice:totalDiscountPrice,
-         totalPrice:totalPrice,
-         userName: Global.userName,
-         departMent:'Programmer',
-         orderPrice: orderPrice,
-         orderState: 'New',
-         isDeleted: 0,
+        FirebaseFirestore.instance
+            .collection('Orders')
+            .doc(orderId.toString())
+            .update(model.toJson())
+            .then((value) {})
+            .catchError((onError) {
+          FirebaseFirestore.instance
+              .collection('Orders')
+              .doc(orderId.toString())
+              .set(model.toJson())
+              .then((value) {})
+              .catchError(onError);
+        });
+        // Send Notification For Admin
 
-       );
+        for (var element in listUser) {
+          if (element.isAdmin &&
+              listProject.any((element2) =>
+                  element2.adminMobile == element.mobile &&
+                  element2.id == Global.projectId)) {
+            sendNotificationToUserByToken(
+                messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
+                messageTitle: 'طلب جديد',
+                userToken: element.fireBaseToken);
+          }
+        }
 
-
-       FirebaseFirestore.instance.collection('Orders').doc(Global.projectId.toString()).
-       collection('orderList').doc(orderId.toString())
-           .update(model.toJson()).then((value){
-       }).catchError((onError){
-         FirebaseFirestore.instance.collection('Orders').doc(Global.projectId.toString()).
-         collection('orderList').doc(orderId.toString())
-             .set(model.toJson()).then((value) {
-         }).catchError(onError);
-       });
-       // Send Notification For Admin
-
-       for (var element in listUser) {
-
-         if(element.isAdmin && listProject.any((element2) => element2.adminMobile == element.mobile && element2.id == Global.projectId )) {
-           sendNotificationToUserByToken(
-             messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
-             messageTitle: 'طلب جديد',
-
-             userToken:  element.fireBaseToken
-         );
-         }
-
-       }
-
-
-
-       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-           backgroundColor:
-           Colors
-               .green,
-           content: Text(
-             'تم ارسال الطلب بنجاح',
-             textAlign:
-             TextAlign
-                 .center,
-           ),
-           shape: RoundedRectangleBorder(
-               borderRadius:
-               BorderRadius.all(Radius.circular(
-                   30))),
-           behavior:
-           SnackBarBehavior
-               .floating,
-           padding:
-           EdgeInsets.all(
-               20.0),
-           duration: Duration(
-               milliseconds:
-               4000)));
-       listOrder = [];
-       emit(SelectCategoryState());
-     }
-   }
-   catch(e){
-     print(e);
-   }
-
-
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              'تم ارسال الطلب بنجاح',
+              textAlign: TextAlign.center,
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            behavior: SnackBarBehavior.floating,
+            padding: EdgeInsets.all(20.0),
+            duration: Duration(milliseconds: 4000)));
+        listOrder = [];
+        emit(SelectCategoryState());
+      }
+    } catch (e) {
+      print(e);
+    }
   }
-  TabController controller;
 
-  updateOrderState({OrderModel orderModel}){
-    FirebaseFirestore.instance.collection('Orders').doc(Global.projectId.toString()).
-    collection('orderList').doc(orderModel.orderId.toString())
-        .update(orderModel.toJson()).then((value){
-    }).catchError((onError){
-      FirebaseFirestore.instance.collection('Orders').doc(Global.projectId.toString()).
-      collection('orderList').doc(orderModel.orderId.toString())
-          .set(orderModel.toJson()).then((value) {
-      }).catchError(onError);
+  updateOrderState({OrderModel orderModel}) {
+    FirebaseFirestore.instance
+        .collection('Orders')
+        .doc(orderModel.orderId.toString())
+        .update(orderModel.toJson())
+        .then((value) {})
+        .catchError((onError) {
+      FirebaseFirestore.instance
+          .collection('Orders')
+          .doc(orderModel.orderId.toString())
+          .set(orderModel.toJson())
+          .then((value) {})
+          .catchError(onError);
     });
-
-
   }
 
+  getTotalPrice() {
+    double orderPrice = 0;
+    // for (var element in listOrder) {
+    //   orderPrice += element.price;
+    //   for (var element in element.additionsList) {
+    //     orderPrice += element.price;
+    //   }
+    //   return orderPrice.toString();
+    // }
 
-  getTotalPrice(){
-  double orderPrice = 0;
-  // for (var element in listOrder) {
-  //   orderPrice += element.price;
-  //   for (var element in element.additionsList) {
-  //     orderPrice += element.price;
-  //   }
-  //   return orderPrice.toString();
-  // }
-
-
-  for (var element in listOrder) {
-    for( int i = 0 ; i < element.orderCount; i++ ) {
-      orderPrice += element.price;
-      for (var element2 in element.additionsList) {
-        orderPrice += element2.price;
-
+    for (var element in listOrder) {
+      for (int i = 0; i < element.orderCount; i++) {
+        orderPrice += element.price;
+        for (var element2 in element.additionsList) {
+          orderPrice += element2.price;
+        }
       }
     }
 
+    return orderPrice.toString();
   }
 
-  return orderPrice.toString();
-
-  }
-
- addNewItemToCartFromItemScreen({itemId,orderCount}){
-    var newList = listItemsSearch.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId) ;
+  addNewItemToCartFromItemScreen({itemId, orderCount}) {
+    var newList = listItemsSearch.firstWhere((element) =>
+        element.itemId == itemId && element.projectId == Global.projectId);
     var model = ItemModel(
-      orderCount:orderCount ,
-      oldPrice:newList.oldPrice ,
-      itemTitle:newList.itemTitle ,
+      orderCount: orderCount,
+      oldPrice: newList.oldPrice,
+      itemTitle: newList.itemTitle,
       itemId: newList.itemId,
       isPopular: newList.isPopular,
-      isDiscount:newList.isDiscount ,
+      isDiscount: newList.isDiscount,
       isDeleted: newList.isDeleted,
       isAvailable: newList.isAvailable,
-      image:newList.image ,
-      description:newList.description ,
-      createdDate:newList.createdDate ,
+      image: newList.image,
+      description: newList.description,
+      createdDate: newList.createdDate,
       categoryTitle: newList.categoryTitle,
-      categoryId:newList.categoryId ,
+      categoryId: newList.categoryId,
       additionsList: listOfSelectedAdditions.toList(),
-      price:newList.price ,
-        supCategoryId:newList.supCategoryId,
-
-      supCategoryTitle:newList.supCategoryTitle ,
-
-      isFavourite:listFavourite.any((element) => element.ItemId == itemId && element.UesrMobile == Global.mobile &&  element.projectId == Global.projectId)? true:false??false ,
-      userMobile:Global.mobile ,
-      userName: Global.userName,
-      projectId: Global.projectId,
-    );
-    listOrder.add(model);
-    listOfSelectedAdditions = [];
-   emit(SearchSubCategoryState());
- }
-
-  addNewItemToCartFromHomeScreen({itemId,orderCount}){
-    var newList = popularFoodList.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId);
-    var model = ItemModel(
-        orderCount:orderCount ,
-
-        orderState: 'New',
-        oldPrice:newList.oldPrice ,
-        itemTitle:newList.itemTitle ,
-        itemId: newList.itemId,
-        isPopular: newList.isPopular,
-        isDiscount:newList.isDiscount ,
-        isDeleted: newList.isDeleted,
-        isAvailable: newList.isAvailable,
-        image:newList.image ,
-        description:newList.description ,
-        createdDate:newList.createdDate ,
-        categoryTitle: newList.categoryTitle,
-        categoryId:newList.categoryId ,
-        additionsList: listOfSelectedAdditions.toList(),
-        price:newList.price ,
-        supCategoryId:newList.supCategoryId,
-        supCategoryTitle:newList.supCategoryTitle,
-
-      isFavourite:listFavourite.any((element) => element.ItemId == itemId && element.UesrMobile == Global.mobile &&  element.projectId == Global.projectId)? true:false??false ,
-      userMobile:Global.mobile ,
+      price: newList.price,
+      supCategoryId: newList.supCategoryId,
+      supCategoryTitle: newList.supCategoryTitle,
+      isFavourite: listFavourite.any((element) =>
+              element.ItemId == itemId &&
+              element.UesrMobile == Global.mobile &&
+              element.projectId == Global.projectId)
+          ? true
+          : false ?? false,
+      userMobile: Global.mobile,
       userName: Global.userName,
       projectId: Global.projectId,
     );
@@ -642,32 +543,72 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
     emit(SearchSubCategoryState());
   }
 
-  addNewItemToCartFromFeedsScreen({itemId,orderCount}){
-    var newList = listFeedsSearch.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId);
+  addNewItemToCartFromHomeScreen({itemId, orderCount}) {
+    var newList = popularFoodList.firstWhere((element) =>
+        element.itemId == itemId && element.projectId == Global.projectId);
     var model = ItemModel(
-        orderCount:orderCount ,
+      orderCount: orderCount,
+      orderState: 'New',
+      oldPrice: newList.oldPrice,
+      itemTitle: newList.itemTitle,
+      itemId: newList.itemId,
+      isPopular: newList.isPopular,
+      isDiscount: newList.isDiscount,
+      isDeleted: newList.isDeleted,
+      isAvailable: newList.isAvailable,
+      image: newList.image,
+      description: newList.description,
+      createdDate: newList.createdDate,
+      categoryTitle: newList.categoryTitle,
+      categoryId: newList.categoryId,
+      additionsList: listOfSelectedAdditions.toList(),
+      price: newList.price,
+      supCategoryId: newList.supCategoryId,
+      supCategoryTitle: newList.supCategoryTitle,
+      isFavourite: listFavourite.any((element) =>
+              element.ItemId == itemId &&
+              element.UesrMobile == Global.mobile &&
+              element.projectId == Global.projectId)
+          ? true
+          : false ?? false,
+      userMobile: Global.mobile,
+      userName: Global.userName,
+      projectId: Global.projectId,
+    );
+    listOrder.add(model);
+    listOfSelectedAdditions = [];
+    emit(SearchSubCategoryState());
+  }
 
-        orderState: 'New',
-        oldPrice:newList.oldPrice ,
-        itemTitle:newList.itemTitle ,
-        itemId: newList.itemId,
-        isPopular: newList.isPopular,
-        isDiscount:newList.isDiscount ,
-        isDeleted: newList.isDeleted,
-        isAvailable: newList.isAvailable,
-        image:newList.image ,
-        description:newList.description ,
-        createdDate:newList.createdDate ,
-        categoryTitle: newList.categoryTitle,
-        categoryId:newList.categoryId ,
-        additionsList: listOfSelectedAdditions.toList(),
-        price:newList.price ,
-        supCategoryId:newList.supCategoryId,
-
-        supCategoryTitle:newList.supCategoryTitle ,
-
-      isFavourite:listFavourite.any((element) => element.ItemId == itemId && element.UesrMobile == Global.mobile &&  element.projectId == Global.projectId)? true:false??false ,
-      userMobile:Global.mobile ,
+  addNewItemToCartFromFeedsScreen({itemId, orderCount}) {
+    var newList = listFeedsSearch.firstWhere((element) =>
+        element.itemId == itemId && element.projectId == Global.projectId);
+    var model = ItemModel(
+      orderCount: orderCount,
+      orderState: 'New',
+      oldPrice: newList.oldPrice,
+      itemTitle: newList.itemTitle,
+      itemId: newList.itemId,
+      isPopular: newList.isPopular,
+      isDiscount: newList.isDiscount,
+      isDeleted: newList.isDeleted,
+      isAvailable: newList.isAvailable,
+      image: newList.image,
+      description: newList.description,
+      createdDate: newList.createdDate,
+      categoryTitle: newList.categoryTitle,
+      categoryId: newList.categoryId,
+      additionsList: listOfSelectedAdditions.toList(),
+      price: newList.price,
+      supCategoryId: newList.supCategoryId,
+      supCategoryTitle: newList.supCategoryTitle,
+      isFavourite: listFavourite.any((element) =>
+              element.ItemId == itemId &&
+              element.UesrMobile == Global.mobile &&
+              element.projectId == Global.projectId)
+          ? true
+          : false ?? false,
+      userMobile: Global.mobile,
       userName: Global.userName,
       projectId: Global.projectId,
     );
@@ -678,22 +619,36 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
   }
 
   getCategory() async {
-    FirebaseFirestore.instance.collection('Category').snapshots().listen((event) {
-    listCategory = event.docs.map((x) => CategoryModel.fromJson(x.data())).toList();
-    emit(SelectCategoryState());
-  });
+    FirebaseFirestore.instance
+        .collection('Category')
+        .snapshots()
+        .listen((event) {
+      listCategory =
+          event.docs.map((x) => CategoryModel.fromJson(x.data())).toList();
+      emit(SelectCategoryState());
+    });
   }
 
   getSubCategory() async {
-    FirebaseFirestore.instance.collection('SubCategory').snapshots().listen((event) {
-      listSubCategory = event.docs.map((x) => SubCategory.fromJson(x.data())).toList();
+    FirebaseFirestore.instance
+        .collection('SubCategory')
+        .snapshots()
+        .listen((event) {
+      listSubCategory =
+          event.docs.map((x) => SubCategory.fromJson(x.data())).toList();
       emit(SelectCategoryState());
     });
   }
 
   getFavourite() async {
-    FirebaseFirestore.instance.collection('Favourite').doc(Global.mobile).collection('ItemModel').snapshots().listen((event) {
-      listFavourite = event.docs.map((x) => FavouritModel.fromJson(x.data())).toList();
+    FirebaseFirestore.instance
+        .collection('Favourite')
+        .doc(Global.mobile)
+        .collection('ItemModel')
+        .snapshots()
+        .listen((event) {
+      listFavourite =
+          event.docs.map((x) => FavouritModel.fromJson(x.data())).toList();
 
       emit(SelectCategoryState());
     });
@@ -702,200 +657,245 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
   getItems() async {
     FirebaseFirestore.instance.collection('Items').snapshots().listen((event) {
       listItems = event.docs.map((x) => ItemModel.fromJson(x.data())).toList();
-      listFeedsSearch = listItems.where((element) =>   element.projectId == Global.projectId).toList();
-      popularFoodList = listItems.where((element) => element.isPopular &&  element.projectId == Global.projectId).toList();
+      listFeedsSearch = listItems
+          .where((element) => element.projectId == Global.projectId)
+          .toList();
+      popularFoodList = listItems
+          .where((element) =>
+              element.isPopular && element.projectId == Global.projectId)
+          .toList();
       // listItems.forEach((element) {print(element.toJson());});
       emit(SelectCategoryState());
     });
   }
 
- List<AdditionsModel> listOfSelectedAdditions = [];
+  List<AdditionsModel> listOfSelectedAdditions = [];
+
   getAdditions() async {
-    FirebaseFirestore.instance.collection('Additions').snapshots().listen((event) {
-
-      listAdditions = event.docs.map((x) => AdditionsModel.fromJson(x.data())).toList();
+    FirebaseFirestore.instance
+        .collection('Additions')
+        .snapshots()
+        .listen((event) {
+      listAdditions =
+          event.docs.map((x) => AdditionsModel.fromJson(x.data())).toList();
       emit(SelectCategoryState());
-
     });
   }
 
-
   List<FavouritModel> listFavourite = [];
-  changeItemFavouriteState({bool isFavourite = false, int itemId})
-  {
 
-
-    FavouritModel model =  FavouritModel(
+  changeItemFavouriteState({bool isFavourite = false, int itemId}) {
+    FavouritModel model = FavouritModel(
         isFavourit: !isFavourite,
         ItemId: itemId,
         UesrMobile: Global.mobile,
-      projectId: Global.projectId
-    );
+        projectId: Global.projectId);
 
-
-
-    FirebaseFirestore.instance.collection('Favourite').doc(Global.mobile).collection('ItemModel').doc(itemId.toString()).update(model.toMap()).then((value){
-
-
-    }).catchError((onError){
-
-
-
-      FirebaseFirestore.instance.collection('Favourite')
-          .doc(Global.mobile).collection('ItemModel').doc(itemId.toString()).set(model.toMap()).then((value) {
-
-
-
-
-      }).catchError(onError);
-
-
-
+    FirebaseFirestore.instance
+        .collection('Favourite')
+        .doc(Global.mobile)
+        .collection('ItemModel')
+        .doc(itemId.toString())
+        .update(model.toMap())
+        .then((value) {})
+        .catchError((onError) {
+      FirebaseFirestore.instance
+          .collection('Favourite')
+          .doc(Global.mobile)
+          .collection('ItemModel')
+          .doc(itemId.toString())
+          .set(model.toMap())
+          .then((value) {})
+          .catchError(onError);
     });
-
-
-
-
   }
 
-
-
-  selectCategory(categoryId,context) async {
-selectedSubCategoryId = 0;
-selectedItemId = 0;
+  selectCategory(categoryId, context) async {
+    selectedSubCategoryId = 0;
+    selectedItemId = 0;
     selectedCategoryId = categoryId;
 
-    listSubCategorySearch = listSubCategory.where((element) => element.categoryId == categoryId &&  element.projectId == Global.projectId).toList();
+    listSubCategorySearch = listSubCategory
+        .where((element) =>
+            element.categoryId == categoryId &&
+            element.projectId == Global.projectId)
+        .toList();
 
-    if(listSubCategorySearch.isNotEmpty){
-      navigateTo(context,   SubCategoryScreen(categoryTitle: listCategory.firstWhere((element) => element.categoryId == selectedCategoryId &&  element.projectId == Global.projectId).categoryTitle,));
-    }
-    else{
+    if (listSubCategorySearch.isNotEmpty) {
+      navigateTo(
+          context,
+          SubCategoryScreen(
+            categoryTitle: listCategory
+                .firstWhere((element) =>
+                    element.categoryId == selectedCategoryId &&
+                    element.projectId == Global.projectId)
+                .categoryTitle,
+          ));
+    } else {
       EasyLoading.showError('لا يوجد بيانات');
     }
 
-
     emit(SelectCategoryState());
-
   }
 
-  selectSubCategory({supCategoryId,context}) async {
-
-
+  selectSubCategory({supCategoryId, context}) async {
     selectedItemId = 0;
     selectedSubCategoryId = supCategoryId;
 
-
-    listItemsSearch = listItems.where((element) => element.supCategoryId == supCategoryId &&  element.projectId == Global.projectId).toList();
+    listItemsSearch = listItems
+        .where((element) =>
+            element.supCategoryId == supCategoryId &&
+            element.projectId == Global.projectId)
+        .toList();
     emit(SelectCategoryState());
-    if(listItemsSearch.isNotEmpty){
+    if (listItemsSearch.isNotEmpty) {
       txtSubCategoryControl.clear();
-      listSubCategorySearch = listSubCategory.where((element) => element.categoryId == selectedCategoryId &&  element.projectId == Global.projectId).toList();
-      navigateTo(context,ItemsScreen(subcategoryTitle:listItems.firstWhere((element) => element.supCategoryId == supCategoryId &&  element.projectId == Global.projectId).supCategoryTitle??''));
-    }
-    else{
+      listSubCategorySearch = listSubCategory
+          .where((element) =>
+              element.categoryId == selectedCategoryId &&
+              element.projectId == Global.projectId)
+          .toList();
+      navigateTo(
+          context,
+          ItemsScreen(
+              subcategoryTitle: listItems
+                      .firstWhere((element) =>
+                          element.supCategoryId == supCategoryId &&
+                          element.projectId == Global.projectId)
+                      .supCategoryTitle ??
+                  ''));
+    } else {
       EasyLoading.showError('لا يوجد بيانات');
     }
 
-
     emit(SelectCategoryState());
   }
 
-  searchInSupCategory(String value){
-  
-    if(value.trim() != ''){
-      listSubCategorySearch = listSubCategory.where((element) =>   element.categoryId == selectedCategoryId   &&
-          element.subCategoryTitle.toLowerCase().contains(value.toLowerCase()) &&  element.projectId == Global.projectId).toList();
-    }
-    else{
-      listSubCategorySearch = listSubCategory.where((element) => element.categoryId == selectedCategoryId &&  element.projectId == Global.projectId).toList();
+  searchInSupCategory(String value) {
+    if (value.trim() != '') {
+      listSubCategorySearch = listSubCategory
+          .where((element) =>
+              element.categoryId == selectedCategoryId &&
+              element.subCategoryTitle
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) &&
+              element.projectId == Global.projectId)
+          .toList();
+    } else {
+      listSubCategorySearch = listSubCategory
+          .where((element) =>
+              element.categoryId == selectedCategoryId &&
+              element.projectId == Global.projectId)
+          .toList();
     }
 
     emit(SearchSubCategoryState());
   }
-  searchInItems(String value){
-    if(value.trim() != ''){
-      listItemsSearch = listItems.where((element) =>   element.supCategoryId == selectedSubCategoryId  &&
-          element.itemTitle.toLowerCase().contains(value.toLowerCase())&&  element.projectId == Global.projectId).toList();
-    }
-    else{
-      listItemsSearch = listItems.where((element) => element.supCategoryId == selectedSubCategoryId &&  element.projectId == Global.projectId).toList();
-    }
-    emit(SearchSubCategoryState());
-  }
 
-
-  searchInFeeds(String value){
-    if(value.trim() != ''){
-      listFeedsSearch = listItems.where((element) =>   element.itemTitle.toLowerCase().contains(value.toLowerCase()) &&  element.projectId == Global.projectId).toList();
-    }
-    else{
-      listFeedsSearch = listItems.where((element) =>   element.projectId == Global.projectId).toList();
+  searchInItems(String value) {
+    if (value.trim() != '') {
+      listItemsSearch = listItems
+          .where((element) =>
+              element.supCategoryId == selectedSubCategoryId &&
+              element.itemTitle.toLowerCase().contains(value.toLowerCase()) &&
+              element.projectId == Global.projectId)
+          .toList();
+    } else {
+      listItemsSearch = listItems
+          .where((element) =>
+              element.supCategoryId == selectedSubCategoryId &&
+              element.projectId == Global.projectId)
+          .toList();
     }
     emit(SearchSubCategoryState());
   }
 
-  sendNotifacation(){
+  searchInFeeds(String value) {
+    if (value.trim() != '') {
+      listFeedsSearch = listItems
+          .where((element) =>
+              element.itemTitle.toLowerCase().contains(value.toLowerCase()) &&
+              element.projectId == Global.projectId)
+          .toList();
+    } else {
+      listFeedsSearch = listItems
+          .where((element) => element.projectId == Global.projectId)
+          .toList();
+    }
+    emit(SearchSubCategoryState());
+  }
 
-
+  sendNotifacation() {
     Dio dio;
-    dio = Dio(BaseOptions(
-        baseUrl: '',
-        receiveDataWhenStatusError: true,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'key=AAAARcAtNzU:APA91bGKDZmMAXkV3mRi_5_BvnLmaxm2rZHF7JBskZcIIkbVx34kfjzoNB-iocOI4sI4uR8Bcg0WV1B84BJ_VHWzi7gPAlC943DuTIaQOswi3upbld6tqEdO4R732LzWqaIpluYNkM_w',
-        }));
+    dio = Dio(
+        BaseOptions(baseUrl: '', receiveDataWhenStatusError: true, headers: {
+      'Content-Type': 'application/json',
+      'Authorization':
+          'key=AAAARcAtNzU:APA91bGKDZmMAXkV3mRi_5_BvnLmaxm2rZHF7JBskZcIIkbVx34kfjzoNB-iocOI4sI4uR8Bcg0WV1B84BJ_VHWzi7gPAlC943DuTIaQOswi3upbld6tqEdO4R732LzWqaIpluYNkM_w',
+    }));
     var data = {
-      "notification": {"body": "this is a body","title": "this is a title"}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}, "to": Global.fireBaseToken
+      "notification": {"body": "this is a body", "title": "this is a title"},
+      "priority": "high",
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        "id": "1",
+        "status": "done"
+      },
+      "to": Global.fireBaseToken
     };
-    dio.post('https://fcm.googleapis.com/fcm/send', data: data).then((value) {
-
-
-    });
-
-
-
-
+    dio
+        .post('https://fcm.googleapis.com/fcm/send', data: data)
+        .then((value) {});
   }
 
-   sendNotificationToUserByToken({String messageTitle ,String messageBody,String userToken }){
-
+  sendNotificationToUserByToken(
+      {String messageTitle, String messageBody, String userToken}) {
     // print(messageTitle);
     // print(messageBody);
     // print(userToken);
 
     Dio dio;
-    dio = Dio(BaseOptions(
-        baseUrl: '',
-        receiveDataWhenStatusError: true,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'key=AAAARcAtNzU:APA91bGKDZmMAXkV3mRi_5_BvnLmaxm2rZHF7JBskZcIIkbVx34kfjzoNB-iocOI4sI4uR8Bcg0WV1B84BJ_VHWzi7gPAlC943DuTIaQOswi3upbld6tqEdO4R732LzWqaIpluYNkM_w',
-        }));
+    dio = Dio(
+        BaseOptions(baseUrl: '', receiveDataWhenStatusError: true, headers: {
+      'Content-Type': 'application/json',
+      'Authorization':
+          'key=AAAARcAtNzU:APA91bGKDZmMAXkV3mRi_5_BvnLmaxm2rZHF7JBskZcIIkbVx34kfjzoNB-iocOI4sI4uR8Bcg0WV1B84BJ_VHWzi7gPAlC943DuTIaQOswi3upbld6tqEdO4R732LzWqaIpluYNkM_w',
+    }));
     var data = {
-      "notification": {"body":messageBody ,"title": messageTitle}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}, "to": userToken
+      "notification": {"body": messageBody, "title": messageTitle},
+      "priority": "high",
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        "id": "1",
+        "status": "done"
+      },
+      "to": userToken
     };
-    dio.post('https://fcm.googleapis.com/fcm/send', data: data).then((value) {
-
-    }).catchError((onError){
+    dio
+        .post('https://fcm.googleapis.com/fcm/send', data: data)
+        .then((value) {})
+        .catchError((onError) {
       print(onError);
     });
   }
 
   sendNotificationForAllUser(context) async {
-    for (var element in  listUser)  {
-      await    sendNotificationToUserByToken(messageTitle:titleTextControl.text,messageBody:sendMessageTextControl.text,userToken: element.fireBaseToken);
+    for (var element in listUser) {
+      await sendNotificationToUserByToken(
+          messageTitle: titleTextControl.text,
+          messageBody: sendMessageTextControl.text,
+          userToken: element.fireBaseToken);
     }
 
     sendMessageTextControl.clear();
     titleTextControl.clear();
     emit(SelectCategoryState());
-
   }
 
-  RoundedLoadingButtonController sendNotifactionBtnController = RoundedLoadingButtonController();
-  RoundedLoadingButtonController callBtnController = RoundedLoadingButtonController();
+  RoundedLoadingButtonController sendNotifactionBtnController =
+      RoundedLoadingButtonController();
+  RoundedLoadingButtonController callBtnController =
+      RoundedLoadingButtonController();
 
   List ingredients = [
     {
@@ -929,8 +929,8 @@ selectedItemId = 0;
       print(handleError);
     });
   }
-  logOut(context)
-  async {
+
+  logOut(context) async {
     await CachHelper.SetData(key: 'mobile', value: '');
     await CachHelper.SetData(key: 'isUserLogin', value: false);
     await CachHelper.SetData(key: 'isAdmin', value: false);

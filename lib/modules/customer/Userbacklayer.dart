@@ -3,9 +3,7 @@
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
-
 import 'package:elomda/shared/Global.dart';
-
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +15,8 @@ class UserBackLayerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeScreenState>(
-
         builder: (context, state) {
-var cubit  = HomeCubit.get(context);
+          var cubit = HomeCubit.get(context);
           return Stack(
             fit: StackFit.expand,
             children: [
@@ -33,36 +30,37 @@ var cubit  = HomeCubit.get(context);
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                        Center(
-                        child: Global.imageUrl != null?  CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage:
-                          NetworkImage(Global.imageUrl),
-                          backgroundColor: Colors.transparent,
-                        ):const CircleAvatar(
-                            radius: 45,
-                            backgroundImage: AssetImage('assets/person.jpg'),
-
-                        ),
+                      Center(
+                        child: Global.imageUrl != null
+                            ? CircleAvatar(
+                                radius: 30.0,
+                                backgroundImage: NetworkImage(Global.imageUrl),
+                                backgroundColor: Colors.transparent,
+                              )
+                            : const CircleAvatar(
+                                radius: 45,
+                                backgroundImage:
+                                    AssetImage('assets/person.jpg'),
+                              ),
                       ),
                       const SizedBox(height: 5.0),
 
                       content(context, () {
-                        NavigatToAndReplace(context,  const HomeLayout());
+                        NavigatToAndReplace(context, const HomeLayout());
                         cubit.changeCurrentIndex(3);
                       }, 'عربة التسوق', 1),
                       const SizedBox(height: 5.0),
                       content(context, () {
                         // navigateTo(context, const FavouriteScreen());
-                        NavigatToAndReplace(context,  const HomeLayout());
+                        NavigatToAndReplace(context, const HomeLayout());
                         cubit.changeCurrentIndex(1);
                       }, 'المفضل', 2),
 
                       content(context, () {
                         // navigateTo(context, const FavouriteScreen());
-                        NavigatToAndReplace(context,  const HomeLayout());
-                        cubit.changeCurrentIndex(1);
-                      }, 'الطلبات السابقة', 5),
+                        NavigatToAndReplace(context, const HomeLayout());
+                        cubit.changeCurrentIndex(3);
+                      }, 'المشتريات', 5),
                       const SizedBox(height: 5.0),
 
                       // content(context, () {
@@ -75,7 +73,6 @@ var cubit  = HomeCubit.get(context);
                       // content(context, () {
                       //   navigateTo(context, const UploadProductForm());
                       // }, 'Upload a new product',3),
-
                     ],
                   ),
                 ),
