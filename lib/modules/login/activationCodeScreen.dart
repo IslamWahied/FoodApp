@@ -28,7 +28,7 @@ class ActivationCodeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RegisterCubit(),
+      create: (context) => RegisterCubit()..getAllProjects()..getUsers(),
 
       child: BlocConsumer<RegisterCubit, RegisterState>(
         builder: (context, state) {

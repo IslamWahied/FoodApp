@@ -50,9 +50,6 @@ Future<void> main() async {
 
   int projectId = await CachHelper.GetData(key: 'ProjectId') ?? 0;
 
-  print('projectId');
-  print(projectId);
-  print('projectId');
 
   if (isUserLogin && mobile.trim() != '') {
     Global.isAdmin = isAdmin ?? false;
@@ -85,7 +82,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => LoginCubit()),
           BlocProvider(create: (context) => UploadProducts()),
           BlocProvider(create: (context) => UpdateDataCubit()),
-          BlocProvider(create: (context) => RegisterCubit()..getAllProjects()),
+          BlocProvider(create: (context) => RegisterCubit()..getAllProjects()..getUsers()),
           BlocProvider(
               create: (context) => HomeCubit()
                 ..getAllProjects()
@@ -98,6 +95,7 @@ class MyApp extends StatelessWidget {
                 ..getFavourite()),
         ],
         child: MaterialApp(
+
           theme: Constants.lightTheme,
           builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,

@@ -1,11 +1,11 @@
 // @dart=2.9
-import 'package:elomda/bloc/login_bloc/loginCubit.dart';
-import 'package:elomda/bloc/login_bloc/loginState.dart';
+
 import 'package:elomda/bloc/register_Bloc/registerBloc.dart';
 import 'package:elomda/bloc/register_Bloc/registerState.dart';
-import 'package:elomda/modules/login/ProjectInfoRegisterScreen.dart';
+import 'package:elomda/modules/customer/product_details/foodDetail.dart';
+
 import 'package:elomda/modules/login/register_screen.dart';
-import 'package:elomda/modules/product_details/foodDetail.dart';
+
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';

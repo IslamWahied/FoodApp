@@ -20,6 +20,7 @@ class HomeLayout extends StatelessWidget {
               var cubit = HomeCubit.get(context);
 
               return Scaffold(
+
                 extendBody: true,
                 body:Global.isAdmin? cubit.adminScreens[cubit.currentIndex]:cubit.userScreens[cubit.currentIndex],
 
@@ -48,7 +49,7 @@ class HomeLayout extends StatelessWidget {
                         },
                         backgroundColor: Theme.of(context).primaryColor,
                         unselectedItemColor: Colors.grey,
-                        selectedItemColor: Colors.deepOrange,
+                        selectedItemColor: Colors.amber,
                         currentIndex: cubit.currentIndex,
 
                         selectedLabelStyle: const TextStyle(
@@ -131,7 +132,7 @@ class HomeLayout extends StatelessWidget {
                         },
                         backgroundColor: Theme.of(context).primaryColor,
                         unselectedItemColor: Colors.grey,
-                        selectedItemColor: Colors.deepOrange,
+                        selectedItemColor: Colors.orangeAccent,
                         currentIndex: cubit.currentIndex,
                         items: [
                           const BottomNavigationBarItem(
@@ -190,7 +191,7 @@ class HomeLayout extends StatelessWidget {
                     radius: 32,
                     backgroundColor: const Color(0xfffcfcff),
                     child: FloatingActionButton(
-                      backgroundColor: Colors.deepOrange,
+                      backgroundColor: Colors.deepOrangeAccent,
                       onPressed: () {
                           cubit.changeCurrentIndex(1);
                          // cubit.sendNotification();

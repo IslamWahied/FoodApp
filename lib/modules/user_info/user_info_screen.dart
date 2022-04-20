@@ -1,13 +1,11 @@
 // @dart=2.9
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/bloc/register_Bloc/registerBloc.dart';
+
 import 'package:elomda/home_layout/home_layout.dart';
-import 'package:elomda/modules/cart/cart_screen.dart';
-import 'package:elomda/modules/favourite/feeds_screen.dart';
-import 'package:elomda/modules/login/login_screen.dart';
+
 import 'package:elomda/shared/Global.dart';
-import 'package:elomda/shared/components/Componant.dart';
+
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +13,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:list_tile_switch/list_tile_switch.dart';
 
-class User_Info extends StatelessWidget {
-  ScrollController scrollController;
-  var top = 0.0;
+class UserInformationScreen extends StatelessWidget {
 
-  User_Info({Key key}) : super(key: key);
+
+ const UserInformationScreen({Key key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class User_Info extends StatelessWidget {
             body: Stack(
               children: [
                 CustomScrollView(
-                  controller: scrollController,
+                  controller: cubit.scrollController,
                   slivers: [
                     SliverAppBar(
                       // leading: Icon(Icons.ac_unit_outlined),
@@ -45,7 +43,7 @@ class User_Info extends StatelessWidget {
                       pinned: true,
                       flexibleSpace: LayoutBuilder(builder:
                           (BuildContext context, BoxConstraints constraints) {
-                        top = constraints.biggest.height;
+                            cubit.top = constraints.biggest.height;
 
                         return Stack(
                           children: [
@@ -56,7 +54,7 @@ class User_Info extends StatelessWidget {
                                 centerTitle: true,
                                 title: AnimatedOpacity(
                                   duration: const Duration(milliseconds: 300),
-                                  opacity: top <= 110.0 ? 1.0 : 0,
+                                  opacity: cubit.top <= 110.0 ? 1.0 : 0,
                                   child: Row(
 
                                     children: [

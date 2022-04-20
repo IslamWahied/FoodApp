@@ -47,7 +47,16 @@ class RegisterCubit extends Cubit<RegisterState> {
         smsCode: textVerifiedCodeControl.text);
     signInWithPhoneAuthCredential(phoneAuthCredential, context);
   }
-
+  List<UserModel> listUser = [];
+  getUsers() async {
+    FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
+      listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
+      listUser.forEach((element) {print(element.toMap());});
+      emit(Refersh());
+    }).onError((handleError) {
+      print(handleError);
+    });
+  }
   signInWithPhoneAuthCredential(phoneAuthCredential, context) async {
     try {
       final authCredential =
@@ -59,11 +68,17 @@ class RegisterCubit extends Cubit<RegisterState> {
 
 
 
-        bool isOldUser = HomeCubit.get(context).listUser.any((element) => element.mobile == Global.mobile);
+        bool isOldUser = listUser.any((element) => element.mobile == Global.mobile);
+
+
+        print('isOldUser');
+        print(listUser.length);
+        print(isOldUser);
+        print('isOldUser');
 
         if (isOldUser) {
 
-          var userModel = HomeCubit.get(context).listUser.firstWhere((element) => element.mobile == LoginCubit.get(context).textMobileControl.text);
+          var userModel = listUser.firstWhere((element) => element.mobile == LoginCubit.get(context).textMobileControl.text);
 
           Global.userName = userModel.userName;
 
@@ -77,9 +92,15 @@ class RegisterCubit extends Cubit<RegisterState> {
 
           if(userModel.isAdmin){
 
-            Global.projectId = HomeCubit.get(context).listProject.firstWhere((element) => element.adminMobile ==  Global.mobile).id;
+            Global.projectId =  listProject.firstWhere((element) => element.adminMobile ==  Global.mobile).id;
 
             await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
+          }
+
+
+          if(Global.fireBaseToken != userModel.fireBaseToken){
+
+
           }
 
           await CachHelper.SetData(key: 'mobile', value: Global.mobile);

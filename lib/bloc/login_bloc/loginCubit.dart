@@ -37,7 +37,6 @@ class LoginCubit extends Cubit<LoginState> {
 
 
 
-
   String verificationCode = '';
   resendActivationCode(context) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -55,7 +54,8 @@ class LoginCubit extends Cubit<LoginState> {
 
   getActivationCode(context) async {
     FocusManager.instance.primaryFocus?.unfocus();
-    if ((Global.mobile != textMobileControl.text || verificationCode == null || verificationCode.trim() == '') && textMobileControl.text.trim() != '' && textMobileControl.text != null) {
+    if ((Global.mobile != textMobileControl.text || verificationCode == null || verificationCode.trim() == '') && textMobileControl.text.trim() != '' && textMobileControl.text != null)
+    {
       loginBtnController.start();
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: '+2' + textMobileControl.text,
@@ -91,7 +91,7 @@ class LoginCubit extends Cubit<LoginState> {
     }
     else if (textMobileControl.text.trim() != '' && textMobileControl.text != null && Global.mobile == textMobileControl.text) {
 
-      navigatTo(context, ActivationCodeScreen());
+      navigatTo(context, const ActivationCodeScreen());
     }
   }
   StreamController<ErrorAnimationType> errorController =

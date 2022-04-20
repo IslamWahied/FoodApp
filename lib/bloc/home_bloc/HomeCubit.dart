@@ -1,8 +1,10 @@
 // @dart=2.9
+
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/bloc/login_bloc/loginCubit.dart';
+
 import 'package:elomda/models/category/SupCategory.dart';
 import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/categoryModel.dart';
@@ -14,21 +16,26 @@ import 'package:elomda/models/order/orderModel.dart';
 import 'package:elomda/models/project/projectModel.dart';
 import 'package:elomda/models/user/user_model.dart';
 
-import 'package:elomda/modules/Order/Admin/canceledOrder.dart';
-import 'package:elomda/modules/Order/Admin/PreparedOrder.dart';
-import 'package:elomda/modules/Order/Admin/doneOrder.dart';
-import 'package:elomda/modules/Order/Admin/newOrders.dart';
-import 'package:elomda/modules/adminBackLayerOpations/sendNotifacation.dart';
+import 'package:elomda/modules/admin/Order/Admin/PreparedOrder.dart';
+import 'package:elomda/modules/admin/Order/Admin/canceledOrder.dart';
+import 'package:elomda/modules/admin/Order/Admin/doneOrder.dart';
+import 'package:elomda/modules/admin/Order/Admin/newOrders.dart';
+import 'package:elomda/modules/admin/adminBackLayerOpations/sendNotifacation.dart';
 
-import 'package:elomda/modules/cart/cart_screen.dart';
-import 'package:elomda/modules/category/subCategoryScreen.dart';
-import 'package:elomda/modules/favourite/feeds_screen.dart';
-import 'package:elomda/modules/home/RestrantListScreen.dart';
-import 'package:elomda/modules/home/home_screen.dart';
-import 'package:elomda/modules/item/items.dart';
+
+import 'package:elomda/modules/customer/cart/cart_screen.dart';
+import 'package:elomda/modules/customer/category/subCategoryScreen.dart';
+import 'package:elomda/modules/customer/favourite/feeds_screen.dart';
+import 'package:elomda/modules/customer/item/items.dart';
+import 'package:elomda/modules/customer/search/search_screen.dart';
+
+import 'package:elomda/modules/customer/RestrantListScreen.dart';
+
+
 import 'package:elomda/modules/login/login_screen.dart';
-import 'package:elomda/modules/search/search_screen.dart';
+
 import 'package:elomda/modules/user_info/user_info_screen.dart';
+
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
@@ -38,9 +45,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+
 import 'package:intl/intl.dart' as sd;
+
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:audioplayers/audioplayers.dart';
+
 
 
 
@@ -60,7 +70,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
     const PreparedOrderScreen(),
     const DoneOrderScreen(),
     const CancelOrderScreen(),
-    User_Info(),
+    const UserInformationScreen(),
     const SendNotifacationScreen()
 
   ];
@@ -71,9 +81,9 @@ class HomeCubit extends Cubit<HomeScreenState> {
     const  RestrantListScreen (),
 
     const FavouriteScreen(),
-    SearchScreen(),
+    const SearchScreen(),
     const OrderScreen(isShowNavBar: false),
-    User_Info(),
+    const UserInformationScreen(),
 
   ];
 
@@ -328,6 +338,11 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
   List<OrderModel> listAllOrders = [];
 
 
+
+
+  ScrollController scrollController;
+  var top = 0.0;
+
  String getTotalCustomerOrdersPrice(){
    double total = 0;
    listAllOrders.where((element) => element.userMobile == selectedUserId).forEach((element2) {
@@ -337,19 +352,36 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
     return total.toString();
   }
 
+
+
+
+
+
   getOrders() async {
 
     FirebaseFirestore.instance.collection('Orders').doc('1').collection('orderList')
         .snapshots()
         .listen((event) async {
-      AudioPlayer audioPlayer = AudioPlayer();
-      await audioPlayer.setUrl('messages.mp3');
+
+      var x = listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).length;
 
       listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
-
       emit(SelectCategoryState());
+
+      if (x < listAllOrders.where((element) => element.orderState.toLowerCase() == 'New'.toLowerCase()).length ) {
+
+        AssetsAudioPlayer.playAndForget(
+          Audio("assets/audios/messages.mp3"),
+          volume: 0.8,
+
+
+        );
+
+
+
+      }
     });
-  }
+ }
   String getTotalPriceForItem({int index}) {
     double price = 0;
     try{
@@ -383,7 +415,9 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
 
   sendOrder(context) {
    try{
-     if (listOrder.isNotEmpty) {
+
+
+     if ( listOrder.isNotEmpty) {
 
        double totalAdditionalPrice = 0;
 
@@ -452,13 +486,44 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
        });
        // Send Notification For Admin
 
+       for (var element in listUser) {
 
-       sendNotificationToUserByToken(
-           messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
-           messageTitle: 'طلب جديد',
+         if(element.isAdmin && listProject.any((element2) => element2.adminMobile == element.mobile && element2.id == Global.projectId )) {
+           sendNotificationToUserByToken(
+             messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
+             messageTitle: 'طلب جديد',
 
-           userToken:  listUser[0].fireBaseToken
-       );
+             userToken:  element.fireBaseToken
+         );
+         }
+
+       }
+
+
+
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+           backgroundColor:
+           Colors
+               .green,
+           content: Text(
+             'تم ارسال الطلب بنجاح',
+             textAlign:
+             TextAlign
+                 .center,
+           ),
+           shape: RoundedRectangleBorder(
+               borderRadius:
+               BorderRadius.all(Radius.circular(
+                   30))),
+           behavior:
+           SnackBarBehavior
+               .floating,
+           padding:
+           EdgeInsets.all(
+               20.0),
+           duration: Duration(
+               milliseconds:
+               4000)));
        listOrder = [];
        emit(SelectCategoryState());
      }
@@ -469,7 +534,7 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
 
 
   }
-
+  TabController controller;
 
   updateOrderState({OrderModel orderModel}){
     FirebaseFirestore.instance.collection('Orders').doc(Global.projectId.toString()).
@@ -481,6 +546,8 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
           .set(orderModel.toJson()).then((value) {
       }).catchError(onError);
     });
+
+
   }
 
 
@@ -661,7 +728,8 @@ String selectedTab  = !Global.isAdmin? 'الرئيسية' : 'طلبات جديد
     FavouritModel model =  FavouritModel(
         isFavourit: !isFavourite,
         ItemId: itemId,
-        UesrMobile: Global.mobile
+        UesrMobile: Global.mobile,
+      projectId: Global.projectId
     );
 
 
@@ -700,7 +768,7 @@ selectedItemId = 0;
     listSubCategorySearch = listSubCategory.where((element) => element.categoryId == categoryId &&  element.projectId == Global.projectId).toList();
 
     if(listSubCategorySearch.isNotEmpty){
-      navigateTo(context,   subCategoryScreen(categoryTitle: listCategory.firstWhere((element) => element.categoryId == selectedCategoryId &&  element.projectId == Global.projectId).categoryTitle,));
+      navigateTo(context,   SubCategoryScreen(categoryTitle: listCategory.firstWhere((element) => element.categoryId == selectedCategoryId &&  element.projectId == Global.projectId).categoryTitle,));
     }
     else{
       EasyLoading.showError('لا يوجد بيانات');

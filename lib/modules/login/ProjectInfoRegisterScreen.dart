@@ -1,17 +1,13 @@
 // @dart=2.9
 
-import 'package:dropdown_search/dropdown_search.dart';
-import 'package:elomda/bloc/login_bloc/loginCubit.dart';
-import 'package:elomda/bloc/login_bloc/loginState.dart';
 import 'package:elomda/bloc/register_Bloc/registerBloc.dart';
 import 'package:elomda/bloc/register_Bloc/registerState.dart';
-import 'package:elomda/modules/product_details/foodDetail.dart';
-import 'package:elomda/shared/components/Componant.dart';
+import 'package:elomda/modules/customer/product_details/foodDetail.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class ProjectInfoRegisterScreen extends StatelessWidget {
