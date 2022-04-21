@@ -1,11 +1,8 @@
 // @dart=2.9
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-
 import 'package:elomda/home_layout/home_layout.dart';
-
 import 'package:elomda/shared/Global.dart';
-
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +11,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:list_tile_switch/list_tile_switch.dart';
 
 class UserInformationScreen extends StatelessWidget {
-
-
- const UserInformationScreen({Key key}) : super(key: key);
-
+  const UserInformationScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,29 +37,27 @@ class UserInformationScreen extends StatelessWidget {
                       pinned: true,
                       flexibleSpace: LayoutBuilder(builder:
                           (BuildContext context, BoxConstraints constraints) {
-                            cubit.top = constraints.biggest.height;
+                        cubit.top = constraints.biggest.height;
 
                         return Stack(
                           children: [
-
                             Container(
-                              decoration: const BoxDecoration(color: Colors.black),
+                              decoration:
+                                  const BoxDecoration(color: Colors.black),
                               child: FlexibleSpaceBar(
                                 centerTitle: true,
                                 title: AnimatedOpacity(
                                   duration: const Duration(milliseconds: 300),
                                   opacity: cubit.top <= 110.0 ? 1.0 : 0,
                                   child: Row(
-
                                     children: [
-
                                       const SizedBox(
                                         width: 12,
                                       ),
                                       Container(
                                         height: kToolbarHeight / 1.8,
                                         width: kToolbarHeight / 1.8,
-                                        decoration:   BoxDecoration(
+                                        decoration: BoxDecoration(
                                           boxShadow: const [
                                             BoxShadow(
                                               color: Colors.white,
@@ -74,41 +66,42 @@ class UserInformationScreen extends StatelessWidget {
                                           ],
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image:Global.imageUrl != null &&Global.imageUrl.trim() != ''? NetworkImage(Global.imageUrl):const AssetImage('assets/person.jpg'),
-                                              //
+                                            fit: BoxFit.cover,
+                                            image: Global.imageUrl != null &&
+                                                    Global.imageUrl.trim() != ''
+                                                ? NetworkImage(Global.imageUrl)
+                                                : const AssetImage(
+                                                    'assets/person.jpg'),
+                                            //
 
-                                              //
-                                              // cubit.user_info_finalPickedImage ==
-                                              //     null
-                                              //     ? NetworkImage(cubit.image ??
-                                              //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')
-                                              //     : FileImage(
-                                              //     cubit.user_info_finalPickedImage),
-
-                                              ),
+                                            //
+                                            // cubit.user_info_finalPickedImage ==
+                                            //     null
+                                            //     ? NetworkImage(cubit.image ??
+                                            //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')
+                                            //     : FileImage(
+                                            //     cubit.user_info_finalPickedImage),
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                        Text(
+                                      Text(
                                         Global.userName,
                                         style: const TextStyle(
-                                            fontSize: 20.0, color: Colors.white),
+                                            fontSize: 20.0,
+                                            color: Colors.white),
                                       ),
                                     ],
                                   ),
                                 ),
                                 background: Stack(
                                   alignment: Alignment.bottomRight,
-                                  children:   [
-
+                                  children: [
                                     Image(
-
                                       // image: AssetImage('assets/person.jpg'),
-                                        image:    NetworkImage(
-                                          Global.imageUrl),
+                                      image: NetworkImage(Global.imageUrl),
                                       fit: BoxFit.fitWidth,
                                       width: double.infinity,
                                     ),
@@ -116,11 +109,10 @@ class UserInformationScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          // if(Global.isAdmin)
-                          //   IconButton(icon: const Icon(Icons.arrow_back,size: 30),color: Constants.black,onPressed: (){
-                          //     Navigator.pop(context);
-                          //   }),
-
+                            // if(Global.isAdmin)
+                            //   IconButton(icon: const Icon(Icons.arrow_back,size: 30),color: Constants.black,onPressed: (){
+                            //     Navigator.pop(context);
+                            //   }),
                           ],
                         );
                       }),
@@ -142,9 +134,10 @@ class UserInformationScreen extends StatelessWidget {
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: () {
-                                  // navigateTo(context, const FavouriteScreen());
-                                  // NavigatToAndReplace(context,  const HomeLayout());
-                                  HomeCubit.get(context).changeCurrentIndex(1);
+                                  cubit.isShowBackLayer = false;
+                                  NavigatToAndReplace(
+                                      context, const HomeLayout());
+                                  cubit.changeCurrentIndex(1);
                                 },
                                 splashColor: Colors.red,
                                 child: const ListTile(
@@ -158,14 +151,17 @@ class UserInformationScreen extends StatelessWidget {
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: () {
-                                  NavigatToAndReplace(context,  const HomeLayout());
-                                  HomeCubit.get(context).changeCurrentIndex(3);
+                                  cubit.isShowBackLayer = false;
+                                  NavigatToAndReplace(
+                                      context, const HomeLayout());
+                                  cubit.changeCurrentIndex(3);
                                 },
                                 splashColor: Colors.red,
                                 child: const ListTile(
                                   title: Text('المشتريات'),
                                   trailing: Icon(Icons.chevron_right_rounded),
-                                  leading: Icon(MaterialCommunityIcons.cart_plus),
+                                  leading:
+                                      Icon(MaterialCommunityIcons.cart_plus),
                                 ),
                               ),
                             ),
@@ -201,18 +197,23 @@ class UserInformationScreen extends StatelessWidget {
                             Container(
                               child: userTile(
                                 'رقم التليفون',
-                                Global.mobile??'',
+                                Global.mobile ?? '',
                                 Icons.phone,
                               ),
                             ),
-if(Global.isAdmin)
-                            Container(
-                              child: userTile(
-                                'الحالة',
-                                cubit.listProject.firstWhere((element) => element.id == Global.projectId).isActive? 'فعال' : 'غير فعال'??'',
-                                Icons.phone,
+                            if (Global.isAdmin)
+                              Container(
+                                child: userTile(
+                                  'الحالة',
+                                  cubit.listProject
+                                          .firstWhere((element) =>
+                                              element.id == Global.projectId)
+                                          .isActive
+                                      ? 'فعال'
+                                      : 'غير فعال' ?? '',
+                                  Icons.phone,
+                                ),
                               ),
-                            ),
                             // Container(
                             //   child: userTile(
                             //     'العنوان',
@@ -223,7 +224,11 @@ if(Global.isAdmin)
                             Container(
                               child: userTile(
                                 'تاريخ الانضمام',
-                             cubit.convertDateFormat(cubit.listUser.firstWhere((element) => element.mobile == Global.mobile).createdDate)??'',
+                                cubit.convertDateFormat(cubit.listUser
+                                        .firstWhere((element) =>
+                                            element.mobile == Global.mobile)
+                                        .createdDate) ??
+                                    '',
                                 Icons.watch_later,
                               ),
                             ),
@@ -257,11 +262,13 @@ if(Global.isAdmin)
                                         builder: (BuildContext ctx) {
                                           return AlertDialog(
                                             title: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      right: 6.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 6.0),
                                                   child: Image.asset(
                                                     'assets/logout.png',
                                                     height: 20,
@@ -275,7 +282,9 @@ if(Global.isAdmin)
                                               ],
                                             ),
                                             content: const Text(
-                                                'هل تريد تسجيل الخروج؟',textAlign: TextAlign.end,),
+                                              'هل تريد تسجيل الخروج؟',
+                                              textAlign: TextAlign.end,
+                                            ),
                                             actions: [
                                               TextButton(
                                                   onPressed: () async {
@@ -284,10 +293,7 @@ if(Global.isAdmin)
                                                   child: const Text('الغاء')),
                                               TextButton(
                                                   onPressed: () {
-
-
                                                     cubit.logOut(context);
-
                                                   },
                                                   child: const Text(
                                                     'تاكيد',
@@ -299,7 +305,8 @@ if(Global.isAdmin)
                                         });
                                   },
                                   title: const Text('تسجيل الخروج'),
-                                  leading: const Icon(Icons.exit_to_app_rounded),
+                                  leading:
+                                      const Icon(Icons.exit_to_app_rounded),
                                 ),
                               ),
                             ),

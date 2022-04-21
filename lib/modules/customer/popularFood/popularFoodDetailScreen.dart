@@ -2,7 +2,6 @@
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/customer/product_details/foodDetail.dart';
-
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
@@ -25,16 +24,16 @@ class PopularFoodDetailScreen extends StatelessWidget {
 
   const PopularFoodDetailScreen(
       {this.itemId,
-        this.orderCount,
-        this.isDiscount,
-        this.oldPrice,
-        this.index,
-        this.imagePath,
-        this.itemDescription,
-        this.subCategoryTitle,
-        this.itemName,
-        this.itemPrice,
-        Key key})
+      this.orderCount,
+      this.isDiscount,
+      this.oldPrice,
+      this.index,
+      this.imagePath,
+      this.itemDescription,
+      this.subCategoryTitle,
+      this.itemName,
+      this.itemPrice,
+      Key key})
       : super(key: key);
 
   @override
@@ -54,21 +53,19 @@ class PopularFoodDetailScreen extends StatelessWidget {
             iconTheme: const IconThemeData(color: Constants.black),
             title: customAppBar(context: context, title: itemName),
           ),
-
           bottomSheet: BottomSheet(
             enableDrag: false,
-            onClosing: (){},
-            builder: (context){
-              return  Padding(
+            onClosing: () {},
+            builder: (context) {
+              return Padding(
                 padding: const EdgeInsets.only(bottom: 60),
                 child: SizedBox(
                   width: double.infinity,
-
-                  child:  ElevatedButton(
+                  child: ElevatedButton(
                     onPressed: () {
                       cubit.addNewItemToCartFromFeedsScreen(
-                          itemId: cubit.selectedItemId, orderCount: orderCount ?? 1);
-                      // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+                          itemId: cubit.selectedItemId,
+                          orderCount: orderCount ?? 1);
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -92,15 +89,15 @@ class PopularFoodDetailScreen extends StatelessWidget {
                     ),
                     style: ElevatedButton.styleFrom(
                         primary: Constants.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 20),
                         textStyle: const TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
                   ),
                 ),
               );
-
             },
           ),
           body: ListView(
@@ -210,11 +207,21 @@ class PopularFoodDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (cubit.listItems.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).additionsList.isNotEmpty)
+                    if (cubit.listItems
+                        .firstWhere((element) =>
+                            element.itemId == itemId &&
+                            element.projectId == Global.projectId)
+                        .additionsList
+                        .isNotEmpty)
                       const SizedBox(
                         height: 50,
                       ),
-                    if (cubit.listItems.firstWhere((element) => element.itemId == itemId &&  element.projectId == Global.projectId).additionsList.isNotEmpty)
+                    if (cubit.listItems
+                        .firstWhere((element) =>
+                            element.itemId == itemId &&
+                            element.projectId == Global.projectId)
+                        .additionsList
+                        .isNotEmpty)
                       const PrimaryText(
                           text: 'الاضافات',
                           fontWeight: FontWeight.w700,
@@ -227,21 +234,40 @@ class PopularFoodDetailScreen extends StatelessWidget {
                 ),
               ),
 
-              if (cubit.popularFoodList.where((element) =>   element.projectId == Global.projectId).toList()[index].additionsList.isNotEmpty)
+              if (cubit.popularList
+                  .where((element) => element.projectId == Global.projectId)
+                  .toList()[index]
+                  .additionsList
+                  .isNotEmpty)
                 SizedBox(
                   height: 150,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: cubit.popularFoodList.where((element) =>   element.projectId == Global.projectId).toList()[index].additionsList.length ?? 0,
+                    itemCount: cubit.popularList
+                            .where((element) =>
+                                element.projectId == Global.projectId)
+                            .toList()[index]
+                            .additionsList
+                            .length ??
+                        0,
                     itemBuilder: (context, index2) => Padding(
-                      padding: EdgeInsets.only(left: index2 == 0 ? 20 : 0, top: 10, bottom: 20),
+                      padding: EdgeInsets.only(
+                          left: index2 == 0 ? 20 : 0, top: 10, bottom: 20),
                       child: additionCard(
-
-                          imagePath: cubit.popularFoodList.where((element) =>   element.projectId == Global.projectId).toList()[index].additionsList[index2].image,
+                          imagePath: cubit.popularList
+                              .where((element) =>
+                                  element.projectId == Global.projectId)
+                              .toList()[index]
+                              .additionsList[index2]
+                              .image,
                           context: context,
                           cubit: cubit,
-                          additionId:cubit.popularFoodList.where((element) =>   element.projectId == Global.projectId).toList()[index].additionsList[index2].itemId
-                      ),
+                          additionId: cubit.popularList
+                              .where((element) =>
+                                  element.projectId == Global.projectId)
+                              .toList()[index]
+                              .additionsList[index2]
+                              .itemId),
                     ),
                   ),
                 ),
@@ -256,15 +282,18 @@ class PopularFoodDetailScreen extends StatelessWidget {
     );
   }
 
-  GestureDetector additionCard({String imagePath,int additionId,HomeCubit cubit,context}) {
+  GestureDetector additionCard(
+      {String imagePath, int additionId, HomeCubit cubit, context}) {
     return GestureDetector(
-      onTap: (){
-        if(cubit.listOfSelectedAdditions.any((element) => element.itemId ==additionId))
-        {
-          cubit.listOfSelectedAdditions.removeWhere((element) => element.itemId == additionId);
-        }
-        else{
-          cubit.listOfSelectedAdditions.add(HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId));
+      onTap: () {
+        if (cubit.listOfSelectedAdditions
+            .any((element) => element.itemId == additionId)) {
+          cubit.listOfSelectedAdditions
+              .removeWhere((element) => element.itemId == additionId);
+        } else {
+          cubit.listOfSelectedAdditions.add(HomeCubit.get(context)
+              .listAdditions
+              .firstWhere((element) => element.itemId == additionId));
         }
         cubit.emit(SelectCategoryState());
       },
@@ -272,19 +301,20 @@ class PopularFoodDetailScreen extends StatelessWidget {
         clipBehavior: Clip.none,
         alignment: Alignment.topRight,
         children: [
-
           Container(
-
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 9),
               margin: const EdgeInsets.only(
                 right: 20,
               ),
               decoration: BoxDecoration(
-                  borderRadius:  BorderRadius.only(
-                    bottomLeft:     const Radius.circular(20),
-                    bottomRight:     const Radius.circular(20),
-                    topLeft:  const Radius.circular(20),
-                    topRight: cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId)?  const Radius.circular(0)   :const Radius.circular(20),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: const Radius.circular(20),
+                    bottomRight: const Radius.circular(20),
+                    topLeft: const Radius.circular(20),
+                    topRight: cubit.listOfSelectedAdditions
+                            .any((element) => element.itemId == additionId)
+                        ? const Radius.circular(0)
+                        : const Radius.circular(20),
                   ),
                   color: Constants.white,
                   boxShadow: [
@@ -297,15 +327,12 @@ class PopularFoodDetailScreen extends StatelessWidget {
                     width: 110,
                     height: 50,
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-
-
-
-
-
                       SvgPicture.asset(
                         'assets/dollar.svg',
                         color: Constants.tertiary,
@@ -313,19 +340,33 @@ class PopularFoodDetailScreen extends StatelessWidget {
                         height: 10,
                       ),
                       PrimaryText(
-                        text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).price.toString() ??0.toString(),
+                        text: HomeCubit.get(context)
+                                .listAdditions
+                                .firstWhere((element) =>
+                                    element.itemId == additionId &&
+                                    element.projectId == Global.projectId)
+                                .price
+                                .toString() ??
+                            0.toString(),
                         size: 10,
                         fontWeight: FontWeight.w700,
                         color: Constants.tertiary,
                         height: 1,
                       ),
-
-
                     ],
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   PrimaryText(
-                    text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).itemTitle.toString() ??''.toString(),
+                    text: HomeCubit.get(context)
+                            .listAdditions
+                            .firstWhere((element) =>
+                                element.itemId == additionId &&
+                                element.projectId == Global.projectId)
+                            .itemTitle
+                            .toString() ??
+                        ''.toString(),
                     size: 12,
                     fontWeight: FontWeight.w700,
                     color: Constants.darkBG,
@@ -333,15 +374,17 @@ class PopularFoodDetailScreen extends StatelessWidget {
                   ),
                 ],
               )),
-          if(cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId))
+          if (cubit.listOfSelectedAdditions
+              .any((element) => element.itemId == additionId))
             const Positioned(
                 top: -10,
                 right: 10,
-                child: Icon(Icons.check_circle,color: Colors.green,)),
-
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                )),
         ],
       ),
     );
   }
 }
-

@@ -166,7 +166,7 @@ class ShopScreen extends StatelessWidget {
                             ),
                           ),
                         )
-                      : SizedBox();
+                      : const SizedBox();
                 },
               ),
               frontLayer: const TabsInCartScreen());
@@ -545,304 +545,303 @@ class _TabsInTicketState extends State<TabsInCartScreen>
                 child: TabBarView(
                   controller: cubit.tabController,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: cubit.listOrder.isEmpty
-                          ? MainAxisAlignment.center
-                          : MainAxisAlignment.start,
-                      children: [
-                        Visibility(
-                            visible: cubit.listOrder.isNotEmpty &&
-                                cubit.listOrder != [],
-                            replacement: const Center(
-                              child: Text(
-                                'لايوجد طلبات مضافة',
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            child: Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: cubit.listOrder.length ?? 0,
-                                  itemBuilder: (context, index) => itemCard(
-                                      itemId: cubit.listOrder[index].itemId,
-                                      isFavourite: cubit
-                                                  .listFavourite.isNotEmpty &&
-                                              cubit.listFavourite.any(
-                                                  (element) =>
-                                                      element.ItemId ==
-                                                          cubit.listOrder[index]
-                                                              .itemId &&
-                                                      element.isFavourit)
-                                          ? true
-                                          : false,
-                                      itemPrice: cubit.listOrder[index].price,
-                                      index: index,
-                                      subCategoryTitle: cubit
-                                          .listOrder[index].supCategoryTitle,
-                                      name: cubit.listOrder[index].itemTitle,
-                                      context: context,
-                                      imagePath: cubit.listOrder[index].image,
-                                      itemsPrice: cubit.listOrder[index].price,
-                                      star: '',
-                                      itemDescription:
-                                          cubit.listOrder[index].description ??
-                                              ''),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 100, top: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: cubit.listOrder.isEmpty
+                            ? MainAxisAlignment.center
+                            : MainAxisAlignment.start,
+                        children: [
+                          Visibility(
+                              visible: cubit.listOrder.isNotEmpty &&
+                                  cubit.listOrder != [],
+                              replacement: const Center(
+                                child: Text(
+                                  'لايوجد طلبات مضافة',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
-                            )),
-                      ],
-                    ),
-                    Conditional.single(
-                      context: context,
-                      conditionBuilder: (BuildContext context) => cubit
-                          .listAllOrders
-                          .where((element) =>
-                              (element.orderState.toLowerCase() !=
-                                      'New'.toLowerCase() &&
-                                  element.orderState.toLowerCase() !=
-                                      'Prepared'.toLowerCase()) &&
-                              element.userMobile == Global.mobile)
-                          .toList()
-                          .isNotEmpty,
-                      widgetBuilder: (BuildContext context) {
-                        return ListView.separated(
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(),
-                          itemCount: cubit.listAllOrders
-                              .where((element) =>
-                                  (element.orderState.toLowerCase() !=
-                                          'New'.toLowerCase() &&
-                                      element.orderState.toLowerCase() !=
-                                          'Prepared'.toLowerCase()) &&
-                                  element.userMobile == Global.mobile)
-                              .toList()
-                              .length,
-                          itemBuilder: (context, index) {
-                            var orderModel = cubit.listAllOrders
-                                .where((element) =>
-                                    (element.orderState.toLowerCase() !=
-                                            'New'.toLowerCase() &&
-                                        element.orderState.toLowerCase() !=
-                                            'Prepared'.toLowerCase()) &&
-                                    element.userMobile == Global.mobile)
-                                .toList()[index];
-
-                            return StatefulBuilder(
-                                builder: (context, setState) {
-                              return Slidable(
-                                closeOnScroll: false,
-
-                                // component is not dragged.
+                              child: Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    height: 200,
-                                    child: Card(
-                                      elevation: 2,
-                                      color: Colors.white,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(orderModel.userName ??
-                                                        ''),
-                                                    Baseline(
-                                                        baseline: 25.0,
-                                                        baselineType:
-                                                            TextBaseline
-                                                                .alphabetic,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 3),
-                                                          child: Text(
-                                                              orderModel
-                                                                      .departMent ??
-                                                                  '',
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontSize: 10,
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                              )),
-                                                        )),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  width: 80,
-                                                  height: 30,
-                                                  child: Card(
-                                                    color: orderModel.orderState
-                                                                .toLowerCase() ==
-                                                            'Canceled'
-                                                        ? Colors.red
-                                                        : Colors.green,
-                                                    child: Center(
-                                                        child: Text(
-                                                      orderModel.orderState
-                                                                  .toLowerCase() ==
-                                                              'Canceled'
-                                                          ? 'تم الالغاء'
-                                                          : 'تم الاستلام',
-                                                      style: const TextStyle(
-                                                          color: Colors.white),
-                                                    )),
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: cubit.listOrder.length ?? 0,
+                                    itemBuilder: (context, index) => itemCard(
+                                        itemId: cubit.listOrder[index].itemId,
+                                        isFavourite: cubit
+                                                    .listFavourite.isNotEmpty &&
+                                                cubit.listFavourite.any((element) =>
+                                                    element.ItemId ==
+                                                        cubit.listOrder[index]
+                                                            .itemId &&
+                                                    element.isFavourit)
+                                            ? true
+                                            : false,
+                                        itemPrice: cubit.listOrder[index].price,
+                                        index: index,
+                                        subCategoryTitle: cubit
+                                            .listOrder[index].supCategoryTitle,
+                                        name: cubit.listOrder[index].itemTitle,
+                                        context: context,
+                                        imagePath: cubit.listOrder[index].image,
+                                        itemsPrice:
+                                            cubit.listOrder[index].price,
+                                        star: '',
+                                        itemDescription: cubit
+                                                .listOrder[index].description ??
+                                            ''),
+                                  ),
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 100),
+                      child: Conditional.single(
+                        context: context,
+                        conditionBuilder: (BuildContext context) => cubit
+                            .listAllOrders
+                            .where((element) =>
+                                element.userMobile == Global.mobile)
+                            .toList()
+                            .isNotEmpty,
+                        widgetBuilder: (BuildContext context) {
+                          return ListView.separated(
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(),
+                            itemCount: cubit.listAllOrders
+                                .where((element) =>
+                                    element.userMobile == Global.mobile)
+                                .toList()
+                                .length,
+                            itemBuilder: (context, index) {
+                              var orderModel = cubit.listAllOrders
+                                  .where((element) =>
+                                      element.userMobile == Global.mobile)
+                                  .toList()[index];
+                              return StatefulBuilder(
+                                  builder: (context, setState) {
+                                return Slidable(
+                                  closeOnScroll: false,
+
+                                  // component is not dragged.
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      height: 200,
+                                      child: Card(
+                                        elevation: 2,
+                                        color: Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                          orderModel.userName ??
+                                                              ''),
+                                                      Baseline(
+                                                          baseline: 25.0,
+                                                          baselineType:
+                                                              TextBaseline
+                                                                  .alphabetic,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 3),
+                                                            child: Text(
+                                                                orderModel
+                                                                        .departMent ??
+                                                                    '',
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 10,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                )),
+                                                          )),
+                                                    ],
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            const Divider(),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: const [
-                                                    Text(
-                                                      'OrderCount : ',
-                                                      style: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontSize: 17),
+                                                  SizedBox(
+                                                    width: 80,
+                                                    height: 30,
+                                                    child: Card(
+                                                      color:
+                                                          cubit.orderStateColor(
+                                                              orderModel
+                                                                  .orderState),
+                                                      child: Center(
+                                                          child: Text(
+                                                        cubit.orderStateArabic(
+                                                            orderModel
+                                                                .orderState),
+                                                        style: const TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      )),
                                                     ),
-                                                    Text(
-                                                      '20',
-                                                      style: TextStyle(
-                                                          fontSize: 17),
-                                                    )
-                                                  ],
-                                                ),
-                                                Text(
-                                                  cubit.convertDateFormat(
-                                                          orderModel
-                                                              .createdDate) ??
-                                                      '',
-                                                  style: TextStyle(
-                                                      fontSize: 13.5,
-                                                      color: Colors.grey[600]),
-                                                )
-                                              ],
-                                            ),
-                                            const SizedBox(height: 10),
-                                            const Spacer(),
-                                            const Divider(),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    const Text(
-                                                      'الاجمالي : ',
-                                                      style: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontSize: 17),
-                                                    ),
-                                                    Text(
-                                                      orderModel.totalPrice
-                                                              .toString() ??
-                                                          '0',
-                                                      style: const TextStyle(
-                                                          fontSize: 17),
-                                                    ),
-                                                  ],
-                                                ),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      showDialog(
-                                                          useSafeArea: true,
-                                                          context: context,
-                                                          builder:
-                                                              (context) =>
-                                                                  AlertDialog(
-                                                                    content:
-                                                                        SingleChildScrollView(
-                                                                      child:
-                                                                          Column(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.end,
-                                                                        children: [
-                                                                          Row(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.center,
-                                                                            children: const [
-                                                                              Text(
-                                                                                'تفاصيل الطلب',
-                                                                                style: TextStyle(color: Colors.blue, fontSize: 16),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                          const SizedBox(
-                                                                            height:
-                                                                                10,
-                                                                          ),
-                                                                          SizedBox(
-                                                                            width:
-                                                                                MediaQuery.of(context).size.width * 0.7,
-                                                                            height:
-                                                                                200,
-                                                                            child: ListView.separated(
-                                                                                itemBuilder: (context, index) => orderModelCard(orderModel.listItemModel[index], context),
-                                                                                separatorBuilder: (context, index) => const SizedBox(height: 10),
-                                                                                itemCount: orderModel.listItemModel.length),
-                                                                          ),
-                                                                          const Divider(),
-                                                                          TextButton(
-                                                                              onPressed: () {
-                                                                                Navigator.pop(context);
-                                                                              },
-                                                                              child: const Text(
-                                                                                'Close',
-                                                                                style: TextStyle(color: Colors.red),
-                                                                              ))
-                                                                        ],
+                                                  ),
+                                                ],
+                                              ),
+                                              const Divider(),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    cubit.convertDateFormat(
+                                                            orderModel
+                                                                .createdDate) ??
+                                                        '',
+                                                    style: TextStyle(
+                                                        fontSize: 13.5,
+                                                        color:
+                                                            Colors.grey[600]),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        orderModel.orderCount
+                                                                .toString() ??
+                                                            '0',
+                                                        style: const TextStyle(
+                                                            fontSize: 17),
+                                                      ),
+                                                      const Text(
+                                                        ' : عدد الوحدات  ',
+                                                        style: TextStyle(
+                                                            color: Colors.blue,
+                                                            fontSize: 17),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 10),
+                                              const Spacer(),
+                                              const Divider(),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  MaterialButton(
+                                                      color: Colors.brown,
+                                                      onPressed: () {
+                                                        showDialog(
+                                                            useSafeArea: true,
+                                                            context: context,
+                                                            builder:
+                                                                (context) =>
+                                                                    AlertDialog(
+                                                                      content:
+                                                                          SingleChildScrollView(
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.min,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.end,
+                                                                          children: [
+                                                                            Row(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: const [
+                                                                                Text(
+                                                                                  'تفاصيل الطلب',
+                                                                                  style: TextStyle(color: Colors.blue, fontSize: 16),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 10,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: MediaQuery.of(context).size.width * 0.7,
+                                                                              height: 200,
+                                                                              child: ListView.separated(itemBuilder: (context, index) => orderModelCard(orderModel.listItemModel[index], context), separatorBuilder: (context, index) => const SizedBox(height: 10), itemCount: orderModel.listItemModel.length),
+                                                                            ),
+                                                                            const Divider(),
+                                                                            TextButton(
+                                                                                onPressed: () {
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                child: const Text(
+                                                                                  'Close',
+                                                                                  style: TextStyle(color: Colors.red),
+                                                                                ))
+                                                                          ],
+                                                                        ),
                                                                       ),
-                                                                    ),
-                                                                  ));
-                                                    },
-                                                    child:
-                                                        const Text('التفاصيل'))
-                                              ],
-                                            ),
-                                          ],
+                                                                    ));
+                                                      },
+                                                      child: const Text(
+                                                        'التفاصيل',
+                                                        style: TextStyle(
+                                                            color: AppColors
+                                                                .white),
+                                                      )),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        orderModel.orderPrice
+                                                                .toString() ??
+                                                            '0',
+                                                        style: const TextStyle(
+                                                            fontSize: 17),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      const Text(
+                                                        ': الاجمالي  ',
+                                                        style: TextStyle(
+                                                            color: Colors.blue,
+                                                            fontSize: 17),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            });
-                          },
-                        );
-                      },
-                      fallbackBuilder: (BuildContext context) => const Center(
+                                );
+                              });
+                            },
+                          );
+                        },
+                        fallbackBuilder: (BuildContext context) => const Center(
                           child: Text(
-                        'لا يوجد طلبات',
-                        style: TextStyle(color: Colors.red, fontSize: 18),
-                      )),
+                            'لايوجد طلبات مضافة',
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

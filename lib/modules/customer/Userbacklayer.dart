@@ -44,35 +44,18 @@ class UserBackLayerMenu extends StatelessWidget {
                               ),
                       ),
                       const SizedBox(height: 5.0),
-
-                      content(context, () {
-                        NavigatToAndReplace(context, const HomeLayout());
-                        cubit.changeCurrentIndex(3);
-                      }, 'عربة التسوق', 1),
                       const SizedBox(height: 5.0),
                       content(context, () {
-                        // navigateTo(context, const FavouriteScreen());
+                        cubit.isShowBackLayer = false;
                         NavigatToAndReplace(context, const HomeLayout());
                         cubit.changeCurrentIndex(1);
                       }, 'المفضل', 2),
-
                       content(context, () {
-                        // navigateTo(context, const FavouriteScreen());
+                        cubit.isShowBackLayer = false;
                         NavigatToAndReplace(context, const HomeLayout());
                         cubit.changeCurrentIndex(3);
                       }, 'المشتريات', 5),
                       const SizedBox(height: 5.0),
-
-                      // content(context, () {
-                      //   UpdateDataCubit.get(context).restAfterUpload(context);
-                      //   UpdateDataCubit.get(context).selectedTypeItemId = 1;
-                      //   navigateTo(context, const UpdateDataScreen());
-                      // }, 'Update product', 4),
-                      //
-                      // const SizedBox(height: 5.0),
-                      // content(context, () {
-                      //   navigateTo(context, const UploadProductForm());
-                      // }, 'Upload a new product',3),
                     ],
                   ),
                 ),

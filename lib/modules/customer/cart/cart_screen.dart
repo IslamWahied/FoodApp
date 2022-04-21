@@ -162,7 +162,7 @@ class OrderScreen extends StatelessWidget {
                             ),
                           ),
                         )
-                      : SizedBox();
+                      : const SizedBox();
                 },
               ),
               frontLayer: const TabsInCartScreen());
@@ -173,6 +173,7 @@ class OrderScreen extends StatelessWidget {
 Widget itemCard(
     {int itemId,
     int index,
+    int projectId,
     bool isFavourite,
     String imagePath,
     String subCategoryTitle,
@@ -562,6 +563,8 @@ class _TabsInTicketState extends State<TabsInCartScreen>
                                   scrollDirection: Axis.vertical,
                                   itemCount: cubit.listOrder.length ?? 0,
                                   itemBuilder: (context, index) => itemCard(
+                                      projectId:
+                                          cubit.listOrder[index].projectId,
                                       itemId: cubit.listOrder[index].itemId,
                                       isFavourite: cubit
                                                   .listFavourite.isNotEmpty &&
@@ -752,7 +755,7 @@ class _TabsInTicketState extends State<TabsInCartScreen>
                                                           fontSize: 17),
                                                     ),
                                                     Text(
-                                                      orderModel.totalPrice
+                                                      orderModel.orderPrice
                                                               .toString() ??
                                                           '0',
                                                       style: const TextStyle(

@@ -20,7 +20,7 @@ import 'package:elomda/modules/admin/adminBackLayerOpations/sendNotifacation.dar
 import 'package:elomda/modules/customer/RestrantListScreen.dart';
 import 'package:elomda/modules/customer/cart/shopScreen.dart';
 import 'package:elomda/modules/customer/category/subCategoryScreen.dart';
-import 'package:elomda/modules/customer/favourite/feeds_screen.dart';
+import 'package:elomda/modules/customer/favourite/favouriteScreen.dart';
 import 'package:elomda/modules/customer/item/items.dart';
 import 'package:elomda/modules/customer/search/search_screen.dart';
 import 'package:elomda/modules/login/login_screen.dart';
@@ -68,6 +68,40 @@ class HomeCubit extends Cubit<HomeScreenState> {
     const ShopScreen(),
     const UserInformationScreen(),
   ];
+
+  String selectedTab = !Global.isAdmin ? 'الرئيسية' : 'طلبات جديدة';
+
+  void changeCurrentIndex(int value) {
+    if (Global.isAdmin) {
+      if (value == 0) {
+        selectedTab = 'طلبات جديدة';
+      } else if (value == 1) {
+        selectedTab = 'تحت التجهيز';
+      } else if (value == 2) {
+        selectedTab = 'تم التسليم';
+      } else if (value == 3) {
+        selectedTab = 'تم الالغاء';
+      } else if (value == 4) {
+        selectedTab = 'الاعدادات';
+      }
+    } else {
+      if (value == 0) {
+        selectedTab = 'القائمة الرئيسية';
+      } else if (value == 1) {
+        selectedTab = 'المفضل';
+      } else if (value == 2) {
+        selectedTab = 'بحث';
+      } else if (value == 3) {
+        selectedTab = 'المشتريات';
+      } else if (value == 4) {
+        selectedTab = 'الاعدادات';
+      }
+    }
+
+    currentIndex = value;
+
+    emit(SearchSubCategoryState());
+  }
 
   List<Project> listProject = [];
 
@@ -227,40 +261,6 @@ class HomeCubit extends Cubit<HomeScreenState> {
     });
   }
 
-  String selectedTab = !Global.isAdmin ? 'الرئيسية' : 'طلبات جديدة';
-
-  void changeCurrentIndex(int value) {
-    if (Global.isAdmin) {
-      if (value == 0) {
-        selectedTab = 'طلبات جديدة';
-      } else if (value == 1) {
-        selectedTab = 'تحت التجهيز';
-      } else if (value == 2) {
-        selectedTab = 'تم التسليم';
-      } else if (value == 3) {
-        selectedTab = 'تم الالغاء';
-      } else if (value == 4) {
-        selectedTab = 'الاعدادات';
-      }
-    } else {
-      if (value == 0) {
-        selectedTab = 'القائمة الرئيسية';
-      } else if (value == 1) {
-        selectedTab = 'المفضل';
-      } else if (value == 2) {
-        selectedTab = 'بحث';
-      } else if (value == 3) {
-        selectedTab = 'المشتريات';
-      } else if (value == 4) {
-        selectedTab = 'الاعدادات';
-      }
-    }
-
-    currentIndex = value;
-
-    emit(SearchSubCategoryState());
-  }
-
   // Change Theme Mode
 
   bool isDarkTheme = false;
@@ -296,10 +296,14 @@ class HomeCubit extends Cubit<HomeScreenState> {
   List<CategoryModel> listCategory = [];
   List<SubCategory> listSubCategory = [];
   List<SubCategory> listSubCategorySearch = [];
+
   List<ItemModel> listItems = [];
-  List<ItemModel> popularFoodList = [];
+
+  List<ItemModel> listFeedItemSearch = [];
+
+  List<ItemModel> popularList = [];
   List<ItemModel> listItemsSearch = [];
-  List<ItemModel> listFeedsSearch = [];
+  List<ItemModel> listFavouriteSearch = [];
   List<ItemModel> listOrder = [];
   List<AdditionsModel> listAdditions = [];
 
@@ -316,7 +320,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
     listAllOrders
         .where((element) => element.userMobile == selectedUserId)
         .forEach((element2) {
-      total += element2.totalPrice - element2.totalDiscountPrice;
+      total += element2.orderPrice;
     });
     return total.toString();
   }
@@ -385,88 +389,207 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
         double orderPrice = 0;
 
-        double totalPrice = 0;
-
         for (var element1 in listOrder) {
           for (var element2 in element1.additionsList) {
-            totalAdditionalPrice = totalAdditionalPrice + element2.price;
+            totalAdditionalPrice =
+                totalAdditionalPrice + (element2.price * element1.orderCount);
           }
+
           if (element1.isDiscount) {
+            double xx = element1.oldPrice - element1.price;
             totalDiscountPrice =
-                totalDiscountPrice + (element1.price - element1.oldPrice);
+                totalDiscountPrice + (xx >= 0 ? xx : 0 * element1.orderCount);
           }
 
-          orderPrice = element1.price;
-
-          totalPrice =
-              element1.price + totalDiscountPrice + totalAdditionalPrice;
+          orderPrice = orderPrice + (element1.price * element1.orderCount);
         }
+        orderPrice = (orderPrice + totalAdditionalPrice) - totalDiscountPrice;
+
         var orderId = 1;
 
         if (listAllOrders.isNotEmpty) {
           orderId = listAllOrders.length + 1;
         }
+
         var model = OrderModel(
-          orderId: orderId,
-          projectId: Global.projectId,
-          userMobile: Global.mobile,
-          adminMobile: '0',
-          createdDate: DateTime.now().toString(),
-          listItemModel: listOrder,
-          totalAdditionalPrice: totalAdditionalPrice,
-          totalDiscountPrice: totalDiscountPrice,
-          totalPrice: totalPrice,
-          userName: Global.userName,
-          departMent: 'Programmer',
-          orderPrice: orderPrice,
-          orderState: 'New',
-          isDeleted: 0,
-        );
+            orderId: orderId,
+            projectId: Global.projectId,
+            userMobile: Global.mobile,
+            adminMobile: '0',
+            createdDate: DateTime.now().toString(),
+            listItemModel: listOrder,
+            totalAdditionalPrice: totalAdditionalPrice,
+            totalDiscountPrice: totalDiscountPrice,
+            userName: Global.userName,
+            departMent: 'Programmer',
+            orderPrice: orderPrice,
+            orderState: 'New',
+            isDeleted: 0,
+            orderCount: listOrder.length ?? 0);
 
         FirebaseFirestore.instance
             .collection('Orders')
             .doc(orderId.toString())
             .update(model.toJson())
-            .then((value) {})
-            .catchError((onError) {
+            .then((value) {
           FirebaseFirestore.instance
               .collection('Orders')
               .doc(orderId.toString())
               .set(model.toJson())
-              .then((value) {})
-              .catchError(onError);
+              .then((value) {
+            for (var element in listUser) {
+              if (element.isAdmin &&
+                  listProject.any((element2) =>
+                      element2.adminMobile == element.mobile &&
+                      element2.id == Global.projectId)) {
+                sendNotificationToUserByToken(
+                    messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
+                    messageTitle: 'طلب جديد',
+                    userToken: element.fireBaseToken);
+              }
+            }
+
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Colors.green,
+                content: Text(
+                  'تم ارسال الطلب بنجاح',
+                  textAlign: TextAlign.center,
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                behavior: SnackBarBehavior.floating,
+                padding: EdgeInsets.all(20.0),
+                duration: Duration(milliseconds: 4000)));
+            listOrder = [];
+          }).catchError((onError) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Colors.red,
+                content: Text(
+                  'حدث خطئ بارسال الطلب برجاء المحاولة مرة اخري',
+                  textAlign: TextAlign.center,
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                behavior: SnackBarBehavior.floating,
+                padding: EdgeInsets.all(20.0),
+                duration: Duration(milliseconds: 4000)));
+          });
+        }).catchError((onError) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(
+                'حدث خطئ بارسال الطلب برجاء المحاولة مرة اخري',
+                textAlign: TextAlign.center,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              behavior: SnackBarBehavior.floating,
+              padding: EdgeInsets.all(20.0),
+              duration: Duration(milliseconds: 4000)));
         });
         // Send Notification For Admin
 
-        for (var element in listUser) {
-          if (element.isAdmin &&
-              listProject.any((element2) =>
-                  element2.adminMobile == element.mobile &&
-                  element2.id == Global.projectId)) {
-            sendNotificationToUserByToken(
-                messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
-                messageTitle: 'طلب جديد',
-                userToken: element.fireBaseToken);
-          }
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            backgroundColor: Colors.green,
-            content: Text(
-              'تم ارسال الطلب بنجاح',
-              textAlign: TextAlign.center,
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30))),
-            behavior: SnackBarBehavior.floating,
-            padding: EdgeInsets.all(20.0),
-            duration: Duration(milliseconds: 4000)));
-        listOrder = [];
         emit(SelectCategoryState());
       }
     } catch (e) {
       print(e);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            'حدث خطئ بارسال الطلب برجاء المحاولة مرة اخري',
+            textAlign: TextAlign.center,
+          ),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30))),
+          behavior: SnackBarBehavior.floating,
+          padding: EdgeInsets.all(20.0),
+          duration: Duration(milliseconds: 4000)));
     }
+  }
+
+  // sendOrder(context) {
+  //   try {
+  //     if (listOrder.isNotEmpty) {
+  //       double totalAdditionalPrice = 0;
+  //
+  //       double totalDiscountPrice = 0;
+  //
+  //       double orderPrice = 0;
+  //
+  //       for (var element1 in listOrder) {
+  //         for (var element2 in element1.additionsList) {
+  //           totalAdditionalPrice =
+  //               totalAdditionalPrice + (element2.price * element1.orderCount);
+  //         }
+  //
+  //         if (element1.isDiscount) {
+  //           double xx = element1.oldPrice - element1.price;
+  //           totalDiscountPrice =
+  //               totalDiscountPrice + (xx >= 0 ? xx : 0 * element1.orderCount);
+  //         }
+  //
+  //         orderPrice = orderPrice + (element1.price * element1.orderCount);
+  //       }
+  //       orderPrice = (orderPrice + totalAdditionalPrice) - totalDiscountPrice;
+  //       print('totalAdditionalPrice');
+  //       print(totalAdditionalPrice);
+  //       print('totalAdditionalPrice');
+  //
+  //       print('totalDiscountPrice');
+  //       print(totalDiscountPrice);
+  //       print('totalDiscountPrice');
+  //
+  //       print('orderPrice');
+  //       print(orderPrice);
+  //       print('orderPrice');
+  //
+  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //           backgroundColor: Colors.green,
+  //           content: Text(
+  //             'تم ارسال الطلب بنجاح',
+  //             textAlign: TextAlign.center,
+  //           ),
+  //           shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.all(Radius.circular(30))),
+  //           behavior: SnackBarBehavior.floating,
+  //           padding: EdgeInsets.all(20.0),
+  //           duration: Duration(milliseconds: 4000)));
+  //
+  //       emit(SelectCategoryState());
+  //     }
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print(e);
+  //     }
+  //   }
+  // }
+
+  String orderStateArabic(String state) {
+    String arState = '';
+    if (state.toLowerCase() == 'new'.toLowerCase()) {
+      arState = 'جديد';
+    } else if (state.toLowerCase() == 'Prepared'.toLowerCase()) {
+      arState = 'جار التجهيز';
+    } else if (state.toLowerCase() == 'Done'.toLowerCase()) {
+      arState = 'تم التسليم';
+    } else if (state.toLowerCase() == 'Canceled'.toLowerCase()) {
+      arState = 'تم الالغاء';
+    }
+    return arState;
+  }
+
+  Color orderStateColor(String state) {
+    Color arStateColor = Colors.red;
+    if (state.toLowerCase() == 'new'.toLowerCase()) {
+      arStateColor = Colors.red;
+    } else if (state.toLowerCase() == 'Prepared'.toLowerCase()) {
+      arStateColor = Colors.orange;
+    } else if (state.toLowerCase() == 'Done'.toLowerCase()) {
+      arStateColor = Colors.green;
+    } else if (state.toLowerCase() == 'Canceled'.toLowerCase()) {
+      arStateColor = Colors.red;
+    }
+    return arStateColor;
   }
 
   updateOrderState({OrderModel orderModel}) {
@@ -544,7 +667,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
   }
 
   addNewItemToCartFromHomeScreen({itemId, orderCount}) {
-    var newList = popularFoodList.firstWhere((element) =>
+    var newList = popularList.firstWhere((element) =>
         element.itemId == itemId && element.projectId == Global.projectId);
     var model = ItemModel(
       orderCount: orderCount,
@@ -581,8 +704,9 @@ class HomeCubit extends Cubit<HomeScreenState> {
   }
 
   addNewItemToCartFromFeedsScreen({itemId, orderCount}) {
-    var newList = listFeedsSearch.firstWhere((element) =>
+    var newList = popularList.firstWhere((element) =>
         element.itemId == itemId && element.projectId == Global.projectId);
+
     var model = ItemModel(
       orderCount: orderCount,
       orderState: 'New',
@@ -614,7 +738,9 @@ class HomeCubit extends Cubit<HomeScreenState> {
     );
 
     listOrder.add(model);
+
     listOfSelectedAdditions = [];
+
     emit(SearchSubCategoryState());
   }
 
@@ -657,14 +783,9 @@ class HomeCubit extends Cubit<HomeScreenState> {
   getItems() async {
     FirebaseFirestore.instance.collection('Items').snapshots().listen((event) {
       listItems = event.docs.map((x) => ItemModel.fromJson(x.data())).toList();
-      listFeedsSearch = listItems
-          .where((element) => element.projectId == Global.projectId)
-          .toList();
-      popularFoodList = listItems
-          .where((element) =>
-              element.isPopular && element.projectId == Global.projectId)
-          .toList();
-      // listItems.forEach((element) {print(element.toJson());});
+      listFeedItemSearch = listItems;
+      popularList = listItems.where((element) => element.isPopular).toList();
+
       emit(SelectCategoryState());
     });
   }
@@ -807,18 +928,19 @@ class HomeCubit extends Cubit<HomeScreenState> {
               element.projectId == Global.projectId)
           .toList();
     }
+
     emit(SearchSubCategoryState());
   }
 
-  searchInFeeds(String value) {
+  searchInFavourite(String value) {
     if (value.trim() != '') {
-      listFeedsSearch = listItems
+      listFavouriteSearch = listItems
           .where((element) =>
               element.itemTitle.toLowerCase().contains(value.toLowerCase()) &&
               element.projectId == Global.projectId)
           .toList();
     } else {
-      listFeedsSearch = listItems
+      listFavouriteSearch = listItems
           .where((element) => element.projectId == Global.projectId)
           .toList();
     }

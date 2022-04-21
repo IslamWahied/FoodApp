@@ -109,7 +109,7 @@ class HomeLayout extends StatelessWidget {
                         },
                         backgroundColor: Theme.of(context).primaryColor,
                         unselectedItemColor: Colors.grey,
-                        selectedItemColor: Colors.orangeAccent,
+                        selectedItemColor: Colors.deepOrange,
                         currentIndex: cubit.currentIndex,
                         items: [
                           const BottomNavigationBarItem(
@@ -172,8 +172,7 @@ class HomeLayout extends StatelessWidget {
                     child: FloatingActionButton(
                       backgroundColor: Colors.deepOrangeAccent,
                       onPressed: () {
-                        cubit.changeCurrentIndex(1);
-                        // cubit.sendNotification();
+                        cubit.changeCurrentIndex(2);
                       },
                       child: const Icon(Icons.search_outlined),
                       hoverElevation: 10,

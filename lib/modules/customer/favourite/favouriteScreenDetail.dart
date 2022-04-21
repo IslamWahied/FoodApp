@@ -2,7 +2,6 @@
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/customer/product_details/foodDetail.dart';
-
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
@@ -10,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-class FeedFoodDetailScreen extends StatelessWidget {
+class FavouriteScreenDetail extends StatelessWidget {
   final String imagePath;
   final String itemName;
   final int itemId;
@@ -23,7 +22,7 @@ class FeedFoodDetailScreen extends StatelessWidget {
   final int orderCount;
   final bool isDiscount;
 
-  const FeedFoodDetailScreen(
+  const FavouriteScreenDetail(
       {this.itemId,
       this.orderCount,
       this.isDiscount,
@@ -90,41 +89,41 @@ class FeedFoodDetailScreen extends StatelessWidget {
           // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           bottomSheet: BottomSheet(
             enableDrag: false,
-            onClosing: (){},
-            builder: (context){
+            onClosing: () {},
+            builder: (context) {
               return SizedBox(
-                  width: double.infinity,
-              child:  ElevatedButton(
-                onPressed: () {
-                  cubit.addNewItemToCartFromFeedsScreen(
-                      itemId: cubit.selectedItemId, orderCount: orderCount ?? 1);
-                  // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    PrimaryText(
-                      text: 'اضافة الي طلباتي',
-                      fontWeight: FontWeight.w600,
-                      size: 18,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Icon(Icons.chevron_right)
-                  ],
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    cubit.addNewItemToCartFromFeedsScreen(
+                        itemId: cubit.selectedItemId,
+                        orderCount: orderCount ?? 1);
+                    // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      PrimaryText(
+                        text: 'اضافة الي طلباتي',
+                        fontWeight: FontWeight.w600,
+                        size: 18,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Icon(Icons.chevron_right)
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      primary: Constants.primary,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 20),
+                      textStyle: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
-                style: ElevatedButton.styleFrom(
-                    primary: Constants.primary,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                    textStyle: const TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.bold)),
-              ),
               );
-
             },
           ),
           body: ListView(
@@ -234,12 +233,19 @@ class FeedFoodDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (cubit.listItems.firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId).additionsList.isNotEmpty)
+                    if (cubit.listItems
+                        .firstWhere((element) =>
+                            element.itemId == itemId &&
+                            element.projectId == Global.projectId)
+                        .additionsList
+                        .isNotEmpty)
                       const SizedBox(
                         height: 50,
                       ),
                     if (cubit.listItems
-                        .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
+                        .firstWhere((element) =>
+                            element.itemId == itemId &&
+                            element.projectId == Global.projectId)
                         .additionsList
                         .isNotEmpty)
                       const PrimaryText(
@@ -255,15 +261,19 @@ class FeedFoodDetailScreen extends StatelessWidget {
               ),
 
               if (cubit.listItems
-                  .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
+                  .firstWhere((element) =>
+                      element.itemId == itemId &&
+                      element.projectId == Global.projectId)
                   .additionsList
                   .isNotEmpty)
                 SizedBox(
                   height: 150,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: cubit.listFeedsSearch
-                            .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
+                    itemCount: cubit.listFavouriteSearch
+                            .firstWhere((element) =>
+                                element.itemId == itemId &&
+                                element.projectId == Global.projectId)
                             .additionsList
                             .length ??
                         0,
@@ -271,14 +281,18 @@ class FeedFoodDetailScreen extends StatelessWidget {
                       padding: EdgeInsets.only(
                           left: index == 0 ? 20 : 0, top: 10, bottom: 20),
                       child: additionCard(
-                          imagePath: cubit.listFeedsSearch
-                              .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
+                          imagePath: cubit.listFavouriteSearch
+                              .firstWhere((element) =>
+                                  element.itemId == itemId &&
+                                  element.projectId == Global.projectId)
                               .additionsList[index]
                               .image,
                           context: context,
                           cubit: cubit,
-                          additionId: cubit.listFeedsSearch
-                              .firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId)
+                          additionId: cubit.listFavouriteSearch
+                              .firstWhere((element) =>
+                                  element.itemId == itemId &&
+                                  element.projectId == Global.projectId)
                               .additionsList[index]
                               .itemId),
                     ),
@@ -295,13 +309,22 @@ class FeedFoodDetailScreen extends StatelessWidget {
     );
   }
 
-  GestureDetector additionCard({String imagePath, int additionId, HomeCubit cubit, context}) {
+  GestureDetector additionCard(
+      {String imagePath, int additionId, HomeCubit cubit, context}) {
     return GestureDetector(
       onTap: () {
-        if (cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId &&  element.projectId == Global.projectId)) {
-          cubit.listOfSelectedAdditions.removeWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId);
+        if (cubit.listOfSelectedAdditions.any((element) =>
+            element.itemId == additionId &&
+            element.projectId == Global.projectId)) {
+          cubit.listOfSelectedAdditions.removeWhere((element) =>
+              element.itemId == additionId &&
+              element.projectId == Global.projectId);
         } else {
-          cubit.listOfSelectedAdditions.add(HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId && element.projectId == Global.projectId));
+          cubit.listOfSelectedAdditions.add(HomeCubit.get(context)
+              .listAdditions
+              .firstWhere((element) =>
+                  element.itemId == additionId &&
+                  element.projectId == Global.projectId));
         }
         cubit.emit(SelectCategoryState());
       },
@@ -380,7 +403,9 @@ class FeedFoodDetailScreen extends StatelessWidget {
                   ),
                 ],
               )),
-          if (cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId && element.projectId == Global.projectId))
+          if (cubit.listOfSelectedAdditions.any((element) =>
+              element.itemId == additionId &&
+              element.projectId == Global.projectId))
             const Positioned(
                 top: -10,
                 right: 10,
@@ -393,4 +418,3 @@ class FeedFoodDetailScreen extends StatelessWidget {
     );
   }
 }
-

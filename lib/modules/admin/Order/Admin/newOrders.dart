@@ -292,7 +292,7 @@ class NewOrderScreen extends StatelessWidget {
                                                     fontSize: 17),
                                               ),
                                               Text(
-                                                orderModel.totalPrice
+                                                orderModel.orderPrice
                                                         .toString() ??
                                                     '0',
                                                 style: const TextStyle(

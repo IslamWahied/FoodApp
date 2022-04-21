@@ -1,60 +1,49 @@
 // @dart=2.9
 import 'package:backdrop/backdrop.dart';
+import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/models/project/projectModel.dart';
 import 'package:elomda/modules/customer/Userbacklayer.dart';
 import 'package:elomda/modules/customer/home/home_screen.dart';
-
-
-
 import 'package:elomda/shared/Global.dart';
-
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
 
- 
-
-
-
 class RestrantListScreen extends StatelessWidget {
-  const RestrantListScreen({Key  key}) : super(key: key);
+  const RestrantListScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: HomeCubit.get(context).mAnavigatorkey,
-      home:
-      MediaQuery.removePadding(
+      home: MediaQuery.removePadding(
         context: context,
         removeTop: false,
-
-          child: BlocConsumer<HomeCubit, HomeScreenState>(
+        child: BlocConsumer<HomeCubit, HomeScreenState>(
           builder: (context, state) {
             var cubit = HomeCubit.get(context);
 
             return Scaffold(
-
               body: Center(
                 child: BackdropScaffold(
-                  onBackLayerConcealed: (){
+                  onBackLayerConcealed: () {
                     cubit.isShowBackLayer = true;
                     cubit.emit(SelectCategoryState());
                   },
-                  onBackLayerRevealed: (){
+                  onBackLayerRevealed: () {
                     cubit.isShowBackLayer = false;
                     cubit.emit(SelectCategoryState());
                   },
-
                   frontLayerBackgroundColor: Constants.white,
                   headerHeight: MediaQuery.of(context).size.height * 0.35,
                   appBar: BackdropAppBar(
-                    title:   Text(cubit.selectedTab),
+                    title: Text(cubit.selectedTab),
                     leading: const BackdropToggleButton(
                       icon: AnimatedIcons.home_menu,
                       color: Colors.deepOrange,
@@ -65,37 +54,71 @@ class RestrantListScreen extends StatelessWidget {
                       ),
                     ),
                     actions: [
-                      cubit.isShowBackLayer?   IconButton(
-                          onPressed: () {
-                            NavigatToAndReplace(context,  const HomeLayout());
-                            HomeCubit.get(context).changeCurrentIndex(4);
-                          },
-                          padding: const EdgeInsets.all(10),
-                          icon:   CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Colors.white,
-                            child:Global.imageUrl != null?
-                            CircleAvatar(
-                              radius: 50.0,
-                              backgroundImage:
-                              NetworkImage(Global.imageUrl),
-                              backgroundColor: Colors.transparent,
+                      cubit.isShowBackLayer
+                          ? Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    cubit.isShowBackLayer = false;
+                                    NavigatToAndReplace(
+                                        context, const HomeLayout());
+                                    cubit.changeCurrentIndex(3);
+                                  },
+                                  child: Badge(
+                                      badgeContent: Text(
+                                        cubit.listOrder.length.toString() ??
+                                            '0',
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 11),
+                                      ),
+                                      child: Image.asset(
+                                        'assets/shoppingcart.png',
+                                        width: 22,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                                const SizedBox(width: 20),
+                                IconButton(
+                                    onPressed: () {
+                                      cubit.isShowBackLayer = false;
+                                      NavigatToAndReplace(
+                                          context, const HomeLayout());
+                                      cubit.changeCurrentIndex(4);
+                                    },
+                                    padding: const EdgeInsets.all(10),
+                                    icon: CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor: Colors.white,
+                                      child: Global.imageUrl != null
+                                          ? CircleAvatar(
+                                              radius: 30.0,
+                                              backgroundImage:
+                                                  NetworkImage(Global.imageUrl),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                            )
+                                          : const CircleAvatar(
+                                              radius: 13,
+                                              backgroundImage: AssetImage(
+                                                  'assets/person.jpg'),
+                                            ),
+                                    )),
+                              ],
                             )
-                                :
-                            const CircleAvatar(
-                              radius: 13,
-                              backgroundImage: AssetImage('assets/person.jpg'),
-
-                            ),
-                          )):const SizedBox(width: 1,)
+                          : const SizedBox(
+                              width: 1,
+                            )
                     ],
                   ),
                   backLayer: UserBackLayerMenu(),
-                  frontLayer:Conditional.single(
+                  frontLayer: Conditional.single(
                     context: context,
-                    conditionBuilder: (BuildContext context) => cubit.listProject.where((element) => element.isActive).isNotEmpty,
+                    conditionBuilder: (BuildContext context) => cubit
+                        .listProject
+                        .where((element) => element.isActive)
+                        .isNotEmpty,
                     widgetBuilder: (BuildContext context) {
-                      return  Column(
+                      return Column(
                         children: [
                           const SizedBox(
                             height: 30,
@@ -106,112 +129,87 @@ class RestrantListScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               crossAxisCount: 2,
-
                               mainAxisSpacing: 1.0,
                               crossAxisSpacing: 1.0,
                               childAspectRatio: 1 / 1.3,
                               children: List.generate(
-                               cubit.listProject.where((element) => element.isActive).length,
-                                    (index) => buildGridProjects( cubit.listProject.where((element) => element.isActive).toList()[index],
-                                        context),
+                                cubit.listProject
+                                    .where((element) => element.isActive)
+                                    .length,
+                                (index) => buildGridProjects(
+                                    cubit.listProject
+                                        .where((element) => element.isActive)
+                                        .toList()[index],
+                                    context),
                               ),
                             ),
                           ),
                         ],
                       );
                     },
-
-                    fallbackBuilder: (BuildContext context) => const Center(child: Text('لا يوجد مطاعم حاليا',style: TextStyle(color: Colors.red,fontSize: 18),)),
+                    fallbackBuilder: (BuildContext context) => const Center(
+                        child: Text(
+                      'لا يوجد مطاعم حاليا',
+                      style: TextStyle(color: Colors.red, fontSize: 18),
+                    )),
                   ),
                 ),
               ),
             );
           },
           listener: (context, state) => {},
-      ),
         ),
+      ),
     );
   }
 }
+
 Widget buildGridProjects(Project model, context) => GestureDetector(
-  onTap: (){
-    Global.projectId = model.id;
+      onTap: () {
+        Global.projectId = model.id;
 
-    Navigator.of(HomeCubit.get(context).mAnavigatorkey.currentContext)
-        .push(MaterialPageRoute(
-        builder: (BuildContext context) =>
-            const HomeScreen()));
+        Navigator.of(HomeCubit.get(context).mAnavigatorkey.currentContext).push(
+            MaterialPageRoute(
+                builder: (BuildContext context) => const HomeScreen()));
 
-    // navigatTo(context, const HomeScreen());
-  },
-  child:   SizedBox(
+        // navigatTo(context, const HomeScreen());
+      },
+      child: SizedBox(
+        height: 174,
+        child: Stack(
+          children: <Widget>[
+            Card(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
 
-
-
-    height: 174,
-
-    child: Stack(
-
-      children: <Widget>[
-
-        Card(
-
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-
-          child: Column(
-
-            crossAxisAlignment: CrossAxisAlignment.center,
-
-            children: [
-
-              SizedBox(
-
-                width: 335,
-
-                height: 180,
-
-                child: Image.network(
-
-                  model.image,
-
-                  fit: BoxFit.cover,
-
-                ),
-
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 335,
+                    height: 180,
+                    child: Image.network(
+                      model.image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
               ),
 
-            ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
 
-          ),
+              elevation: 5,
 
-          shape: RoundedRectangleBorder(
-
-            borderRadius: BorderRadius.circular(10.0),
-
-          ),
-
-          elevation: 5,
-
-          // margin: const EdgeInsets.all(10),
-
+              // margin: const EdgeInsets.all(10),
+            ),
+            Positioned(
+              right: 20,
+              bottom: 20,
+              left: 75,
+              child: Text(model.name),
+            )
+          ],
         ),
-
-        Positioned(
-
-  right: 20,
-
-          bottom: 20,
-
-          left: 75,
-
-          child:Text(model.name),
-
-        )
-
-      ],
-
-    ),
-
-  ),
-);
-
+      ),
+    );

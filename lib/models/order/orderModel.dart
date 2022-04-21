@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'dart:convert';
+
 import 'package:elomda/models/category/itemModel.dart';
 
 class OrderModel {
@@ -7,33 +8,33 @@ class OrderModel {
   String userMobile;
   String adminMobile;
   String userName;
-int projectId;
+  int projectId;
   String departMent;
   String createdDate;
   double totalAdditionalPrice;
   double totalDiscountPrice;
   double orderPrice;
-  double totalPrice;
+
   int isDeleted;
   String orderState;
+  int orderCount;
   List<ItemModel> listItemModel;
 
-  OrderModel({
-    this.orderId,
-    this.userName,
-    this.adminMobile,
-    this.orderState,
-    this.userMobile,
-    this.orderPrice,
-    this.createdDate,
-    this.isDeleted,
-    this.listItemModel,
-    this.totalAdditionalPrice,
-    this.totalDiscountPrice,
-    this.totalPrice,
-    this.departMent,
-    this.projectId
-  });
+  OrderModel(
+      {this.orderId,
+      this.userName,
+      this.adminMobile,
+      this.orderState,
+      this.userMobile,
+      this.orderPrice,
+      this.createdDate,
+      this.isDeleted,
+      this.listItemModel,
+      this.totalAdditionalPrice,
+      this.totalDiscountPrice,
+      this.departMent,
+      this.orderCount,
+      this.projectId});
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     List<dynamic> listItemlist = json['listItemModel'] ?? [];
@@ -52,10 +53,9 @@ int projectId;
         departMent: json['departMent'],
         totalAdditionalPrice: json['totalAdditionalPrice'] ?? 0,
         totalDiscountPrice: json['totalDiscountPrice'] ?? 0,
-        totalPrice: json['totalPrice'] ?? 0,
         projectId: json['projectId'] ?? 1,
-        listItemModel: customList
-    );
+        orderCount: json['orderCount'] ?? 0,
+        listItemModel: customList);
   }
 
   Map<String, dynamic> toJson() {
@@ -71,8 +71,8 @@ int projectId;
       'isDeleted': isDeleted,
       'totalAdditionalPrice': totalAdditionalPrice ?? 0,
       'totalDiscountPrice': totalDiscountPrice ?? 0,
-      'totalPrice': totalPrice ?? 0,
       'projectId': projectId ?? 1,
+      'orderCount': orderCount ?? 0,
       'listItemModel': listItemModel.map((e) => e.toJson())?.toList(),
     };
   }
