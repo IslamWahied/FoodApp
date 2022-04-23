@@ -44,7 +44,7 @@ class HomeLayout extends StatelessWidget {
                         },
                         backgroundColor: Theme.of(context).primaryColor,
                         unselectedItemColor: Colors.grey,
-                        selectedItemColor: Colors.amber,
+                        selectedItemColor: Colors.deepOrange,
                         currentIndex: cubit.currentIndex,
 
                         selectedLabelStyle: const TextStyle(fontSize: 12.5),

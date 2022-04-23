@@ -3,10 +3,13 @@ import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/admin/adminBackLayer.dart';
 import 'package:elomda/shared/Global.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'newOrders.dart';
 
@@ -18,13 +21,137 @@ class PreparedOrderScreen extends StatelessWidget {
     return BlocConsumer<HomeCubit, HomeState>(
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
-        var newOrderList = cubit.listAllOrders
-            .where((element) =>
-                element.orderState.toLowerCase() == 'Prepared'.toLowerCase() &&
-                element.projectId == Global.projectId)
-            .toList();
+        var newOrderList = cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'Prepared'.toLowerCase() && element.projectId == Global.projectId).toList();
 
         return Scaffold(
+          resizeToAvoidBottomInset : false,
+          // bottomSheet: SizedBox(
+          //   height: 500.0,
+          //
+          //   child:    StatefulBuilder(
+          //     key: cubit.stateKey,
+          //     builder: (context,state)=>
+          //         Column(
+          //           crossAxisAlignment:
+          //           CrossAxisAlignment.center,
+          //           mainAxisAlignment:
+          //           MainAxisAlignment.start,
+          //           mainAxisSize: MainAxisSize.min,
+          //           children:   [
+          //             const Text(
+          //               'تسليم الطلب',
+          //               style:
+          //               TextStyle(color: Colors.blue, fontSize: 16),
+          //             ),
+          //
+          //
+          //             const SizedBox(
+          //               height:
+          //               10,
+          //             ),
+          //
+          //             const Divider(),
+          //             const SizedBox(
+          //               height:
+          //               10,
+          //             ),
+          //             const Text('المبلغ المدفوع',style:   TextStyle(letterSpacing: 2,color: Colors.black54, fontWeight: FontWeight.bold,)),
+          //             Material(
+          //
+          //               elevation: 4,
+          //               shadowColor: Colors.blue,
+          //               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          //               child: Padding(
+          //                 padding: const EdgeInsets.only(left: 12),
+          //                 child: TextFormField(
+          //                   controller: cubit.txtCustomerPayAmount,
+          //                   textAlign: TextAlign.center,
+          //                   inputFormatters: <TextInputFormatter>[
+          //                     FilteringTextInputFormatter.allow(
+          //                         RegExp(r'[0-9.]')),
+          //                   ],
+          //                   keyboardType: const TextInputType.numberWithOptions(),
+          //                   onChanged: (value){
+          //
+          //                     cubit.stateKey.currentState.setState(() {
+          //                       // cubit.getFinalCustomerPayAmount(value,orderModel.orderPrice);
+          //                     });
+          //
+          //                   },
+          //                   decoration: InputDecoration(
+          //                       hintText: '',
+          //
+          //                       isDense: true, // important line
+          //                       contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 20),// control your hints text size
+          //                       hintStyle: const TextStyle(letterSpacing: 2, color: Colors.black54, fontWeight: FontWeight.bold),
+          //                       fillColor:  Colors.white30 ,
+          //                       filled: true,
+          //                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none)),
+          //                 ),
+          //               ),
+          //             ),
+          //             Padding(
+          //               padding: const EdgeInsets.only(bottom: 15,top: 15),
+          //               child:   Image.asset('assets/upDown.png',height: 30),
+          //             ),
+          //             const Text('قيمة الاوردر',style:   TextStyle(letterSpacing: 2,color: Colors.black54, fontWeight: FontWeight.bold,)),
+          //             Material(
+          //               elevation: 4,
+          //
+          //               shadowColor: Colors.blue,
+          //               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          //               child: Padding(
+          //                 padding: const EdgeInsets.only(left: 12),
+          //                 child: TextFormField(
+          //                   enabled: false,
+          //                   readOnly: true,
+          //                   textAlign: TextAlign.center,
+          //                   keyboardType: TextInputType.text,
+          //                   decoration: InputDecoration(
+          //                       hintText:'orderModel.orderPrice.toString()',
+          //                       isDense: true,
+          //
+          //
+          //                       hintStyle: const TextStyle(letterSpacing: 2,color: Colors.black54, fontWeight: FontWeight.bold,),
+          //                       alignLabelWithHint: true,
+          //                       fillColor:  Colors.white30 ,
+          //
+          //                       filled: true,
+          //
+          //                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none)),
+          //                 ),
+          //               ),
+          //             ),
+          //             const Padding(
+          //               padding: EdgeInsets.only(bottom: 15,top: 15),
+          //               child:  Text('=',style: TextStyle(color: Colors.blue,fontSize: 20),),
+          //             ),
+          //             Material(
+          //               elevation: 4,
+          //               shadowColor: Colors.blue,
+          //               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          //               child: Padding(
+          //                 padding: const EdgeInsets.only(left: 12),
+          //                 child: TextFormField(
+          //                   enabled: false,
+          //                   readOnly: true,
+          //                   textAlign: TextAlign.center,
+          //                   keyboardType: TextInputType.text,
+          //                   decoration: InputDecoration(
+          //                       hintText: cubit.finalAmount.toString(),
+          //                       isDense: true,
+          //                       hintStyle:   TextStyle(letterSpacing: 2,color: cubit.finalAmount>=0?Colors.green : Colors.red, fontWeight: FontWeight.bold,),
+          //                       alignLabelWithHint: true,
+          //                       fillColor:  Colors.white30 ,
+          //                       filled: true,
+          //                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none)),
+          //                 ),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //   ),
+          // ),
           body: Center(
             child: backdrop(
               context: context,
@@ -45,7 +172,7 @@ class PreparedOrderScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       var orderModel = newOrderList[index];
 
-                      // print(orderModel.toJson());
+
                       return StatefulBuilder(builder: (context, setState) {
                         return Slidable(
                           closeOnScroll: false,
@@ -60,20 +187,158 @@ class PreparedOrderScreen extends StatelessWidget {
                                   // An action can be bigger than the others.
                                   flex: 1,
                                   onPressed: (context) {
-                                    cubit.listAllOrders
-                                        .firstWhere((element) =>
-                                            element.orderId ==
-                                                orderModel.orderId &&
-                                            element.projectId ==
-                                                Global.projectId)
-                                        .orderState = 'Done';
-                                    var x = cubit.listAllOrders.firstWhere(
-                                        (element) =>
-                                            element.orderId ==
-                                                orderModel.orderId &&
-                                            element.projectId ==
-                                                Global.projectId);
-                                    cubit.updateOrderState(orderModel: x);
+
+
+cubit.selectedOrderId = orderModel.orderId;
+cubit.orderPrice = orderModel.orderPrice;
+
+
+                                    showDialog(
+
+                                        context: context,
+                                        builder: (context) {
+                                          return Dialog(
+                                           child:
+                                          StatefulBuilder(
+                                          key: cubit.stateKey,
+                                            builder: (context,state)=>
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children:   [
+
+Text('#${cubit.selectedOrderId}تحصيل اوردر '),
+
+                                                      const SizedBox(
+                                                        height:
+                                                        10,
+                                                      ),
+
+                                                      const Divider(),
+                                                      const SizedBox(
+                                                        height:
+                                                        10,
+                                                      ),
+                                                      const Text('المبلغ المدفوع',style:   TextStyle(letterSpacing: 2,color: Colors.black54, fontWeight: FontWeight.bold,)),
+                                                      Material(
+
+                                                        elevation: 4,
+                                                        shadowColor: Colors.blue,
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(left: 12),
+                                                          child: TextFormField(
+                                                            controller: cubit.txtCustomerPayAmount,
+                                                            textAlign: TextAlign.center,
+                                                            inputFormatters: <TextInputFormatter>[
+                                                              FilteringTextInputFormatter.allow(
+                                                                  RegExp(r'[0-9.]')),
+                                                            ],
+                                                            keyboardType: const TextInputType.numberWithOptions(),
+                                                            onChanged: (value){
+
+                                                              cubit.stateKey.currentState.setState(() {
+                                                                cubit.getFinalCustomerPayAmount(value,orderModel.orderPrice);
+                                                              });
+
+                                                            },
+                                                            decoration: InputDecoration(
+                                                                hintText: '',
+
+                                                                isDense: true, // important line
+                                                                contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 20),// control your hints text size
+                                                                hintStyle: const TextStyle(letterSpacing: 2, color: Colors.black54, fontWeight: FontWeight.bold),
+                                                                fillColor:  Colors.white30 ,
+                                                                filled: true,
+                                                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none)),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(bottom: 15,top: 15),
+                                                        child:   Image.asset('assets/upDown.png',height: 30),
+                                                      ),
+                                                      const Text('قيمة الاوردر',style:   TextStyle(letterSpacing: 2,color: Colors.black54, fontWeight: FontWeight.bold,)),
+                                                      Material(
+                                                        elevation: 4,
+
+                                                        shadowColor: Colors.blue,
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(left: 12),
+                                                          child: TextFormField(
+                                                            enabled: false,
+                                                            readOnly: true,
+                                                            textAlign: TextAlign.center,
+                                                            keyboardType: TextInputType.text,
+                                                            decoration: InputDecoration(
+                                                                hintText:orderModel.orderPrice.toString(),
+                                                                isDense: true,
+
+
+                                                                hintStyle: const TextStyle(letterSpacing: 2,color: Colors.black54, fontWeight: FontWeight.bold,),
+                                                                alignLabelWithHint: true,
+                                                                fillColor:  Colors.white30 ,
+
+                                                                filled: true,
+
+                                                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none)),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const Padding(
+                                                        padding: EdgeInsets.only(bottom: 15,top: 15),
+                                                        child:  Text('=',style: TextStyle(color: Colors.blue,fontSize: 20),),
+                                                      ),
+                                                      Material(
+                                                        elevation: 4,
+                                                        shadowColor: Colors.blue,
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(left: 12),
+                                                          child: TextFormField(
+                                                            enabled: false,
+                                                            readOnly: true,
+                                                            textAlign: TextAlign.center,
+                                                            keyboardType: TextInputType.text,
+                                                            decoration: InputDecoration(
+                                                                hintText: cubit.finalAmount.toString(),
+                                                                isDense: true,
+                                                                hintStyle:   TextStyle(letterSpacing: 2,color: cubit.finalAmount>=0?Colors.green : Colors.red, fontWeight: FontWeight.bold,),
+                                                                alignLabelWithHint: true,
+                                                                fillColor:  Colors.white30 ,
+                                                                filled: true,
+                                                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none)),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                       const SizedBox(height: 20),
+                                                       Row(
+                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                         children: [
+                                                           MaterialButton(onPressed: (){
+                                                             Navigator.pop(context);
+                                                           },color: Colors.red,child: const Text('اغلاق',style: TextStyle(color: Colors.white),)),
+                                                           MaterialButton(onPressed: (){
+                                                       orderModel.orderState = 'Done';
+                                                             cubit.updateOrderState(orderModel:orderModel);
+                                                             Navigator.pop(context);
+                                                           },color: Colors.green,child: const Text('حفظ',style: TextStyle(color: Colors.white),)),
+                                                         ],
+                                                       ),
+                                                    ],
+                                                  ),
+                                                ),
+                                          )
+
+                                          );
+                                        });
+
                                   },
                                   backgroundColor: Colors.green,
                                   foregroundColor: Colors.white,

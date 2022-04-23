@@ -47,6 +47,12 @@ class Constants {
 
 
   static ThemeData lightTheme = ThemeData(
+    bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(10))
+        )
+    ),
     backgroundColor: lightBG,
     primaryColor: lightPrimary,
     scaffoldBackgroundColor: lightBG,

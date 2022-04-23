@@ -21,6 +21,8 @@ import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'adminAccount.dart';
+
 
 class AdminBackLayerMenu extends StatelessWidget {
   AdminBackLayerMenu({Key key}) : super(key: key);
@@ -172,7 +174,7 @@ class AdminBackLayerMenu extends StatelessWidget {
                           .firstWhere(
                               (element) => element.mobile == Global.mobile)
                           .isActive) {
-                        navigateTo(context, const UploadProductForm());
+                        navigateTo(context, const AdminAccountScreen());
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

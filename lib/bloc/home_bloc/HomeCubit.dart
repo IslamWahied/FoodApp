@@ -44,6 +44,10 @@ class HomeCubit extends Cubit<HomeState> {
   TextEditingController sendMessageTextControl = TextEditingController();
   TextEditingController titleTextControl = TextEditingController();
   TextEditingController txtUpdateCustomerBalance = TextEditingController();
+
+  TextEditingController txtCustomerPayAmount = TextEditingController();
+  double  finalAmount =0;
+
   FocusNode sendMessageNode = FocusNode();
 
   TabController tabController;
@@ -69,8 +73,35 @@ class HomeCubit extends Cubit<HomeState> {
     const ShopScreen(),
     const UserInformationScreen(),
   ];
-
+double  orderPrice = 0;
+int  selectedOrderId = 0;
+bool  selectedOrder = false;
   String selectedTab = !Global.isAdmin ? 'الرئيسية' : 'طلبات جديدة';
+
+
+  getFinalCustomerPayAmount(String value,double orderPrice){
+
+    if(value.trim().toString() != ''){
+
+
+
+      double x = double.parse(value??0)??0;
+
+      finalAmount =  x -  orderPrice;
+
+    }
+    else{
+      finalAmount = orderPrice * -1;
+    }
+
+    emit(SearchSubCategoryState());
+  }
+
+  saveTransaActionOrderAndState(){
+
+  }
+  GlobalKey<State<StatefulBuilder>> stateKey  = GlobalKey<State<StatefulBuilder>>();
+
 
   void changeCurrentIndex(int value) {
     if (Global.isAdmin) {
@@ -283,7 +314,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   bool isDarkTheme = false;
 
-  String selectedUserId = '';
+  String selectedUserId = '01151816423';
 
   static HomeCubit get(context) => BlocProvider.of(context);
   int selectedCategoryId = 0;
@@ -619,38 +650,47 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   updateOrderState({OrderModel orderModel}) {
+
+
     FirebaseFirestore.instance
         .collection('Orders')
         .doc(orderModel.orderId.toString())
         .update(orderModel.toJson())
         .then((value) {
-      UserAccount model = UserAccount(
-          createdByMobile: Global.mobile,
-          createdDate: DateTime.now().toString(),
-          customerMobile: orderModel.userMobile,
-          isDeleted: false,
-          projectId: orderModel.projectId,
-          credit: 0,
-          debit: orderModel.orderPrice.toInt(),
-          orderId: orderModel.orderId);
 
-      if (orderModel.orderState.toLowerCase() == 'Prepared'.toLowerCase()) {
-        var userAccountId = listUserAccount
-            .where((element) => element.projectId == Global.projectId)
-            .length;
 
-        if (userAccountId == 0) {
-          userAccountId = 1;
-        } else {
-          userAccountId = userAccountId + 1;
-        }
+      if (orderModel.orderState.toLowerCase() == 'Done'.toLowerCase()) {
 
-        FirebaseFirestore.instance
-            .collection('UserAccount')
-            .doc(userAccountId.toString())
-            .set(model.toMap())
-            .then((value) {});
+        UserAccount model = UserAccount(
+            createdByMobile: Global.mobile,
+            createdDate: DateTime.now().toString(),
+            customerMobile: orderModel.userMobile,
+            isDeleted: false,
+            projectId: orderModel.projectId,
+            credit: 0,
+            debit: orderModel.orderPrice.toInt(),
+            orderId: orderModel.orderId
+        );
+        FirebaseFirestore.instance.collection('UserAccount').doc().set(model.toMap());
+
+
+          UserAccount model2 = UserAccount(
+              createdByMobile: Global.mobile,
+              createdDate: DateTime.now().toString(),
+              customerMobile: orderModel.userMobile,
+              isDeleted: false,
+              projectId: orderModel.projectId,
+              credit: double.parse(txtCustomerPayAmount.text).toInt(),
+              debit: 0,
+              orderId: orderModel.orderId);
+          FirebaseFirestore.instance.collection('UserAccount').doc().set(model2.toMap());
+
+
+
+
+
       }
+
     }).catchError((onError) {});
   }
 
