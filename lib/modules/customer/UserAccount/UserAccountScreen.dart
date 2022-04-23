@@ -14,66 +14,53 @@ import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserAccountScreen extends StatelessWidget {
-  const UserAccountScreen({Key  key}) : super(key: key);
+  const UserAccountScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit,HomeState>(
-      builder: (context,state){
+    return BlocConsumer<HomeCubit, HomeState>(
+      builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return Scaffold(
-
-           backgroundColor:Colors.grey[100],
-          appBar:AppBar(
-
+          backgroundColor: Colors.grey[100],
+          appBar: AppBar(
             elevation: 0,
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             centerTitle: false,
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
-            title: customAppBar(context: context, title: ' حساب العملاء',isShowCarShop: false),
+            title: customAppBar(
+                context: context, title: ' حساب العملاء', isShowCarShop: false),
           ),
           body: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-
-
                 Column(
                   children: [
                     const SizedBox(height: 50),
                     Padding(
-                      padding: const EdgeInsets.only(right: 10,left: 10),
+                      padding: const EdgeInsets.only(right: 10, left: 10),
                       child: SizedBox(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.095,
+                          height: MediaQuery.of(context).size.height * 0.095,
                           width: double.infinity,
                           child: DropdownSearch(
-
-
                             showClearButton: true,
-
                             popupBackgroundColor: Colors.grey[250],
-                            maxHeight: MediaQuery
-                                .of(context)
-                                .size
-                                .height * 0.35,
+                            maxHeight:
+                                MediaQuery.of(context).size.height * 0.35,
                             dropdownSearchDecoration: InputDecoration(
-                              floatingLabelBehavior:FloatingLabelBehavior.auto ,
+                              floatingLabelBehavior: FloatingLabelBehavior.auto,
                               fillColor: Colors.white,
                               focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.circular(25.0),
+                                borderRadius: BorderRadius.circular(25.0),
                                 borderSide: const BorderSide(
                                   color: Colors.black,
                                 ),
                               ),
                               border: OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.circular(25.0),
+                                borderRadius: BorderRadius.circular(25.0),
                                 borderSide: const BorderSide(
                                   color: Colors.black,
                                   width: 2.0,
@@ -81,40 +68,40 @@ class UserAccountScreen extends StatelessWidget {
                               ),
                               labelText: 'العميل',
                               alignLabelWithHint: true,
-
-
                               labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20),
+                                  fontWeight: FontWeight.w400, fontSize: 20),
                             ),
-                            selectedItem: cubit.selectedUserId.trim() !=
-                                '' ? cubit.listUser
-                                .firstWhere((element) =>
-                            element.mobile == cubit.selectedUserId)
-                                .userName
+                            selectedItem: cubit.selectedUserId.trim() != ''
+                                ? cubit.listUser
+                                    .firstWhere((element) =>
+                                        element.mobile == cubit.selectedUserId)
+                                    .userName
                                 : '',
                             showSearchBox: true,
                             mode: Mode.BOTTOM_SHEET,
-
-                            items:cubit.listUser.map((e) => e.userName).toList(),
+                            items:
+                                cubit.listUser.map((e) => e.userName).toList(),
                             onChanged: (value) async {
-                              if(value != null)
-                              {
-                                cubit.selectedUserId = cubit.listUser.firstWhere((element) => element.userName.toLowerCase()  == value.toString().toLowerCase()).mobile ;
-                              }else{
+                              if (value != null) {
+                                cubit.selectedUserId = cubit.listUser
+                                    .firstWhere((element) =>
+                                        element.userName.toLowerCase() ==
+                                        value.toString().toLowerCase())
+                                    .mobile;
+                              } else {
                                 cubit.selectedUserId = '';
-
                               }
                               cubit.emit(SelectCategoryState());
-
                             },
                           )),
                     ),
                     const SizedBox(height: 60),
-                    if(cubit.selectedUserId != null &&  cubit.selectedUserId.trim() != '')
+                    if (cubit.selectedUserId != null &&
+                        cubit.selectedUserId.trim() != '')
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 21),
-                        margin: EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 21),
+                        margin: const EdgeInsets.all(15.0),
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
@@ -126,12 +113,10 @@ class UserAccountScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(41),
                           color: Colors.white,
                         ),
-
                         child: Stack(
                           clipBehavior: Clip.none,
                           alignment: Alignment.topCenter,
                           children: [
-
                             SizedBox(
                               width: double.infinity,
                               child: Padding(
@@ -143,17 +128,26 @@ class UserAccountScreen extends StatelessWidget {
                                       height: 70,
                                     ),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Column (
-
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Text('اجمالي المبالغ',style: TextStyle(fontSize: 18,color: Colors.grey[600],fontWeight:FontWeight.w800)),
+                                                Text('اجمالي المبالغ',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.grey[600],
+                                                        fontWeight:
+                                                            FontWeight.w800)),
                                                 Row(
                                                   children: [
                                                     SvgPicture.asset(
@@ -162,46 +156,68 @@ class UserAccountScreen extends StatelessWidget {
                                                       width: 15,
                                                     ),
                                                     PrimaryText(
-                                                      text:cubit.getTotalCustomerOrdersPrice() ,
+                                                      text: cubit
+                                                          .getTotalCustomerOrdersPrice(),
                                                       size: 25,
-                                                      fontWeight: FontWeight.w700,
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                       color: Constants.tertiary,
                                                       height: 1,
                                                     ),
-
                                                   ],
                                                 ),
-
-
                                               ],
                                             ),
                                             InkWell(
-                                              onTap: (){
-                                                navigateTo(context, const CustomerOrdersScreen());
+                                              onTap: () {
+                                                navigateTo(context,
+                                                    const CustomerOrdersScreen());
                                               },
                                               child: Column(
-
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Text('عدد الطلبات',style: TextStyle(fontSize: 18,color: Colors.grey[600],fontWeight:FontWeight.w800)),
-
+                                                  Text('عدد الطلبات',
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color:
+                                                              Colors.grey[600],
+                                                          fontWeight:
+                                                              FontWeight.w800)),
                                                   PrimaryText(
-                                                    text:cubit.listAllOrders.where((element) => element.userMobile == cubit.selectedUserId).toList().length.toString()??0 ,
+                                                    text: cubit.listAllOrders
+                                                            .where((element) =>
+                                                                element.userMobile ==
+                                                                    cubit
+                                                                        .selectedUserId &&
+                                                                element.orderState
+                                                                        .toLowerCase() ==
+                                                                    'Done'
+                                                                        .toLowerCase())
+                                                            .toList()
+                                                            .length
+                                                            .toString() ??
+                                                        0,
                                                     size: 25,
                                                     fontWeight: FontWeight.w700,
                                                     color: Constants.tertiary,
                                                     height: 1,
                                                   ),
-
-
                                                 ],
                                               ),
                                             ),
                                             Column(
-
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Text('الرصيد الحالي',style: TextStyle(fontSize: 18,color: Colors.grey[600],fontWeight:FontWeight.w800)),
+                                                Text('الرصيد الحالي',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.grey[600],
+                                                        fontWeight:
+                                                            FontWeight.w800)),
                                                 // Text('20',style: TextStyle(fontSize: 22,color: Colors.blueAccent,fontWeight:FontWeight.w700 ),),
 
                                                 Row(
@@ -212,42 +228,64 @@ class UserAccountScreen extends StatelessWidget {
                                                       width: 15,
                                                     ),
                                                     PrimaryText(
-                                                      text:cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).currentBalance.toString()??'0' ,
+                                                      text: cubit
+                                                              .getUserBalance()
+                                                              .toString() ??
+                                                          '0',
                                                       size: 25,
-                                                      fontWeight: FontWeight.w700,
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                       color: Constants.tertiary,
                                                       height: 1,
                                                     ),
-
                                                   ],
                                                 ),
 
-                                                MaterialButton(color: Colors.green,onPressed: (){
-
-                                                  cubit.modalBottomSheetMenu(context);
-
-                                                },child: Text('+اضافة رصيد',style: const TextStyle(fontSize: 12,color: Colors.white,fontWeight:FontWeight.w800),))
-
+                                                MaterialButton(
+                                                    color: Colors.green,
+                                                    onPressed: () {
+                                                      cubit
+                                                          .modalBottomSheetMenu(
+                                                              context);
+                                                    },
+                                                    child: const Text(
+                                                      '+اضافة رصيد',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w800),
+                                                    ))
                                               ],
                                             ),
                                           ],
                                         ),
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 8),
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 8),
                                           child: Divider(color: Colors.grey),
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
                                           children: [
                                             Row(
                                               children: [
-                                                Text(cubit.selectedUserId??'',style: TextStyle(color: Colors.blueAccent,fontSize: 16),),
+                                                Text(
+                                                  cubit.selectedUserId ?? '',
+                                                  style: const TextStyle(
+                                                      color: Colors.blueAccent,
+                                                      fontSize: 16),
+                                                ),
                                                 const Text('  :  '),
-                                                Text('الموبيل',style: TextStyle(fontSize: 16,color: Colors.grey[600],fontWeight:FontWeight.w600)),
+                                                Text('الموبيل',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.grey[600],
+                                                        fontWeight:
+                                                            FontWeight.w600)),
                                               ],
                                             ),
-
-
                                           ],
                                         ),
                                         // Row(
@@ -261,57 +299,70 @@ class UserAccountScreen extends StatelessWidget {
                                         // ),
                                         const SizedBox(height: 25),
                                         Row(
-
-                                                   mainAxisAlignment: MainAxisAlignment.end,
-                                                   children: [
-                                                     Text(cubit.convertDateFormat(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).createdDate)??'',style: TextStyle(color: Colors.blueAccent,fontSize: 16),),
-
-                                                     Text(' : تاريخ الانضمام',style: TextStyle(fontSize: 15,color: Colors.grey[600],fontWeight:FontWeight.w600)),
-                                                   ],
-                                                 ),
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              cubit.convertDateFormat(cubit
+                                                      .listUser
+                                                      .firstWhere((element) =>
+                                                          element.mobile ==
+                                                          cubit.selectedUserId)
+                                                      .createdDate) ??
+                                                  '',
+                                              style: const TextStyle(
+                                                  color: Colors.blueAccent,
+                                                  fontSize: 16),
+                                            ),
+                                            Text(' : تاريخ الانضمام',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.grey[600],
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                          ],
+                                        ),
                                         const SizedBox(height: 20),
                                         Padding(
-                                          padding: const EdgeInsets.only(right: 10,top: 10),
+                                          padding: const EdgeInsets.only(
+                                              right: 10, top: 10),
                                           child: RoundedLoadingButton(
                                               width: 80,
                                               height: 40,
-
-                                              controller: cubit.callBtnController,
+                                              controller:
+                                                  cubit.callBtnController,
 
                                               // color: Colors.green,
                                               color: Colors.green,
-
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: const [
-
                                                   Icon(
                                                     Icons.call,
                                                     color: Colors.white,
                                                     size: 14,
                                                   ),
-                                                  SizedBox(width: 3,),
+                                                  SizedBox(
+                                                    width: 3,
+                                                  ),
                                                   Text(
                                                     "اتصال",
                                                     style: TextStyle(
                                                       fontSize: 15.0,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       color: Colors.white,
                                                     ),
                                                   ),
-
-
-
                                                 ],
                                               ),
                                               animateOnTap: false,
                                               onPressed: () {
-
-                                                launch(('tel://${cubit.selectedUserId}'));
-
+                                                launch(
+                                                    ('tel://${cubit.selectedUserId}'));
                                               }),
                                         ),
-
                                       ],
                                     )
                                   ],
@@ -320,24 +371,50 @@ class UserAccountScreen extends StatelessWidget {
                             ),
                             Positioned(
                               top: -80,
-                              child:  Column(
+                              child: Column(
                                 children: [
                                   CircleAvatar(
                                     radius: 54,
                                     backgroundColor: Colors.grey[200],
-                                    child:cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image != null && cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image.trim() != '' ? CircleAvatar(
-                                      radius: 50,
-
-                                      backgroundImage: NetworkImage(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).image),
-
-                                    ): const CircleAvatar(
-                                      radius: 60,
-                                      backgroundImage:AssetImage('assets/person.jpg'),
-
-                                    ),
+                                    child: cubit.listUser
+                                                    .firstWhere((element) =>
+                                                        element.mobile ==
+                                                        cubit.selectedUserId)
+                                                    .image !=
+                                                null &&
+                                            cubit.listUser
+                                                    .firstWhere((element) =>
+                                                        element.mobile ==
+                                                        cubit.selectedUserId)
+                                                    .image
+                                                    .trim() !=
+                                                ''
+                                        ? CircleAvatar(
+                                            radius: 50,
+                                            backgroundImage: NetworkImage(cubit
+                                                .listUser
+                                                .firstWhere((element) =>
+                                                    element.mobile ==
+                                                    cubit.selectedUserId)
+                                                .image),
+                                          )
+                                        : const CircleAvatar(
+                                            radius: 60,
+                                            backgroundImage:
+                                                AssetImage('assets/person.jpg'),
+                                          ),
                                   ),
                                   const SizedBox(height: 10),
-                                  Text(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName??'',style: const TextStyle(fontSize: 20,color: Colors.grey),)
+                                  Text(
+                                    cubit.listUser
+                                            .firstWhere((element) =>
+                                                element.mobile ==
+                                                cubit.selectedUserId)
+                                            .userName ??
+                                        '',
+                                    style: const TextStyle(
+                                        fontSize: 20, color: Colors.grey),
+                                  )
                                 ],
                               ),
                             ),
@@ -346,10 +423,10 @@ class UserAccountScreen extends StatelessWidget {
                       )
                   ],
                 ),
-
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 21),
-                  margin: EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 21),
+                  margin: const EdgeInsets.all(15.0),
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -364,11 +441,10 @@ class UserAccountScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: (){},
+                          onTap: () {},
                           child: Container(
                             padding: const EdgeInsets.all(5.0),
                             alignment: Alignment.center,
@@ -398,11 +474,10 @@ class UserAccountScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: (){},
+                          onTap: () {},
                           child: Container(
                             padding: const EdgeInsets.all(5.0),
                             alignment: Alignment.center,
@@ -432,11 +507,10 @@ class UserAccountScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: (){},
+                          onTap: () {},
                           child: Container(
                             padding: const EdgeInsets.all(5.0),
                             alignment: Alignment.center,
@@ -466,107 +540,184 @@ class UserAccountScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-
-
-
                     ],
                   ),
                 ),
-                if(cubit.selectedUserId != null &&  cubit.selectedUserId.trim() != '')
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 21),
-                  margin: const EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 5.0,
-                        color: Colors.grey[300],
-                        spreadRadius: 5.0,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(41),
-                    color: Colors.white,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Material(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 7.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  border: Border.all(color: Colors.blue),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: const Text(
-                                  "الكل",
-                                  style: TextStyle(color: Colors.blue),
+                if (cubit.selectedUserId != null &&
+                    cubit.selectedUserId.trim() != '')
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 21),
+                    margin: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 5.0,
+                          color: Colors.grey[300],
+                          spreadRadius: 5.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(41),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Material(
+                              child: InkWell(
+                                onTap: () {
+                                  if (cubit.isShowAllAccount) {
+                                    cubit.listUserAccount = cubit
+                                        .listUserAccountBase
+                                        .where((element) =>
+                                            element.customerMobile ==
+                                                cubit.selectedUserId &&
+                                            element.projectId ==
+                                                Global.projectId &&
+                                            cubit.convertDateFormat(
+                                                    element.createdDate) ==
+                                                cubit.convertDateFormat(
+                                                    DateTime.now().toString()))
+                                        .toList();
+                                  } else {
+                                    cubit.listUserAccount = cubit
+                                        .listUserAccountBase
+                                        .where((element) =>
+                                            element.customerMobile ==
+                                                cubit.selectedUserId &&
+                                            element.projectId ==
+                                                Global.projectId)
+                                        .toList();
+                                  }
+                                  cubit.emit(SelectCategoryState());
+                                  cubit.isShowAllAccount =
+                                      !cubit.isShowAllAccount;
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 13.0, vertical: 7.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    border: Border.all(color: Colors.blue),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: Text(
+                                    cubit.isShowAllAccount ? "الكل" : "اليوم",
+                                    style: const TextStyle(color: Colors.blue),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-
-                          const Text(
-                            "التعاملات",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-
-                      ListView.separated(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (context,index){
-                            var model = cubit.listUserAccount.where((element) => element.customerMobile == cubit.selectedUserId && element.projectId == Global.projectId).toList()[index];
-                            return  Material(
-                              color: Colors.transparent,
-                              child: ListTile(
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(cubit.listProject.firstWhere((element) => element.id == model.projectId).name??''),
-                                    Text('#رقم الطلب ${model.orderId}' ),
-
-                                  ],
-                                ),
-                                subtitle: Text(cubit.convertDateFormat(model.createdDate)??''),
-                                trailing:  model.credit == 0 ? Text("-\$ ${model.debit}"):  Text("+\$ ${model.credit}"),
-                                leading: CircleAvatar(
-                                  radius: 25,
-                                  child: Image.asset(
-                                    IconImgs.send,
-                                    height: 25,
-                                    width: 25,
-                                  ),
-                                  backgroundColor: IconColors.send,
-                                ),
-                                enabled: true,
-                                onTap: () {},
+                            const Padding(
+                              padding: EdgeInsets.only(right: 20),
+                              child: Text(
+                                "التعاملات",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
                               ),
-                            );
-                          },
-                          separatorBuilder: (context,index)=>SizedBox(height: 5),
-                          itemCount: cubit.listUserAccount.where((element) => element.customerMobile == cubit.selectedUserId && element.projectId == Global.projectId).toList().length??0
-                      )
-                    ],
-                  ),
-                )
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15.0,
+                        ),
+                        ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (context, index) {
+                              var model;
+                              if (cubit.isShowAllAccount) {
+                                model = cubit.listUserAccount
+                                    .where((element) =>
+                                        element.customerMobile ==
+                                            cubit.selectedUserId &&
+                                        element.projectId == Global.projectId)
+                                    .toList()[index];
+                              } else {
+                                model = cubit.listUserAccount
+                                    .where((element) =>
+                                        element.customerMobile ==
+                                            cubit.selectedUserId &&
+                                        element.projectId == Global.projectId &&
+                                        cubit.convertDateFormat(
+                                                element.createdDate) ==
+                                            cubit.convertDateFormat(
+                                                DateTime.now().toString()))
+                                    .toList()[index];
+                              }
 
+                              return Material(
+                                color: Colors.transparent,
+                                child: ListTile(
+                                  title: Text(cubit.listProject
+                                          .firstWhere((element) =>
+                                              element.id == model.projectId)
+                                          .name ??
+                                      ''),
+                                  subtitle: Text(cubit.convertDateFormat(
+                                          model.createdDate) ??
+                                      ''),
+                                  trailing: model.credit == 0
+                                      ? Text(
+                                          "-\$ ${model.debit}",
+                                          style: const TextStyle(
+                                              fontSize: 18, color: Colors.red),
+                                        )
+                                      : Text("+\$ ${model.credit}",
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.green)),
+                                  leading: CircleAvatar(
+                                    radius: 25,
+                                    child: Image.asset(
+                                      model.credit == 0
+                                          ? IconImgs.transfer
+                                          : IconImgs.send,
+                                      height: 25,
+                                      width: 25,
+                                    ),
+                                    backgroundColor: model.credit == 0
+                                        ? IconColors.transfer
+                                        : IconColors.send,
+                                  ),
+                                  enabled: true,
+                                  onTap: () {},
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 5),
+                            itemCount: cubit.isShowAllAccount
+                                ? cubit.listUserAccount
+                                    .where((element) =>
+                                        element.customerMobile ==
+                                            cubit.selectedUserId &&
+                                        element.projectId == Global.projectId)
+                                    .toList()
+                                    .length
+                                : cubit.listUserAccount
+                                    .where((element) =>
+                                        element.customerMobile ==
+                                            cubit.selectedUserId &&
+                                        element.projectId == Global.projectId &&
+                                        cubit.convertDateFormat(
+                                                element.createdDate) ==
+                                            cubit.convertDateFormat(
+                                                DateTime.now().toString()))
+                                    .toList()
+                                    .length)
+                      ],
+                    ),
+                  )
               ],
             ),
           ),
         );
       },
-      listener: (context,state){
-
-      },
+      listener: (context, state) {},
     );
   }
 }

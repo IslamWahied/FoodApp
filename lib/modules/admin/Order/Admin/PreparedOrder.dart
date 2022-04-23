@@ -1,14 +1,8 @@
 // @dart=2.9
-import 'package:backdrop/backdrop.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/admin/adminBackLayer.dart';
-import 'package:elomda/modules/user_info/user_info_screen.dart';
 import 'package:elomda/shared/Global.dart';
-import 'package:elomda/shared/components/Componant.dart';
-import 'package:elomda/shared/network/local/helper.dart';
-import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
@@ -24,22 +18,24 @@ class PreparedOrderScreen extends StatelessWidget {
     return BlocConsumer<HomeCubit, HomeState>(
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
-        var newOrderList = cubit.listAllOrders.where((element) => element.orderState.toLowerCase() == 'Prepared'.toLowerCase() && element.projectId == Global.projectId).toList();
-        print('newOrderList.length');
-        print(cubit.listAllOrders.length);
-        print('newOrderList.length');
+        var newOrderList = cubit.listAllOrders
+            .where((element) =>
+                element.orderState.toLowerCase() == 'Prepared'.toLowerCase() &&
+                element.projectId == Global.projectId)
+            .toList();
+
         return Scaffold(
           body: Center(
-            child:backdrop(
+            child: backdrop(
               context: context,
-              newOrderList:newOrderList,
+              newOrderList: newOrderList,
               backLayer: Conditional.single(
                 context: context,
                 conditionBuilder: (BuildContext context) => cubit.listAllOrders
                     .where((element) =>
-                element.orderState.toLowerCase() ==
-                    'Prepared'.toLowerCase() &&
-                    element.projectId == Global.projectId)
+                        element.orderState.toLowerCase() ==
+                            'Prepared'.toLowerCase() &&
+                        element.projectId == Global.projectId)
                     .toList()
                     .isNotEmpty,
                 widgetBuilder: (BuildContext context) {
@@ -66,15 +62,15 @@ class PreparedOrderScreen extends StatelessWidget {
                                   onPressed: (context) {
                                     cubit.listAllOrders
                                         .firstWhere((element) =>
-                                    element.orderId ==
-                                        orderModel.orderId &&
-                                        element.projectId ==
-                                            Global.projectId)
+                                            element.orderId ==
+                                                orderModel.orderId &&
+                                            element.projectId ==
+                                                Global.projectId)
                                         .orderState = 'Done';
                                     var x = cubit.listAllOrders.firstWhere(
-                                            (element) =>
-                                        element.orderId ==
-                                            orderModel.orderId &&
+                                        (element) =>
+                                            element.orderId ==
+                                                orderModel.orderId &&
                                             element.projectId ==
                                                 Global.projectId);
                                     cubit.updateOrderState(orderModel: x);
@@ -95,15 +91,15 @@ class PreparedOrderScreen extends StatelessWidget {
                                   onPressed: (context) {
                                     cubit.listAllOrders
                                         .firstWhere((element) =>
-                                    element.orderId ==
-                                        orderModel.orderId &&
-                                        element.projectId ==
-                                            Global.projectId)
+                                            element.orderId ==
+                                                orderModel.orderId &&
+                                            element.projectId ==
+                                                Global.projectId)
                                         .orderState = 'Canceled';
                                     var x = cubit.listAllOrders.firstWhere(
-                                            (element) =>
-                                        element.orderId ==
-                                            orderModel.orderId &&
+                                        (element) =>
+                                            element.orderId ==
+                                                orderModel.orderId &&
                                             element.projectId ==
                                                 Global.projectId);
                                     cubit.updateOrderState(orderModel: x);
@@ -130,11 +126,11 @@ class PreparedOrderScreen extends StatelessWidget {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: [
@@ -142,11 +138,11 @@ class PreparedOrderScreen extends StatelessWidget {
                                               Baseline(
                                                   baseline: 25.0,
                                                   baselineType:
-                                                  TextBaseline.alphabetic,
+                                                      TextBaseline.alphabetic,
                                                   child: Padding(
                                                     padding:
-                                                    const EdgeInsets.only(
-                                                        left: 3),
+                                                        const EdgeInsets.only(
+                                                            left: 3),
                                                     child: Text(
                                                         orderModel.departMent ??
                                                             '',
@@ -154,7 +150,7 @@ class PreparedOrderScreen extends StatelessWidget {
                                                           fontSize: 10,
                                                           color: Colors.grey,
                                                           fontWeight:
-                                                          FontWeight.w400,
+                                                              FontWeight.w400,
                                                           //    fontFamily: 'Raleway'
                                                           // fontFamily: 'Elshan'
                                                           // fontFamily: 'Elshan'
@@ -169,10 +165,10 @@ class PreparedOrderScreen extends StatelessWidget {
                                               color: Colors.orange,
                                               child: Center(
                                                   child: Text(
-                                                    'تحت التجهيز' ?? '',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  )),
+                                                'تحت التجهيز' ?? '',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )),
                                             ),
                                           ),
                                         ],
@@ -180,7 +176,7 @@ class PreparedOrderScreen extends StatelessWidget {
                                       const Divider(),
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: const [
@@ -198,7 +194,7 @@ class PreparedOrderScreen extends StatelessWidget {
                                           ),
                                           Text(
                                             cubit.convertDateFormat(
-                                                orderModel.createdDate) ??
+                                                    orderModel.createdDate) ??
                                                 '',
                                             style: TextStyle(
                                                 fontSize: 13.5,
@@ -211,7 +207,7 @@ class PreparedOrderScreen extends StatelessWidget {
                                       const Divider(),
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: [
@@ -223,7 +219,7 @@ class PreparedOrderScreen extends StatelessWidget {
                                               ),
                                               Text(
                                                 orderModel.orderPrice
-                                                    .toString() ??
+                                                        .toString() ??
                                                     '0',
                                                 style: const TextStyle(
                                                     fontSize: 17),
@@ -232,94 +228,96 @@ class PreparedOrderScreen extends StatelessWidget {
                                           ),
                                           TextButton(
                                               onPressed: () {
-                                                if(cubit.listUser.firstWhere((element) => element.mobile == Global.mobile).isActive){
+                                                if (cubit.listUser
+                                                    .firstWhere((element) =>
+                                                        element.mobile ==
+                                                        Global.mobile)
+                                                    .isActive) {
                                                   showDialog(
                                                       useSafeArea: true,
                                                       context: context,
                                                       builder:
                                                           (context) =>
-                                                          AlertDialog(
-                                                            content:
-                                                            SingleChildScrollView(
-                                                              child: Column(
-                                                                mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                                crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .end,
-                                                                children: [
-                                                                  Row(
+                                                              AlertDialog(
+                                                                content:
+                                                                    SingleChildScrollView(
+                                                                  child: Column(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
                                                                     crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                    mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                    children: const [
-                                                                      Text(
-                                                                        'تفاصيل الطلب',
-                                                                        style: TextStyle(
-                                                                            color: Colors.blue,
-                                                                            fontSize: 16),
+                                                                        CrossAxisAlignment
+                                                                            .end,
+                                                                    children: [
+                                                                      Row(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: const [
+                                                                          Text(
+                                                                            'تفاصيل الطلب',
+                                                                            style:
+                                                                                TextStyle(color: Colors.blue, fontSize: 16),
+                                                                          ),
+                                                                        ],
                                                                       ),
+                                                                      const SizedBox(
+                                                                        height:
+                                                                            10,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width: MediaQuery.of(context).size.width *
+                                                                            0.7,
+                                                                        height:
+                                                                            200,
+                                                                        child: ListView.separated(
+                                                                            itemBuilder: (context, index) =>
+                                                                                orderModelCard(orderModel.listItemModel[index], context),
+                                                                            separatorBuilder: (context, index) => const SizedBox(height: 10),
+                                                                            itemCount: orderModel.listItemModel.length),
+                                                                      ),
+                                                                      const Divider(),
+                                                                      TextButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                          child:
+                                                                              const Text(
+                                                                            'اغلاق',
+                                                                            style:
+                                                                                TextStyle(color: Colors.red),
+                                                                          ))
                                                                     ],
                                                                   ),
-                                                                  const SizedBox(
-                                                                    height:
-                                                                    10,
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: MediaQuery.of(context)
-                                                                        .size
-                                                                        .width *
-                                                                        0.7,
-                                                                    height:
-                                                                    200,
-                                                                    child: ListView.separated(
-                                                                        itemBuilder: (context, index) => orderModelCard(
-                                                                            orderModel.listItemModel[
-                                                                            index],
-                                                                            context),
-                                                                        separatorBuilder: (context, index) => const SizedBox(
-                                                                            height:
-                                                                            10),
-                                                                        itemCount: orderModel
-                                                                            .listItemModel
-                                                                            .length),
-                                                                  ),
-                                                                  const Divider(),
-                                                                  TextButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      },
-                                                                      child:
-                                                                      const Text(
-                                                                        'Close',
-                                                                        style:
-                                                                        TextStyle(color: Colors.red),
-                                                                      ))
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ));
+                                                                ),
+                                                              ));
+                                                } else {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                      const SnackBar(
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          content: Text(
+                                                            'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          30))),
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  20.0),
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  4000)));
                                                 }
-                                                else{
-                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                      backgroundColor: Colors.red,
-                                                      content: Text(
-                                                        'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
-                                                        textAlign: TextAlign.center,
-                                                      ),
-                                                      shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                                                      behavior: SnackBarBehavior.floating,
-                                                      padding: EdgeInsets.all(20.0),
-                                                      duration: Duration(milliseconds: 4000)));
-                                                }
-
                                               },
                                               child: const Text('التفاصيل'))
                                         ],
@@ -337,14 +335,11 @@ class PreparedOrderScreen extends StatelessWidget {
                 },
                 fallbackBuilder: (BuildContext context) => const Center(
                     child: Text(
-                      'لا يوجد طلبات',
-                      style: TextStyle(color: Colors.red, fontSize: 18),
-                    )),
+                  'لا يوجد طلبات',
+                  style: TextStyle(color: Colors.red, fontSize: 18),
+                )),
               ),
             ),
-
-
-
           ),
         );
       },

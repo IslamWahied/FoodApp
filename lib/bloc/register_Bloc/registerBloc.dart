@@ -11,18 +11,17 @@ import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/models/project/projectModel.dart';
 import 'package:elomda/models/user/user_model.dart';
 import 'package:elomda/modules/login/chooseAccountTypeScreen.dart';
-import 'package:elomda/modules/login/register_screen.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/shared/network/local/shared_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class RegisterCubit extends Cubit<RegisterState> {
   RegisterCubit() : super(RegisterInitState());
@@ -47,16 +46,18 @@ class RegisterCubit extends Cubit<RegisterState> {
         smsCode: textVerifiedCodeControl.text);
     signInWithPhoneAuthCredential(phoneAuthCredential, context);
   }
+
   List<UserModel> listUser = [];
   getUsers() async {
     FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
       listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
-      listUser.forEach((element) {print(element.toMap());});
+
       emit(Refersh());
     }).onError((handleError) {
       print(handleError);
     });
   }
+
   signInWithPhoneAuthCredential(phoneAuthCredential, context) async {
     try {
       final authCredential =
@@ -66,16 +67,12 @@ class RegisterCubit extends Cubit<RegisterState> {
 
         await Future.delayed(const Duration(seconds: 2));
 
-
-
-        bool isOldUser = listUser.any((element) => element.mobile == Global.mobile);
-
-
-
+        bool isOldUser =
+            listUser.any((element) => element.mobile == Global.mobile);
 
         if (isOldUser) {
-
-          var userModel = listUser.firstWhere((element) => element.mobile == LoginCubit.get(context).textMobileControl.text);
+          var userModel = listUser.firstWhere((element) =>
+              element.mobile == LoginCubit.get(context).textMobileControl.text);
 
           Global.userName = userModel.userName;
 
@@ -87,32 +84,24 @@ class RegisterCubit extends Cubit<RegisterState> {
 
           Global.departMent = userModel.departmentId;
 
-          if(userModel.isAdmin){
-
-            Global.projectId =  listProject.firstWhere((element) => element.adminMobile ==  Global.mobile).id;
-            Global.projectImageUrl =  listProject.firstWhere((element) => element.id ==  Global.projectId).image;
+          if (userModel.isAdmin) {
+            Global.projectId = listProject
+                .firstWhere((element) => element.adminMobile == Global.mobile)
+                .id;
+            Global.projectImageUrl = listProject
+                .firstWhere((element) => element.id == Global.projectId)
+                .image;
             await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
-
-
-
-
           }
 
-
-          if(Global.fireBaseToken != userModel.fireBaseToken){
-
-            if(userModel.fireBaseToken != Global.fireBaseToken){
+          if (Global.fireBaseToken != userModel.fireBaseToken) {
+            if (userModel.fireBaseToken != Global.fireBaseToken) {
               userModel.fireBaseToken = Global.fireBaseToken;
               FirebaseFirestore.instance
                   .collection('User')
                   .doc(Global.mobile)
                   .update(userModel.toMap())
-                  .then((value) async {
-
-
-              });
-
-
+                  .then((value) async {});
             }
           }
 
@@ -122,10 +111,8 @@ class RegisterCubit extends Cubit<RegisterState> {
           await CachHelper.SetData(key: 'imageUrl', value: userModel.image);
           await CachHelper.SetData(key: 'imageUrl', value: userModel.image);
           await CachHelper.SetData(key: 'userName', value: userModel.userName);
-          await CachHelper.SetData(key: 'departmentId', value: userModel.departmentId);
-
-
-
+          await CachHelper.SetData(
+              key: 'departmentId', value: userModel.departmentId);
 
           HomeCubit.get(context).currentIndex = 0;
           if (Global.isAdmin) {
@@ -139,7 +126,8 @@ class RegisterCubit extends Cubit<RegisterState> {
         }
       }
     } on FirebaseAuthException catch (e) {
-      if (e.message == 'The verification ID used to create the phone auth credential is invalid.') {
+      if (e.message ==
+          'The verification ID used to create the phone auth credential is invalid.') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             backgroundColor: Colors.red,
             content: Text(
@@ -166,10 +154,10 @@ class RegisterCubit extends Cubit<RegisterState> {
       }
     }
   }
-    bool isAdmin  =false;
+
+  bool isAdmin = false;
   File finalPickedUserImage;
   File finalPickedProjectImage;
-
 
   void uploadProjectPickImageCamera(context) async {
     final picker = ImagePicker();
@@ -190,7 +178,6 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(Refersh());
   }
 
-
   void uploadPickImageCamera(context) async {
     final picker = ImagePicker();
 
@@ -210,11 +197,8 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(Refersh());
   }
 
-
-
   UserModel userModel;
   Project projectModel;
-
 
   registerAndLoginUser(context) async {
     rgisterBtnController.start();
@@ -236,28 +220,22 @@ class RegisterCubit extends Cubit<RegisterState> {
         .doc(Global.mobile)
         .get()
         .then((value) async {
-
-
       userModel = UserModel.fromJson(value.data());
       Global.imageUrl = userModel.image;
       await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
       if (userModel.mobile != null) {
-
         rgisterBtnController.success();
         await Future.delayed(const Duration(seconds: 1));
         rgisterBtnController.reset();
         NavigatToAndReplace(context, const HomeLayout());
-
       } else {
         firebase_storage.FirebaseStorage.instance
             .ref()
             .child(
-            'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
+                'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
             .putFile(finalPickedUserImage)
             .then((value) {
           value.ref.getDownloadURL().then((value) async {
-
-
             UserModel model = UserModel(
               isActive: false,
               image: value,
@@ -282,7 +260,6 @@ class RegisterCubit extends Cubit<RegisterState> {
               NavigatToAndReplace(context, const HomeLayout());
             }).catchError((e) async {
               if (kDebugMode) {
-
                 rgisterBtnController.error();
                 await Future.delayed(const Duration(seconds: 1));
                 rgisterBtnController.reset();
@@ -293,14 +270,10 @@ class RegisterCubit extends Cubit<RegisterState> {
         });
       }
     }).catchError((error) {
-
-
-
-
       firebase_storage.FirebaseStorage.instance
           .ref()
           .child(
-          'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
+              'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
           .putFile(finalPickedUserImage)
           .then((value) {
         value.ref.getDownloadURL().then((value) async {
@@ -338,10 +311,13 @@ class RegisterCubit extends Cubit<RegisterState> {
       });
     });
   }
+
   registerAndLoginAdmin(context) async {
     rgisterBtnController.start();
     Global.userName = txtRegisterUserNameControl.text;
-    Global.departMent = HomeCubit.get(context).departMentList.indexWhere((element) => element == departMentSelectedName);
+    Global.departMent = HomeCubit.get(context)
+        .departMentList
+        .indexWhere((element) => element == departMentSelectedName);
     Global.isAdmin = true;
 
     await CachHelper.SetData(key: 'mobile', value: Global.mobile);
@@ -351,9 +327,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     await CachHelper.SetData(key: 'isUserLogin', value: true);
     await CachHelper.SetData(key: 'isAdmin', value: true);
 
-
     // Upload User
-
 
     FirebaseFirestore.instance
         .collection('User')
@@ -363,18 +337,13 @@ class RegisterCubit extends Cubit<RegisterState> {
       userModel = UserModel.fromJson(value.data());
 
       if (userModel.mobile != null) {
-
         Global.imageUrl = userModel.image;
         await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
-
-
-
-
       } else {
         firebase_storage.FirebaseStorage.instance
             .ref()
             .child(
-            'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
+                'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
             .putFile(finalPickedUserImage)
             .then((value) {
           value.ref.getDownloadURL().then((value) async {
@@ -395,15 +364,9 @@ class RegisterCubit extends Cubit<RegisterState> {
                 .collection('User')
                 .doc(Global.mobile)
                 .set(model.toMap())
-                .then((value) async {
-
-
-            }).catchError((e) async {
+                .then((value) async {})
+                .catchError((e) async {
               if (kDebugMode) {
-
-
-
-
                 print(e);
               }
             });
@@ -414,7 +377,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       firebase_storage.FirebaseStorage.instance
           .ref()
           .child(
-          'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
+              'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
           .putFile(finalPickedUserImage)
           .then((value) {
         value.ref.getDownloadURL().then((value) async {
@@ -435,18 +398,13 @@ class RegisterCubit extends Cubit<RegisterState> {
               .collection('User')
               .doc(Global.mobile)
               .set(model.toMap())
-              .then((value) async {
-
-          }).catchError((e) async {
-            if (kDebugMode) {
-
-            }
+              .then((value) async {})
+              .catchError((e) async {
+            if (kDebugMode) {}
           });
         });
       });
     });
-
-
 
     // Upload Project
     FirebaseFirestore.instance
@@ -454,7 +412,6 @@ class RegisterCubit extends Cubit<RegisterState> {
         .doc(txtProjectMobileControl.text)
         .get()
         .then((value) async {
-
       if (value.data() != null) {
         projectModel = Project.fromJson(value.data());
 
@@ -462,7 +419,8 @@ class RegisterCubit extends Cubit<RegisterState> {
         Global.projectId = projectModel.id;
         await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
 
-        await CachHelper.SetData(key: 'ProjectImageUrl', value: Global.projectImageUrl);
+        await CachHelper.SetData(
+            key: 'ProjectImageUrl', value: Global.projectImageUrl);
 
         rgisterBtnController.success();
         await Future.delayed(const Duration(seconds: 1));
@@ -470,31 +428,26 @@ class RegisterCubit extends Cubit<RegisterState> {
 
         Global.isAdmin = true;
         NavigatToAndReplace(context, const HomeLayout());
-
       } else {
-
         firebase_storage.FirebaseStorage.instance
             .ref()
             .child(
-            'Project/${Uri.file(finalPickedProjectImage.path).pathSegments.last}')
+                'Project/${Uri.file(finalPickedProjectImage.path).pathSegments.last}')
             .putFile(finalPickedProjectImage)
             .then((value) {
-
           value.ref.getDownloadURL().then((value) async {
-
             Global.projectImageUrl = value;
             Project model = Project(
                 isActive: false,
                 image: value,
-
                 createdDate: DateTime.now().toString(),
                 adminMobile: Global.mobile,
-                id:  1,
+                id: 1,
                 name: txtRegisterProjectNameControl.text,
-                projectMobile: txtProjectMobileControl.text
-            );
+                projectMobile: txtProjectMobileControl.text);
 
-            await CachHelper.SetData(key: 'ProjectImageUrl', value: Global.projectImageUrl);
+            await CachHelper.SetData(
+                key: 'ProjectImageUrl', value: Global.projectImageUrl);
             Global.projectId = 1;
             await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
             FirebaseFirestore.instance
@@ -509,7 +462,6 @@ class RegisterCubit extends Cubit<RegisterState> {
               NavigatToAndReplace(context, const HomeLayout());
             }).catchError((e) async {
               if (kDebugMode) {
-
                 rgisterBtnController.error();
                 await Future.delayed(const Duration(seconds: 1));
                 rgisterBtnController.reset();
@@ -525,23 +477,22 @@ class RegisterCubit extends Cubit<RegisterState> {
       firebase_storage.FirebaseStorage.instance
           .ref()
           .child(
-          'Project/${Uri.file(finalPickedProjectImage.path).pathSegments.last}')
+              'Project/${Uri.file(finalPickedProjectImage.path).pathSegments.last}')
           .putFile(finalPickedProjectImage)
           .then((value) {
         value.ref.getDownloadURL().then((value) async {
           Project model = Project(
               isActive: false,
               image: value,
-
               createdDate: DateTime.now().toString(),
               adminMobile: Global.mobile,
               id: listProject.length + 1,
               name: txtRegisterProjectNameControl.text,
-              projectMobile: txtProjectMobileControl.text
-          );
+              projectMobile: txtProjectMobileControl.text);
           Global.projectId = listProject.length + 1;
           await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
-          await CachHelper.SetData(key: 'ProjectImageUrl', value: Global.projectImageUrl);
+          await CachHelper.SetData(
+              key: 'ProjectImageUrl', value: Global.projectImageUrl);
           FirebaseFirestore.instance
               .collection('Projects')
               .doc(Global.mobile)
@@ -557,9 +508,6 @@ class RegisterCubit extends Cubit<RegisterState> {
       });
     });
   }
-
-
-
 
   //
   // List<UserModel> listUser = [];
@@ -588,8 +536,8 @@ class RegisterCubit extends Cubit<RegisterState> {
     });
   }
 
-
-  RoundedLoadingButtonController rgisterBtnController = RoundedLoadingButtonController();
+  RoundedLoadingButtonController rgisterBtnController =
+      RoundedLoadingButtonController();
   void removeUploadImage(context) {
     finalPickedUserImage = null;
     changeRegisterValidState();
@@ -602,16 +550,18 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(Refersh());
   }
 
-
   TextEditingController txtRegisterUserNameControl = TextEditingController();
   TextEditingController txtRegisterProjectNameControl = TextEditingController();
   bool registerValid = false;
 
   changeRegisterValidState() {
-    if (isAdmin && txtRegisterUserNameControl.text.trim() != '' && txtRegisterUserNameControl.text.trim() != '' &&
-        finalPickedUserImage != null &&  finalPickedProjectImage != null
-        && txtProjectMobileControl.text.trim() != '' && txtProjectMobileControl.text != null
-    ) {
+    if (isAdmin &&
+        txtRegisterUserNameControl.text.trim() != '' &&
+        txtRegisterUserNameControl.text.trim() != '' &&
+        finalPickedUserImage != null &&
+        finalPickedProjectImage != null &&
+        txtProjectMobileControl.text.trim() != '' &&
+        txtProjectMobileControl.text != null) {
       registerValid = true;
     } else if (!isAdmin && txtRegisterUserNameControl.text.trim() != '') {
       registerValid = true;
@@ -621,6 +571,7 @@ class RegisterCubit extends Cubit<RegisterState> {
 
     emit(Refersh());
   }
+
   resendActivationCode(context) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '+2' + LoginCubit.get(context).textMobileControl.text,

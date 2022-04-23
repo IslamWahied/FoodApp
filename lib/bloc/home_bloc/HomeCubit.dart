@@ -234,23 +234,40 @@ class HomeCubit extends Cubit<HomeState> {
 
   void updateCustomerBalance({BuildContext context}) {
     Navigator.pop(context);
-    UserModel model =
-        listUser.firstWhere((element) => element.mobile == selectedUserId);
-    double newBalance =
-        model.currentBalance + double.parse(txtUpdateCustomerBalance.text);
-    model.currentBalance = newBalance;
+
+    double newBalance = double.parse(txtUpdateCustomerBalance.text);
+
+    UserAccount model = UserAccount(
+        createdByMobile: Global.mobile,
+        createdDate: DateTime.now().toString(),
+        customerMobile: selectedUserId,
+        isDeleted: false,
+        projectId: Global.projectId,
+        credit: newBalance.toInt(),
+        debit: 0,
+        orderId: 0);
+
+    var userAccountId = listUserAccount
+        .where((element) => element.projectId == Global.projectId)
+        .length;
+
+    if (userAccountId == 0) {
+      userAccountId = 1;
+    } else {
+      userAccountId = userAccountId + 1;
+    }
 
     FirebaseFirestore.instance
-        .collection('User')
-        .doc(selectedUserId)
-        .update(model.toMap())
+        .collection('UserAccount')
+        .doc(userAccountId.toString())
+        .set(model.toMap())
         .then((value) {
       sendNotificationToUserByToken(
           userToken: listUser
               .firstWhere((element) => element.mobile == selectedUserId)
               .fireBaseToken,
           messageBody:
-              'تم اضافة ${double.parse(txtUpdateCustomerBalance.text)} جنية الي حسابك رصيد حسابك الان  ${newBalance} ',
+              '   تم اضافة ${double.parse(txtUpdateCustomerBalance.text)} جنية الي حسابك رصيد حسابك الان  ${getUserBalance().toString()} لدي ${listProject.firstWhere((element) => element.id == Global.projectId).name}',
           messageTitle:
               ' اضافة ${txtUpdateCustomerBalance.text + ' ' + ' جنية '}في المحفظة ');
 
@@ -300,8 +317,6 @@ class HomeCubit extends Cubit<HomeState> {
 
   List<ItemModel> listItems = [];
 
-
-
   List<ItemModel> popularList = [];
 
   List<ItemModel> listItemsSearch = [];
@@ -321,15 +336,20 @@ class HomeCubit extends Cubit<HomeState> {
   var top = 0.0;
 
   String getTotalCustomerOrdersPrice() {
-    double total = 0;
-    listAllOrders
-        .where((element) => element.userMobile == selectedUserId)
-        .forEach((element2) {
-      total += element2.orderPrice;
+    double debit = 0;
+
+    listUserAccount
+        .where((element) => element.customerMobile == selectedUserId)
+        .forEach((element) {
+      if (element.debit != 0) {
+        debit += element.debit;
+      }
     });
-    return total.toString();
+
+    return (debit).toString();
   }
 
+  bool isShowAllAccount = false;
   getOrders() async {
     FirebaseFirestore.instance.collection('Orders').snapshots().listen((event) {
       var x1 = listAllOrders
@@ -338,13 +358,15 @@ class HomeCubit extends Cubit<HomeState> {
               .length ??
           0;
 
-      listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
-      listAllOrders.forEach((element) {print(element.toJson());});
+      listAllOrders =
+          event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
+      listAllOrders.forEach((element) {});
       var x2 = listAllOrders
               .where((element) =>
                   element.orderState.toLowerCase() == 'New'.toLowerCase())
               .length ??
           0;
+
       if ((x1 < x2) && Global.isAdmin) {
         AssetsAudioPlayer.playAndForget(
           Audio("assets/audios/messages.mp3"),
@@ -431,9 +453,6 @@ class HomeCubit extends Cubit<HomeState> {
             isDeleted: 0,
             orderCount: listOrder.length ?? 0);
 
-
-
-
         FirebaseFirestore.instance
             .collection('Orders')
             .doc(orderId.toString())
@@ -447,7 +466,7 @@ class HomeCubit extends Cubit<HomeState> {
             for (var element in listUser) {
               if (element.isAdmin &&
                   listProject.any((element2) =>
-                  element2.adminMobile == element.mobile &&
+                      element2.adminMobile == element.mobile &&
                       element2.id == Global.projectId)) {
                 sendNotificationToUserByToken(
                     messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
@@ -605,60 +624,34 @@ class HomeCubit extends Cubit<HomeState> {
         .doc(orderModel.orderId.toString())
         .update(orderModel.toJson())
         .then((value) {
+      UserAccount model = UserAccount(
+          createdByMobile: Global.mobile,
+          createdDate: DateTime.now().toString(),
+          customerMobile: orderModel.userMobile,
+          isDeleted: false,
+          projectId: orderModel.projectId,
+          credit: 0,
+          debit: orderModel.orderPrice.toInt(),
+          orderId: orderModel.orderId);
 
-UserAccount model = UserAccount(
-  createdByMobile: Global.mobile,
-  createdDate: DateTime.now().toString(),
-  customerMobile: orderModel.userMobile,
-  isDeleted: false,
-  projectId: orderModel.projectId,
-  credit: 0,
-  debit:orderModel.orderPrice ,
-  orderId: orderModel.orderId
+      if (orderModel.orderState.toLowerCase() == 'Prepared'.toLowerCase()) {
+        var userAccountId = listUserAccount
+            .where((element) => element.projectId == Global.projectId)
+            .length;
 
-);
+        if (userAccountId == 0) {
+          userAccountId = 1;
+        } else {
+          userAccountId = userAccountId + 1;
+        }
 
-var userAccountId  = listUserAccount.where((element) => element.projectId == Global.projectId ).length;
-
-if(userAccountId == 0)
-  {
-    userAccountId = 1;
-  }
-else{
-  userAccountId = userAccountId + 1;
-}
-      FirebaseFirestore.instance
-          .collection('UserAccount')
-          .doc(orderModel.projectId.toString()).collection(userAccountId.toString()).doc()
-          .set(model.toMap()).then((value) {
-
-      }).catchError((onError){});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    })
-        .catchError((onError) {
-      FirebaseFirestore.instance
-          .collection('Orders')
-          .doc(orderModel.orderId.toString())
-          .set(orderModel.toJson())
-          .then((value) {})
-          .catchError(onError);
-    });
-
-
-
+        FirebaseFirestore.instance
+            .collection('UserAccount')
+            .doc(userAccountId.toString())
+            .set(model.toMap())
+            .then((value) {});
+      }
+    }).catchError((onError) {});
   }
 
   getTotalPrice() {
@@ -681,6 +674,22 @@ else{
     }
 
     return orderPrice.toString();
+  }
+
+  String getUserBalance() {
+    double debit = 0;
+    double credit = 0;
+    listUserAccount
+        .where((element) => element.customerMobile == selectedUserId)
+        .forEach((element) {
+      if (element.debit != 0) {
+        debit += element.debit;
+      } else {
+        credit += element.credit;
+      }
+    });
+
+    return (credit - debit).toString();
   }
 
   addNewItemToCartFromItemScreen({itemId, orderCount}) {
@@ -720,18 +729,10 @@ else{
   }
 
   addItemToCart(
-      {
-         
-       int orderCount,
-        ItemModel itemModel,
-        bool isFavourit,
-      BuildContext  context
-        
-        
-        
-        
-      }) {
-   
+      {int orderCount,
+      ItemModel itemModel,
+      bool isFavourit,
+      BuildContext context}) {
     var model = ItemModel(
       orderCount: orderCount,
       orderState: 'New',
@@ -807,9 +808,9 @@ else{
     emit(SearchSubCategoryState());
   }
 
-  addNewItemToCartFromSearchScreen({itemId, orderCount,context}) {
-    var newList = listItemsSearch.firstWhere((element) =>
-    element.itemId == itemId );
+  addNewItemToCartFromSearchScreen({itemId, orderCount, context}) {
+    var newList =
+        listItemsSearch.firstWhere((element) => element.itemId == itemId);
 
     var model = ItemModel(
       orderCount: orderCount,
@@ -831,9 +832,9 @@ else{
       supCategoryId: newList.supCategoryId,
       supCategoryTitle: newList.supCategoryTitle,
       isFavourite: listFavourite.any((element) =>
-      element.ItemId == itemId &&
-          element.UesrMobile == Global.mobile &&
-          element.projectId == Global.projectId)
+              element.ItemId == itemId &&
+              element.UesrMobile == Global.mobile &&
+              element.projectId == Global.projectId)
           ? true
           : false ?? false,
       userMobile: Global.mobile,
@@ -905,19 +906,28 @@ else{
     });
   }
 
-List<UserAccount> listUserAccount = [];
+  List<UserAccount> listUserAccountBase = [];
+  List<UserAccount> listUserAccount = [];
+
   getUsersAccount() async {
+    try {
+      FirebaseFirestore.instance
+          .collection('UserAccount')
+          .orderBy('createdDate')
+          .snapshots()
+          .listen((event) {
+        listUserAccount =
+            event.docs.map((x) => UserAccount.fromJson(x.data())).toList();
 
+        listUserAccountBase = listUserAccount;
 
-
-    FirebaseFirestore.instance.collection('UserAccount').snapshots().listen((event) {
-
-      listUserAccount = event.docs.map((x) => UserAccount.fromJson(x.data())).toList();
-
-
-
-      emit(SelectCategoryState());
-    });
+        emit(SelectCategoryState());
+      }).onError((handleError) {
+        print(handleError);
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   List<AdditionsModel> listOfSelectedAdditions = [];
@@ -938,7 +948,7 @@ List<UserAccount> listUserAccount = [];
   changeItemFavouriteState({bool isFavourite = false, ItemModel itemModel}) {
     FavouritModel model = FavouritModel(
         isFavourit: !isFavourite,
-        ItemId:itemModel.itemId,
+        ItemId: itemModel.itemId,
         UesrMobile: Global.mobile,
         projectId: Global.projectId);
 
@@ -1046,7 +1056,10 @@ List<UserAccount> listUserAccount = [];
   searchInItems(String value) {
     if (value.trim() != '') {
       listItemsSearch = listItems
-          .where((element) => element.itemTitle.contains(value) || element.categoryTitle.contains(value) || element.supCategoryTitle.contains(value)  )
+          .where((element) =>
+              element.itemTitle.contains(value) ||
+              element.categoryTitle.contains(value) ||
+              element.supCategoryTitle.contains(value))
           .toList();
     } else {
       listItemsSearch = listItems;
@@ -1058,7 +1071,11 @@ List<UserAccount> listUserAccount = [];
   searchInItemsBySupCategory(String value) {
     if (value.trim() != '') {
       listItemsBySubCategSearch = listItems
-          .where((element) => element.categoryId == selectedCategoryId && element.supCategoryId == selectedSubCategoryId  && element.projectId == Global.projectId && element.itemTitle.contains(value) )
+          .where((element) =>
+              element.categoryId == selectedCategoryId &&
+              element.supCategoryId == selectedSubCategoryId &&
+              element.projectId == Global.projectId &&
+              element.itemTitle.contains(value))
           .toList();
     } else {
       listItemsBySubCategSearch = listItems;
@@ -1066,7 +1083,6 @@ List<UserAccount> listUserAccount = [];
 
     emit(SearchSubCategoryState());
   }
-
 
   searchInFavourite(String value) {
     if (value.trim() != '') {
@@ -1106,7 +1122,8 @@ List<UserAccount> listUserAccount = [];
         .then((value) {});
   }
 
-  sendNotificationToUserByToken({String messageTitle, String messageBody, String userToken}) {
+  sendNotificationToUserByToken(
+      {String messageTitle, String messageBody, String userToken}) {
     // print(messageTitle);
     // print(messageBody);
     // print(userToken);
@@ -1149,8 +1166,10 @@ List<UserAccount> listUserAccount = [];
     emit(SelectCategoryState());
   }
 
-  RoundedLoadingButtonController sendNotifactionBtnController = RoundedLoadingButtonController();
-  RoundedLoadingButtonController callBtnController = RoundedLoadingButtonController();
+  RoundedLoadingButtonController sendNotifactionBtnController =
+      RoundedLoadingButtonController();
+  RoundedLoadingButtonController callBtnController =
+      RoundedLoadingButtonController();
 
   List ingredients = [
     {
@@ -1194,7 +1213,7 @@ List<UserAccount> listUserAccount = [];
     await CachHelper.SetData(key: 'imageUrl', value: '');
     await CachHelper.SetData(key: 'userName', value: '');
     await CachHelper.SetData(key: 'departmentId', value: 0);
-    Global.isAdmin  = false;
+    Global.isAdmin = false;
     currentIndex = 0;
     NavigatToAndReplace(context, const LoginScreen());
   }

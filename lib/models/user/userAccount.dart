@@ -1,21 +1,16 @@
 // @dart=2.9
-class UserAccount
-{
 
+class UserAccount {
   int orderId;
   int projectId;
   String customerMobile;
-  double debit;
-  double credit;
+  int debit;
+  int credit;
   String createdDate;
   String createdByMobile;
   bool isDeleted;
 
-
-
-
   UserAccount({
-
     this.orderId,
     this.projectId,
     this.customerMobile,
@@ -24,36 +19,29 @@ class UserAccount
     this.createdDate,
     this.createdByMobile,
     this.isDeleted,
-
   });
 
-  UserAccount.fromJson(Map<String, dynamic> json)
-  {
-
+  UserAccount.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
     projectId = json['projectId'];
     customerMobile = json['customerMobile'];
-    debit = json['debit'].toDouble();
+    debit = json['debit'];
     credit = json['credit'];
     createdDate = json['createdDate'];
-    createdByMobile = json['createdByMobile']??'';
-    isDeleted = json['isDeleted']??'';
-
+    createdByMobile = json['createdByMobile'] ?? '';
+    isDeleted = json['isDeleted'] ?? false;
   }
 
-  Map<String, dynamic> toMap()
-  {
+  Map<String, dynamic> toMap() {
     return {
-
-      'orderId':orderId,
-      'projectId':projectId,
-      'customerMobile':customerMobile,
-      'debit':debit,
-      'credit':credit,
-      'createdDate':createdDate??'',
-      'createdByMobile':createdByMobile,
-      'isDeleted':createdDate,
-
+      'orderId': orderId,
+      'projectId': projectId,
+      'customerMobile': customerMobile,
+      'debit': debit,
+      'credit': credit,
+      'createdDate': createdDate ?? '',
+      'createdByMobile': createdByMobile,
+      'isDeleted': isDeleted,
     };
   }
 }

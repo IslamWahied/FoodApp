@@ -32,24 +32,35 @@ class CustomerOrdersScreen extends StatelessWidget {
                 leadingWidth: 0,
                 iconTheme: const IconThemeData(color: Constants.black),
                 title: customAppBar(
-                    context: context,
-                    title:
-                        '${cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).userName ?? 'العميل'}  طلبات  ',
-                    isShowCarShop: false),
+                    context: context, title: 'الطلبات', isShowCarShop: false),
               ),
               body: Conditional.single(
                 context: context,
                 conditionBuilder: (BuildContext context) => cubit.listAllOrders
-                    .where(
-                        (element) => element.userMobile == cubit.selectedUserId)
+                    .where((element) =>
+                        element.userMobile == cubit.selectedUserId &&
+                        element.orderState.toLowerCase() ==
+                            "Done".toLowerCase())
                     .toList()
                     .isNotEmpty,
                 widgetBuilder: (BuildContext context) {
                   return ListView.separated(
                     separatorBuilder: (context, index) => const SizedBox(),
-                    itemCount: newOrderList.length,
+                    itemCount: cubit.listAllOrders
+                            .where((element) =>
+                                element.userMobile == cubit.selectedUserId &&
+                                element.orderState.toLowerCase() ==
+                                    "Done".toLowerCase())
+                            .toList()
+                            .length ??
+                        0,
                     itemBuilder: (context, index) {
-                      var orderModel = newOrderList[index];
+                      var orderModel = cubit.listAllOrders
+                          .where((element) =>
+                              element.userMobile == cubit.selectedUserId &&
+                              element.orderState.toLowerCase() ==
+                                  "Done".toLowerCase())
+                          .toList()[index];
 
                       return StatefulBuilder(builder: (context, setState) {
                         return Slidable(
@@ -102,10 +113,14 @@ class CustomerOrdersScreen extends StatelessWidget {
                                             width: 80,
                                             height: 30,
                                             child: Card(
-                                              color: Colors.red,
+                                              color: cubit.orderStateColor(
+                                                  orderModel.orderState),
                                               child: Center(
                                                   child: Text(
-                                                orderModel.orderState ?? '',
+                                                cubit.orderStateArabic(
+                                                        orderModel
+                                                            .orderState) ??
+                                                    '',
                                                 style: const TextStyle(
                                                     color: Colors.white),
                                               )),
@@ -119,16 +134,19 @@ class CustomerOrdersScreen extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
-                                            children: const [
-                                              Text(
-                                                'OrderCount : ',
+                                            children: [
+                                              const Text(
+                                                'عدد العناصر : ',
                                                 style: TextStyle(
                                                     color: Colors.blue,
                                                     fontSize: 17),
                                               ),
                                               Text(
-                                                '20',
-                                                style: TextStyle(fontSize: 17),
+                                                orderModel.orderCount
+                                                        .toString() ??
+                                                    '0',
+                                                style: const TextStyle(
+                                                    fontSize: 17),
                                               )
                                             ],
                                           ),

@@ -1,23 +1,19 @@
 //@dart=2.9
 import 'dart:async';
-import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
-import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/models/project/projectModel.dart';
 import 'package:elomda/models/user/user_model.dart';
 import 'package:elomda/modules/login/activationCodeScreen.dart';
-
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/network/local/helper.dart';
-import 'package:elomda/shared/network/local/shared_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+
 import 'loginState.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -30,12 +26,13 @@ class LoginCubit extends Cubit<LoginState> {
   bool isAdmin = false;
 
   final GlobalKey<ScaffoldState> scaffoldLoginKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<ScaffoldState> scaffoldVerifiedKey = GlobalKey<ScaffoldState>();
-  RoundedLoadingButtonController loginBtnController = RoundedLoadingButtonController();
-  RoundedLoadingButtonController verifiedBtnController = RoundedLoadingButtonController();
+  final GlobalKey<ScaffoldState> scaffoldVerifiedKey =
+      GlobalKey<ScaffoldState>();
+  RoundedLoadingButtonController loginBtnController =
+      RoundedLoadingButtonController();
+  RoundedLoadingButtonController verifiedBtnController =
+      RoundedLoadingButtonController();
   TextEditingController textMobileControl = TextEditingController();
-
-
 
   String verificationCode = '';
   resendActivationCode(context) async {
@@ -54,8 +51,11 @@ class LoginCubit extends Cubit<LoginState> {
 
   getActivationCode(context) async {
     FocusManager.instance.primaryFocus?.unfocus();
-    if ((Global.mobile != textMobileControl.text || verificationCode == null || verificationCode.trim() == '') && textMobileControl.text.trim() != '' && textMobileControl.text != null)
-    {
+    if ((Global.mobile != textMobileControl.text ||
+            verificationCode == null ||
+            verificationCode.trim() == '') &&
+        textMobileControl.text.trim() != '' &&
+        textMobileControl.text != null) {
       loginBtnController.start();
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: '+2' + textMobileControl.text,
@@ -69,10 +69,12 @@ class LoginCubit extends Cubit<LoginState> {
           loginBtnController.error();
           loginBtnController.reset();
 
-          if (e.message == 'We have blocked all requests from this device due to unusual activity. Try again later.') {
-            emit(LoginErrorState(' لقد حظرنا جميع الطلبات الواردة من هذا الجهاز نظرًا\n ! لوجود نشاط غير معتاد حاول مرة أخرى في وقت لاحق'));
+          if (e.message ==
+              'We have blocked all requests from this device due to unusual activity. Try again later.') {
+            emit(LoginErrorState(
+                ' لقد حظرنا جميع الطلبات الواردة من هذا الجهاز نظرًا\n ! لوجود نشاط غير معتاد حاول مرة أخرى في وقت لاحق'));
           } else {
-            emit(LoginErrorState(e.message??e.code));
+            emit(LoginErrorState(e.message ?? e.code));
           }
         },
         codeSent: (String verificationId, int resendToken) {
@@ -88,12 +90,13 @@ class LoginCubit extends Cubit<LoginState> {
         },
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
-    }
-    else if (textMobileControl.text.trim() != '' && textMobileControl.text != null && Global.mobile == textMobileControl.text) {
-
+    } else if (textMobileControl.text.trim() != '' &&
+        textMobileControl.text != null &&
+        Global.mobile == textMobileControl.text) {
       navigatTo(context, const ActivationCodeScreen());
     }
   }
+
   StreamController<ErrorAnimationType> errorController =
       StreamController<ErrorAnimationType>();
 
@@ -108,23 +111,11 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginSuccessState());
   }
 
-
-
-
-
-
-
-
-
   restLoginCubit() {
-
     textMobileControl.text = '';
-
 
     verifiedIsValid = false;
     isValid = false;
-
-
 
     emit(ChangeInScreenState());
   }
@@ -140,18 +131,11 @@ class LoginCubit extends Cubit<LoginState> {
         .then((value) {
       userModel = UserModel.fromJson(value.data());
 
-      if (kDebugMode) {
-        print(value.data());
-      }
+      if (kDebugMode) {}
     }).catchError((error) {
       if (kDebugMode) {
         print(error);
       }
     });
   }
-
-
-
-
-
 }
