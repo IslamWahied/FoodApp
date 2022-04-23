@@ -23,7 +23,7 @@ class ShopScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = HomeCubit.get(context);
@@ -293,7 +293,8 @@ Widget itemCard(
                                 onTap: () {
                                   HomeCubit.get(context)
                                       .changeItemFavouriteState(
-                                          itemId: itemId,
+                                    itemModel: HomeCubit.get(context).listOrder[index] ,
+
                                           isFavourite: isFavourite);
                                 },
                                 child: isFavourite
@@ -497,7 +498,7 @@ class _TabsInTicketState extends State<TabsInCartScreen>
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) => {},
         builder: (context, state) {
           var cubit = HomeCubit.get(context);

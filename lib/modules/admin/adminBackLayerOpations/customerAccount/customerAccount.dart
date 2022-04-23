@@ -19,7 +19,7 @@ class CustomerAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea (
-      child: BlocConsumer<HomeCubit,HomeScreenState>(
+      child: BlocConsumer<HomeCubit,HomeState>(
         builder: (context,state){
           var cubit = HomeCubit.get(context);
           return Scaffold(

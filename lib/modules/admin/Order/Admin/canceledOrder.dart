@@ -2,11 +2,13 @@
 import 'package:backdrop/backdrop.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/modules/admin/adminBackLayer.dart';
 import 'package:elomda/modules/user_info/user_info_screen.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
+import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,7 @@ class CancelOrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         var newOrderList = cubit.listAllOrders
@@ -38,7 +40,7 @@ class CancelOrderScreen extends StatelessWidget {
                 cubit.isShowBackLayer = false;
                 cubit.emit(SelectCategoryState());
               },
-              frontLayerBackgroundColor: Constants.white,
+              frontLayerBackgroundColor: Constants.lighterGray,
               headerHeight: MediaQuery.of(context).size.height * 0.35,
               appBar: BackdropAppBar(
                 title: Text(cubit.selectedTab),
@@ -53,45 +55,29 @@ class CancelOrderScreen extends StatelessWidget {
                 ),
                 actions: [
                   cubit.isShowBackLayer
-                      ? IconButton(
-                          onPressed: () {
-                            navigateTo(context, const UserInformationScreen());
-                          },
-                          padding: const EdgeInsets.all(10),
-                          icon: CircleAvatar(
-                            radius: 15,
-                            backgroundColor: Colors.white,
-                            child: Global.imageUrl != null &&
-                                    Global.imageUrl.trim() != ''
-                                ? SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: FadeInImage(
-                                        height: 50,
-                                        width: 50,
-                                        fadeInDuration:
-                                            const Duration(milliseconds: 500),
-                                        fadeInCurve: Curves.easeInExpo,
-                                        fadeOutCurve: Curves.easeOutExpo,
-                                        placeholder: const AssetImage(
-                                            "assets/person.jpg"),
-                                        image: NetworkImage(Global.imageUrl),
-                                        imageErrorBuilder:
-                                            (context, error, stackTrace) {
-                                          return const CircleAvatar(
-                                            radius: 13,
-                                            backgroundImage:
-                                                AssetImage('assets/person.jpg'),
-                                          );
-                                        },
-                                        fit: BoxFit.cover),
-                                  )
-                                : const CircleAvatar(
-                                    radius: 13,
-                                    backgroundImage:
-                                        AssetImage('assets/person.jpg'),
-                                  ),
-                          ))
+                      ?  IconButton(
+                      onPressed: () {
+
+                        NavigatToAndReplace(context, const HomeLayout());
+                        cubit.changeCurrentIndex(4);
+                      },
+                      padding: const EdgeInsets.all(10),
+                      icon: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        child: Global.imageUrl != null
+                            ? CircleAvatar(
+                          radius: 30.0,
+                          backgroundImage:
+                          NetworkImage(Global.imageUrl),
+                          backgroundColor: Colors.transparent,
+                        )
+                            : const CircleAvatar(
+                          radius: 13,
+                          backgroundImage:
+                          AssetImage('assets/person.jpg'),
+                        ),
+                      ))
                       : const SizedBox(
                           width: 1,
                         )
@@ -118,10 +104,7 @@ class CancelOrderScreen extends StatelessWidget {
                         return Slidable(
                           closeOnScroll: false,
 
-                          endActionPane: const ActionPane(
-                            motion: ScrollMotion(),
-                            children: [],
-                          ),
+
 
                           // component is not dragged.
                           child: Padding(
@@ -176,7 +159,7 @@ class CancelOrderScreen extends StatelessWidget {
                                                   orderModel.orderState),
                                               child: Center(
                                                   child: Text(
-                                                orderModel.orderState ?? '',
+                                                      cubit.orderStateArabic(orderModel.orderState) ?? '',
                                                 style: const TextStyle(
                                                     color: Colors.white),
                                               )),
@@ -239,80 +222,96 @@ class CancelOrderScreen extends StatelessWidget {
                                           ),
                                           TextButton(
                                               onPressed: () {
-                                                showDialog(
-                                                    useSafeArea: true,
-                                                    context: context,
-                                                    builder:
-                                                        (context) =>
-                                                            AlertDialog(
-                                                              content:
-                                                                  SingleChildScrollView(
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .end,
-                                                                  children: [
-                                                                    Row(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: const [
-                                                                        Text(
-                                                                          'Order Detail',
-                                                                          style: TextStyle(
-                                                                              color: Colors.blue,
-                                                                              fontSize: 16),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          10,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width *
-                                                                          0.7,
-                                                                      height:
-                                                                          200,
-                                                                      child: ListView.separated(
-                                                                          itemBuilder: (context, index) => orderModelCard(
-                                                                              orderModel.listItemModel[
-                                                                                  index],
-                                                                              context),
-                                                                          separatorBuilder: (context, index) => const SizedBox(
-                                                                              height:
-                                                                                  10),
-                                                                          itemCount: orderModel
-                                                                              .listItemModel
-                                                                              .length),
-                                                                    ),
-                                                                    const Divider(),
-                                                                    TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                        child:
-                                                                            const Text(
-                                                                          'Close',
-                                                                          style:
-                                                                              TextStyle(color: Colors.red),
-                                                                        ))
-                                                                  ],
-                                                                ),
+                                                if(cubit.listUser.firstWhere((element) => element.mobile == Global.mobile).isActive){
+                                                  showDialog(
+                                                      useSafeArea: true,
+                                                      context: context,
+                                                      builder:
+                                                          (context) =>
+                                                          AlertDialog(
+                                                            content:
+                                                            SingleChildScrollView(
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                                crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                                children: [
+                                                                  Row(
+                                                                    crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                    mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                    children: const [
+                                                                      Text(
+                                                                        'تفاصيل الطلب',
+                                                                        style: TextStyle(
+                                                                            color: Colors.blue,
+                                                                            fontSize: 16),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height:
+                                                                    10,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: MediaQuery.of(context)
+                                                                        .size
+                                                                        .width *
+                                                                        0.7,
+                                                                    height:
+                                                                    200,
+                                                                    child: ListView.separated(
+                                                                        itemBuilder: (context, index) => orderModelCard(
+                                                                            orderModel.listItemModel[
+                                                                            index],
+                                                                            context),
+                                                                        separatorBuilder: (context, index) => const SizedBox(
+                                                                            height:
+                                                                            10),
+                                                                        itemCount: orderModel
+                                                                            .listItemModel
+                                                                            .length),
+                                                                  ),
+                                                                  const Divider(),
+                                                                  TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child:
+                                                                      const Text(
+                                                                        'Close',
+                                                                        style:
+                                                                        TextStyle(color: Colors.red),
+                                                                      ))
+                                                                ],
                                                               ),
-                                                            ));
+                                                            ),
+                                                          ));
+                                                }
+                                                else{
+                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                      backgroundColor: Colors.red,
+                                                      content: Text(
+                                                        'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                                                      behavior: SnackBarBehavior.floating,
+                                                      padding: EdgeInsets.all(20.0),
+                                                      duration: Duration(milliseconds: 4000)));
+                                                }
+
                                               },
-                                              child: const Text('Details'))
+                                              child: const Text('التفاصيل'))
                                         ],
                                       ),
                                     ],

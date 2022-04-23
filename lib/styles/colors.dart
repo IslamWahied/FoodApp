@@ -101,3 +101,19 @@ class Constants {
     textSelectionTheme: TextSelectionThemeData(cursorColor: darkAccent),
   );
 }
+class IconColors {
+  static const Color send = Color(0xffecfaf8);
+  static const Color transfer = Color(0xfffdeef5);
+  static const Color passbook = Color(0xfffff4eb);
+  static const Color more = Color(0xffeff1fe);
+}
+
+class IconImgs {
+  static const String send = "assets/send.png";
+  static const String transfer = "assets/transfer.png";
+  static const String passbook = "assets/passbook.png";
+  static const String more = "assets/more.png";
+  static const String freeze = "assets/freeze.png";
+  static const String unlock = "assets/unlock.png";
+  static const String secret = "assets/secret.png";
+}

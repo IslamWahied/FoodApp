@@ -17,7 +17,7 @@ class SubCategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) {},
     builder: (context, state) {
           var cubit = HomeCubit.get(context);
@@ -107,7 +107,7 @@ class SubCategoryScreen extends StatelessWidget {
 }
 Widget foodSubCategoryCard({String imagePath, String name, int supCategoryId, context}) {
 
-  return BlocConsumer<HomeCubit,HomeScreenState>(
+  return BlocConsumer<HomeCubit,HomeState>(
     listener: (context,state)=>{},
     builder: (context,state){
       var cubit = HomeCubit.get(context);

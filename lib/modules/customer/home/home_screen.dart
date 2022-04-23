@@ -4,27 +4,34 @@ import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
+
 import 'package:elomda/modules/customer/Userbacklayer.dart';
-import 'package:elomda/modules/customer/popularFood/popularFoodDetailScreen.dart';
+
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+
+import '../../../shared/components/Reuseable.dart';
+
+
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) => () {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return BackdropScaffold(
+
           onBackLayerConcealed: () {
             cubit.isShowBackLayer = true;
             cubit.emit(SelectCategoryState());
@@ -33,9 +40,10 @@ class HomeScreen extends StatelessWidget {
             cubit.isShowBackLayer = false;
             cubit.emit(SelectCategoryState());
           },
-          frontLayerBackgroundColor: Constants.white,
+          frontLayerBackgroundColor: Constants.lighterGray,
           headerHeight: MediaQuery.of(context).size.height * 0.35,
           appBar: BackdropAppBar(
+
             title: Text(cubit.selectedTab),
             leading: const BackdropToggleButton(
               icon: AnimatedIcons.home_menu,
@@ -148,15 +156,17 @@ class HomeScreen extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(right: 20),
                           child: PrimaryText(
-                              text: 'التصنيفات',
+                              text: 'الاقسام',
                               fontWeight: FontWeight.w700,
                               size: 22),
                         ),
                       ],
                     ),
+                    const SizedBox(height: 5),
                     SizedBox(
-                      height: 240,
-                      child: ListView.builder(
+                      height: 250,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => const SizedBox(width: 10) ,
                         scrollDirection: Axis.horizontal,
                         itemCount: cubit.listCategory
                                 .where((element) =>
@@ -185,6 +195,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: const [
@@ -204,53 +215,18 @@ class HomeScreen extends StatelessWidget {
                                 element.projectId == Global.projectId)
                             .toList()
                             .length,
-                        (index) => itemCard(
-                          index: index,
-                          isFavourite: cubit.listFavourite.isNotEmpty &&
-                                  cubit.listFavourite.any((element) =>
-                                      element.ItemId ==
-                                          cubit.popularList
-                                              .where((element) =>
-                                                  element.projectId ==
-                                                  Global.projectId)
-                                              .toList()[index]
-                                              .itemId &&
-                                      element.isFavourit)
-                              ? true
-                              : false,
-                          // itemId: cubit.popularFoodList
-                          //     .where((element) =>
-                          //         element.projectId == Global.projectId)
-                          //     .toList()[index]
-                          //     .itemId,
+                        (index) {
+                     var popularModel  =   cubit.popularList.where((element) => element.projectId == Global.projectId).toList()[index];
+                        return    itemCard(
+                           
+                          isFavourite: cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == popularModel.itemId && element.isFavourit) ? true : false,
+                          
                           context: context,
-                          imagePath: cubit.popularList
-                              .where((element) =>
-                                  element.projectId == Global.projectId)
-                              .toList()[index]
-                              .image,
-                          itemDescription: cubit.popularList
-                              .where((element) =>
-                                  element.projectId == Global.projectId)
-                              .toList()[index]
-                              .description,
-                          itemPrice: cubit.popularList
-                              .where((element) =>
-                                  element.projectId == Global.projectId)
-                              .toList()[index]
-                              .price,
-                          name: cubit.popularList
-                              .where((element) =>
-                                  element.projectId == Global.projectId)
-                              .toList()[index]
-                              .itemTitle,
-                          star: '5',
-                          subCategoryTitle: cubit.popularList
-                              .where((element) =>
-                                  element.projectId == Global.projectId)
-                              .toList()[index]
-                              .supCategoryTitle,
-                        ),
+                          itemModel: popularModel
+                          
+                          
+                        );
+                        },
                       ),
                     ),
                   ],
@@ -268,7 +244,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget foodCategoryCard(
       String imagePath, String name, int categoryId, context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) => {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
@@ -276,316 +252,102 @@ class HomeScreen extends StatelessWidget {
           onTap: () {
             cubit.selectCategory(categoryId, context);
           },
-          child: Container(
-            margin: const EdgeInsets.only(right: 20, top: 20, bottom: 20),
-            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: HomeCubit.get(context).selectedCategoryId == categoryId
-                    ? Constants.primary
-                    : Constants.white,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 15,
-                  )
-                ]),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // SvgPicture.asset(imagePath, width: 40),
-                Image.network(imagePath, width: 90, height: 70),
-                PrimaryText(text: name, fontWeight: FontWeight.w800, size: 16),
-                RawMaterialButton(
-                    onPressed: null,
-                    fillColor: cubit.selectedCategoryId == categoryId
-                        ? Constants.white
-                        : Constants.tertiary,
-                    shape: const CircleBorder(),
-                    child: Icon(Icons.chevron_right_rounded,
-                        size: 20,
-                        color: HomeCubit.get(context).selectedCategoryId ==
-                                categoryId
-                            ? Constants.black
-                            : Constants.white))
-              ],
-            ),
-          ),
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: <Widget>[
+              Card(
+                color: HomeCubit.get(context).selectedCategoryId == categoryId ? Constants.primary : Constants.white,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: Image.network(
+                        imagePath,
+                        fit: BoxFit.cover,
+
+                      ),
+                    ),
+                  ],
+                ),
+
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+
+                elevation: 5,
+
+                // margin: const EdgeInsets.all(10),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+
+                    PrimaryText(text: name, fontWeight: FontWeight.w800, size: 16),
+                    RawMaterialButton(
+                                onPressed: null,
+                                fillColor: cubit.selectedCategoryId == categoryId
+                                    ? Constants.white
+                                    : Constants.tertiary,
+                                shape: const CircleBorder(),
+                                child: Icon(Icons.chevron_right_rounded,
+                                    size: 20,
+                                    color: HomeCubit.get(context).selectedCategoryId ==
+                                            categoryId
+                                        ? Constants.black
+                                        : Constants.white)),
+                  ],
+                ),
+              ),
+
+            ],
+          )
+
+
+          // Container(
+          //   margin: const EdgeInsets.only(right: 20, top: 20, bottom: 20),
+          //   padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+          //   decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(20),
+          //       color: HomeCubit.get(context).selectedCategoryId == categoryId
+          //           ? Constants.primary
+          //           : Constants.white,
+          //       boxShadow: const [
+          //         BoxShadow(
+          //           color: Colors.grey,
+          //           blurRadius: 15,
+          //         )
+          //       ]),
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       // SvgPicture.asset(imagePath, width: 40),
+          //       Image.network(imagePath, width: 90, height: 80,fit: BoxFit.cover,),
+          //       PrimaryText(text: name, fontWeight: FontWeight.w800, size: 16),
+          //       RawMaterialButton(
+          //           onPressed: null,
+          //           fillColor: cubit.selectedCategoryId == categoryId
+          //               ? Constants.white
+          //               : Constants.tertiary,
+          //           shape: const CircleBorder(),
+          //           child: Icon(Icons.chevron_right_rounded,
+          //               size: 20,
+          //               color: HomeCubit.get(context).selectedCategoryId ==
+          //                       categoryId
+          //                   ? Constants.black
+          //                   : Constants.white))
+          //     ],
+          //   ),
+          // ),
         );
       },
     );
   }
 
-  Widget itemCard(
-      {String imagePath,
-      String subCategoryTitle,
-      double itemPrice,
-      String name,
-      int index,
-      String itemDescription,
-      String star,
-      context,
-      isFavourite}) {
-    int value = 1;
-    return BlocConsumer<HomeCubit, HomeScreenState>(
-      listener: (context, state) => {},
-      builder: (context, state) {
-        var cubit = HomeCubit.get(context);
-        var model = cubit.popularList
-            .where((element) => element.projectId == Global.projectId)
-            .toList()[index];
-        return StatefulBuilder(builder: (context, setState) {
-          return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: GestureDetector(
-              onTap: () {
-                cubit.selectedItemId = model.itemId;
-                cubit.selectedCategoryId = model.categoryId;
-                cubit.selectedSubCategoryId = model.supCategoryId;
-
-                if (kDebugMode) {
-                  print('itemId');
-                }
-                if (kDebugMode) {
-                  print(model.itemId);
-                }
-                if (kDebugMode) {
-                  print('itemId');
-                }
-
-                navigateTo(
-                    context,
-                    PopularFoodDetailScreen(
-                      index: index,
-                      orderCount: value ?? 1,
-                      oldPrice: model.oldPrice,
-                      isDiscount: model.isDiscount,
-                      imagePath: model.image,
-                      subCategoryTitle: model.supCategoryTitle,
-                      itemName: model.itemTitle,
-                      itemDescription: model.description ?? '',
-                      itemPrice: model.price,
-                      itemId: model.itemId,
-                    ));
-              },
-              child: Container(
-                margin: const EdgeInsets.only(
-                    right: 15, left: 0, top: 25, bottom: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(blurRadius: 10, color: Constants.lighterGray)
-                  ],
-                  color: Constants.white,
-                ),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.topRight,
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.star,
-                                    color: Constants.primary,
-                                    size: 20,
-                                  ),
-                                  GestureDetector(
-                                      onTap: () {
-                                        HomeCubit.get(context)
-                                            .changeItemFavouriteState(
-                                                itemId: model.itemId,
-                                                isFavourite: isFavourite);
-                                      },
-                                      child: isFavourite
-                                          ? const Icon(
-                                              Icons.favorite,
-                                              color: Colors.red,
-                                              size: 25,
-                                            )
-                                          : const Icon(Icons.favorite_border,
-                                              size: 25)),
-                                  const SizedBox(width: 10),
-                                  SizedBox(
-                                    // width: MediaQuery.of(context).size.width / 2.2,
-                                    height: 33,
-                                    child: PrimaryText(
-                                        text: name,
-                                        size: 22,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 15),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                var cubit = HomeCubit.get(context);
-                                cubit.addNewItemToCartFromHomeScreen(
-                                    itemId: model.itemId, orderCount: value);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 45, vertical: 20),
-                                decoration: const BoxDecoration(
-                                    color: Constants.primary,
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    )),
-                                child: const Icon(Icons.add, size: 20),
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      if (HomeCubit.get(context)
-                                          .popularList
-                                          .firstWhere((element) =>
-                                              element.itemId == model.itemId &&
-                                              element.projectId ==
-                                                  Global.projectId)
-                                          .isDiscount)
-                                        PrimaryText(
-                                          isDiscount: true,
-                                          text: HomeCubit.get(context)
-                                              .popularList
-                                              .firstWhere((element) =>
-                                                  element.itemId ==
-                                                      model.itemId &&
-                                                  element.projectId ==
-                                                      Global.projectId &&
-                                                  element.isDiscount)
-                                              .oldPrice
-                                              .toString(),
-                                          size: 20,
-                                          fontWeight: FontWeight.w700,
-                                          color: Constants.lighterGray,
-                                          height: 1,
-                                        ),
-                                      SvgPicture.asset(
-                                        'assets/dollar.svg',
-                                        color: Constants.tertiary,
-                                        width: 15,
-                                      ),
-                                      PrimaryText(
-                                        text: itemPrice.toString(),
-                                        size: 20,
-                                        fontWeight: FontWeight.w700,
-                                        color: Constants.tertiary,
-                                        height: 1,
-                                      ),
-                                    ],
-                                  ),
-                                  // const SizedBox(
-                                  //   width: 30,
-                                  // ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              if (value != 1) {
-                                                value = value - 1;
-                                              }
-                                            });
-                                          },
-                                          child: const CircleAvatar(
-                                            radius: 15,
-                                            backgroundColor: Colors.blueAccent,
-                                            child: Text(
-                                              '-',
-                                              style: TextStyle(
-                                                  fontSize: 25,
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(value.toString() ?? '1'),
-                                        const SizedBox(width: 10),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              if (value != 50) {
-                                                value = value + 1;
-                                              }
-                                            });
-                                          },
-                                          child: CircleAvatar(
-                                            radius: 15,
-                                            backgroundColor: Colors.blueAccent
-                                                .withOpacity(0.9),
-                                            child: const Text(
-                                              '+',
-                                              style: TextStyle(
-                                                  fontSize: 22,
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Container(
-                      height: 100,
-                      width: 100,
-                      transform: Matrix4.translationValues(
-                        15.0,
-                        -20.0,
-                        0.0,
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey[300],
-                                blurRadius: 20,
-                                spreadRadius: 5)
-                          ]),
-                      child: Hero(
-                        tag: imagePath,
-                        child: Image.network(imagePath,
-                            width: MediaQuery.of(context).size.width / 2.9),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-      },
-    );
-  }
+ 
 }

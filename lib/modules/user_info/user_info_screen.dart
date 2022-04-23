@@ -15,7 +15,7 @@ class UserInformationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
@@ -54,6 +54,7 @@ class UserInformationScreen extends StatelessWidget {
                                       const SizedBox(
                                         width: 12,
                                       ),
+                                      if(!Global.isAdmin)
                                       Container(
                                         height: kToolbarHeight / 1.8,
                                         width: kToolbarHeight / 1.8,
@@ -72,23 +73,42 @@ class UserInformationScreen extends StatelessWidget {
                                                 ? NetworkImage(Global.imageUrl)
                                                 : const AssetImage(
                                                     'assets/person.jpg'),
-                                            //
 
-                                            //
-                                            // cubit.user_info_finalPickedImage ==
-                                            //     null
-                                            //     ? NetworkImage(cubit.image ??
-                                            //     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/542px-Unknown_person.jpg')
-                                            //     : FileImage(
-                                            //     cubit.user_info_finalPickedImage),
                                           ),
                                         ),
                                       ),
+
+                                      if(Global.isAdmin)
+                                        Container(
+                                          height: kToolbarHeight / 1.8,
+                                          width: kToolbarHeight / 1.8,
+                                          decoration: BoxDecoration(
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: Colors.white,
+                                                blurRadius: 1.0,
+                                              ),
+                                            ],
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: Global.projectImageUrl != null &&
+                                                  Global.projectImageUrl.trim() != ''
+                                                  ? NetworkImage(Global.projectImageUrl)
+                                                  : const AssetImage(
+                                                  'assets/person.jpg'),
+
+                                            ),
+                                          ),
+                                        ),
+
+
+
                                       const SizedBox(
                                         width: 10,
                                       ),
                                       Text(
-                                        Global.userName,
+                                        Global.userName ?? '',
                                         style: const TextStyle(
                                             fontSize: 20.0,
                                             color: Colors.white),
@@ -99,12 +119,30 @@ class UserInformationScreen extends StatelessWidget {
                                 background: Stack(
                                   alignment: Alignment.bottomRight,
                                   children: [
+                                if(Global.isAdmin)
                                     Image(
                                       // image: AssetImage('assets/person.jpg'),
-                                      image: NetworkImage(Global.imageUrl),
+                                      image: Global.projectImageUrl != null &&
+                                          Global.projectImageUrl.trim() != ''
+                                          ? NetworkImage(Global.projectImageUrl)
+                                          : const AssetImage(
+                                          'assets/person.jpg'),
                                       fit: BoxFit.fitWidth,
                                       width: double.infinity,
                                     ),
+
+
+                                    if(!Global.isAdmin)
+                                      Image(
+                                        // image: AssetImage('assets/person.jpg'),
+                                        image: Global.imageUrl != null &&
+                                            Global.imageUrl.trim() != ''
+                                            ? NetworkImage(Global.imageUrl)
+                                            : const AssetImage(
+                                            'assets/person.jpg'),
+                                        fit: BoxFit.fitWidth,
+                                        width: double.infinity,
+                                      ),
                                   ],
                                 ),
                               ),
@@ -125,11 +163,12 @@ class UserInformationScreen extends StatelessWidget {
                           children: [
                             Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
-                                child: userTitle(title: 'الصفحة الشخصية')),
+                                child: userTitle(title:Global.isAdmin?'بيانات المطعم' :  'الصفحة الشخصية')),
                             const Divider(
                               thickness: 1,
                               color: Colors.grey,
                             ),
+                            if(!Global.isAdmin)
                             Material(
                               color: Colors.transparent,
                               child: InkWell(
@@ -147,6 +186,7 @@ class UserInformationScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            if(!Global.isAdmin)
                             Material(
                               color: Colors.transparent,
                               child: InkWell(
@@ -163,6 +203,14 @@ class UserInformationScreen extends StatelessWidget {
                                   leading:
                                       Icon(MaterialCommunityIcons.cart_plus),
                                 ),
+                              ),
+                            ),
+                            if(Global.isAdmin)
+                            Container(
+                              child: userTile(
+                                'رقم التليفون',
+                                cubit.listProject.firstWhere((element) => element.id == Global.projectId).projectMobile ?? '',
+                                Icons.phone,
                               ),
                             ),
                             // Material(

@@ -71,10 +71,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         bool isOldUser = listUser.any((element) => element.mobile == Global.mobile);
 
 
-        print('isOldUser');
-        print(listUser.length);
-        print(isOldUser);
-        print('isOldUser');
+
 
         if (isOldUser) {
 
@@ -93,14 +90,30 @@ class RegisterCubit extends Cubit<RegisterState> {
           if(userModel.isAdmin){
 
             Global.projectId =  listProject.firstWhere((element) => element.adminMobile ==  Global.mobile).id;
-
+            Global.projectImageUrl =  listProject.firstWhere((element) => element.id ==  Global.projectId).image;
             await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
+
+
+
+
           }
 
 
           if(Global.fireBaseToken != userModel.fireBaseToken){
 
+            if(userModel.fireBaseToken != Global.fireBaseToken){
+              userModel.fireBaseToken = Global.fireBaseToken;
+              FirebaseFirestore.instance
+                  .collection('User')
+                  .doc(Global.mobile)
+                  .update(userModel.toMap())
+                  .then((value) async {
 
+
+              });
+
+
+            }
           }
 
           await CachHelper.SetData(key: 'mobile', value: Global.mobile);
@@ -223,6 +236,8 @@ class RegisterCubit extends Cubit<RegisterState> {
         .doc(Global.mobile)
         .get()
         .then((value) async {
+
+
       userModel = UserModel.fromJson(value.data());
       Global.imageUrl = userModel.image;
       await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
@@ -241,6 +256,8 @@ class RegisterCubit extends Cubit<RegisterState> {
             .putFile(finalPickedUserImage)
             .then((value) {
           value.ref.getDownloadURL().then((value) async {
+
+
             UserModel model = UserModel(
               isActive: false,
               image: value,
@@ -276,6 +293,10 @@ class RegisterCubit extends Cubit<RegisterState> {
         });
       }
     }).catchError((error) {
+
+
+
+
       firebase_storage.FirebaseStorage.instance
           .ref()
           .child(

@@ -33,7 +33,7 @@ class FoodDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
@@ -54,35 +54,38 @@ class FoodDetail extends StatelessWidget {
             builder: (context) {
               return SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    cubit.addNewItemToCartFromFeedsScreen(
-                        itemId: cubit.selectedItemId,
-                        orderCount: orderCount ?? 1);
-                    // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      PrimaryText(
-                        text: 'اضافة الي طلباتي',
-                        fontWeight: FontWeight.w600,
-                        size: 18,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(Icons.chevron_right)
-                    ],
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 62),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      cubit.addNewItemToCartFromFeedsScreen(
+                          itemId: cubit.selectedItemId,
+                          orderCount: orderCount ?? 1);
+                      // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        PrimaryText(
+                          text: 'اضافة الي طلباتي',
+                          fontWeight: FontWeight.w600,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(Icons.chevron_right)
+                      ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        primary: Constants.primary,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 20),
+                        textStyle: const TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
                   ),
-                  style: ElevatedButton.styleFrom(
-                      primary: Constants.primary,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 20),
-                      textStyle: const TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
               );
             },
@@ -419,7 +422,7 @@ Padding customAppBar(
               color: AppColors.black,
               overflow: TextOverflow.ellipsis),
         ),
-
+        if (isShowCarShop)
         InkWell(
           onTap: () {
             NavigatToAndReplace(context, const HomeLayout());
@@ -443,8 +446,8 @@ Padding customAppBar(
           ),
         ),
         if (!isShowCarShop)
-          const SizedBox(
-            width: 1,
+            SizedBox(
+            width:MediaQuery.of(context).size.width * .10,
           )
         // Container(
         //   padding: const EdgeInsets.all(10),

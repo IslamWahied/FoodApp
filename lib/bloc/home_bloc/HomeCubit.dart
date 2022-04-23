@@ -11,6 +11,7 @@ import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/models/favourit/favouritModel.dart';
 import 'package:elomda/models/order/orderModel.dart';
 import 'package:elomda/models/project/projectModel.dart';
+import 'package:elomda/models/user/userAccount.dart';
 import 'package:elomda/models/user/user_model.dart';
 import 'package:elomda/modules/admin/Order/Admin/PreparedOrder.dart';
 import 'package:elomda/modules/admin/Order/Admin/canceledOrder.dart';
@@ -37,8 +38,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart' as sd;
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-class HomeCubit extends Cubit<HomeScreenState> {
-  HomeCubit() : super(HomeScreenStateInitState());
+class HomeCubit extends Cubit<HomeState> {
+  HomeCubit() : super(HomeStateInitState());
 
   TextEditingController sendMessageTextControl = TextEditingController();
   TextEditingController titleTextControl = TextEditingController();
@@ -299,17 +300,21 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   List<ItemModel> listItems = [];
 
-  List<ItemModel> listFeedItemSearch = [];
+
 
   List<ItemModel> popularList = [];
+
   List<ItemModel> listItemsSearch = [];
+
+  List<ItemModel> listItemsBySubCategSearch = [];
+
   List<ItemModel> listFavouriteSearch = [];
   List<ItemModel> listOrder = [];
   List<AdditionsModel> listAdditions = [];
 
   TextEditingController txtSubCategoryControl = TextEditingController();
   TextEditingController txtItemControl = TextEditingController();
-  TextEditingController txtFavouriteControl = TextEditingController();
+  TextEditingController txtSearchControl = TextEditingController();
   List<OrderModel> listAllOrders = [];
 
   ScrollController scrollController;
@@ -333,9 +338,8 @@ class HomeCubit extends Cubit<HomeScreenState> {
               .length ??
           0;
 
-      listAllOrders =
-          event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
-
+      listAllOrders = event.docs.map((x) => OrderModel.fromJson(x.data())).toList();
+      listAllOrders.forEach((element) {print(element.toJson());});
       var x2 = listAllOrders
               .where((element) =>
                   element.orderState.toLowerCase() == 'New'.toLowerCase())
@@ -427,10 +431,13 @@ class HomeCubit extends Cubit<HomeScreenState> {
             isDeleted: 0,
             orderCount: listOrder.length ?? 0);
 
+
+
+
         FirebaseFirestore.instance
             .collection('Orders')
             .doc(orderId.toString())
-            .update(model.toJson())
+            .set(model.toJson())
             .then((value) {
           FirebaseFirestore.instance
               .collection('Orders')
@@ -440,7 +447,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
             for (var element in listUser) {
               if (element.isAdmin &&
                   listProject.any((element2) =>
-                      element2.adminMobile == element.mobile &&
+                  element2.adminMobile == element.mobile &&
                       element2.id == Global.projectId)) {
                 sendNotificationToUserByToken(
                     messageBody: '${Global.userName} تم ارسال طلب جديد من  ',
@@ -597,7 +604,50 @@ class HomeCubit extends Cubit<HomeScreenState> {
         .collection('Orders')
         .doc(orderModel.orderId.toString())
         .update(orderModel.toJson())
-        .then((value) {})
+        .then((value) {
+
+UserAccount model = UserAccount(
+  createdByMobile: Global.mobile,
+  createdDate: DateTime.now().toString(),
+  customerMobile: orderModel.userMobile,
+  isDeleted: false,
+  projectId: orderModel.projectId,
+  credit: 0,
+  debit:orderModel.orderPrice ,
+  orderId: orderModel.orderId
+
+);
+
+var userAccountId  = listUserAccount.where((element) => element.projectId == Global.projectId ).length;
+
+if(userAccountId == 0)
+  {
+    userAccountId = 1;
+  }
+else{
+  userAccountId = userAccountId + 1;
+}
+      FirebaseFirestore.instance
+          .collection('UserAccount')
+          .doc(orderModel.projectId.toString()).collection(userAccountId.toString()).doc()
+          .set(model.toMap()).then((value) {
+
+      }).catchError((onError){});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    })
         .catchError((onError) {
       FirebaseFirestore.instance
           .collection('Orders')
@@ -606,6 +656,9 @@ class HomeCubit extends Cubit<HomeScreenState> {
           .then((value) {})
           .catchError(onError);
     });
+
+
+
   }
 
   getTotalPrice() {
@@ -666,30 +719,40 @@ class HomeCubit extends Cubit<HomeScreenState> {
     emit(SearchSubCategoryState());
   }
 
-  addNewItemToCartFromHomeScreen({itemId, orderCount}) {
-    var newList = popularList.firstWhere((element) =>
-        element.itemId == itemId && element.projectId == Global.projectId);
+  addItemToCart(
+      {
+         
+       int orderCount,
+        ItemModel itemModel,
+        bool isFavourit,
+      BuildContext  context
+        
+        
+        
+        
+      }) {
+   
     var model = ItemModel(
       orderCount: orderCount,
       orderState: 'New',
-      oldPrice: newList.oldPrice,
-      itemTitle: newList.itemTitle,
-      itemId: newList.itemId,
-      isPopular: newList.isPopular,
-      isDiscount: newList.isDiscount,
-      isDeleted: newList.isDeleted,
-      isAvailable: newList.isAvailable,
-      image: newList.image,
-      description: newList.description,
-      createdDate: newList.createdDate,
-      categoryTitle: newList.categoryTitle,
-      categoryId: newList.categoryId,
+      oldPrice: itemModel.oldPrice,
+      itemTitle: itemModel.itemTitle,
+      itemId: itemModel.itemId,
+      isPopular: itemModel.isPopular,
+      isDiscount: itemModel.isDiscount,
+      isDeleted: itemModel.isDeleted,
+      isAvailable: itemModel.isAvailable,
+      image: itemModel.image,
+      description: itemModel.description,
+      createdDate: itemModel.createdDate,
+      categoryTitle: itemModel.categoryTitle,
+      categoryId: itemModel.categoryId,
       additionsList: listOfSelectedAdditions.toList(),
-      price: newList.price,
-      supCategoryId: newList.supCategoryId,
-      supCategoryTitle: newList.supCategoryTitle,
+      price: itemModel.price,
+      supCategoryId: itemModel.supCategoryId,
+      supCategoryTitle: itemModel.supCategoryTitle,
       isFavourite: listFavourite.any((element) =>
-              element.ItemId == itemId &&
+              element.ItemId == itemModel.itemId &&
               element.UesrMobile == Global.mobile &&
               element.projectId == Global.projectId)
           ? true
@@ -744,6 +807,57 @@ class HomeCubit extends Cubit<HomeScreenState> {
     emit(SearchSubCategoryState());
   }
 
+  addNewItemToCartFromSearchScreen({itemId, orderCount,context}) {
+    var newList = listItemsSearch.firstWhere((element) =>
+    element.itemId == itemId );
+
+    var model = ItemModel(
+      orderCount: orderCount,
+      orderState: 'New',
+      oldPrice: newList.oldPrice,
+      itemTitle: newList.itemTitle,
+      itemId: newList.itemId,
+      isPopular: newList.isPopular,
+      isDiscount: newList.isDiscount,
+      isDeleted: newList.isDeleted,
+      isAvailable: newList.isAvailable,
+      image: newList.image,
+      description: newList.description,
+      createdDate: newList.createdDate,
+      categoryTitle: newList.categoryTitle,
+      categoryId: newList.categoryId,
+      additionsList: listOfSelectedAdditions.toList(),
+      price: newList.price,
+      supCategoryId: newList.supCategoryId,
+      supCategoryTitle: newList.supCategoryTitle,
+      isFavourite: listFavourite.any((element) =>
+      element.ItemId == itemId &&
+          element.UesrMobile == Global.mobile &&
+          element.projectId == Global.projectId)
+          ? true
+          : false ?? false,
+      userMobile: Global.mobile,
+      userName: Global.userName,
+      projectId: Global.projectId,
+    );
+
+    listOrder.add(model);
+
+    listOfSelectedAdditions = [];
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        backgroundColor: Colors.green,
+        content: Text(
+          'تم الاضافة الي المشتريات',
+          textAlign: TextAlign.center,
+        ),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(30))),
+        behavior: SnackBarBehavior.floating,
+        padding: EdgeInsets.all(20.0),
+        duration: Duration(milliseconds: 4000)));
+    emit(SearchSubCategoryState());
+  }
+
   getCategory() async {
     FirebaseFirestore.instance
         .collection('Category')
@@ -783,8 +897,24 @@ class HomeCubit extends Cubit<HomeScreenState> {
   getItems() async {
     FirebaseFirestore.instance.collection('Items').snapshots().listen((event) {
       listItems = event.docs.map((x) => ItemModel.fromJson(x.data())).toList();
-      listFeedItemSearch = listItems;
+      listItemsSearch = listItems;
+      listItemsBySubCategSearch = listItems;
       popularList = listItems.where((element) => element.isPopular).toList();
+
+      emit(SelectCategoryState());
+    });
+  }
+
+List<UserAccount> listUserAccount = [];
+  getUsersAccount() async {
+
+
+
+    FirebaseFirestore.instance.collection('UserAccount').snapshots().listen((event) {
+
+      listUserAccount = event.docs.map((x) => UserAccount.fromJson(x.data())).toList();
+
+
 
       emit(SelectCategoryState());
     });
@@ -805,10 +935,10 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
   List<FavouritModel> listFavourite = [];
 
-  changeItemFavouriteState({bool isFavourite = false, int itemId}) {
+  changeItemFavouriteState({bool isFavourite = false, ItemModel itemModel}) {
     FavouritModel model = FavouritModel(
         isFavourit: !isFavourite,
-        ItemId: itemId,
+        ItemId:itemModel.itemId,
         UesrMobile: Global.mobile,
         projectId: Global.projectId);
 
@@ -816,7 +946,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
         .collection('Favourite')
         .doc(Global.mobile)
         .collection('ItemModel')
-        .doc(itemId.toString())
+        .doc(itemModel.itemId.toString())
         .update(model.toMap())
         .then((value) {})
         .catchError((onError) {
@@ -824,7 +954,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
           .collection('Favourite')
           .doc(Global.mobile)
           .collection('ItemModel')
-          .doc(itemId.toString())
+          .doc(itemModel.itemId.toString())
           .set(model.toMap())
           .then((value) {})
           .catchError(onError);
@@ -916,21 +1046,27 @@ class HomeCubit extends Cubit<HomeScreenState> {
   searchInItems(String value) {
     if (value.trim() != '') {
       listItemsSearch = listItems
-          .where((element) =>
-              element.supCategoryId == selectedSubCategoryId &&
-              element.itemTitle.toLowerCase().contains(value.toLowerCase()) &&
-              element.projectId == Global.projectId)
+          .where((element) => element.itemTitle.contains(value) || element.categoryTitle.contains(value) || element.supCategoryTitle.contains(value)  )
           .toList();
     } else {
-      listItemsSearch = listItems
-          .where((element) =>
-              element.supCategoryId == selectedSubCategoryId &&
-              element.projectId == Global.projectId)
-          .toList();
+      listItemsSearch = listItems;
     }
 
     emit(SearchSubCategoryState());
   }
+
+  searchInItemsBySupCategory(String value) {
+    if (value.trim() != '') {
+      listItemsBySubCategSearch = listItems
+          .where((element) => element.categoryId == selectedCategoryId && element.supCategoryId == selectedSubCategoryId  && element.projectId == Global.projectId && element.itemTitle.contains(value) )
+          .toList();
+    } else {
+      listItemsBySubCategSearch = listItems;
+    }
+
+    emit(SearchSubCategoryState());
+  }
+
 
   searchInFavourite(String value) {
     if (value.trim() != '') {
@@ -970,8 +1106,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
         .then((value) {});
   }
 
-  sendNotificationToUserByToken(
-      {String messageTitle, String messageBody, String userToken}) {
+  sendNotificationToUserByToken({String messageTitle, String messageBody, String userToken}) {
     // print(messageTitle);
     // print(messageBody);
     // print(userToken);
@@ -1014,10 +1149,8 @@ class HomeCubit extends Cubit<HomeScreenState> {
     emit(SelectCategoryState());
   }
 
-  RoundedLoadingButtonController sendNotifactionBtnController =
-      RoundedLoadingButtonController();
-  RoundedLoadingButtonController callBtnController =
-      RoundedLoadingButtonController();
+  RoundedLoadingButtonController sendNotifactionBtnController = RoundedLoadingButtonController();
+  RoundedLoadingButtonController callBtnController = RoundedLoadingButtonController();
 
   List ingredients = [
     {
@@ -1048,7 +1181,9 @@ class HomeCubit extends Cubit<HomeScreenState> {
 
       emit(SelectCategoryState());
     }).onError((handleError) {
-      print(handleError);
+      if (kDebugMode) {
+        print(handleError);
+      }
     });
   }
 
@@ -1059,6 +1194,7 @@ class HomeCubit extends Cubit<HomeScreenState> {
     await CachHelper.SetData(key: 'imageUrl', value: '');
     await CachHelper.SetData(key: 'userName', value: '');
     await CachHelper.SetData(key: 'departmentId', value: 0);
+    Global.isAdmin  = false;
     currentIndex = 0;
     NavigatToAndReplace(context, const LoginScreen());
   }

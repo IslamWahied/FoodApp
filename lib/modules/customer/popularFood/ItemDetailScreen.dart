@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
+import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/modules/customer/product_details/foodDetail.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
@@ -9,36 +10,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-class PopularFoodDetailScreen extends StatelessWidget {
-  final String imagePath;
-  final String itemName;
-  final int itemId;
-  final String subCategoryTitle;
-  final String itemDescription;
-
-  final double itemPrice;
-  final double oldPrice;
-  final int index;
+class ItemDetailScreen extends StatelessWidget {
+ final ItemModel itemModel;
   final int orderCount;
-  final bool isDiscount;
 
-  const PopularFoodDetailScreen(
-      {this.itemId,
+
+  const ItemDetailScreen(
+      {
+
       this.orderCount,
-      this.isDiscount,
-      this.oldPrice,
-      this.index,
-      this.imagePath,
-      this.itemDescription,
-      this.subCategoryTitle,
-      this.itemName,
-      this.itemPrice,
-      Key key})
+      this.itemModel,
+      Key key
+      })
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
@@ -51,7 +39,7 @@ class PopularFoodDetailScreen extends StatelessWidget {
             centerTitle: false,
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
-            title: customAppBar(context: context, title: itemName),
+            title: customAppBar(context: context, title:itemModel.itemTitle),
           ),
           bottomSheet: BottomSheet(
             enableDrag: false,
@@ -113,7 +101,7 @@ class PopularFoodDetailScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Hero(
-                          tag: imagePath,
+                          tag: itemModel.image,
                           child: Container(
                             decoration: BoxDecoration(
                               boxShadow: [
@@ -124,7 +112,7 @@ class PopularFoodDetailScreen extends StatelessWidget {
                             ),
                             height: 200,
                             width: 170,
-                            child: Image.network(imagePath, fit: BoxFit.cover),
+                            child: Image.network(itemModel.image, fit: BoxFit.cover),
                           ),
                         ),
                         Column(
@@ -135,10 +123,10 @@ class PopularFoodDetailScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  if (isDiscount)
+                                  if (itemModel.isDiscount)
                                     PrimaryText(
                                       isDiscount: true,
-                                      text: oldPrice.toString(),
+                                      text:itemModel.oldPrice.toString(),
                                       size: 20,
                                       fontWeight: FontWeight.w700,
                                       color: Constants.lighterGray,
@@ -150,7 +138,7 @@ class PopularFoodDetailScreen extends StatelessWidget {
                                     width: 15,
                                   ),
                                   PrimaryText(
-                                    text: itemPrice.toString(),
+                                    text: itemModel.price.toString(),
                                     size: 40,
                                     fontWeight: FontWeight.w700,
                                     color: Constants.tertiary,
@@ -183,7 +171,7 @@ class PopularFoodDetailScreen extends StatelessWidget {
                     const SizedBox(
                       height: 40,
                     ),
-                    if (itemDescription != null && itemDescription.trim() != '')
+                    if (itemModel.description != null && itemModel.description.trim() != '')
                       const PrimaryText(
                           text: 'الوصف', fontWeight: FontWeight.w700, size: 22),
                     const SizedBox(
@@ -195,7 +183,7 @@ class PopularFoodDetailScreen extends StatelessWidget {
                       height: 100,
                       child: SingleChildScrollView(
                         child: Text(
-                          itemDescription ?? '',
+                          itemModel.description ?? '',
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.right,
                           style: const TextStyle(
@@ -209,7 +197,7 @@ class PopularFoodDetailScreen extends StatelessWidget {
                     ),
                     if (cubit.listItems
                         .firstWhere((element) =>
-                            element.itemId == itemId &&
+                            element.itemId == itemModel.itemId &&
                             element.projectId == Global.projectId)
                         .additionsList
                         .isNotEmpty)
@@ -218,7 +206,7 @@ class PopularFoodDetailScreen extends StatelessWidget {
                       ),
                     if (cubit.listItems
                         .firstWhere((element) =>
-                            element.itemId == itemId &&
+                            element.itemId == itemModel.itemId &&
                             element.projectId == Global.projectId)
                         .additionsList
                         .isNotEmpty)
@@ -234,19 +222,12 @@ class PopularFoodDetailScreen extends StatelessWidget {
                 ),
               ),
 
-              if (cubit.popularList
-                  .where((element) => element.projectId == Global.projectId)
-                  .toList()[index]
-                  .additionsList
-                  .isNotEmpty)
+              if (itemModel.additionsList.isNotEmpty)
                 SizedBox(
                   height: 150,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: cubit.popularList
-                            .where((element) =>
-                                element.projectId == Global.projectId)
-                            .toList()[index]
+                    itemCount:itemModel
                             .additionsList
                             .length ??
                         0,
@@ -254,27 +235,18 @@ class PopularFoodDetailScreen extends StatelessWidget {
                       padding: EdgeInsets.only(
                           left: index2 == 0 ? 20 : 0, top: 10, bottom: 20),
                       child: additionCard(
-                          imagePath: cubit.popularList
-                              .where((element) =>
-                                  element.projectId == Global.projectId)
-                              .toList()[index]
+                          imagePath:itemModel
                               .additionsList[index2]
                               .image,
                           context: context,
                           cubit: cubit,
-                          additionId: cubit.popularList
-                              .where((element) =>
-                                  element.projectId == Global.projectId)
-                              .toList()[index]
+                          additionId: itemModel
                               .additionsList[index2]
                               .itemId),
                     ),
                   ),
                 ),
-              // if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
-              // const SizedBox(
-              //   height: 100,
-              // )
+
             ],
           ),
         );
@@ -282,8 +254,7 @@ class PopularFoodDetailScreen extends StatelessWidget {
     );
   }
 
-  GestureDetector additionCard(
-      {String imagePath, int additionId, HomeCubit cubit, context}) {
+  GestureDetector additionCard({String imagePath, int additionId, HomeCubit cubit, context}) {
     return GestureDetector(
       onTap: () {
         if (cubit.listOfSelectedAdditions

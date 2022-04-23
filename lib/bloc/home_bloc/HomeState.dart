@@ -1,9 +1,9 @@
 // @dart=2.9
-abstract class HomeScreenState {}
+abstract class HomeState {}
 
-class HomeScreenStateInitState extends HomeScreenState {}
-class OnIconClickState extends HomeScreenState {}
-class SearchSubCategoryState extends HomeScreenState {}
-class SelectCategoryState extends HomeScreenState {}
+class HomeStateInitState extends HomeState {}
+class OnIconClickState extends HomeState {}
+class SearchSubCategoryState extends HomeState {}
+class SelectCategoryState extends HomeState {}
 
 

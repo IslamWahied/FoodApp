@@ -25,7 +25,7 @@ class RestrantListScreen extends StatelessWidget {
       home: MediaQuery.removePadding(
         context: context,
         removeTop: false,
-        child: BlocConsumer<HomeCubit, HomeScreenState>(
+        child: BlocConsumer<HomeCubit, HomeState>(
           builder: (context, state) {
             var cubit = HomeCubit.get(context);
 

@@ -11,9 +11,9 @@ class HomeLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
-      listener: (BuildContext context, HomeScreenState state) {},
-      builder: (BuildContext context, HomeScreenState state) {
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (BuildContext context, HomeState state) {},
+      builder: (BuildContext context, HomeState state) {
         var cubit = HomeCubit.get(context);
 
         return Scaffold(
@@ -52,11 +52,23 @@ class HomeLayout extends StatelessWidget {
                         items: [
                           BottomNavigationBarItem(
                             icon: Badge(
-                              showBadge: cubit.listOrder.isNotEmpty &&
-                                  HomeCubit.get(context).listOrder.length !=
+                              showBadge:cubit.listAllOrders
+                                  .where((element) =>
+                              element.orderState.toLowerCase() == 'New'.toLowerCase() &&
+                                  element.projectId == Global.projectId)
+                                  .toList().isNotEmpty &&
+                                  cubit.listAllOrders
+                                      .where((element) =>
+                                  element.orderState.toLowerCase() == 'New'.toLowerCase() &&
+                                      element.projectId == Global.projectId)
+                                      .toList().length !=
                                       null,
                               badgeContent: Text(
-                                cubit.listOrder.length.toString() ?? '0',
+                                cubit.listAllOrders
+                                    .where((element) =>
+                                element.orderState.toLowerCase() == 'New'.toLowerCase() &&
+                                    element.projectId == Global.projectId)
+                                    .toList().length.toString() ?? '0',
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 11),
                               ),
@@ -66,8 +78,32 @@ class HomeLayout extends StatelessWidget {
                             ),
                             label: 'جديد',
                           ),
-                          const BottomNavigationBarItem(
-                            icon: Icon(Icons.bookmark_border),
+                            BottomNavigationBarItem(
+                            icon: Badge(
+                              showBadge:cubit.listAllOrders
+                                  .where((element) =>
+                              element.orderState.toLowerCase() == 'Prepared'.toLowerCase() &&
+                                  element.projectId == Global.projectId)
+                                  .toList().isNotEmpty &&
+                                  cubit.listAllOrders
+                                      .where((element) =>
+                                  element.orderState.toLowerCase() == 'Prepared'.toLowerCase() &&
+                                      element.projectId == Global.projectId)
+                                      .toList().length !=
+                                      null,
+                              badgeContent: Text(
+                                cubit.listAllOrders
+                                    .where((element) =>
+                                element.orderState.toLowerCase() == 'Prepared'.toLowerCase() &&
+                                    element.projectId == Global.projectId)
+                                    .toList().length.toString() ?? '0',
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 11),
+                              ),
+                              child: const Icon(
+                                Icons.bookmark_border,
+                              ),
+                            ),
                             label: 'تحت التجهيز',
                           ),
                           const BottomNavigationBarItem(

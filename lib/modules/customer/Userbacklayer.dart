@@ -14,7 +14,7 @@ class UserBackLayerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeScreenState>(
+    return BlocConsumer<HomeCubit, HomeState>(
         builder: (context, state) {
           var cubit = HomeCubit.get(context);
           return Stack(

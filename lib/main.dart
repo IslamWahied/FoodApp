@@ -92,7 +92,9 @@ class MyApp extends StatelessWidget {
                 ..getSubCategory()
                 ..getItems()
                 ..getAdditions()
-                ..getFavourite()),
+                ..getFavourite()
+                ..getUsersAccount()
+          ),
         ],
         child: MaterialApp(
 
