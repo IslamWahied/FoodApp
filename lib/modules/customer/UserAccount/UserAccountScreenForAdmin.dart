@@ -13,8 +13,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class UserAccountScreen extends StatelessWidget {
-  const UserAccountScreen({Key key}) : super(key: key);
+class UserAccountScreenForAdmin extends StatelessWidget {
+  const UserAccountScreenForAdmin({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class UserAccountScreen extends StatelessWidget {
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
             title: customAppBar(
-                context: context, title: 'حسابي', isShowCarShop: false),
+                context: context, title: ' حساب العملاء', isShowCarShop: false),
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -66,28 +66,28 @@ class UserAccountScreen extends StatelessWidget {
                                   width: 2.0,
                                 ),
                               ),
-                              labelText: 'المطعم',
+                              labelText: 'العميل',
                               alignLabelWithHint: true,
                               labelStyle: const TextStyle(
                                   fontWeight: FontWeight.w400, fontSize: 20),
                             ),
-                            selectedItem: cubit.selectedUserId != null &&
-                                    cubit.listProject.isNotEmpty &&
-                                    cubit.selectedUserId.trim() != ''
-                                ? cubit.listProject
-                                        .firstWhere((element) =>
-                                            element.name.toLowerCase() ==
-                                            cubit.selectedUserId.toLowerCase())
-                                        .name ??
-                                    ''
+                            selectedItem: cubit.selectedUserId.trim() != ''
+                                ? cubit.listUser
+                                    .firstWhere((element) =>
+                                        element.mobile == cubit.selectedUserId)
+                                    .userName
                                 : '',
                             showSearchBox: true,
                             mode: Mode.BOTTOM_SHEET,
                             items:
-                                cubit.listProject.map((e) => e.name).toList(),
+                                cubit.listUser.map((e) => e.userName).toList(),
                             onChanged: (value) async {
                               if (value != null) {
-                                cubit.selectedUserId = value;
+                                cubit.selectedUserId = cubit.listUser
+                                    .firstWhere((element) =>
+                                        element.userName.toLowerCase() ==
+                                        value.toString().toLowerCase())
+                                    .mobile;
                                 cubit.isShowAllAccount = false;
                               } else {
                                 cubit.selectedUserId = '';
@@ -158,7 +158,7 @@ class UserAccountScreen extends StatelessWidget {
                                                     ),
                                                     PrimaryText(
                                                       text: cubit
-                                                          .getTotalUserPrigectOrdersPrice(),
+                                                          .getTotalCustomerOrdersPrice(),
                                                       size: 25,
                                                       fontWeight:
                                                           FontWeight.w700,
@@ -189,21 +189,9 @@ class UserAccountScreen extends StatelessWidget {
                                                   PrimaryText(
                                                     text: cubit.listAllOrders
                                                             .where((element) =>
-                                                                element.userName
-                                                                        .toLowerCase() ==
-                                                                    Global
-                                                                        .userName
-                                                                        .toLowerCase() &&
-                                                                element.projectId
-                                                                        .toString() ==
+                                                                element.userMobile ==
                                                                     cubit
-                                                                        .listProject
-                                                                        .firstWhere((element) =>
-                                                                            element.name.toLowerCase() ==
-                                                                            cubit
-                                                                                .selectedUserId)
-                                                                        .id
-                                                                        .toString() &&
+                                                                        .selectedUserId &&
                                                                 element.orderState
                                                                         .toLowerCase() ==
                                                                     'Done'
@@ -242,7 +230,7 @@ class UserAccountScreen extends StatelessWidget {
                                                     ),
                                                     PrimaryText(
                                                       text: cubit
-                                                              .getUserProjectBalance()
+                                                              .getUserBalance()
                                                               .toString() ??
                                                           '0',
                                                       size: 25,
@@ -253,6 +241,22 @@ class UserAccountScreen extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
+
+                                                MaterialButton(
+                                                    color: Colors.green,
+                                                    onPressed: () {
+                                                      cubit
+                                                          .modalBottomSheetMenu(
+                                                              context);
+                                                    },
+                                                    child: const Text(
+                                                      '+اضافة رصيد',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w800),
+                                                    ))
                                               ],
                                             ),
                                           ],
@@ -269,15 +273,7 @@ class UserAccountScreen extends StatelessWidget {
                                             Row(
                                               children: [
                                                 Text(
-                                                  cubit.listProject
-                                                          .firstWhere((element) =>
-                                                              element.name
-                                                                  .toLowerCase() ==
-                                                              cubit
-                                                                  .selectedUserId
-                                                                  .toLowerCase())
-                                                          .projectMobile ??
-                                                      '',
+                                                  cubit.selectedUserId ?? '',
                                                   style: const TextStyle(
                                                       color: Colors.blueAccent,
                                                       fontSize: 16),
@@ -293,6 +289,15 @@ class UserAccountScreen extends StatelessWidget {
                                             ),
                                           ],
                                         ),
+                                        // Row(
+                                        //   mainAxisAlignment: MainAxisAlignment.end,
+                                        //   children: [
+                                        //     Text(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId != null?cubit.departMentList[cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId]:'',style: const TextStyle(color: Colors.blueAccent,fontSize: 16),),
+                                        //     const Text('  :  '),
+                                        //     // Text('القسم',style: TextStyle(fontSize: 16,color: Colors.grey[600],fontWeight:FontWeight.w600)),
+                                        //
+                                        //   ],
+                                        // ),
                                         const SizedBox(height: 25),
                                         Row(
                                           mainAxisAlignment:
@@ -300,12 +305,10 @@ class UserAccountScreen extends StatelessWidget {
                                           children: [
                                             Text(
                                               cubit.convertDateFormat(cubit
-                                                      .listProject
+                                                      .listUser
                                                       .firstWhere((element) =>
-                                                          element.name
-                                                              .toLowerCase() ==
-                                                          cubit.selectedUserId
-                                                              .toLowerCase())
+                                                          element.mobile ==
+                                                          cubit.selectedUserId)
                                                       .createdDate) ??
                                                   '',
                                               style: const TextStyle(
@@ -358,7 +361,7 @@ class UserAccountScreen extends StatelessWidget {
                                               animateOnTap: false,
                                               onPressed: () {
                                                 launch(
-                                                    ('tel://${cubit.listProject.firstWhere((element) => element.name.toLowerCase() == cubit.selectedUserId.toLowerCase()).projectMobile}'));
+                                                    ('tel://${cubit.selectedUserId}'));
                                               }),
                                         ),
                                       ],
@@ -374,32 +377,26 @@ class UserAccountScreen extends StatelessWidget {
                                   CircleAvatar(
                                     radius: 54,
                                     backgroundColor: Colors.grey[200],
-                                    child: cubit.listProject
+                                    child: cubit.listUser
                                                     .firstWhere((element) =>
-                                                        element.name
-                                                            .toLowerCase() ==
-                                                        cubit.selectedUserId
-                                                            .toLowerCase())
+                                                        element.mobile ==
+                                                        cubit.selectedUserId)
                                                     .image !=
                                                 null &&
-                                            cubit.listProject
+                                            cubit.listUser
                                                     .firstWhere((element) =>
-                                                        element.name
-                                                            .toLowerCase() ==
-                                                        cubit.selectedUserId
-                                                            .toLowerCase())
+                                                        element.mobile ==
+                                                        cubit.selectedUserId)
                                                     .image
                                                     .trim() !=
                                                 ''
                                         ? CircleAvatar(
                                             radius: 50,
                                             backgroundImage: NetworkImage(cubit
-                                                .listProject
+                                                .listUser
                                                 .firstWhere((element) =>
-                                                    element.name
-                                                        .toLowerCase() ==
-                                                    cubit.selectedUserId
-                                                        .toLowerCase())
+                                                    element.mobile ==
+                                                    cubit.selectedUserId)
                                                 .image),
                                           )
                                         : const CircleAvatar(
@@ -410,12 +407,11 @@ class UserAccountScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    cubit.listProject
+                                    cubit.listUser
                                             .firstWhere((element) =>
-                                                element.name.toLowerCase() ==
-                                                cubit.selectedUserId
-                                                    .toLowerCase())
-                                            .name ??
+                                                element.mobile ==
+                                                cubit.selectedUserId)
+                                            .userName ??
                                         '',
                                     style: const TextStyle(
                                         fontSize: 20, color: Colors.grey),
@@ -578,15 +574,9 @@ class UserAccountScreen extends StatelessWidget {
                                         .listUserAccountBase
                                         .where((element) =>
                                             element.customerMobile ==
-                                                Global.mobile &&
+                                                cubit.selectedUserId &&
                                             element.projectId ==
-                                                cubit.listProject
-                                                    .firstWhere((element) =>
-                                                        element.name
-                                                            .toLowerCase() ==
-                                                        cubit.selectedUserId
-                                                            .toLowerCase())
-                                                    .id &&
+                                                Global.projectId &&
                                             cubit.convertDateFormat(
                                                     element.createdDate) ==
                                                 cubit.convertDateFormat(
@@ -597,15 +587,9 @@ class UserAccountScreen extends StatelessWidget {
                                         .listUserAccountBase
                                         .where((element) =>
                                             element.customerMobile ==
-                                                Global.mobile &&
+                                                cubit.selectedUserId &&
                                             element.projectId ==
-                                                cubit.listProject
-                                                    .firstWhere((element) =>
-                                                        element.name
-                                                            .toLowerCase() ==
-                                                        cubit.selectedUserId
-                                                            .toLowerCase())
-                                                    .id)
+                                                Global.projectId)
                                         .toList();
                                   }
                                   cubit.emit(SelectCategoryState());
@@ -650,29 +634,15 @@ class UserAccountScreen extends StatelessWidget {
                                 model = cubit.listUserAccount
                                     .where((element) =>
                                         element.customerMobile ==
-                                            Global.mobile &&
-                                        element.projectId ==
-                                            cubit.listProject
-                                                .firstWhere((element) =>
-                                                    element.name
-                                                        .toLowerCase() ==
-                                                    cubit.selectedUserId
-                                                        .toLowerCase())
-                                                .id)
+                                            cubit.selectedUserId &&
+                                        element.projectId == Global.projectId)
                                     .toList()[index];
                               } else {
                                 model = cubit.listUserAccount
                                     .where((element) =>
                                         element.customerMobile ==
-                                            Global.mobile &&
-                                        element.projectId ==
-                                            cubit.listProject
-                                                .firstWhere((element) =>
-                                                    element.name
-                                                        .toLowerCase() ==
-                                                    cubit.selectedUserId
-                                                        .toLowerCase())
-                                                .id &&
+                                            cubit.selectedUserId &&
+                                        element.projectId == Global.projectId &&
                                         cubit.convertDateFormat(
                                                 element.createdDate) ==
                                             cubit.convertDateFormat(
@@ -685,9 +655,7 @@ class UserAccountScreen extends StatelessWidget {
                                 child: ListTile(
                                   title: Text(cubit.listProject
                                           .firstWhere((element) =>
-                                              element.name.toLowerCase() ==
-                                              cubit.selectedUserId
-                                                  .toLowerCase())
+                                              element.id == model.projectId)
                                           .name ??
                                       ''),
                                   subtitle: Text(cubit.convertDateFormat(
@@ -726,36 +694,25 @@ class UserAccountScreen extends StatelessWidget {
                             itemCount: cubit.isShowAllAccount
                                 ? cubit.listUserAccount
                                     .where((element) =>
-                                        element.customerMobile == Global.mobile &&
-                                        element.projectId ==
-                                            cubit.listProject
-                                                .firstWhere((element) =>
-                                                    element.name.toLowerCase() ==
-                                                    cubit.selectedUserId
-                                                        .toLowerCase())
-                                                .id)
+                                        element.customerMobile ==
+                                            cubit.selectedUserId &&
+                                        element.projectId == Global.projectId)
                                     .toList()
                                     .length
                                 : cubit.listUserAccount
                                     .where((element) =>
-                                        element.customerMobile == Global.mobile &&
-                                        element.projectId ==
-                                            cubit.listProject
-                                                .firstWhere((element) =>
-                                                    element.name.toLowerCase() ==
-                                                    cubit.selectedUserId
-                                                        .toLowerCase())
-                                                .id &&
-                                        cubit.convertDateFormat(element.createdDate) ==
-                                            cubit.convertDateFormat(DateTime.now().toString()))
+                                        element.customerMobile ==
+                                            cubit.selectedUserId &&
+                                        element.projectId == Global.projectId &&
+                                        cubit.convertDateFormat(
+                                                element.createdDate) ==
+                                            cubit.convertDateFormat(
+                                                DateTime.now().toString()))
                                     .toList()
                                     .length)
                       ],
                     ),
-                  ),
-                const SizedBox(
-                  height: 100,
-                ),
+                  )
               ],
             ),
           ),

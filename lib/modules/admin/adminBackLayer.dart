@@ -4,25 +4,19 @@ import 'package:backdrop/backdrop.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
-
 import 'package:elomda/modules/admin/Update_Data/UpdateData.dart';
-import 'package:elomda/modules/admin/adminBackLayerOpations/customerAccount/customerAccount.dart';
 import 'package:elomda/modules/admin/adminBackLayerOpations/sendNotifacation.dart';
 import 'package:elomda/modules/admin/upload_products/upload_products.dart';
-import 'package:elomda/modules/customer/UserAccount/UserAccountScreen.dart';
-
+import 'package:elomda/modules/customer/UserAccount/UserAccountScreenForAdmin.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
-
 import 'package:elomda/styles/icons/my_icons.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'adminAccount.dart';
-
 
 class AdminBackLayerMenu extends StatelessWidget {
   AdminBackLayerMenu({Key key}) : super(key: key);
@@ -44,7 +38,7 @@ class AdminBackLayerMenu extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Global.imageUrl != null
+                    Global.imageUrl != null && Global.imageUrl.trim() != ''
                         ? Center(
                             child: CircleAvatar(
                               radius: 60.0,
@@ -149,8 +143,8 @@ class AdminBackLayerMenu extends StatelessWidget {
                           .isActive) {
                         cubit.selectedUserId = '';
 
-                       // navigateTo(context, const CustomerAccountScreen());
-                         navigateTo(context, const UserAccountScreen());
+                        // navigateTo(context, const CustomerAccountScreen());
+                        navigateTo(context, const UserAccountScreenForAdmin());
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -240,62 +234,63 @@ class AdminBackLayerMenu extends StatelessWidget {
   }
 }
 
-
-Widget backdrop({BuildContext context,newOrderList,Widget backLayer})=>Scaffold(
-  body: Center(
-    child: BackdropScaffold(
-      backgroundColor: Colors.grey[100],
-      onBackLayerConcealed: () {
-        HomeCubit.get(context).isShowBackLayer = true;
-        HomeCubit.get(context).emit(SelectCategoryState());
-      },
-      onBackLayerRevealed: () {
-        HomeCubit.get(context).isShowBackLayer = false;
-        HomeCubit.get(context).emit(SelectCategoryState());
-      },
-      frontLayerBackgroundColor: Constants.lighterGray,
-      headerHeight: MediaQuery.of(context).size.height * 0.35,
-      appBar: BackdropAppBar(
-        title: Text(HomeCubit.get(context).selectedTab),
-        leading: const BackdropToggleButton(
-          icon: AnimatedIcons.home_menu,
-          color: Colors.deepOrange,
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            color: Colors.black,
+Widget backdrop({BuildContext context, newOrderList, Widget backLayer}) =>
+    Scaffold(
+      body: Center(
+        child: BackdropScaffold(
+          backgroundColor: Colors.grey[100],
+          onBackLayerConcealed: () {
+            HomeCubit.get(context).isShowBackLayer = true;
+            HomeCubit.get(context).emit(SelectCategoryState());
+          },
+          onBackLayerRevealed: () {
+            HomeCubit.get(context).isShowBackLayer = false;
+            HomeCubit.get(context).emit(SelectCategoryState());
+          },
+          frontLayerBackgroundColor: Constants.lighterGray,
+          headerHeight: MediaQuery.of(context).size.height * 0.35,
+          appBar: BackdropAppBar(
+            title: Text(HomeCubit.get(context).selectedTab),
+            leading: const BackdropToggleButton(
+              icon: AnimatedIcons.home_menu,
+              color: Colors.deepOrange,
+            ),
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+            ),
+            actions: [
+              HomeCubit.get(context).isShowBackLayer
+                  ? IconButton(
+                      onPressed: () {
+                        NavigatToAndReplace(context, const HomeLayout());
+                        HomeCubit.get(context).changeCurrentIndex(4);
+                      },
+                      padding: const EdgeInsets.all(10),
+                      icon: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        child: Global.imageUrl != null &&
+                                Global.imageUrl.trim() != ''
+                            ? CircleAvatar(
+                                radius: 30.0,
+                                backgroundImage: NetworkImage(Global.imageUrl),
+                                backgroundColor: Colors.transparent,
+                              )
+                            : const CircleAvatar(
+                                radius: 13,
+                                backgroundImage:
+                                    AssetImage('assets/person.jpg'),
+                              ),
+                      ))
+                  : const SizedBox(
+                      width: 1,
+                    )
+            ],
           ),
+          backLayer: AdminBackLayerMenu(),
+          frontLayer: backLayer,
         ),
-        actions: [
-          HomeCubit.get(context).isShowBackLayer
-              ? IconButton(
-              onPressed: () {
-
-                NavigatToAndReplace(context, const HomeLayout());
-                HomeCubit.get(context).changeCurrentIndex(4);
-              },
-              padding: const EdgeInsets.all(10),
-              icon: CircleAvatar(
-                radius: 15,
-                backgroundColor: Colors.white,
-                child: Global.imageUrl != null
-                    ? CircleAvatar(
-                  radius: 30.0,
-                  backgroundImage: NetworkImage(Global.imageUrl),
-                  backgroundColor: Colors.transparent,
-                )
-                    : const CircleAvatar(
-                  radius: 13,
-                  backgroundImage: AssetImage('assets/person.jpg'),
-                ),
-              ))
-              : const SizedBox(
-            width: 1,
-          )
-        ],
       ),
-      backLayer: AdminBackLayerMenu(),
-      frontLayer:backLayer,
-    ),
-  ),
-);
+    );

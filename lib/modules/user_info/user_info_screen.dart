@@ -54,31 +54,7 @@ class UserInformationScreen extends StatelessWidget {
                                       const SizedBox(
                                         width: 12,
                                       ),
-                                      if(!Global.isAdmin)
-                                      Container(
-                                        height: kToolbarHeight / 1.8,
-                                        width: kToolbarHeight / 1.8,
-                                        decoration: BoxDecoration(
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.white,
-                                              blurRadius: 1.0,
-                                            ),
-                                          ],
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: Global.imageUrl != null &&
-                                                    Global.imageUrl.trim() != ''
-                                                ? NetworkImage(Global.imageUrl)
-                                                : const AssetImage(
-                                                    'assets/person.jpg'),
-
-                                          ),
-                                        ),
-                                      ),
-
-                                      if(Global.isAdmin)
+                                      if (!Global.isAdmin)
                                         Container(
                                           height: kToolbarHeight / 1.8,
                                           width: kToolbarHeight / 1.8,
@@ -92,18 +68,42 @@ class UserInformationScreen extends StatelessWidget {
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
                                               fit: BoxFit.cover,
-                                              image: Global.projectImageUrl != null &&
-                                                  Global.projectImageUrl.trim() != ''
-                                                  ? NetworkImage(Global.projectImageUrl)
+                                              image: Global.imageUrl != null &&
+                                                      Global.imageUrl.trim() !=
+                                                          ''
+                                                  ? NetworkImage(
+                                                      Global.imageUrl)
                                                   : const AssetImage(
-                                                  'assets/person.jpg'),
-
+                                                      'assets/person.jpg'),
                                             ),
                                           ),
                                         ),
-
-
-
+                                      if (Global.isAdmin)
+                                        Container(
+                                          height: kToolbarHeight / 1.8,
+                                          width: kToolbarHeight / 1.8,
+                                          decoration: BoxDecoration(
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: Colors.white,
+                                                blurRadius: 1.0,
+                                              ),
+                                            ],
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: Global.projectImageUrl !=
+                                                          null &&
+                                                      Global.projectImageUrl
+                                                              .trim() !=
+                                                          ''
+                                                  ? NetworkImage(
+                                                      Global.projectImageUrl)
+                                                  : const AssetImage(
+                                                      'assets/person.jpg'),
+                                            ),
+                                          ),
+                                        ),
                                       const SizedBox(
                                         width: 10,
                                       ),
@@ -119,27 +119,27 @@ class UserInformationScreen extends StatelessWidget {
                                 background: Stack(
                                   alignment: Alignment.bottomRight,
                                   children: [
-                                if(Global.isAdmin)
-                                    Image(
-                                      // image: AssetImage('assets/person.jpg'),
-                                      image: Global.projectImageUrl != null &&
-                                          Global.projectImageUrl.trim() != ''
-                                          ? NetworkImage(Global.projectImageUrl)
-                                          : const AssetImage(
-                                          'assets/person.jpg'),
-                                      fit: BoxFit.fitWidth,
-                                      width: double.infinity,
-                                    ),
-
-
-                                    if(!Global.isAdmin)
+                                    if (Global.isAdmin)
+                                      Image(
+                                        // image: AssetImage('assets/person.jpg'),
+                                        image: Global.projectImageUrl != null &&
+                                                Global.projectImageUrl.trim() !=
+                                                    ''
+                                            ? NetworkImage(
+                                                Global.projectImageUrl)
+                                            : const AssetImage(
+                                                'assets/person.jpg'),
+                                        fit: BoxFit.fitWidth,
+                                        width: double.infinity,
+                                      ),
+                                    if (!Global.isAdmin)
                                       Image(
                                         // image: AssetImage('assets/person.jpg'),
                                         image: Global.imageUrl != null &&
-                                            Global.imageUrl.trim() != ''
+                                                Global.imageUrl.trim() != ''
                                             ? NetworkImage(Global.imageUrl)
                                             : const AssetImage(
-                                            'assets/person.jpg'),
+                                                'assets/person.jpg'),
                                         fit: BoxFit.fitWidth,
                                         width: double.infinity,
                                       ),
@@ -163,56 +163,63 @@ class UserInformationScreen extends StatelessWidget {
                           children: [
                             Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
-                                child: userTitle(title:Global.isAdmin?'بيانات المطعم' :  'الصفحة الشخصية')),
+                                child: userTitle(
+                                    title: Global.isAdmin
+                                        ? 'بيانات المطعم'
+                                        : 'الصفحة الشخصية')),
                             const Divider(
                               thickness: 1,
                               color: Colors.grey,
                             ),
-                            if(!Global.isAdmin)
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () {
-                                  cubit.isShowBackLayer = false;
-                                  NavigatToAndReplace(
-                                      context, const HomeLayout());
-                                  cubit.changeCurrentIndex(1);
-                                },
-                                splashColor: Colors.red,
-                                child: const ListTile(
-                                  title: Text('المفضلات'),
-                                  trailing: Icon(Icons.chevron_right_rounded),
-                                  leading: Icon(Icons.favorite),
+                            if (!Global.isAdmin)
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    cubit.isShowBackLayer = false;
+                                    NavigatToAndReplace(
+                                        context, const HomeLayout());
+                                    cubit.changeCurrentIndex(1);
+                                  },
+                                  splashColor: Colors.red,
+                                  child: const ListTile(
+                                    title: Text('المفضلات'),
+                                    trailing: Icon(Icons.chevron_right_rounded),
+                                    leading: Icon(Icons.favorite),
+                                  ),
                                 ),
                               ),
-                            ),
-                            if(!Global.isAdmin)
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () {
-                                  cubit.isShowBackLayer = false;
-                                  NavigatToAndReplace(
-                                      context, const HomeLayout());
-                                  cubit.changeCurrentIndex(3);
-                                },
-                                splashColor: Colors.red,
-                                child: const ListTile(
-                                  title: Text('المشتريات'),
-                                  trailing: Icon(Icons.chevron_right_rounded),
-                                  leading:
-                                      Icon(MaterialCommunityIcons.cart_plus),
+                            if (!Global.isAdmin)
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    cubit.isShowBackLayer = false;
+                                    NavigatToAndReplace(
+                                        context, const HomeLayout());
+                                    cubit.changeCurrentIndex(3);
+                                  },
+                                  splashColor: Colors.red,
+                                  child: const ListTile(
+                                    title: Text('المشتريات'),
+                                    trailing: Icon(Icons.chevron_right_rounded),
+                                    leading:
+                                        Icon(MaterialCommunityIcons.cart_plus),
+                                  ),
                                 ),
                               ),
-                            ),
-                            if(Global.isAdmin)
-                            Container(
-                              child: userTile(
-                                'رقم التليفون',
-                                cubit.listProject.firstWhere((element) => element.id == Global.projectId).projectMobile ?? '',
-                                Icons.phone,
+                            if (Global.isAdmin)
+                              Container(
+                                child: userTile(
+                                  'رقم التليفون',
+                                  cubit.listProject
+                                          .firstWhere((element) =>
+                                              element.id == Global.projectId)
+                                          .projectMobile ??
+                                      '',
+                                  Icons.phone,
+                                ),
                               ),
-                            ),
                             // Material(
                             //   color: Colors.transparent,
                             //   child: InkWell(
@@ -262,20 +269,15 @@ class UserInformationScreen extends StatelessWidget {
                                   Icons.phone,
                                 ),
                               ),
-                            // Container(
-                            //   child: userTile(
-                            //     'العنوان',
-                            //     "القطامية امام الاتحادية موقعه الجمل",
-                            //     Icons.local_shipping,
-                            //   ),
-                            // ),
+
                             Container(
                               child: userTile(
                                 'تاريخ الانضمام',
                                 cubit.convertDateFormat(cubit.listUser
-                                        .firstWhere((element) =>
-                                            element.mobile == Global.mobile)
-                                        .createdDate) ??
+                                            .firstWhere((element) =>
+                                                element.mobile == Global.mobile)
+                                            .createdDate ??
+                                        '') ??
                                     '',
                                 Icons.watch_later,
                               ),

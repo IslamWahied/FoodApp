@@ -4,22 +4,15 @@ import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
-
 import 'package:elomda/modules/customer/Userbacklayer.dart';
-
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../shared/components/Reuseable.dart';
-
-
-
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key key}) : super(key: key);
@@ -31,7 +24,6 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return BackdropScaffold(
-
           onBackLayerConcealed: () {
             cubit.isShowBackLayer = true;
             cubit.emit(SelectCategoryState());
@@ -43,7 +35,6 @@ class HomeScreen extends StatelessWidget {
           frontLayerBackgroundColor: Constants.lighterGray,
           headerHeight: MediaQuery.of(context).size.height * 0.35,
           appBar: BackdropAppBar(
-
             title: Text(cubit.selectedTab),
             leading: const BackdropToggleButton(
               icon: AnimatedIcons.home_menu,
@@ -87,7 +78,8 @@ class HomeScreen extends StatelessWidget {
                             icon: CircleAvatar(
                               radius: 15,
                               backgroundColor: Colors.white,
-                              child: Global.imageUrl != null
+                              child: Global.imageUrl != null &&
+                                      Global.imageUrl.trim() != ''
                                   ? CircleAvatar(
                                       radius: 30.0,
                                       backgroundImage:
@@ -166,7 +158,8 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(
                       height: 250,
                       child: ListView.separated(
-                        separatorBuilder: (context, index) => const SizedBox(width: 10) ,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(width: 10),
                         scrollDirection: Axis.horizontal,
                         itemCount: cubit.listCategory
                                 .where((element) =>
@@ -216,16 +209,20 @@ class HomeScreen extends StatelessWidget {
                             .toList()
                             .length,
                         (index) {
-                     var popularModel  =   cubit.popularList.where((element) => element.projectId == Global.projectId).toList()[index];
-                        return    itemCard(
-                           
-                          isFavourite: cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == popularModel.itemId && element.isFavourit) ? true : false,
-                          
-                          context: context,
-                          itemModel: popularModel
-                          
-                          
-                        );
+                          var popularModel = cubit.popularList
+                              .where((element) =>
+                                  element.projectId == Global.projectId)
+                              .toList()[index];
+                          return itemCard(
+                              isFavourite: cubit.listFavourite.isNotEmpty &&
+                                      cubit.listFavourite.any((element) =>
+                                          element.ItemId ==
+                                              popularModel.itemId &&
+                                          element.isFavourit)
+                                  ? true
+                                  : false,
+                              context: context,
+                              itemModel: popularModel);
                         },
                       ),
                     ),
@@ -249,105 +246,103 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return GestureDetector(
-          onTap: () {
-            cubit.selectCategory(categoryId, context);
-          },
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: <Widget>[
-              Card(
-                color: HomeCubit.get(context).selectedCategoryId == categoryId ? Constants.primary : Constants.white,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
+            onTap: () {
+              cubit.selectCategory(categoryId, context);
+            },
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: <Widget>[
+                Card(
+                  color: HomeCubit.get(context).selectedCategoryId == categoryId
+                      ? Constants.primary
+                      : Constants.white,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 150,
-                      height: 150,
-                      child: Image.network(
-                        imagePath,
-                        fit: BoxFit.cover,
-
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 150,
+                        height: 150,
+                        child: Image.network(
+                          imagePath,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+
+                  elevation: 5,
+
+                  // margin: const EdgeInsets.all(10),
                 ),
-
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+                Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      PrimaryText(
+                          text: name, fontWeight: FontWeight.w800, size: 16),
+                      RawMaterialButton(
+                          onPressed: null,
+                          fillColor: cubit.selectedCategoryId == categoryId
+                              ? Constants.white
+                              : Constants.tertiary,
+                          shape: const CircleBorder(),
+                          child: Icon(Icons.chevron_right_rounded,
+                              size: 20,
+                              color:
+                                  HomeCubit.get(context).selectedCategoryId ==
+                                          categoryId
+                                      ? Constants.black
+                                      : Constants.white)),
+                    ],
+                  ),
                 ),
+              ],
+            )
 
-                elevation: 5,
-
-                // margin: const EdgeInsets.all(10),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-
-                    PrimaryText(text: name, fontWeight: FontWeight.w800, size: 16),
-                    RawMaterialButton(
-                                onPressed: null,
-                                fillColor: cubit.selectedCategoryId == categoryId
-                                    ? Constants.white
-                                    : Constants.tertiary,
-                                shape: const CircleBorder(),
-                                child: Icon(Icons.chevron_right_rounded,
-                                    size: 20,
-                                    color: HomeCubit.get(context).selectedCategoryId ==
-                                            categoryId
-                                        ? Constants.black
-                                        : Constants.white)),
-                  ],
-                ),
-              ),
-
-            ],
-          )
-
-
-          // Container(
-          //   margin: const EdgeInsets.only(right: 20, top: 20, bottom: 20),
-          //   padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-          //   decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(20),
-          //       color: HomeCubit.get(context).selectedCategoryId == categoryId
-          //           ? Constants.primary
-          //           : Constants.white,
-          //       boxShadow: const [
-          //         BoxShadow(
-          //           color: Colors.grey,
-          //           blurRadius: 15,
-          //         )
-          //       ]),
-          //   child: Column(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       // SvgPicture.asset(imagePath, width: 40),
-          //       Image.network(imagePath, width: 90, height: 80,fit: BoxFit.cover,),
-          //       PrimaryText(text: name, fontWeight: FontWeight.w800, size: 16),
-          //       RawMaterialButton(
-          //           onPressed: null,
-          //           fillColor: cubit.selectedCategoryId == categoryId
-          //               ? Constants.white
-          //               : Constants.tertiary,
-          //           shape: const CircleBorder(),
-          //           child: Icon(Icons.chevron_right_rounded,
-          //               size: 20,
-          //               color: HomeCubit.get(context).selectedCategoryId ==
-          //                       categoryId
-          //                   ? Constants.black
-          //                   : Constants.white))
-          //     ],
-          //   ),
-          // ),
-        );
+            // Container(
+            //   margin: const EdgeInsets.only(right: 20, top: 20, bottom: 20),
+            //   padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+            //   decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(20),
+            //       color: HomeCubit.get(context).selectedCategoryId == categoryId
+            //           ? Constants.primary
+            //           : Constants.white,
+            //       boxShadow: const [
+            //         BoxShadow(
+            //           color: Colors.grey,
+            //           blurRadius: 15,
+            //         )
+            //       ]),
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       // SvgPicture.asset(imagePath, width: 40),
+            //       Image.network(imagePath, width: 90, height: 80,fit: BoxFit.cover,),
+            //       PrimaryText(text: name, fontWeight: FontWeight.w800, size: 16),
+            //       RawMaterialButton(
+            //           onPressed: null,
+            //           fillColor: cubit.selectedCategoryId == categoryId
+            //               ? Constants.white
+            //               : Constants.tertiary,
+            //           shape: const CircleBorder(),
+            //           child: Icon(Icons.chevron_right_rounded,
+            //               size: 20,
+            //               color: HomeCubit.get(context).selectedCategoryId ==
+            //                       categoryId
+            //                   ? Constants.black
+            //                   : Constants.white))
+            //     ],
+            //   ),
+            // ),
+            );
       },
     );
   }
-
- 
 }

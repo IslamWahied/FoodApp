@@ -67,7 +67,8 @@ class ShopScreen extends StatelessWidget {
                                 icon: CircleAvatar(
                                   radius: 15,
                                   backgroundColor: Colors.white,
-                                  child: Global.imageUrl != null
+                                  child: Global.imageUrl != null &&
+                                          Global.imageUrl.trim() != ''
                                       ? CircleAvatar(
                                           radius: 30.0,
                                           backgroundImage:
@@ -293,8 +294,8 @@ Widget itemCard(
                                 onTap: () {
                                   HomeCubit.get(context)
                                       .changeItemFavouriteState(
-                                    itemModel: HomeCubit.get(context).listOrder[index] ,
-
+                                          itemModel: HomeCubit.get(context)
+                                              .listOrder[index],
                                           isFavourite: isFavourite);
                                 },
                                 child: isFavourite

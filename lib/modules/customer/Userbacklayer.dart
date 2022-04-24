@@ -4,10 +4,13 @@ import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/shared/Global.dart';
+import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/icons/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'UserAccount/UserAccountScreen.dart';
 
 class UserBackLayerMenu extends StatelessWidget {
   UserBackLayerMenu({Key key}) : super(key: key);
@@ -31,7 +34,8 @@ class UserBackLayerMenu extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Center(
-                        child: Global.imageUrl != null
+                        child: Global.imageUrl != null &&
+                                Global.imageUrl.trim() != ''
                             ? CircleAvatar(
                                 radius: 30.0,
                                 backgroundImage: NetworkImage(Global.imageUrl),
@@ -46,15 +50,13 @@ class UserBackLayerMenu extends StatelessWidget {
                       const SizedBox(height: 5.0),
                       const SizedBox(height: 5.0),
                       content(context, () {
-                        cubit.isShowBackLayer = false;
-                        NavigatToAndReplace(context, const HomeLayout());
-                        cubit.changeCurrentIndex(1);
-                      }, 'المفضل', 2),
+                        navigateTo(context, const UserAccountScreen());
+                      }, 'حسابي', 1),
                       content(context, () {
                         cubit.isShowBackLayer = false;
                         NavigatToAndReplace(context, const HomeLayout());
-                        cubit.changeCurrentIndex(3);
-                      }, 'المشتريات', 5),
+                        cubit.changeCurrentIndex(4);
+                      }, 'الصفحة الشخصية', 3),
                       const SizedBox(height: 5.0),
                     ],
                   ),

@@ -200,76 +200,11 @@ class RegisterCubit extends Cubit<RegisterState> {
   UserModel userModel;
   Project projectModel;
 
-  registerAndLoginUser(context) async {
-    rgisterBtnController.start();
-    Global.userName = txtRegisterUserNameControl.text;
+  registerAndLoginUser2(context) async {
+    // Check Image Is Null
 
-    Global.departMent = 0;
-
-    await CachHelper.SetData(key: 'mobile', value: Global.mobile);
-    await CachHelper.SetData(key: 'userName', value: Global.userName);
-    await CachHelper.SetData(key: 'departmentId', value: Global.departMent);
-    await CachHelper.SetData(key: 'showOnBoarding', value: false);
-    await CachHelper.SetData(key: 'isUserLogin', value: true);
-    await CachHelper.SetData(key: 'isAdmin', value: false);
-
-    Global.isAdmin = false;
-
-    FirebaseFirestore.instance
-        .collection('User')
-        .doc(Global.mobile)
-        .get()
-        .then((value) async {
-      userModel = UserModel.fromJson(value.data());
-      Global.imageUrl = userModel.image;
-      await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
-      if (userModel.mobile != null) {
-        rgisterBtnController.success();
-        await Future.delayed(const Duration(seconds: 1));
-        rgisterBtnController.reset();
-        NavigatToAndReplace(context, const HomeLayout());
-      } else {
-        firebase_storage.FirebaseStorage.instance
-            .ref()
-            .child(
-                'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
-            .putFile(finalPickedUserImage)
-            .then((value) {
-          value.ref.getDownloadURL().then((value) async {
-            UserModel model = UserModel(
-              isActive: false,
-              image: value,
-              currentBalance: 0,
-              createdDate: DateTime.now().toString(),
-              isAdmin: isAdmin,
-              departmentId: 0,
-              mobile: Global.mobile,
-              userName: Global.userName,
-              fireBaseToken: Global.fireBaseToken,
-            );
-            Global.imageUrl = value;
-            await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
-            FirebaseFirestore.instance
-                .collection('User')
-                .doc(Global.mobile)
-                .set(model.toMap())
-                .then((value) async {
-              rgisterBtnController.success();
-              await Future.delayed(const Duration(seconds: 1));
-              rgisterBtnController.reset();
-              NavigatToAndReplace(context, const HomeLayout());
-            }).catchError((e) async {
-              if (kDebugMode) {
-                rgisterBtnController.error();
-                await Future.delayed(const Duration(seconds: 1));
-                rgisterBtnController.reset();
-                print(e);
-              }
-            });
-          });
-        });
-      }
-    }).catchError((error) {
+    if (finalPickedUserImage != null) {
+      // if not image null  Update User By Image
       firebase_storage.FirebaseStorage.instance
           .ref()
           .child(
@@ -282,64 +217,106 @@ class RegisterCubit extends Cubit<RegisterState> {
             image: value,
             currentBalance: 0,
             createdDate: DateTime.now().toString(),
-            isAdmin: isAdmin,
+            isAdmin: false,
             departmentId: 0,
             mobile: Global.mobile,
-            userName: Global.userName,
+            userName: txtRegisterUserNameControl.text,
             fireBaseToken: Global.fireBaseToken,
           );
+
           Global.imageUrl = value;
+
           await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
+
           FirebaseFirestore.instance
               .collection('User')
               .doc(Global.mobile)
-              .set(model.toMap())
-              .then((value) async {
-            rgisterBtnController.error();
-            await Future.delayed(const Duration(seconds: 1));
-            rgisterBtnController.reset();
-            NavigatToAndReplace(context, const HomeLayout());
-          }).catchError((e) async {
-            if (kDebugMode) {
-              rgisterBtnController.error();
-              await Future.delayed(const Duration(seconds: 1));
-              rgisterBtnController.reset();
-              print(e);
-            }
-          });
+              .set(model.toMap());
+        }).then((value) async {
+          // Save In CashHelper
+          await CachHelper.SetData(key: 'mobile', value: Global.mobile);
+          await CachHelper.SetData(key: 'userName', value: Global.userName);
+          await CachHelper.SetData(key: 'departmentId', value: 0);
+          await CachHelper.SetData(key: 'showOnBoarding', value: false);
+          await CachHelper.SetData(key: 'isUserLogin', value: true);
+          await CachHelper.SetData(key: 'isAdmin', value: false);
+
+          // Save Globale
+          Global.departMent = 0;
+          Global.userName = txtRegisterUserNameControl.text;
+          Global.isAdmin = false;
+          Global.projectId = 0;
+
+          // Go To Home
+          rgisterBtnController.success();
+          await Future.delayed(const Duration(seconds: 1));
+          rgisterBtnController.reset();
+          NavigatToAndReplace(context, const HomeLayout());
         });
       });
-    });
+    }
+
+    // Else Upload User Without Image
+    else {
+      UserModel model = UserModel(
+        isActive: false,
+        image: '',
+        currentBalance: 0,
+        createdDate: DateTime.now().toString(),
+        isAdmin: false,
+        departmentId: 0,
+        mobile: Global.mobile,
+        userName: txtRegisterUserNameControl.text,
+        fireBaseToken: Global.fireBaseToken,
+      );
+      print('2');
+      Global.imageUrl = '';
+      await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
+      print('3');
+      FirebaseFirestore.instance
+          .collection('User')
+          .doc(Global.mobile)
+          .set(model.toMap())
+          .then((value) async {
+        await CachHelper.SetData(key: 'mobile', value: Global.mobile);
+        await CachHelper.SetData(
+            key: 'userName', value: txtRegisterUserNameControl.text);
+        await CachHelper.SetData(key: 'departmentId', value: 0);
+        await CachHelper.SetData(key: 'showOnBoarding', value: false);
+        await CachHelper.SetData(key: 'isUserLogin', value: true);
+        await CachHelper.SetData(key: 'isAdmin', value: false);
+
+        // Save Globale
+        Global.departMent = 0;
+        Global.userName = txtRegisterUserNameControl.text;
+        Global.isAdmin = false;
+        Global.projectId = 0;
+
+        // Go To Home
+        rgisterBtnController.success();
+        await Future.delayed(const Duration(seconds: 1));
+        rgisterBtnController.reset();
+        NavigatToAndReplace(context, const HomeLayout());
+      });
+    }
   }
 
   registerAndLoginAdmin(context) async {
-    rgisterBtnController.start();
-    Global.userName = txtRegisterUserNameControl.text;
-    Global.departMent = HomeCubit.get(context)
-        .departMentList
-        .indexWhere((element) => element == departMentSelectedName);
-    Global.isAdmin = true;
+    if (isAdmin && registerValid) {
+      rgisterBtnController.start();
+      Global.userName = txtRegisterUserNameControl.text;
+      Global.departMent = 0;
+      Global.isAdmin = true;
 
-    await CachHelper.SetData(key: 'mobile', value: Global.mobile);
-    await CachHelper.SetData(key: 'userName', value: Global.userName);
-    await CachHelper.SetData(key: 'departmentId', value: Global.departMent);
-    await CachHelper.SetData(key: 'showOnBoarding', value: false);
-    await CachHelper.SetData(key: 'isUserLogin', value: true);
-    await CachHelper.SetData(key: 'isAdmin', value: true);
+      await CachHelper.SetData(key: 'mobile', value: Global.mobile);
+      await CachHelper.SetData(key: 'userName', value: Global.userName);
+      await CachHelper.SetData(key: 'departmentId', value: Global.departMent);
+      await CachHelper.SetData(key: 'showOnBoarding', value: false);
+      await CachHelper.SetData(key: 'isUserLogin', value: true);
+      await CachHelper.SetData(key: 'isAdmin', value: true);
 
-    // Upload User
-
-    FirebaseFirestore.instance
-        .collection('User')
-        .doc(Global.mobile)
-        .get()
-        .then((value) async {
-      userModel = UserModel.fromJson(value.data());
-
-      if (userModel.mobile != null) {
-        Global.imageUrl = userModel.image;
-        await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
-      } else {
+      if (finalPickedUserImage != null) {
+        // if not image null  Update User By Image
         firebase_storage.FirebaseStorage.instance
             .ref()
             .child(
@@ -352,83 +329,113 @@ class RegisterCubit extends Cubit<RegisterState> {
               image: value,
               currentBalance: 0,
               createdDate: DateTime.now().toString(),
-              isAdmin: isAdmin,
+              isAdmin: true,
               departmentId: 0,
               mobile: Global.mobile,
-              userName: Global.userName,
+              userName: txtRegisterUserNameControl.text,
               fireBaseToken: Global.fireBaseToken,
             );
+
             Global.imageUrl = value;
+
             await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
+
             FirebaseFirestore.instance
                 .collection('User')
                 .doc(Global.mobile)
-                .set(model.toMap())
-                .then((value) async {})
-                .catchError((e) async {
-              if (kDebugMode) {
-                print(e);
-              }
-            });
+                .set(model.toMap());
           });
         });
       }
-    }).catchError((error) {
-      firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child(
-              'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
-          .putFile(finalPickedUserImage)
-          .then((value) {
-        value.ref.getDownloadURL().then((value) async {
-          UserModel model = UserModel(
-            isActive: false,
-            image: value,
-            currentBalance: 0,
-            createdDate: DateTime.now().toString(),
-            isAdmin: isAdmin,
-            departmentId: 0,
-            mobile: Global.mobile,
-            userName: Global.userName,
-            fireBaseToken: Global.fireBaseToken,
-          );
-          Global.imageUrl = value;
-          await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
-          FirebaseFirestore.instance
-              .collection('User')
-              .doc(Global.mobile)
-              .set(model.toMap())
-              .then((value) async {})
-              .catchError((e) async {
-            if (kDebugMode) {}
+      // Else Upload User Without Image
+      else {
+        UserModel model = UserModel(
+          isActive: false,
+          image: '',
+          currentBalance: 0,
+          createdDate: DateTime.now().toString(),
+          isAdmin: true,
+          departmentId: 0,
+          mobile: Global.mobile,
+          userName: txtRegisterUserNameControl.text,
+          fireBaseToken: Global.fireBaseToken,
+        );
+
+        Global.imageUrl = '';
+        await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
+
+        FirebaseFirestore.instance
+            .collection('User')
+            .doc(Global.mobile)
+            .set(model.toMap());
+      }
+
+      // Upload Project
+      FirebaseFirestore.instance
+          .collection('Projects')
+          .doc(txtProjectMobileControl.text)
+          .get()
+          .then((value) async {
+        if (value.data() != null) {
+          projectModel = Project.fromJson(value.data());
+
+          Global.projectImageUrl = projectModel.image;
+          Global.projectId = projectModel.id;
+          await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
+
+          await CachHelper.SetData(
+              key: 'ProjectImageUrl', value: Global.projectImageUrl);
+
+          rgisterBtnController.success();
+          await Future.delayed(const Duration(seconds: 1));
+          rgisterBtnController.reset();
+
+          Global.isAdmin = true;
+          NavigatToAndReplace(context, const HomeLayout());
+        } else {
+          firebase_storage.FirebaseStorage.instance
+              .ref()
+              .child(
+                  'Project/${Uri.file(finalPickedProjectImage.path).pathSegments.last}')
+              .putFile(finalPickedProjectImage)
+              .then((value) {
+            value.ref.getDownloadURL().then((value) async {
+              Global.projectImageUrl = value;
+              Project model = Project(
+                  isActive: false,
+                  image: value,
+                  createdDate: DateTime.now().toString(),
+                  adminMobile: Global.mobile,
+                  id: 1,
+                  name: txtRegisterProjectNameControl.text,
+                  projectMobile: txtProjectMobileControl.text);
+
+              await CachHelper.SetData(
+                  key: 'ProjectImageUrl', value: Global.projectImageUrl);
+              Global.projectId = 1;
+              await CachHelper.SetData(
+                  key: 'ProjectId', value: Global.projectId);
+              FirebaseFirestore.instance
+                  .collection('Projects')
+                  .doc(Global.mobile)
+                  .set(model.toMap())
+                  .then((value) async {
+                rgisterBtnController.success();
+                await Future.delayed(const Duration(seconds: 1));
+
+                Global.isAdmin = true;
+                NavigatToAndReplace(context, const HomeLayout());
+              }).catchError((e) async {
+                if (kDebugMode) {
+                  rgisterBtnController.error();
+                  await Future.delayed(const Duration(seconds: 1));
+                  rgisterBtnController.reset();
+                }
+              });
+            });
           });
-        });
-      });
-    });
-
-    // Upload Project
-    FirebaseFirestore.instance
-        .collection('Projects')
-        .doc(txtProjectMobileControl.text)
-        .get()
-        .then((value) async {
-      if (value.data() != null) {
-        projectModel = Project.fromJson(value.data());
-
-        Global.projectImageUrl = projectModel.image;
-        Global.projectId = projectModel.id;
-        await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
-
-        await CachHelper.SetData(
-            key: 'ProjectImageUrl', value: Global.projectImageUrl);
-
-        rgisterBtnController.success();
-        await Future.delayed(const Duration(seconds: 1));
-        rgisterBtnController.reset();
-
-        Global.isAdmin = true;
-        NavigatToAndReplace(context, const HomeLayout());
-      } else {
+        }
+      }).catchError((error) {
         firebase_storage.FirebaseStorage.instance
             .ref()
             .child(
@@ -436,20 +443,18 @@ class RegisterCubit extends Cubit<RegisterState> {
             .putFile(finalPickedProjectImage)
             .then((value) {
           value.ref.getDownloadURL().then((value) async {
-            Global.projectImageUrl = value;
             Project model = Project(
                 isActive: false,
                 image: value,
                 createdDate: DateTime.now().toString(),
                 adminMobile: Global.mobile,
-                id: 1,
+                id: listProject.length + 1,
                 name: txtRegisterProjectNameControl.text,
                 projectMobile: txtProjectMobileControl.text);
-
+            Global.projectId = listProject.length + 1;
+            await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
             await CachHelper.SetData(
                 key: 'ProjectImageUrl', value: Global.projectImageUrl);
-            Global.projectId = 1;
-            await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
             FirebaseFirestore.instance
                 .collection('Projects')
                 .doc(Global.mobile)
@@ -457,56 +462,14 @@ class RegisterCubit extends Cubit<RegisterState> {
                 .then((value) async {
               rgisterBtnController.success();
               await Future.delayed(const Duration(seconds: 1));
-
+              rgisterBtnController.reset();
               Global.isAdmin = true;
               NavigatToAndReplace(context, const HomeLayout());
-            }).catchError((e) async {
-              if (kDebugMode) {
-                rgisterBtnController.error();
-                await Future.delayed(const Duration(seconds: 1));
-                rgisterBtnController.reset();
-                // Global.isAdmin = true;
-                // NavigatToAndReplace(context, const HomeLayout());
-
-              }
             });
           });
         });
-      }
-    }).catchError((error) {
-      firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child(
-              'Project/${Uri.file(finalPickedProjectImage.path).pathSegments.last}')
-          .putFile(finalPickedProjectImage)
-          .then((value) {
-        value.ref.getDownloadURL().then((value) async {
-          Project model = Project(
-              isActive: false,
-              image: value,
-              createdDate: DateTime.now().toString(),
-              adminMobile: Global.mobile,
-              id: listProject.length + 1,
-              name: txtRegisterProjectNameControl.text,
-              projectMobile: txtProjectMobileControl.text);
-          Global.projectId = listProject.length + 1;
-          await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
-          await CachHelper.SetData(
-              key: 'ProjectImageUrl', value: Global.projectImageUrl);
-          FirebaseFirestore.instance
-              .collection('Projects')
-              .doc(Global.mobile)
-              .set(model.toMap())
-              .then((value) async {
-            rgisterBtnController.success();
-            await Future.delayed(const Duration(seconds: 1));
-            rgisterBtnController.reset();
-            Global.isAdmin = true;
-            NavigatToAndReplace(context, const HomeLayout());
-          });
-        });
       });
-    });
+    }
   }
 
   //
@@ -558,7 +521,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     if (isAdmin &&
         txtRegisterUserNameControl.text.trim() != '' &&
         txtRegisterUserNameControl.text.trim() != '' &&
-        finalPickedUserImage != null &&
+        // finalPickedUserImage != null &&
         finalPickedProjectImage != null &&
         txtProjectMobileControl.text.trim() != '' &&
         txtProjectMobileControl.text != null) {

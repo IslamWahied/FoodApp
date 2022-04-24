@@ -46,7 +46,7 @@ class HomeCubit extends Cubit<HomeState> {
   TextEditingController txtUpdateCustomerBalance = TextEditingController();
 
   TextEditingController txtCustomerPayAmount = TextEditingController();
-  double  finalAmount =0;
+  double finalAmount = 0;
 
   FocusNode sendMessageNode = FocusNode();
 
@@ -73,35 +73,26 @@ class HomeCubit extends Cubit<HomeState> {
     const ShopScreen(),
     const UserInformationScreen(),
   ];
-double  orderPrice = 0;
-int  selectedOrderId = 0;
-bool  selectedOrder = false;
+  double orderPrice = 0;
+  int selectedOrderId = 0;
+  bool selectedOrder = false;
   String selectedTab = !Global.isAdmin ? 'الرئيسية' : 'طلبات جديدة';
 
+  getFinalCustomerPayAmount(String value, double orderPrice) {
+    if (value.trim().toString() != '') {
+      double x = double.parse(value ?? 0) ?? 0;
 
-  getFinalCustomerPayAmount(String value,double orderPrice){
-
-    if(value.trim().toString() != ''){
-
-
-
-      double x = double.parse(value??0)??0;
-
-      finalAmount =  x -  orderPrice;
-
-    }
-    else{
+      finalAmount = x - orderPrice;
+    } else {
       finalAmount = orderPrice * -1;
     }
 
     emit(SearchSubCategoryState());
   }
 
-  saveTransaActionOrderAndState(){
-
-  }
-  GlobalKey<State<StatefulBuilder>> stateKey  = GlobalKey<State<StatefulBuilder>>();
-
+  saveTransaActionOrderAndState() {}
+  GlobalKey<State<StatefulBuilder>> stateKey =
+      GlobalKey<State<StatefulBuilder>>();
 
   void changeCurrentIndex(int value) {
     if (Global.isAdmin) {
@@ -314,7 +305,7 @@ bool  selectedOrder = false;
 
   bool isDarkTheme = false;
 
-  String selectedUserId = '01151816423';
+  String selectedUserId = '';
 
   static HomeCubit get(context) => BlocProvider.of(context);
   int selectedCategoryId = 0;
@@ -369,7 +360,7 @@ bool  selectedOrder = false;
   String getTotalCustomerOrdersPrice() {
     double debit = 0;
 
-    listUserAccount
+    listUserAccountBase
         .where((element) => element.customerMobile == selectedUserId)
         .forEach((element) {
       if (element.debit != 0) {
@@ -378,6 +369,54 @@ bool  selectedOrder = false;
     });
 
     return (debit).toString();
+  }
+
+  String getTotalPrigectOrdersPrice() {
+    double debit = 0;
+
+    listUserAccountBase
+        .where((element) => element.projectId.toString() == selectedUserId)
+        .forEach((element) {
+      if (element.debit != 0) {
+        debit += element.debit;
+      }
+    });
+
+    return (debit).toString();
+  }
+
+  String getTotalUserPrigectOrdersPrice() {
+    double debit = 0;
+
+    listUserAccountBase
+        .where((element) =>
+            element.projectId.toString() ==
+            listProject
+                .firstWhere((element) =>
+                    element.name.toLowerCase() == selectedUserId.toLowerCase())
+                .id
+                .toString())
+        .forEach((element) {
+      if (element.debit != 0) {
+        debit += element.debit;
+      }
+    });
+
+    return (debit).toString();
+  }
+
+  String getTotalAdminOrdersPrice() {
+    double credit = 0;
+
+    listUserAccountBase
+        .where((element) => element.projectId == Global.projectId)
+        .forEach((element) {
+      if (element.credit != 0) {
+        credit += element.credit;
+      }
+    });
+
+    return (credit).toString();
   }
 
   bool isShowAllAccount = false;
@@ -650,17 +689,12 @@ bool  selectedOrder = false;
   }
 
   updateOrderState({OrderModel orderModel}) {
-
-
     FirebaseFirestore.instance
         .collection('Orders')
         .doc(orderModel.orderId.toString())
         .update(orderModel.toJson())
         .then((value) {
-
-
       if (orderModel.orderState.toLowerCase() == 'Done'.toLowerCase()) {
-
         UserAccount model = UserAccount(
             createdByMobile: Global.mobile,
             createdDate: DateTime.now().toString(),
@@ -669,28 +703,26 @@ bool  selectedOrder = false;
             projectId: orderModel.projectId,
             credit: 0,
             debit: orderModel.orderPrice.toInt(),
-            orderId: orderModel.orderId
-        );
-        FirebaseFirestore.instance.collection('UserAccount').doc().set(model.toMap());
+            orderId: orderModel.orderId);
+        FirebaseFirestore.instance
+            .collection('UserAccount')
+            .doc()
+            .set(model.toMap());
 
-
-          UserAccount model2 = UserAccount(
-              createdByMobile: Global.mobile,
-              createdDate: DateTime.now().toString(),
-              customerMobile: orderModel.userMobile,
-              isDeleted: false,
-              projectId: orderModel.projectId,
-              credit: double.parse(txtCustomerPayAmount.text).toInt(),
-              debit: 0,
-              orderId: orderModel.orderId);
-          FirebaseFirestore.instance.collection('UserAccount').doc().set(model2.toMap());
-
-
-
-
-
+        UserAccount model2 = UserAccount(
+            createdByMobile: Global.mobile,
+            createdDate: DateTime.now().toString(),
+            customerMobile: orderModel.userMobile,
+            isDeleted: false,
+            projectId: orderModel.projectId,
+            credit: double.parse(txtCustomerPayAmount.text).toInt(),
+            debit: 0,
+            orderId: orderModel.orderId);
+        FirebaseFirestore.instance
+            .collection('UserAccount')
+            .doc()
+            .set(model2.toMap());
       }
-
     }).catchError((onError) {});
   }
 
@@ -719,8 +751,47 @@ bool  selectedOrder = false;
   String getUserBalance() {
     double debit = 0;
     double credit = 0;
-    listUserAccount
+    listUserAccountBase
         .where((element) => element.customerMobile == selectedUserId)
+        .forEach((element) {
+      if (element.debit != 0) {
+        debit += element.debit;
+      } else {
+        credit += element.credit;
+      }
+    });
+
+    return (credit - debit).toString();
+  }
+
+  String getUserProjectBalance() {
+    double debit = 0;
+    double credit = 0;
+    listUserAccountBase
+        .where((element) =>
+            element.projectId ==
+                listProject
+                    .firstWhere((element) =>
+                        element.name.toLowerCase() ==
+                        selectedUserId.toLowerCase())
+                    .id &&
+            element.customerMobile == Global.mobile)
+        .forEach((element) {
+      if (element.debit != 0) {
+        debit += element.debit;
+      } else {
+        credit += element.credit;
+      }
+    });
+
+    return (credit - debit).toString();
+  }
+
+  String getAdminBalance() {
+    double debit = 0;
+    double credit = 0;
+    listUserAccountBase
+        .where((element) => element.projectId == Global.projectId)
         .forEach((element) {
       if (element.debit != 0) {
         debit += element.debit;

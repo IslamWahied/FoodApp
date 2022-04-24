@@ -1,8 +1,7 @@
 // @dart=2.9
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
-import 'package:elomda/modules/admin/adminBackLayerOpations/customerAccount/CustomerOrder.dart';
+import 'package:elomda/models/user/userAccount.dart';
 import 'package:elomda/modules/customer/product_details/foodDetail.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
@@ -10,8 +9,6 @@ import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AdminAccountScreen extends StatelessWidget {
   const AdminAccountScreen({Key key}) : super(key: key);
@@ -31,7 +28,7 @@ class AdminAccountScreen extends StatelessWidget {
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
             title: customAppBar(
-                context: context, title: ' حساب العملاء', isShowCarShop: false),
+                context: context, title: 'حسابي', isShowCarShop: false),
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -39,8 +36,6 @@ class AdminAccountScreen extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: [
-                    const SizedBox(height: 50),
-
                     const SizedBox(height: 60),
                     if (cubit.selectedUserId != null &&
                         cubit.selectedUserId.trim() != '')
@@ -75,25 +70,25 @@ class AdminAccountScreen extends StatelessWidget {
                                     ),
                                     Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.end,
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text('اجمالي المبالغ',
                                                     style: TextStyle(
                                                         fontSize: 18,
                                                         color: Colors.grey[600],
                                                         fontWeight:
-                                                        FontWeight.w800)),
+                                                            FontWeight.w800)),
                                                 Row(
                                                   children: [
                                                     SvgPicture.asset(
@@ -103,10 +98,10 @@ class AdminAccountScreen extends StatelessWidget {
                                                     ),
                                                     PrimaryText(
                                                       text: cubit
-                                                          .getTotalCustomerOrdersPrice(),
+                                                          .getTotalAdminOrdersPrice(),
                                                       size: 25,
                                                       fontWeight:
-                                                      FontWeight.w700,
+                                                          FontWeight.w700,
                                                       color: Constants.tertiary,
                                                       height: 1,
                                                     ),
@@ -116,34 +111,34 @@ class AdminAccountScreen extends StatelessWidget {
                                             ),
                                             InkWell(
                                               onTap: () {
-                                                navigateTo(context,
-                                                    const CustomerOrdersScreen());
+                                                // navigateTo(context,
+                                                //     // const CustomerOrdersScreen());
                                               },
                                               child: Column(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Text('عدد الطلبات',
                                                       style: TextStyle(
                                                           fontSize: 18,
                                                           color:
-                                                          Colors.grey[600],
+                                                              Colors.grey[600],
                                                           fontWeight:
-                                                          FontWeight.w800)),
+                                                              FontWeight.w800)),
                                                   PrimaryText(
                                                     text: cubit.listAllOrders
-                                                        .where((element) =>
-                                                    element.userMobile ==
-                                                        cubit
-                                                            .selectedUserId &&
-                                                        element.orderState
-                                                            .toLowerCase() ==
-                                                            'Done'
-                                                                .toLowerCase())
-                                                        .toList()
-                                                        .length
-                                                        .toString() ??
+                                                            .where((element) =>
+                                                                element.projectId ==
+                                                                    Global
+                                                                        .projectId &&
+                                                                element.orderState
+                                                                        .toLowerCase() ==
+                                                                    'Done'
+                                                                        .toLowerCase())
+                                                            .toList()
+                                                            .length
+                                                            .toString() ??
                                                         0,
                                                     size: 25,
                                                     fontWeight: FontWeight.w700,
@@ -155,17 +150,15 @@ class AdminAccountScreen extends StatelessWidget {
                                             ),
                                             Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text('الرصيد الحالي',
                                                     style: TextStyle(
                                                         fontSize: 18,
                                                         color: Colors.grey[600],
                                                         fontWeight:
-                                                        FontWeight.w800)),
-                                                // Text('20',style: TextStyle(fontSize: 22,color: Colors.blueAccent,fontWeight:FontWeight.w700 ),),
-
+                                                            FontWeight.w800)),
                                                 Row(
                                                   children: [
                                                     SvgPicture.asset(
@@ -175,50 +168,41 @@ class AdminAccountScreen extends StatelessWidget {
                                                     ),
                                                     PrimaryText(
                                                       text: cubit
-                                                          .getUserBalance()
-                                                          .toString() ??
+                                                              .getAdminBalance()
+                                                              .toString() ??
                                                           '0',
                                                       size: 25,
                                                       fontWeight:
-                                                      FontWeight.w700,
+                                                          FontWeight.w700,
                                                       color: Constants.tertiary,
                                                       height: 1,
                                                     ),
                                                   ],
                                                 ),
-
-                                                MaterialButton(
-                                                    color: Colors.green,
-                                                    onPressed: () {
-                                                      cubit
-                                                          .modalBottomSheetMenu(
-                                                          context);
-                                                    },
-                                                    child: const Text(
-                                                      '+اضافة رصيد',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                          FontWeight.w800),
-                                                    ))
                                               ],
                                             ),
                                           ],
                                         ),
                                         const Padding(
                                           padding:
-                                          EdgeInsets.symmetric(vertical: 8),
+                                              EdgeInsets.symmetric(vertical: 8),
                                           child: Divider(color: Colors.grey),
                                         ),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.end,
+                                              MainAxisAlignment.end,
                                           children: [
                                             Row(
                                               children: [
                                                 Text(
-                                                  cubit.selectedUserId ?? '',
+                                                  cubit.listProject
+                                                          .firstWhere(
+                                                              (element) =>
+                                                                  element.id ==
+                                                                  Global
+                                                                      .projectId)
+                                                          .projectMobile ??
+                                                      '',
                                                   style: const TextStyle(
                                                       color: Colors.blueAccent,
                                                       fontSize: 16),
@@ -229,32 +213,23 @@ class AdminAccountScreen extends StatelessWidget {
                                                         fontSize: 16,
                                                         color: Colors.grey[600],
                                                         fontWeight:
-                                                        FontWeight.w600)),
+                                                            FontWeight.w600)),
                                               ],
                                             ),
                                           ],
                                         ),
-                                        // Row(
-                                        //   mainAxisAlignment: MainAxisAlignment.end,
-                                        //   children: [
-                                        //     Text(cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId != null?cubit.departMentList[cubit.listUser.firstWhere((element) => element.mobile == cubit.selectedUserId).departmentId]:'',style: const TextStyle(color: Colors.blueAccent,fontSize: 16),),
-                                        //     const Text('  :  '),
-                                        //     // Text('القسم',style: TextStyle(fontSize: 16,color: Colors.grey[600],fontWeight:FontWeight.w600)),
-                                        //
-                                        //   ],
-                                        // ),
                                         const SizedBox(height: 25),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.end,
+                                              MainAxisAlignment.end,
                                           children: [
                                             Text(
                                               cubit.convertDateFormat(cubit
-                                                  .listUser
-                                                  .firstWhere((element) =>
-                                              element.mobile ==
-                                                  cubit.selectedUserId)
-                                                  .createdDate) ??
+                                                      .listProject
+                                                      .firstWhere((element) =>
+                                                          element.id ==
+                                                          Global.projectId)
+                                                      .createdDate) ??
                                                   '',
                                               style: const TextStyle(
                                                   color: Colors.blueAccent,
@@ -265,50 +240,10 @@ class AdminAccountScreen extends StatelessWidget {
                                                     fontSize: 15,
                                                     color: Colors.grey[600],
                                                     fontWeight:
-                                                    FontWeight.w600)),
+                                                        FontWeight.w600)),
                                           ],
                                         ),
                                         const SizedBox(height: 20),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 10, top: 10),
-                                          child: RoundedLoadingButton(
-                                              width: 80,
-                                              height: 40,
-                                              controller:
-                                              cubit.callBtnController,
-
-                                              // color: Colors.green,
-                                              color: Colors.green,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                                children: const [
-                                                  Icon(
-                                                    Icons.call,
-                                                    color: Colors.white,
-                                                    size: 14,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 3,
-                                                  ),
-                                                  Text(
-                                                    "اتصال",
-                                                    style: TextStyle(
-                                                      fontSize: 15.0,
-                                                      fontWeight:
-                                                      FontWeight.bold,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              animateOnTap: false,
-                                              onPressed: () {
-                                                launch(
-                                                    ('tel://${cubit.selectedUserId}'));
-                                              }),
-                                        ),
                                       ],
                                     )
                                   ],
@@ -322,41 +257,40 @@ class AdminAccountScreen extends StatelessWidget {
                                   CircleAvatar(
                                     radius: 54,
                                     backgroundColor: Colors.grey[200],
-                                    child: cubit.listUser
-                                        .firstWhere((element) =>
-                                    element.mobile ==
-                                        cubit.selectedUserId)
-                                        .image !=
-                                        null &&
-                                        cubit.listUser
-                                            .firstWhere((element) =>
-                                        element.mobile ==
-                                            cubit.selectedUserId)
-                                            .image
-                                            .trim() !=
-                                            ''
+                                    child: cubit.listProject
+                                                    .firstWhere((element) =>
+                                                        element.id ==
+                                                        Global.projectId)
+                                                    .image !=
+                                                null &&
+                                            cubit.listProject
+                                                    .firstWhere((element) =>
+                                                        element.id ==
+                                                        Global.projectId)
+                                                    .image
+                                                    .trim() !=
+                                                ''
                                         ? CircleAvatar(
-                                      radius: 50,
-                                      backgroundImage: NetworkImage(cubit
-                                          .listUser
-                                          .firstWhere((element) =>
-                                      element.mobile ==
-                                          cubit.selectedUserId)
-                                          .image),
-                                    )
+                                            radius: 50,
+                                            backgroundImage: NetworkImage(cubit
+                                                .listProject
+                                                .firstWhere((element) =>
+                                                    element.id ==
+                                                    Global.projectId)
+                                                .image),
+                                          )
                                         : const CircleAvatar(
-                                      radius: 60,
-                                      backgroundImage:
-                                      AssetImage('assets/person.jpg'),
-                                    ),
+                                            radius: 60,
+                                            backgroundImage:
+                                                AssetImage('assets/person.jpg'),
+                                          ),
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    cubit.listUser
-                                        .firstWhere((element) =>
-                                    element.mobile ==
-                                        cubit.selectedUserId)
-                                        .userName ??
+                                    cubit.listProject
+                                            .firstWhere((element) =>
+                                                element.id == Global.projectId)
+                                            .name ??
                                         '',
                                     style: const TextStyle(
                                         fontSize: 20, color: Colors.grey),
@@ -489,175 +423,160 @@ class AdminAccountScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (cubit.selectedUserId != null &&
-                    cubit.selectedUserId.trim() != '')
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15.0, horizontal: 21),
-                    margin: const EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5.0,
-                          color: Colors.grey[300],
-                          spreadRadius: 5.0,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(41),
-                      color: Colors.white,
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Material(
-                              child: InkWell(
-                                onTap: () {
-                                  if (cubit.isShowAllAccount) {
-                                    cubit.listUserAccount = cubit
-                                        .listUserAccountBase
-                                        .where((element) =>
-                                    element.customerMobile ==
-                                        cubit.selectedUserId &&
-                                        element.projectId ==
-                                            Global.projectId &&
-                                        cubit.convertDateFormat(
-                                            element.createdDate) ==
-                                            cubit.convertDateFormat(
-                                                DateTime.now().toString()))
-                                        .toList();
-                                  } else {
-                                    cubit.listUserAccount = cubit
-                                        .listUserAccountBase
-                                        .where((element) =>
-                                    element.customerMobile ==
-                                        cubit.selectedUserId &&
-                                        element.projectId ==
-                                            Global.projectId)
-                                        .toList();
-                                  }
-                                  cubit.emit(SelectCategoryState());
-                                  cubit.isShowAllAccount =
-                                  !cubit.isShowAllAccount;
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 13.0, vertical: 7.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    border: Border.all(color: Colors.blue),
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  child: Text(
-                                    cubit.isShowAllAccount ? "الكل" : "اليوم",
-                                    style: const TextStyle(color: Colors.blue),
-                                  ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 21),
+                  margin: const EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 5.0,
+                        color: Colors.grey[300],
+                        spreadRadius: 5.0,
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(41),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Material(
+                            child: InkWell(
+                              onTap: () {
+                                if (cubit.isShowAllAccount) {
+                                  cubit.listUserAccount = cubit
+                                      .listUserAccountBase
+                                      .where((element) =>
+                                          element.projectId ==
+                                              Global.projectId &&
+                                          cubit.convertDateFormat(
+                                                  element.createdDate) ==
+                                              cubit.convertDateFormat(
+                                                  DateTime.now().toString()))
+                                      .toList();
+                                } else {
+                                  cubit.listUserAccount = cubit
+                                      .listUserAccountBase
+                                      .where((element) =>
+                                          element.projectId == Global.projectId)
+                                      .toList();
+                                }
+                                cubit.emit(SelectCategoryState());
+                                cubit.isShowAllAccount =
+                                    !cubit.isShowAllAccount;
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 13.0, vertical: 7.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  border: Border.all(color: Colors.blue),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Text(
+                                  !cubit.isShowAllAccount ? "الكل" : "اليوم",
+                                  style: const TextStyle(color: Colors.blue),
                                 ),
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(right: 20),
-                              child: Text(
-                                "التعاملات",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: Text(
+                              "التعاملات",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
                             ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 15.0,
-                        ),
-                        ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              var model;
-                              if (cubit.isShowAllAccount) {
-                                model = cubit.listUserAccount
-                                    .where((element) =>
-                                element.customerMobile ==
-                                    cubit.selectedUserId &&
-                                    element.projectId == Global.projectId)
-                                    .toList()[index];
-                              } else {
-                                model = cubit.listUserAccount
-                                    .where((element) =>
-                                element.customerMobile ==
-                                    cubit.selectedUserId &&
-                                    element.projectId == Global.projectId &&
-                                    cubit.convertDateFormat(
-                                        element.createdDate) ==
-                                        cubit.convertDateFormat(
-                                            DateTime.now().toString()))
-                                    .toList()[index];
-                              }
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (context, index) {
+                            UserAccount model;
+                            if (cubit.isShowAllAccount) {
+                              model = cubit.listUserAccount
+                                  .where((element) =>
+                                      element.projectId == Global.projectId)
+                                  .toList()[index];
+                            } else {
+                              model = cubit.listUserAccount
+                                  .where((element) =>
+                                      element.projectId == Global.projectId &&
+                                      cubit.convertDateFormat(
+                                              element.createdDate) ==
+                                          cubit.convertDateFormat(
+                                              DateTime.now().toString()))
+                                  .toList()[index];
+                            }
 
-                              return Material(
-                                color: Colors.transparent,
-                                child: ListTile(
-                                  title: Text(cubit.listProject
-                                      .firstWhere((element) =>
-                                  element.id == model.projectId)
-                                      .name ??
-                                      ''),
-                                  subtitle: Text(cubit.convertDateFormat(
-                                      model.createdDate) ??
-                                      ''),
-                                  trailing: model.credit == 0
-                                      ? Text(
-                                    "-\$ ${model.debit}",
-                                    style: const TextStyle(
-                                        fontSize: 18, color: Colors.red),
-                                  )
-                                      : Text("+\$ ${model.credit}",
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.green)),
-                                  leading: CircleAvatar(
-                                    radius: 25,
-                                    child: Image.asset(
-                                      model.credit == 0
-                                          ? IconImgs.transfer
-                                          : IconImgs.send,
-                                      height: 25,
-                                      width: 25,
-                                    ),
-                                    backgroundColor: model.credit == 0
-                                        ? IconColors.transfer
-                                        : IconColors.send,
+                            return Material(
+                              color: Colors.transparent,
+                              child: ListTile(
+                                title: Text(cubit.listUser
+                                        .firstWhere((element) =>
+                                            element.mobile ==
+                                            model.customerMobile)
+                                        .userName ??
+                                    ''),
+                                subtitle: Text(cubit
+                                        .convertDateFormat(model.createdDate) ??
+                                    ''),
+                                trailing: model.credit == 0
+                                    ? Text(
+                                        "-\$ ${model.debit}",
+                                        style: const TextStyle(
+                                            fontSize: 18, color: Colors.red),
+                                      )
+                                    : Text("+\$ ${model.credit}",
+                                        style: const TextStyle(
+                                            fontSize: 18, color: Colors.green)),
+                                leading: CircleAvatar(
+                                  radius: 25,
+                                  child: Image.asset(
+                                    model.credit == 0
+                                        ? IconImgs.transfer
+                                        : IconImgs.send,
+                                    height: 25,
+                                    width: 25,
                                   ),
-                                  enabled: true,
-                                  onTap: () {},
+                                  backgroundColor: model.credit == 0
+                                      ? IconColors.transfer
+                                      : IconColors.send,
                                 ),
-                              );
-                            },
-                            separatorBuilder: (context, index) =>
-                            const SizedBox(height: 5),
-                            itemCount: cubit.isShowAllAccount
-                                ? cubit.listUserAccount
-                                .where((element) =>
-                            element.customerMobile ==
-                                cubit.selectedUserId &&
-                                element.projectId == Global.projectId)
-                                .toList()
-                                .length
-                                : cubit.listUserAccount
-                                .where((element) =>
-                            element.customerMobile ==
-                                cubit.selectedUserId &&
-                                element.projectId == Global.projectId &&
-                                cubit.convertDateFormat(
-                                    element.createdDate) ==
-                                    cubit.convertDateFormat(
-                                        DateTime.now().toString()))
-                                .toList()
-                                .length)
-                      ],
-                    ),
-                  )
+                                enabled: true,
+                                onTap: () {},
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 5),
+                          itemCount: cubit.isShowAllAccount
+                              ? cubit.listUserAccount
+                                  .where((element) =>
+                                      element.projectId == Global.projectId)
+                                  .toList()
+                                  .length
+                              : cubit.listUserAccount
+                                  .where((element) =>
+                                      element.projectId == Global.projectId &&
+                                      cubit.convertDateFormat(
+                                              element.createdDate) ==
+                                          cubit.convertDateFormat(
+                                              DateTime.now().toString()))
+                                  .toList()
+                                  .length)
+                    ],
+                  ),
+                )
               ],
             ),
           ),

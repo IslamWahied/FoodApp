@@ -6,16 +6,13 @@ import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/customer/Userbacklayer.dart';
 import 'package:elomda/shared/Global.dart';
-import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../shared/components/Reuseable.dart';
-import 'favouriteScreenDetail.dart';
 
 class FavouriteScreen extends StatelessWidget {
   const FavouriteScreen({Key key}) : super(key: key);
@@ -80,7 +77,8 @@ class FavouriteScreen extends StatelessWidget {
                               icon: CircleAvatar(
                                 radius: 15,
                                 backgroundColor: Colors.white,
-                                child: Global.imageUrl != null
+                                child: Global.imageUrl != null &&
+                                        Global.imageUrl.trim() != ''
                                     ? CircleAvatar(
                                         radius: 30.0,
                                         backgroundImage:
@@ -170,10 +168,8 @@ class FavouriteScreen extends StatelessWidget {
 
                             return itemCard(
                                 isFavourite: favModel.isFavourit,
-                                
                                 context: context,
-                                 itemModel: itemModel
-                            );
+                                itemModel: itemModel);
                           }),
                     ),
                   ),
@@ -184,6 +180,3 @@ class FavouriteScreen extends StatelessWidget {
         });
   }
 }
-
- 
- 

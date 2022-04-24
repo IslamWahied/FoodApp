@@ -83,7 +83,7 @@ class SearchScreen extends StatelessWidget {
                               icon: CircleAvatar(
                                 radius: 15,
                                 backgroundColor: Colors.white,
-                                child: Global.imageUrl != null
+                                child: Global.imageUrl != null  && Global.imageUrl.trim() != ''
                                     ? CircleAvatar(
                                         radius: 30.0,
                                         backgroundImage:
