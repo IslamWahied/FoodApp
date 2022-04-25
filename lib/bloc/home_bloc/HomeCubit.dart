@@ -388,21 +388,21 @@ class HomeCubit extends Cubit<HomeState> {
   String getTotalUserPrigectOrdersPrice() {
     double debit = 0;
 
-    listUserAccountBase
-        .where((element) =>
-            element.projectId.toString() ==
-            listProject
-                .firstWhere((element) =>
-                    element.name.toLowerCase() == selectedUserId.toLowerCase())
-                .id
-                .toString())
-        .forEach((element) {
-      if (element.debit != 0) {
-        debit += element.debit;
-      }
-    });
+    // listUserAccountBase
+    //     .where((element) =>
+    //         element.projectId.toString() ==
+    //         listProject
+    //             .firstWhere((element) =>
+    //                 element.name.toLowerCase() == selectedUserId.toLowerCase())
+    //             .id
+    //             .toString())
+    //     .forEach((element) {
+    //   if (element.debit != 0) {
+    //     debit += element.debit;
+    //   }
+    // });
 
-    return (debit).toString();
+    return '0';
   }
 
   String getTotalAdminOrdersPrice() {

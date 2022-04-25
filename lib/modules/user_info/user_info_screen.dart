@@ -92,13 +92,13 @@ class UserInformationScreen extends StatelessWidget {
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
                                               fit: BoxFit.cover,
-                                              image: Global.projectImageUrl !=
+                                              image: cubit.listProject.firstWhere((element) => element.id == Global.projectId).image !=
                                                           null &&
-                                                      Global.projectImageUrl
-                                                              .trim() !=
+                                                  cubit.listProject.firstWhere((element) => element.id == Global.projectId).image
+                                                      .trim() !=
                                                           ''
                                                   ? NetworkImage(
-                                                      Global.projectImageUrl)
+                                                  cubit.listProject.firstWhere((element) => element.id == Global.projectId).image )
                                                   : const AssetImage(
                                                       'assets/person.jpg'),
                                             ),
@@ -122,11 +122,11 @@ class UserInformationScreen extends StatelessWidget {
                                     if (Global.isAdmin)
                                       Image(
                                         // image: AssetImage('assets/person.jpg'),
-                                        image: Global.projectImageUrl != null &&
-                                                Global.projectImageUrl.trim() !=
+                                        image: cubit.listProject.firstWhere((element) => element.id == Global.projectId).image  != null &&
+                                            cubit.listProject.firstWhere((element) => element.id == Global.projectId).image .trim() !=
                                                     ''
                                             ? NetworkImage(
-                                                Global.projectImageUrl)
+                                            cubit.listProject.firstWhere((element) => element.id == Global.projectId).image )
                                             : const AssetImage(
                                                 'assets/person.jpg'),
                                         fit: BoxFit.fitWidth,
@@ -236,7 +236,7 @@ class UserInformationScreen extends StatelessWidget {
                             // ),
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
-                              child: userTitle(title: 'البيانات'),
+                              child: userTitle(title:Global.isAdmin?'البيانات الشخصة': 'البيانات '),
                             ),
                             const Divider(
                               thickness: 1,
@@ -273,12 +273,12 @@ class UserInformationScreen extends StatelessWidget {
                             Container(
                               child: userTile(
                                 'تاريخ الانضمام',
-                                cubit.convertDateFormat(cubit.listUser
+        cubit.listUser.isNotEmpty?      cubit.convertDateFormat(cubit.listUser
                                             .firstWhere((element) =>
                                                 element.mobile == Global.mobile)
                                             .createdDate ??
                                         '') ??
-                                    '',
+                                    '':'',
                                 Icons.watch_later,
                               ),
                             ),

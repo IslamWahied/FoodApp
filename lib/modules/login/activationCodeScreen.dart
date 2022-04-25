@@ -45,6 +45,8 @@ class ActivationCodeScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+
+                       if(!cubit.activationDone)
                         GestureDetector(
                           onTap: () {
                             NavigatToAndReplace(context, const LoginScreen());
@@ -52,25 +54,18 @@ class ActivationCodeScreen extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                                color: Constants.primary,
+                                color: Colors.blue,
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
                                     width: 1, color: Colors.grey[400])),
-                            child: const Icon(Icons.chevron_left),
+                            child: const Icon(Icons.chevron_left,color: Constants.white,),
                           ),
                         ),
 
                         const SizedBox(
                           width: 1,
                         )
-                        // Container(
-                        //   padding: const EdgeInsets.all(10),
-                        //   decoration: BoxDecoration(
-                        //     color: Constants.primary,
-                        //     borderRadius: BorderRadius.circular(15),
-                        //   ),
-                        //   child: const Icon(Icons.star, color: Constants.white),
-                        // ),
+
                       ],
                     ),
                   ),
@@ -267,7 +262,7 @@ class ActivationCodeScreen extends StatelessWidget {
                                     controller: cubit.verifiedBtnController,
                                     successColor: Colors.green,
                                     color: cubit.verifiedIsValid
-                                        ? Colors.green
+                                        ? Colors.blue
                                         : Colors.grey[500],
                                     disabledColor: Colors.grey,
                                     child: Row(

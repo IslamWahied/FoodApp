@@ -3,9 +3,7 @@
 import 'package:elomda/bloc/UpdateData/updateDataCubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
-import 'package:elomda/home_layout/home_layout.dart';
 
-import 'package:elomda/modules/login/login_screen.dart';
 import 'package:elomda/styles/colors.dart';
 import 'package:elomda/shared/network/Dio_Helper/Dio_Helper.dart';
 import 'package:elomda/shared/network/local/shared_helper.dart';
@@ -20,6 +18,10 @@ import 'bloc/login_bloc/loginCubit.dart';
 
 import 'bloc/register_Bloc/registerBloc.dart';
 
+import 'home_layout/home_layout.dart';
+import 'modules/login/activationCodeScreen.dart';
+
+import 'modules/login/login_screen.dart';
 import 'shared/Global.dart';
 
 Future<void> main() async {
@@ -57,6 +59,7 @@ Future<void> main() async {
     Global.projectId = projectId ?? 0;
     Global.userName = await CachHelper.GetData(key: 'userName');
     Global.departMent = await CachHelper.GetData(key: 'departmentId');
+
     Global.imageUrl = await CachHelper.GetData(key: 'imageUrl');
   }
 
@@ -102,8 +105,8 @@ class MyApp extends StatelessWidget {
           builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,
 
-          //  home:isUserLogin?const HomeLayout() : const LoginScreen(),
-          home: isUserLogin ? const HomeLayout() : const LoginScreen(),
+           // home:const ActivationCodeScreen(),
+       home: isUserLogin ? const HomeLayout() : const LoginScreen(),
         ));
   }
 }

@@ -5,6 +5,7 @@ import 'package:elomda/bloc/register_Bloc/registerState.dart';
 import 'package:elomda/modules/customer/product_details/foodDetail.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -17,6 +18,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -25,7 +27,7 @@ class RegisterScreen extends StatelessWidget {
         leadingWidth: 0,
         iconTheme: const IconThemeData(color: Constants.black),
         title: customAppBar(
-            context: context, title: 'بيانات شخصية', isShowCarShop: false),
+            context: context, title: 'البيانات الشخصية', isShowCarShop: false),
       ),
       backgroundColor: Colors.white,
       body: BlocConsumer<RegisterCubit, RegisterState>(
@@ -218,13 +220,33 @@ class RegisterScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(20),
                             child: GestureDetector(
                               onTap: () {
-                                navigatTo(
-                                    context, const ProjectInfoRegisterScreen());
+
+                                  if(cubit.listUser.any((element) => element.userName.toLowerCase().trim() == cubit.txtRegisterUserNameControl.text.toLowerCase().trim() )){
+
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                'تم استخدام اسم العميل من قبل',
+                                textAlign: TextAlign.center,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(30))),
+                                behavior: SnackBarBehavior.floating,
+                                padding: EdgeInsets.all(20.0),
+                                duration: Duration(milliseconds: 4000)));
+
+                                }
+                                  else{
+                                    navigatTo(
+
+                                        context, const ProjectInfoRegisterScreen());
+                                  }
+
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                    color: Constants.primary,
+                                    color:Colors.blue,
                                     borderRadius: BorderRadius.circular(15),
                                     border: Border.all(
                                         width: 1, color: Colors.grey[400])),
@@ -232,9 +254,9 @@ class RegisterScreen extends StatelessWidget {
                                   children: const [
                                     Text(
                                       'التالي',
-                                      style: TextStyle(fontSize: 18),
+                                      style: TextStyle(fontSize: 18,color: Constants.white),
                                     ),
-                                    Icon(Icons.chevron_right),
+                                    Icon(Icons.chevron_right,color: Constants.white,),
                                   ],
                                 ),
                               ),
@@ -267,12 +289,39 @@ class RegisterScreen extends StatelessWidget {
                               ],
                             ),
                             onPressed: () {
+
+
+
+
                               if (cubit.registerValid) {
-                                if (cubit.isAdmin) {
-                                  cubit.registerAndLoginAdmin(context);
-                                } else {
-                                  cubit.registerAndLoginUser2(context);
-                                }
+
+
+                                if(cubit.listUser.any((element) => element.userName.toLowerCase().trim() == cubit.txtRegisterUserNameControl.text.toLowerCase().trim() )){
+
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                      'تم استخدام اسم العميل من قبل',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                                    behavior: SnackBarBehavior.floating,
+                                    padding: EdgeInsets.all(20.0),
+                                    duration: Duration(milliseconds: 4000)));
+
+                              }
+                                else
+                                  {
+                                    if (cubit.isAdmin) {
+                                      cubit.registerAndLoginAdmin(context);
+                                    } else {
+                                      cubit.registerAndLoginUser2(context);
+                                    }
+                                  }
+
+
+
                               }
                             }),
                       )

@@ -60,7 +60,7 @@ class AccountTypeScreen  extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset('assets/customer.png'),
+                                      Image.asset('assets/customer.png',color:!cubit.isAdmin? Constants.white:Constants.black,),
 
                                     ],
                                   ),
@@ -69,7 +69,7 @@ class AccountTypeScreen  extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(
                                     10.0,
                                   ),
-                                  color:!cubit.isAdmin? Colors.yellow:Colors.grey[400],
+                                  color:!cubit.isAdmin? Colors.blue:Colors.grey[400],
                                 ),
                               ),
                               const Text('عميل',style: TextStyle(fontSize: 18),)
@@ -98,13 +98,13 @@ class AccountTypeScreen  extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset('assets/Chef.png'),
+                                      Image.asset('assets/Chef.png',color:cubit.isAdmin? Constants.white:Constants.black,),
 
                                     ],
                                   ),
                                 ),
                                 decoration: BoxDecoration(
-                                  color:cubit.isAdmin? Colors.yellow:Colors.grey[400],
+                                  color:cubit.isAdmin? Colors.blue:Colors.grey[400],
                                   borderRadius: BorderRadius.circular(
                                     10.0,
                                   ),
@@ -138,13 +138,13 @@ class AccountTypeScreen  extends StatelessWidget {
 
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            color: Constants.primary,
+                            color:Colors.blue,
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(width: 1, color: Colors.grey[400])),
                         child: Row(
                           children: const [
-                            Text('التالي',style: TextStyle(fontSize: 18),),
-                            Icon(Icons.chevron_right),
+                            Text('التالي',style: TextStyle(fontSize: 18,color: Constants.white),),
+                            Icon(Icons.chevron_right,color: Constants.white,),
                           ],
                         ),
                       ),
