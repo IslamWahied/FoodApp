@@ -77,7 +77,6 @@ class ItemModel {
         userMobile : json['userMobile']??'',
         userName : json['userName']??'',
         orderState : json['orderState']??'New',
-
         orderCount : json['orderCount']??0,
         isAvailable : json['isAvailable']??true,
         isPopular : json['isPopular']??false,
@@ -85,8 +84,6 @@ class ItemModel {
         isFavourite : json['isFavourite']??false,
         oldPrice : json['oldPrice']??0,
         projectId : json['projectId']??1,
-
-
 
       additionsList: customList
     );

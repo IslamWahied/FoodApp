@@ -10,8 +10,8 @@ class AdditionsModel {
   String description;
   String supCategoryTitle;
   String image;
-  double price;
-  double oldPrice;
+  dynamic price;
+  dynamic oldPrice;
   String createdDate;
   int isDeleted;
   int orderCount;

@@ -296,13 +296,13 @@ class OrderDetailScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children:  [
-                              Text('جنية',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black87)),
-                              SizedBox(
+                              const Text('جنية',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black87)),
+                              const SizedBox(
                                 width: 5,
                               ),
 
                               Text(cubit.getTotalAddaitonlPriceForItem(index: index)??'0',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.blue),),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               const Text(': سعر الاضافات',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
@@ -314,13 +314,13 @@ class OrderDetailScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children:  [
-                            Text('جنية',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black87)),
-                            SizedBox(
+                            const Text('جنية',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black87)),
+                            const SizedBox(
                               width: 5,
                             ),
 
                             Text(HomeCubit.get(context).getTotalPriceForItem(index: index)??'0',style: TextStyle(fontWeight: FontWeight.w600,color: Colors.blue),),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
                             const Text(':الاجمالي',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
@@ -331,7 +331,7 @@ class OrderDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 100,)
+                const SizedBox(height: 100,)
                 // if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
                 // const SizedBox(
                 //   height: 100,

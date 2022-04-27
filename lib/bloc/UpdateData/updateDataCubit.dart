@@ -336,7 +336,7 @@ class UpdateDataCubit extends Cubit<UploadDataState> {
               itemTitle: txtUploadTitle.text ?? '',
               isDiscount: isDiscount,
               isPopular: isPopular,
-              oldPrice: oldPrice,
+              oldPrice: oldPrice.toInt(),
               orderCount: 0,
 
             );
@@ -521,7 +521,7 @@ class UpdateDataCubit extends Cubit<UploadDataState> {
               itemTitle: txtUploadTitle.text ?? '',
               isDiscount: isDiscount,
               isPopular: isPopular,
-              oldPrice: oldPrice,
+              oldPrice: oldPrice.toInt(),
               orderCount: 0,
 
             );

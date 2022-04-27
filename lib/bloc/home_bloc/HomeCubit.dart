@@ -465,15 +465,19 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   String getTotalAddaitonlPriceForItem({int index}) {
-    double price = 0;
-
-    for (var element in listOrder[index].additionsList) {
-      price = price + element.price;
+    try{
+      double price = 0;
+      for (var element in listOrder[index].additionsList) {
+        price = price + element.price;
+      }
+      price = price * listOrder[index].orderCount;
+      emit(SelectCategoryState());
+      return price.toString();
     }
-
-    price = price * listOrder[index].orderCount;
-    emit(SelectCategoryState());
-    return price.toString();
+    catch(e){
+      print(e);
+      return '0';
+    }
   }
 
   sendOrder(context) {
@@ -879,8 +883,8 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   addNewItemToCartFromFeedsScreen({itemId, orderCount}) {
-    var newList = popularList.firstWhere((element) =>
-        element.itemId == itemId && element.projectId == Global.projectId);
+
+    var newList = popularList.firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId);
 
     var model = ItemModel(
       orderCount: orderCount,
@@ -1008,7 +1012,12 @@ class HomeCubit extends Cubit<HomeState> {
 
   getItems() async {
     FirebaseFirestore.instance.collection('Items').snapshots().listen((event) {
-      listItems = event.docs.map((x) => ItemModel.fromJson(x.data())).toList();
+
+
+    listItems = event.docs.map((x) => ItemModel.fromJson(x.data())).toList();
+
+
+
       listItemsSearch = listItems;
       listItemsBySubCategSearch = listItems;
       popularList = listItems.where((element) => element.isPopular).toList();
@@ -1044,12 +1053,15 @@ class HomeCubit extends Cubit<HomeState> {
   List<AdditionsModel> listOfSelectedAdditions = [];
 
   getAdditions() async {
+    print('--------------------------------------------------------------');
     FirebaseFirestore.instance
         .collection('Additions')
         .snapshots()
         .listen((event) {
-      listAdditions =
-          event.docs.map((x) => AdditionsModel.fromJson(x.data())).toList();
+      listAdditions = event.docs.map((x) => AdditionsModel.fromJson(x.data())).toList();
+
+      listAdditions.forEach((element) {print(element.toMap());});
+      print('--------------------------------------------------------------');
       emit(SelectCategoryState());
     });
   }
@@ -1114,12 +1126,13 @@ class HomeCubit extends Cubit<HomeState> {
     selectedItemId = 0;
     selectedSubCategoryId = supCategoryId;
 
-    listItemsSearch = listItems
-        .where((element) =>
-            element.supCategoryId == supCategoryId &&
-            element.projectId == Global.projectId)
+   print('listItems.forEach((element) {print(element.toJson());})');
+    listItems.forEach((element) {print(element.toJson());});
+    listItemsSearch = listItems.where((element) => element.supCategoryId == supCategoryId && element.projectId == Global.projectId)
         .toList();
     emit(SelectCategoryState());
+    // print('listItemsSearch.length');
+    // print(listItemsSearch.length);
     if (listItemsSearch.isNotEmpty) {
       txtSubCategoryControl.clear();
       listSubCategorySearch = listSubCategory
@@ -1127,15 +1140,7 @@ class HomeCubit extends Cubit<HomeState> {
               element.categoryId == selectedCategoryId &&
               element.projectId == Global.projectId)
           .toList();
-      navigateTo(
-          context,
-          ItemsScreen(
-              subcategoryTitle: listItems
-                      .firstWhere((element) =>
-                          element.supCategoryId == supCategoryId &&
-                          element.projectId == Global.projectId)
-                      .supCategoryTitle ??
-                  ''));
+      navigateTo(context, ItemsScreen(subcategoryTitle: listItems.firstWhere((element) => element.supCategoryId == supCategoryId && element.projectId == Global.projectId).supCategoryTitle ?? ''));
     } else {
       EasyLoading.showError('لا يوجد بيانات');
     }

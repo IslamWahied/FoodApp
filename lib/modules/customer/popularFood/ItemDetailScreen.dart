@@ -51,8 +51,11 @@ class ItemDetailScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      cubit.addNewItemToCartFromFeedsScreen(
-                          itemId: cubit.selectedItemId,
+                      cubit.addItemToCart(
+                        context: context,
+                          isFavourit:cubit.listFavourite.any((element) => element.ItemId == itemModel.itemId) ,
+                          itemModel: itemModel,
+
                           orderCount: orderCount ?? 1);
                     },
                     child: Row(

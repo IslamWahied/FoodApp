@@ -375,7 +375,7 @@ bool isOldPrice = false;
                 itemTitle: txtUploadTitle.text ?? '',
                 isDiscount: isDiscount,
                 isPopular: isPopular,
-                oldPrice: oldPrice,
+                oldPrice: oldPrice.toInt(),
                 orderCount: 0,
 
             );

@@ -57,22 +57,25 @@ class SubCategoryScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                      child: TextField(
-                        controller: cubit.txtSubCategoryControl,
-                        onChanged: (String value){
-                        cubit.searchInSupCategory(value);
-                        },
-                        decoration: const InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 2, color: AppColors.lighterGray)),
-                          hintText: 'Search..',
-                          hintStyle: TextStyle(
-                              color: AppColors.lightGray,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500),
-                        ),
+                      child: Directionality(
+                        textDirection:TextDirection.rtl ,
+                        child: TextField(
+                          controller: cubit.txtSubCategoryControl,
+                          onChanged: (String value){
+                          cubit.searchInSupCategory(value);
+                          },
+                          decoration: const InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 2, color: AppColors.lighterGray)),
+                            hintText: 'بحث...',
+                            hintStyle: TextStyle(
+                                color: AppColors.lightGray,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500),
+                          ),
 
+                        ),
                       )),
                   const SizedBox(width: 20),
                 ],
