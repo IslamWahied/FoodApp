@@ -37,7 +37,7 @@ class UploadProductForm extends StatelessWidget {
                   color: Constants.black
               ),
 
-              title:customAppBar(context: context,title: '',isShowCarShop: false) ,
+              title:customAppBar(context: context,title: '',isShowCarShop: false,isYellow: true) ,
             ),
             bottomSheet: GestureDetector(
               onTap: () {
@@ -72,7 +72,7 @@ class UploadProductForm extends StatelessWidget {
                       children: <Widget>[
                         const Padding(
                           padding: EdgeInsets.only(right: 2),
-                          child: Text('Upload',
+                          child: Text('اضافة',
                               style: TextStyle(fontSize: 18),
                               textAlign: TextAlign.center),
                         ),
@@ -107,141 +107,145 @@ class UploadProductForm extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Card(
-                            color: Colors.grey.shade100,
-                            elevation: 5,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  //  flex: 2,
-                                  child: cubit.finalPickedProductImage == null
-                                      ? Container(
-                                    margin: const EdgeInsets.all(10),
-                                    height: 200,
-                                    width: 200,
-                                    child: Center(
-                                      child: Container(
-                                        height: 200,
-                                        // width: 200,
-                                        decoration: BoxDecoration(
-
-                                          color: Theme
-                                              .of(context)
-                                              .backgroundColor,
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(
-                                              40.0),
-                                          child: Image.asset(
-                                            'assets/image-gallery.jpg',
-                                            fit: BoxFit.cover,
-                                            alignment: Alignment.center,
+                      Directionality(
+                      textDirection:TextDirection.rtl,
+                            child: Card(
+                              color: Colors.grey.shade100,
+                              elevation: 5,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      FittedBox(
+                                        child: FlatButton.icon(
+                                          textColor: Colors.white,
+                                          onPressed: () =>
+                                              cubit
+                                                  .uploadPickImageCamera(
+                                                  context),
+                                          icon: const Icon(Icons.camera,
+                                              color: Colors.purpleAccent),
+                                          label: Text(
+                                            'كاميرا',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Theme
+                                                  .of(context)
+                                                  .textSelectionColor,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  )
-                                      : Container(
-                                    margin: const EdgeInsets.all(10),
-                                    height: 200,
-                                    width: 200,
-                                    child: Center(
-                                      child: Container(
-                                        height: 200,
-                                        decoration: BoxDecoration(
-
-                                          color: Theme
-                                              .of(context)
-                                              .backgroundColor,
+                                      FittedBox(
+                                        child: FlatButton.icon(
+                                          textColor: Colors.white,
+                                          onPressed: () =>
+                                              cubit.uploadPickImageGallery(
+                                                  context),
+                                          icon: const Icon(Icons.image,
+                                              color: Colors.purpleAccent),
+                                          label: Text(
+                                            'معرض الصور',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Theme
+                                                  .of(context)
+                                                  .textSelectionColor,
+                                            ),
+                                          ),
                                         ),
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsets.all(0.0),
-                                          child: Image.file(
-                                            cubit
-                                                .finalPickedProductImage,
-                                            fit: BoxFit.fill,
-                                            alignment: Alignment.center,
+                                      ),
+                                      FittedBox(
+                                        child: FlatButton.icon(
+                                          textColor: Colors.white,
+                                          onPressed: () =>
+                                              cubit.removeUploadImage(context),
+                                          icon: Icon(
+                                            Icons.remove_circle_rounded,
+                                            color:
+                                            cubit.finalPickedProductImage ==
+                                                null
+                                                ? Colors.grey
+                                                : Colors.red,
+                                          ),
+                                          label: Text(
+                                            'حذف',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color:
+                                              cubit.finalPickedProductImage ==
+                                                  null
+                                                  ? Colors.grey
+                                                  : Colors.redAccent,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(
+                                    //  flex: 2,
+                                    child: cubit.finalPickedProductImage == null
+                                        ? Container(
+                                      margin: const EdgeInsets.all(10),
+                                      height: 200,
+                                      width: 200,
+                                      child: Center(
+                                        child: Container(
+                                          height: 200,
+                                          // width: 200,
+                                          decoration: BoxDecoration(
+
+                                            color: Theme
+                                                .of(context)
+                                                .backgroundColor,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(
+                                                40.0),
+                                            child: Image.asset(
+                                              'assets/image-gallery.jpg',
+                                              fit: BoxFit.cover,
+                                              alignment: Alignment.center,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                        : Container(
+                                      margin: const EdgeInsets.all(10),
+                                      height: 200,
+                                      width: 200,
+                                      child: Center(
+                                        child: Container(
+                                          height: 200,
+                                          decoration: BoxDecoration(
+
+                                            color: Theme
+                                                .of(context)
+                                                .backgroundColor,
+                                          ),
+                                          child: Padding(
+                                            padding:
+                                            const EdgeInsets.all(0.0),
+                                            child: Image.file(
+                                              cubit
+                                                  .finalPickedProductImage,
+                                              fit: BoxFit.cover,
+                                              alignment: Alignment.center,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FittedBox(
-                                      child: FlatButton.icon(
-                                        textColor: Colors.white,
-                                        onPressed: () =>
-                                            cubit
-                                                .uploadPickImageCamera(
-                                                context),
-                                        icon: const Icon(Icons.camera,
-                                            color: Colors.purpleAccent),
-                                        label: Text(
-                                          'Camera',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Theme
-                                                .of(context)
-                                                .textSelectionColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    FittedBox(
-                                      child: FlatButton.icon(
-                                        textColor: Colors.white,
-                                        onPressed: () =>
-                                            cubit.uploadPickImageGallery(
-                                                context),
-                                        icon: const Icon(Icons.image,
-                                            color: Colors.purpleAccent),
-                                        label: Text(
-                                          'Gallery',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Theme
-                                                .of(context)
-                                                .textSelectionColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    FittedBox(
-                                      child: FlatButton.icon(
-                                        textColor: Colors.white,
-                                        onPressed: () =>
-                                            cubit.removeUploadImage(context),
-                                        icon: Icon(
-                                          Icons.remove_circle_rounded,
-                                          color:
-                                          cubit.finalPickedProductImage ==
-                                              null
-                                              ? Colors.grey
-                                              : Colors.red,
-                                        ),
-                                        label: Text(
-                                          'Remove',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color:
-                                            cubit.finalPickedProductImage ==
-                                                null
-                                                ? Colors.grey
-                                                : Colors.redAccent,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+
+                                ],
+                              ),
                             ),
                           ),
 
@@ -481,6 +485,8 @@ class UploadProductForm extends StatelessWidget {
                                     cubit.checkIsUploadValid(context);
                                   },
                                 )),
+                          if (cubit.selectedTypeItemId == 2 || cubit.selectedTypeItemId == 3  )
+                          const SizedBox(height: 25),
 
                           if (cubit.selectedTypeItemId == 3)
                             const SizedBox(height: 25),

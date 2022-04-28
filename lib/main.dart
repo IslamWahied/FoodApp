@@ -1,5 +1,6 @@
 // @dart=2.9
 
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:elomda/bloc/UpdateData/updateDataCubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
@@ -41,9 +42,9 @@ Future<void> main() async {
     // Navigator.pushNamed(context, '/message',
     //     arguments: MessageArguments(message, true));
   });
-  FirebaseMessaging.onBackgroundMessage((message) {
-    // print('onBackgroundMessage!');
-  });
+  // FirebaseMessaging.onBackgroundMessage((message) {
+  //   // print('onBackgroundMessage!');
+  // });
   Global.fireBaseToken = await FirebaseMessaging.instance.getToken() ?? '';
 
   bool isUserLogin = await CachHelper.GetData(key: 'isUserLogin') ?? false;
@@ -59,7 +60,6 @@ Future<void> main() async {
     Global.projectId = projectId ?? 0;
     Global.userName = await CachHelper.GetData(key: 'userName');
     Global.departMent = await CachHelper.GetData(key: 'departmentId');
-
     Global.imageUrl = await CachHelper.GetData(key: 'imageUrl');
   }
 
@@ -105,8 +105,18 @@ class MyApp extends StatelessWidget {
           builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,
 
-           // home:const ActivationCodeScreen(),
-       home: isUserLogin ? const HomeLayout() : const LoginScreen(),
+
+          // home:const ActivationCodeScreen(),
+       home:Scaffold(
+         body: DoubleBackToCloseApp(
+           child:isUserLogin ? const HomeLayout() : const LoginScreen() ,
+           snackBar:   const SnackBar(
+             content: Text('اضغط مره اخري للخروج',textAlign: TextAlign.center,),
+           ),
+         ),
+
+       )
+       ,
         ));
   }
 }

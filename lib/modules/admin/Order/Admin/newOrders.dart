@@ -28,6 +28,7 @@ class NewOrderScreen extends StatelessWidget {
           body: Center(
             child: backdrop(
               context: context,
+              image: cubit.listProject.isNotEmpty && cubit.listProject.firstWhere((element) => element.id == Global.projectId).image != null?cubit.listProject.firstWhere((element) => element.id == Global.projectId).image:'',
               newOrderList: newOrderList,
               backLayer: Conditional.single(
                 context: context,

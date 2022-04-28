@@ -26,8 +26,10 @@ class CancelOrderScreen extends StatelessWidget {
         return Scaffold(
           body: Center(
             child: backdrop(
+                image: cubit.listProject.firstWhere((element) => element.id == Global.projectId).image,
                 backLayer: Conditional.single(
                   context: context,
+
                   conditionBuilder: (BuildContext context) => cubit
                       .listAllOrders
                       .where((element) =>

@@ -51,7 +51,7 @@ class FavouriteScreenDetail extends StatelessWidget {
             centerTitle: false,
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
-            title: customAppBar(context: context, title: itemName),
+            title: customAppBar(context: context, title: itemName,isYellow: true,isShowCarShop: true),
           ),
           // floatingActionButton: ConstrainedBox(
           //   constraints: BoxConstraints(

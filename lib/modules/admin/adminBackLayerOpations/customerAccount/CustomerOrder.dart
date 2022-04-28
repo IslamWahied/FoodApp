@@ -33,7 +33,7 @@ class CustomerOrdersScreen extends StatelessWidget {
                 leadingWidth: 0,
                 iconTheme: const IconThemeData(color: Constants.black),
                 title: customAppBar(
-                    context: context, title: 'الطلبات', isShowCarShop: false),
+                    context: context, title: 'الطلبات', isShowCarShop: false, isYellow: true),
               ),
               body:Global.isAdmin? Conditional.single(
                 context: context,

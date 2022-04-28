@@ -1053,7 +1053,7 @@ class HomeCubit extends Cubit<HomeState> {
   List<AdditionsModel> listOfSelectedAdditions = [];
 
   getAdditions() async {
-    print('--------------------------------------------------------------');
+
     FirebaseFirestore.instance
         .collection('Additions')
         .snapshots()
@@ -1061,7 +1061,7 @@ class HomeCubit extends Cubit<HomeState> {
       listAdditions = event.docs.map((x) => AdditionsModel.fromJson(x.data())).toList();
 
       listAdditions.forEach((element) {print(element.toMap());});
-      print('--------------------------------------------------------------');
+
       emit(SelectCategoryState());
     });
   }

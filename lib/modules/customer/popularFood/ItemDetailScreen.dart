@@ -39,7 +39,7 @@ class ItemDetailScreen extends StatelessWidget {
             centerTitle: false,
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
-            title: customAppBar(context: context, title:itemModel.itemTitle),
+            title: customAppBar(context: context, title:itemModel.itemTitle,isShowCarShop: true,isYellow: true),
           ),
           bottomSheet: BottomSheet(
             enableDrag: false,

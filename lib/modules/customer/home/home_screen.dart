@@ -239,8 +239,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget foodCategoryCard(
-      String imagePath, String name, int categoryId, context) {
+  Widget foodCategoryCard(String imagePath, String name, int categoryId, context) {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) => {},
       builder: (context, state) {

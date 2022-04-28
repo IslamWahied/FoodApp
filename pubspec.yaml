@@ -43,6 +43,7 @@ dependencies:
   responsive_grid_list: ^1.2.4
   assets_audio_player: ^3.0.4+1
   flutter_smart_dialog: ^3.4.2+2
+  double_back_to_close_app: ^2.1.0
 
 
 

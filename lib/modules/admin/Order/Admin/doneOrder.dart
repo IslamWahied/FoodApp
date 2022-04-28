@@ -31,6 +31,7 @@ class DoneOrderScreen extends StatelessWidget {
         return Scaffold(
           body: Center(
             child:backdrop(
+              image: cubit.listProject.firstWhere((element) => element.id == Global.projectId).image,
               context: context,
               newOrderList:newOrderList,
               backLayer: Conditional.single(

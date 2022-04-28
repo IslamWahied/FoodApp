@@ -11,6 +11,8 @@ import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'ProjectInfoRegisterScreen.dart';
+
 class AccountTypeScreen  extends StatelessWidget {
   const AccountTypeScreen ({Key key}) : super(key: key);
 
@@ -27,7 +29,7 @@ class AccountTypeScreen  extends StatelessWidget {
             color: Constants.black
         ),
 
-        title:customAppBar(context: context,title: '',isShowCarShop: false) ,
+        title:customAppBar(context: context,title: '',isShowCarShop: false,isYellow: false) ,
       ),
       body: BlocConsumer<RegisterCubit,RegisterState>(
         builder: (context, state)  {
@@ -129,8 +131,16 @@ class AccountTypeScreen  extends StatelessWidget {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
+                        if(cubit.isAdmin){
 
-                        navigatTo(context , const RegisterScreen());
+                          navigatTo(context , const ProjectInfoRegisterScreen());
+                        }
+                        else
+                          {
+                            navigatTo(context , const RegisterScreen());
+                          }
+
+
 
 
                       },

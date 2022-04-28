@@ -47,7 +47,7 @@ class Constants {
 
 
   static ThemeData lightTheme = ThemeData(
-    bottomSheetTheme: BottomSheetThemeData(
+    bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(10))

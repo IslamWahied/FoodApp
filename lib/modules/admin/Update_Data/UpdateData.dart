@@ -34,11 +34,8 @@ class UpdateDataScreen extends StatelessWidget {
               backgroundColor: Colors.transparent,
               centerTitle: false,
               leadingWidth: 0,
-              iconTheme: const IconThemeData(
-                  color: Constants.black
-              ),
-
-              title:customAppBar(context: context,title: '') ,
+              iconTheme: const IconThemeData(color: Constants.black),
+              title: customAppBar(context: context, title: '',isShowCarShop: false,isYellow: true),
             ),
             bottomSheet: GestureDetector(
               onTap: () {
@@ -59,7 +56,9 @@ class UpdateDataScreen extends StatelessWidget {
                   ),
                 ),
                 child: Material(
-                  color: cubit.isUploadValid ? Colors.yellowAccent[700] : Colors.grey,
+                  color: cubit.isUploadValid
+                      ? Colors.yellowAccent[700]
+                      : Colors.grey,
                   //Theme.of(context).bottomAppBarColor,
                   child: InkWell(
                     onTap: () {
@@ -70,14 +69,19 @@ class UpdateDataScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                         Padding(
+                        Padding(
                           padding: const EdgeInsets.only(right: 2),
                           child: Text('Update',
-                              style: TextStyle(fontSize: 18,color: cubit.isUploadValid ?Colors.black:Colors.white),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: cubit.isUploadValid
+                                      ? Colors.black
+                                      : Colors.white),
                               textAlign: TextAlign.center),
                         ),
                         GradientIcon(
-                          Feather.upload_cloud, 20,
+                          Feather.upload_cloud,
+                          20,
                           LinearGradient(
                             colors: <Color>[
                               Colors.green,
@@ -110,122 +114,105 @@ class UpdateDataScreen extends StatelessWidget {
                         child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) => GestureDetector(
-                              onTap: () {
-                                cubit.onChangeTypeItemId(listItemTypeCategory[index].id,context);
-                              },
-                              child: Container(
-                                height: 50.0,
-                                width: 85,
-                                color: Colors.transparent,
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        color: cubit.selectedTypeItemId == listItemTypeCategory[index].id
-                                            ? Colors.blue
-                                            .withOpacity(0.4)
-                                            : Colors.grey
-                                            .withOpacity(0.3),
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            25)),
-                                    child: Center(
-                                      child: Text(
-                                        listItemTypeCategory[index]
-                                            .name ??
-                                            '',style: const TextStyle(
-                                          fontSize: 12
-                                      ),),
-                                    )),
-                              ),
-                            ),
+                                  onTap: () {
+                                    cubit.onChangeTypeItemId(
+                                        listItemTypeCategory[index].id,
+                                        context);
+                                  },
+                                  child: Container(
+                                    height: 50.0,
+                                    width: 85,
+                                    color: Colors.transparent,
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: cubit.selectedTypeItemId ==
+                                                    listItemTypeCategory[index]
+                                                        .id
+                                                ? Colors.blue.withOpacity(0.4)
+                                                : Colors.grey.withOpacity(0.3),
+                                            borderRadius:
+                                                BorderRadius.circular(25)),
+                                        child: Center(
+                                          child: Text(
+                                            listItemTypeCategory[index].name ??
+                                                '',
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          ),
+                                        )),
+                                  ),
+                                ),
                             separatorBuilder: (context, index) =>
-                            const SizedBox(width: 5),
-                            itemCount:  listItemTypeCategory.length ?? 0),
+                                const SizedBox(width: 5),
+                            itemCount: listItemTypeCategory.length ?? 0),
                       ),
                       const SizedBox(height: 15),
-                      if (cubit.selectedTypeItemId == 1  )
-                      SizedBox(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.075,
-                          width: double.infinity,
-                          child:
-                          DropdownSearch(
-                            key: GlobalKey(),
-                            showSelectedItems: true,
-                            popupBackgroundColor: Colors.grey[250],
-                            maxHeight: MediaQuery
-                                .of(context)
-                                .size
-                                .height * 0.35,
-                            dropdownSearchDecoration: InputDecoration(
-                              fillColor: Colors.white,
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.circular(25.0),
-                                borderSide: const BorderSide(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.circular(25.0),
-                                borderSide: const BorderSide(
-                                  color: Colors.black,
-                                  width: 2.0,
-                                ),
-                              ),
-                              labelText: 'Category',
-                              labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14),
-                            ),
-
-                            showSearchBox: true,
-                            mode: Mode.BOTTOM_SHEET,
-                            items: HomeCubit.get(context).listCategory.where((
-                                element) => element.isDeleted == 0 &&  element.projectId == Global.projectId)
-                                .map((e) => e.categoryTitle)
-                                .toList(),
-                            onChanged: (value) async {
-                             cubit.onChangeCategory(context,value);
-                             cubit.checkIsUploadValid(context);
-
-                            },
-                          )
-                      ),
-
-
-                      if (cubit.selectedTypeItemId == 2 )
+                      if (cubit.selectedTypeItemId == 1)
                         SizedBox(
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height * 0.075,
+                            height: MediaQuery.of(context).size.height * 0.075,
                             width: double.infinity,
                             child: DropdownSearch(
                               key: GlobalKey(),
                               showSelectedItems: true,
-                           // enabled: cubit.selectedCategoryId == 0 ?false:true,
-                              // showClearButton: true,
                               popupBackgroundColor: Colors.grey[250],
-
-                              maxHeight: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height * 0.35,
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.35,
                               dropdownSearchDecoration: InputDecoration(
                                 fillColor: Colors.white,
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(25.0),
                                   borderSide: const BorderSide(
                                     color: Colors.black,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                    width: 2.0,
+                                  ),
+                                ),
+                                labelText: 'Category',
+                                labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.w400, fontSize: 14),
+                              ),
+                              showSearchBox: true,
+                              mode: Mode.BOTTOM_SHEET,
+                              items: HomeCubit.get(context)
+                                  .listCategory
+                                  .where((element) =>
+                                      element.isDeleted == 0 &&
+                                      element.projectId == Global.projectId)
+                                  .map((e) => e.categoryTitle)
+                                  .toList(),
+                              onChanged: (value) async {
+                                cubit.onChangeCategory(context, value);
+                                cubit.checkIsUploadValid(context);
+                              },
+                            )),
+                      if (cubit.selectedTypeItemId == 2)
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.075,
+                            width: double.infinity,
+                            child: DropdownSearch(
+                              key: GlobalKey(),
+                              showSelectedItems: true,
+                              // enabled: cubit.selectedCategoryId == 0 ?false:true,
+                              // showClearButton: true,
+                              popupBackgroundColor: Colors.grey[250],
+
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.35,
+                              dropdownSearchDecoration: InputDecoration(
+                                fillColor: Colors.white,
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
                                   borderSide: const BorderSide(
                                     color: Colors.black,
                                     width: 2.0,
@@ -233,27 +220,27 @@ class UpdateDataScreen extends StatelessWidget {
                                 ),
                                 labelText: 'SupCategory',
                                 labelStyle: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14),
+                                    fontWeight: FontWeight.w400, fontSize: 14),
                               ),
 
                               showSearchBox: true,
                               mode: Mode.BOTTOM_SHEET,
-                              items:HomeCubit.get(context).listSubCategory.where((element) => element.isDeleted == 0 &&  element.projectId == Global.projectId).map((e) => e.subCategoryTitle).toList(),
+                              items: HomeCubit.get(context)
+                                  .listSubCategory
+                                  .where((element) =>
+                                      element.isDeleted == 0 &&
+                                      element.projectId == Global.projectId)
+                                  .map((e) => e.subCategoryTitle)
+                                  .toList(),
                               onChanged: (value) async {
-cubit.onChangeSupCategory(context: context,value: value);
-cubit.checkIsUploadValid(context);
+                                cubit.onChangeSupCategory(
+                                    context: context, value: value);
+                                cubit.checkIsUploadValid(context);
                               },
-                            )
-                        ),
-
-
-                      if (cubit.selectedTypeItemId == 3 )
+                            )),
+                      if (cubit.selectedTypeItemId == 3)
                         SizedBox(
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height * 0.075,
+                            height: MediaQuery.of(context).size.height * 0.075,
                             width: double.infinity,
                             child: DropdownSearch(
                               showSelectedItems: true,
@@ -262,22 +249,18 @@ cubit.checkIsUploadValid(context);
                               // showClearButton: true,
                               popupBackgroundColor: Colors.grey[250],
 
-                              maxHeight: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height * 0.35,
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.35,
                               dropdownSearchDecoration: InputDecoration(
                                 fillColor: Colors.white,
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(25.0),
                                   borderSide: const BorderSide(
                                     color: Colors.black,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(25.0),
                                   borderSide: const BorderSide(
                                     color: Colors.black,
                                     width: 2.0,
@@ -285,27 +268,27 @@ cubit.checkIsUploadValid(context);
                                 ),
                                 labelText: 'Items',
                                 labelStyle: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14),
+                                    fontWeight: FontWeight.w400, fontSize: 14),
                               ),
 
                               showSearchBox: true,
                               mode: Mode.BOTTOM_SHEET,
-                              items:HomeCubit.get(context).listItems.where((element) => element.isDeleted == 0 &&  element.projectId == Global.projectId).map((e) => e.itemTitle).toList(),
+                              items: HomeCubit.get(context)
+                                  .listItems
+                                  .where((element) =>
+                                      element.isDeleted == 0 &&
+                                      element.projectId == Global.projectId)
+                                  .map((e) => e.itemTitle)
+                                  .toList(),
                               onChanged: (value) async {
-                           cubit.onChangeItems(context:context,value:value);
-                           cubit.checkIsUploadValid(context);
+                                cubit.onChangeItems(
+                                    context: context, value: value);
+                                cubit.checkIsUploadValid(context);
                               },
-                            )
-                        ),
-
-
-                      if (cubit.selectedTypeItemId == 4 )
+                            )),
+                      if (cubit.selectedTypeItemId == 4)
                         SizedBox(
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height * 0.075,
+                            height: MediaQuery.of(context).size.height * 0.075,
                             width: double.infinity,
                             child: DropdownSearch(
                               key: GlobalKey(),
@@ -314,22 +297,18 @@ cubit.checkIsUploadValid(context);
                               // showClearButton: true,
                               popupBackgroundColor: Colors.grey[250],
 
-                              maxHeight: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height * 0.35,
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.35,
                               dropdownSearchDecoration: InputDecoration(
                                 fillColor: Colors.white,
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(25.0),
                                   borderSide: const BorderSide(
                                     color: Colors.black,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(25.0),
                                   borderSide: const BorderSide(
                                     color: Colors.black,
                                     width: 2.0,
@@ -337,21 +316,25 @@ cubit.checkIsUploadValid(context);
                                 ),
                                 labelText: 'Additions',
                                 labelStyle: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14),
+                                    fontWeight: FontWeight.w400, fontSize: 14),
                               ),
 
                               showSearchBox: true,
                               mode: Mode.BOTTOM_SHEET,
-                              items:HomeCubit.get(context).listAdditions.where((element) => element.isDeleted == 0 &&  element.projectId == Global.projectId).map((e) => e.itemTitle).toList(),
+                              items: HomeCubit.get(context)
+                                  .listAdditions
+                                  .where((element) =>
+                                      element.isDeleted == 0 &&
+                                      element.projectId == Global.projectId)
+                                  .map((e) => e.itemTitle)
+                                  .toList(),
                               onChanged: (value) async {
-                                cubit.onChangeAddition(context: context,value: value);
+                                cubit.onChangeAddition(
+                                    context: context, value: value);
                                 cubit.checkIsUploadValid(context);
                               },
-                            )
-                        ),
-
-SizedBox(height: 15),
+                            )),
+                      const SizedBox(height: 15),
                       Card(
                         color: Colors.grey.shade100,
                         elevation: 5,
@@ -362,78 +345,77 @@ SizedBox(height: 15),
                               //  flex: 2,
                               child: cubit.finalPickedProductImage == null
                                   ? Container(
-                                margin: const EdgeInsets.all(10),
-                                height: 200,
-                                width: 200,
-                                child: Center(
-                                  child: Container(
-                                    height: 200,
-                                    // width: 200,
-                                    decoration: BoxDecoration(
-
-                                      color: Theme
-                                          .of(context)
-                                          .backgroundColor,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(
-                                          10.0),
-                                      child:cubit.prodeuctImageUrl != null && cubit.prodeuctImageUrl.trim() != ''?Image.network(cubit.prodeuctImageUrl,fit: BoxFit.cover,alignment: Alignment.center,) : Image.asset(
-                                        'assets/image-gallery.jpg',
-                                        fit: BoxFit.cover,
-                                        alignment: Alignment.center,
+                                      margin: const EdgeInsets.all(10),
+                                      height: 200,
+                                      width: 200,
+                                      child: Center(
+                                        child: Container(
+                                          height: 200,
+                                          // width: 200,
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .backgroundColor,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: cubit.prodeuctImageUrl !=
+                                                        null &&
+                                                    cubit.prodeuctImageUrl
+                                                            .trim() !=
+                                                        ''
+                                                ? Image.network(
+                                                    cubit.prodeuctImageUrl,
+                                                    fit: BoxFit.cover,
+                                                    alignment: Alignment.center,
+                                                  )
+                                                : Image.asset(
+                                                    'assets/image-gallery.jpg',
+                                                    fit: BoxFit.cover,
+                                                    alignment: Alignment.center,
+                                                  ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              )
+                                    )
                                   : Container(
-                                margin: const EdgeInsets.all(10),
-                                height: 200,
-                                width: 200,
-                                child: Center(
-                                  child: Container(
-                                    height: 200,
-                                    decoration: BoxDecoration(
-
-                                      color: Theme
-                                          .of(context)
-                                          .backgroundColor,
-                                    ),
-                                    child: Padding(
-                                      padding:
-                                      const EdgeInsets.all(0.0),
-                                      child: Image.file(
-                                        cubit
-                                            .finalPickedProductImage,
-                                        fit: BoxFit.fill,
-                                        alignment: Alignment.center,
+                                      margin: const EdgeInsets.all(10),
+                                      height: 200,
+                                      width: 200,
+                                      child: Center(
+                                        child: Container(
+                                          height: 200,
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .backgroundColor,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(0.0),
+                                            child: Image.file(
+                                              cubit.finalPickedProductImage,
+                                              fit: BoxFit.fill,
+                                              alignment: Alignment.center,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
                             ),
                             Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 FittedBox(
                                   child: FlatButton.icon(
                                     textColor: Colors.white,
                                     onPressed: () =>
-                                        cubit
-                                            .uploadPickImageCamera(
-                                            context),
+                                        cubit.uploadPickImageCamera(context),
                                     icon: const Icon(Icons.camera,
                                         color: Colors.purpleAccent),
                                     label: Text(
                                       'Camera',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Theme
-                                            .of(context)
+                                        color: Theme.of(context)
                                             .textSelectionColor,
                                       ),
                                     ),
@@ -443,16 +425,14 @@ SizedBox(height: 15),
                                   child: FlatButton.icon(
                                     textColor: Colors.white,
                                     onPressed: () =>
-                                        cubit.uploadPickImageGallery(
-                                            context),
+                                        cubit.uploadPickImageGallery(context),
                                     icon: const Icon(Icons.image,
                                         color: Colors.purpleAccent),
                                     label: Text(
                                       'Gallery',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Theme
-                                            .of(context)
+                                        color: Theme.of(context)
                                             .textSelectionColor,
                                       ),
                                     ),
@@ -465,17 +445,19 @@ SizedBox(height: 15),
                                         cubit.removeUploadImage(context),
                                     icon: Icon(
                                       Icons.remove_circle_rounded,
-                                      color:
-                                      cubit.finalPickedProductImage == null && cubit.prodeuctImageUrl.trim() == '' ? Colors.grey
+                                      color: cubit.finalPickedProductImage ==
+                                                  null &&
+                                              cubit.prodeuctImageUrl.trim() ==
+                                                  ''
+                                          ? Colors.grey
                                           : Colors.red,
                                     ),
                                     label: Text(
                                       'Remove',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color:
-                                        cubit.finalPickedProductImage ==
-                                            null
+                                        color: cubit.finalPickedProductImage ==
+                                                null
                                             ? Colors.grey
                                             : Colors.redAccent,
                                       ),
@@ -487,112 +469,111 @@ SizedBox(height: 15),
                           ],
                         ),
                       ),
-
-
-
-                      if ( cubit.selectedCategoryId != 0 || cubit.selectedSupCategoryId !=0||cubit.selectItemId != 0 || cubit.selectAdditionId != 0 )
-                      Row(
-                        children: [
-                          Flexible(
-                            flex: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 9),
-                              child: TextFormField(
-                                focusNode: cubit.uploadTitleNode,
-                                // key: const ValueKey('Title'),
-                                controller: cubit.txtUploadTitle,
-                                onChanged: (value) {
-                                  cubit.checkIsUploadValid(context);
-                                },
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(
-                                  labelText: 'Title',
+                      if (cubit.selectedCategoryId != 0 ||
+                          cubit.selectedSupCategoryId != 0 ||
+                          cubit.selectItemId != 0 ||
+                          cubit.selectAdditionId != 0)
+                        Row(
+                          children: [
+                            Flexible(
+                              flex: 3,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 9),
+                                child: TextFormField(
+                                  focusNode: cubit.uploadTitleNode,
+                                  // key: const ValueKey('Title'),
+                                  controller: cubit.txtUploadTitle,
+                                  onChanged: (value) {
+                                    cubit.checkIsUploadValid(context);
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Title',
+                                  ),
+                                  // onSaved: (value) {
+                                  //   _productTitle = value;
+                                  // },
                                 ),
-                                // onSaved: (value) {
-                                //   _productTitle = value;
-                                // },
                               ),
                             ),
-                          ),
-
-                          const SizedBox(height: 30),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: <Widget>[
-                                  Checkbox(
-                                    value: cubit.isAvailable,
-                                    onChanged: (bool value) {
-                                      cubit.changeIsAvailableState(value: value);
-                                    },
-                                  ), //Checkbox
-
-                                  const Text(
-                                    'Available',
-                                    style: TextStyle(fontSize: 13.0),
-                                  ), //Text
-
-                                ],
-                              ),
-                              const SizedBox(width: 5,),
-                              if (cubit.selectedTypeItemId == 3  )
+                            const SizedBox(height: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                                 Column(
                                   children: <Widget>[
                                     Checkbox(
-                                      value: cubit.isPopular,
+                                      value: cubit.isAvailable,
                                       onChanged: (bool value) {
-                                        cubit.changeIsPopular(value: value);
+                                        cubit.changeIsAvailableState(
+                                            value: value);
                                       },
                                     ), //Checkbox
+
                                     const Text(
-                                      'Popular',
+                                      'Available',
                                       style: TextStyle(fontSize: 13.0),
                                     ), //Text
-
-                                  ], //<Widget>[]
+                                  ],
                                 ),
-                              const SizedBox(width: 5,),
-                              if (cubit.selectedTypeItemId == 3  )
-                                Column(
-                                  children: <Widget>[
-                                    //SizedBox
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                if (cubit.selectedTypeItemId == 3)
+                                  Column(
+                                    children: <Widget>[
+                                      Checkbox(
+                                        value: cubit.isPopular,
+                                        onChanged: (bool value) {
+                                          cubit.changeIsPopular(value: value);
+                                        },
+                                      ), //Checkbox
+                                      const Text(
+                                        'Popular',
+                                        style: TextStyle(fontSize: 13.0),
+                                      ), //Text
+                                    ], //<Widget>[]
+                                  ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                if (cubit.selectedTypeItemId == 3)
+                                  Column(
+                                    children: <Widget>[
+                                      //SizedBox
 
-                                    Checkbox(
-                                      value: cubit.isDiscount,
-                                      onChanged: (bool value) {
-                                        cubit.changeIsDiscount(value: value);
-                                        cubit.checkIsUploadValid(context);
+                                      Checkbox(
+                                        value: cubit.isDiscount,
+                                        onChanged: (bool value) {
+                                          cubit.changeIsDiscount(value: value);
+                                          cubit.checkIsUploadValid(context);
+                                        },
+                                      ),
 
-                                      },
-                                    ),
-
-                                    const Text(
-                                      'Discount',
-                                      style: TextStyle(fontSize: 13.0),
-                                    ), //Text
+                                      const Text(
+                                        'Discount',
+                                        style: TextStyle(fontSize: 13.0),
+                                      ), //Text
 //Checkbox
-                                  ], //<Widget>[]
+                                    ], //<Widget>[]
+                                  ),
+                                const SizedBox(
+                                  width: 5,
                                 ),
-
-                              const SizedBox(width: 5,),
-
-                            ],
-                          ),
-                        ],
-                      ),
-
-
-
-
-                      if (cubit.isDiscount != null && cubit.selectedTypeItemId == 3 && cubit.selectItemId != 0||(cubit.selectedTypeItemId == 4 && cubit.selectAdditionId != 0))
+                              ],
+                            ),
+                          ],
+                        ),
+                      if (cubit.isDiscount != null &&
+                              cubit.selectedTypeItemId == 3 &&
+                              cubit.selectItemId != 0 ||
+                          (cubit.selectedTypeItemId == 4 &&
+                              cubit.selectAdditionId != 0))
                         Row(
                           children: [
                             Flexible(
                               flex: 1,
                               child: TextFormField(
-
                                 controller: cubit.txtUploadPrice,
                                 keyboardType: TextInputType.number,
                                 onChanged: (value) {
@@ -604,45 +585,38 @@ SizedBox(height: 15),
                                 ],
                                 decoration: const InputDecoration(
                                   labelText: 'Price \$',
-
                                 ),
-
                               ),
                             ),
-                            if(cubit.selectedTypeItemId != 4 )
-                            const SizedBox(width: 15),
-                            if(cubit.selectedTypeItemId != 4  && cubit.isDiscount)
-                            Flexible(
-                              flex: 1,
-                              child: TextFormField(
-
-                                controller: cubit.txtUploadOldPrice,
-                                keyboardType: TextInputType.number,
-                                onChanged: (value) {
-                                  cubit.checkIsUploadValid(context);
-                                },
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9]')),
-                                ],
-                                decoration: const InputDecoration(
-                                  labelText: 'Old Price \$',
-
+                            if (cubit.selectedTypeItemId != 4)
+                              const SizedBox(width: 15),
+                            if (cubit.selectedTypeItemId != 4 &&
+                                cubit.isDiscount)
+                              Flexible(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: cubit.txtUploadOldPrice,
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (value) {
+                                    cubit.checkIsUploadValid(context);
+                                  },
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  decoration: const InputDecoration(
+                                    labelText: 'Old Price \$',
+                                  ),
                                 ),
-
                               ),
-                            ),
                           ],
                         ),
-
                       const SizedBox(height: 30),
-
-
-
-
-                      if (cubit.selectedTypeItemId == 3 && HomeCubit.get(context).listSubCategory.isNotEmpty)
+                      if (cubit.selectedTypeItemId == 3 &&
+                          HomeCubit.get(context).listSubCategory.isNotEmpty)
                         const SizedBox(height: 25),
-                      if (cubit.selectedTypeItemId == 3 && cubit.selectItemId != 0 )
+                      if (cubit.selectedTypeItemId == 3 &&
+                          cubit.selectItemId != 0)
                         TextFormField(
                           // key: const ValueKey('Description'),
                           controller: cubit.txtUploadDescription,
@@ -652,21 +626,17 @@ SizedBox(height: 15),
                           // enabled: true,
                           // enableSuggestions: true,
 
-                          textCapitalization:
-                          TextCapitalization.sentences,
+                          textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
-
                             fillColor: Colors.white,
                             focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(25.0),
                               borderSide: const BorderSide(
                                 color: Colors.black,
                               ),
                             ),
                             border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(25.0),
                               borderSide: const BorderSide(
                                 color: Colors.black,
                                 width: 2.0,
@@ -674,29 +644,59 @@ SizedBox(height: 15),
                             ),
                             labelText: 'Description',
                             labelStyle: const TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14),
+                                fontWeight: FontWeight.w400, fontSize: 14),
                           ),
                           onChanged: (text) {
                             cubit.checkIsUploadValid(context);
                           },
                         ),
-                      if (cubit.selectedTypeItemId == 3 && HomeCubit.get(context).listAdditions.where((element) =>   element.projectId == Global.projectId).toList().isNotEmpty)
+                      if (cubit.selectedTypeItemId == 3 &&
+                          HomeCubit.get(context)
+                              .listAdditions
+                              .where((element) =>
+                                  element.projectId == Global.projectId)
+                              .toList()
+                              .isNotEmpty)
                         const SizedBox(height: 30),
-                      if (cubit.selectedTypeItemId == 3 )
+                      if (cubit.selectedTypeItemId == 3)
                         SizedBox(
                           height: 120,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: HomeCubit.get(context).listAdditions.where((element) => element.itemId == cubit.selectItemId &&  element.projectId == Global.projectId).length??0,
+                            itemCount: HomeCubit.get(context)
+                                    .listAdditions
+                                    .where((element) =>
+                                        element.itemId == cubit.selectItemId &&
+                                        element.projectId == Global.projectId)
+                                    .length ??
+                                0,
                             itemBuilder: (context, index) => Padding(
-                              padding: EdgeInsets.only(left: index == 0 ? 20 : 0,bottom: 7,top: 7),
-                              child:
-                              additionCard(imagePath: HomeCubit.get(context).listAdditions.where((element) => element.itemId == cubit.selectItemId &&  element.projectId == Global.projectId).toList()[index].image,additionId:HomeCubit.get(context).listAdditions.where((element) => element.itemId == cubit.selectItemId &&  element.projectId == Global.projectId).toList()[index].itemId,cubit: cubit,context: context),
+                              padding: EdgeInsets.only(
+                                  left: index == 0 ? 20 : 0, bottom: 7, top: 7),
+                              child: additionCard(
+                                  imagePath: HomeCubit.get(context)
+                                      .listAdditions
+                                      .where((element) =>
+                                          element.itemId ==
+                                              cubit.selectItemId &&
+                                          element.projectId == Global.projectId)
+                                      .toList()[index]
+                                      .image,
+                                  additionId: HomeCubit.get(context)
+                                      .listAdditions
+                                      .where((element) =>
+                                          element.itemId ==
+                                              cubit.selectItemId &&
+                                          element.projectId == Global.projectId)
+                                      .toList()[index]
+                                      .itemId,
+                                  cubit: cubit,
+                                  context: context),
                             ),
                           ),
                         ),
-                      if (cubit.selectedTypeItemId == 3  && HomeCubit.get(context).listAdditions.isNotEmpty)
+                      if (cubit.selectedTypeItemId == 3 &&
+                          HomeCubit.get(context).listAdditions.isNotEmpty)
                         const SizedBox(
                           height: 50,
                         )
@@ -712,17 +712,22 @@ SizedBox(height: 15),
   }
 }
 
-
-
-GestureDetector additionCard({String imagePath,int additionId,UpdateDataCubit cubit,context}) {
+GestureDetector additionCard(
+    {String imagePath, int additionId, UpdateDataCubit cubit, context}) {
   return GestureDetector(
-    onTap: (){
-      if(cubit.listOfSelectedAdditions.any((element) => element.itemId ==additionId &&  element.projectId == Global.projectId))
-      {
-        cubit.listOfSelectedAdditions.removeWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId);
-      }
-      else{
-        cubit.listOfSelectedAdditions.add(HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId));
+    onTap: () {
+      if (cubit.listOfSelectedAdditions.any((element) =>
+          element.itemId == additionId &&
+          element.projectId == Global.projectId)) {
+        cubit.listOfSelectedAdditions.removeWhere((element) =>
+            element.itemId == additionId &&
+            element.projectId == Global.projectId);
+      } else {
+        cubit.listOfSelectedAdditions.add(HomeCubit.get(context)
+            .listAdditions
+            .firstWhere((element) =>
+                element.itemId == additionId &&
+                element.projectId == Global.projectId));
       }
       cubit.emit(refershState());
     },
@@ -730,19 +735,20 @@ GestureDetector additionCard({String imagePath,int additionId,UpdateDataCubit cu
       clipBehavior: Clip.none,
       alignment: Alignment.topRight,
       children: [
-
         Container(
-
             padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 9),
             margin: const EdgeInsets.only(
               right: 20,
             ),
             decoration: BoxDecoration(
-                borderRadius:  BorderRadius.only(
-                  bottomLeft:     const Radius.circular(20),
-                  bottomRight:     const Radius.circular(20),
-                  topLeft:  const Radius.circular(20),
-                  topRight: cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId )?  const Radius.circular(0)   :const Radius.circular(20),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: const Radius.circular(20),
+                  bottomRight: const Radius.circular(20),
+                  topLeft: const Radius.circular(20),
+                  topRight: cubit.listOfSelectedAdditions
+                          .any((element) => element.itemId == additionId)
+                      ? const Radius.circular(0)
+                      : const Radius.circular(20),
                 ),
                 color: Constants.white,
                 boxShadow: [
@@ -755,7 +761,9 @@ GestureDetector additionCard({String imagePath,int additionId,UpdateDataCubit cu
                   width: 110,
                   height: 50,
                 ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -766,19 +774,33 @@ GestureDetector additionCard({String imagePath,int additionId,UpdateDataCubit cu
                       height: 10,
                     ),
                     PrimaryText(
-                      text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).price.toString() ??0.toString(),
+                      text: HomeCubit.get(context)
+                              .listAdditions
+                              .firstWhere((element) =>
+                                  element.itemId == additionId &&
+                                  element.projectId == Global.projectId)
+                              .price
+                              .toString() ??
+                          0.toString(),
                       size: 12,
                       fontWeight: FontWeight.w700,
                       color: Constants.tertiary,
                       height: 1,
                     ),
-
-
                   ],
                 ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
                 PrimaryText(
-                  text: HomeCubit.get(context).listAdditions.firstWhere((element) => element.itemId == additionId &&  element.projectId == Global.projectId).itemTitle.toString() ??''.toString(),
+                  text: HomeCubit.get(context)
+                          .listAdditions
+                          .firstWhere((element) =>
+                              element.itemId == additionId &&
+                              element.projectId == Global.projectId)
+                          .itemTitle
+                          .toString() ??
+                      ''.toString(),
                   size: 15,
                   fontWeight: FontWeight.w700,
                   color: Constants.darkBG,
@@ -786,18 +808,23 @@ GestureDetector additionCard({String imagePath,int additionId,UpdateDataCubit cu
                 ),
               ],
             )),
-        if(cubit.listOfSelectedAdditions.any((element) => element.itemId == additionId &&  element.projectId == Global.projectId))
+        if (cubit.listOfSelectedAdditions.any((element) =>
+            element.itemId == additionId &&
+            element.projectId == Global.projectId))
           const Positioned(
               top: -10,
               right: 10,
-              child: Icon(Icons.check_circle,color: Colors.green,)),
-
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.green,
+              )),
       ],
     ),
   );
 }
+
 class GradientIcon extends StatelessWidget {
-  const GradientIcon(this.icon, this.size,this.gradient);
+  const GradientIcon(this.icon, this.size, this.gradient);
 
   final IconData icon;
   final double size;
@@ -846,6 +873,7 @@ Padding customAppBar2(BuildContext context) {
     ),
   );
 }
+
 List<ListItemTypeCategory> listItemTypeCategory = [
   ListItemTypeCategory(id: 1, name: 'Category'),
   ListItemTypeCategory(id: 2, name: 'SupCategory'),
@@ -859,4 +887,3 @@ class ListItemTypeCategory {
 
   ListItemTypeCategory({this.name, this.id});
 }
-

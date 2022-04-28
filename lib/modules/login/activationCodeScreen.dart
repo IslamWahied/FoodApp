@@ -214,7 +214,7 @@ class ActivationCodeScreen extends StatelessWidget {
                                               onTap: () {
                                                 cubit.endTime = DateTime.now()
                                                         .millisecondsSinceEpoch +
-                                                    2000 * 30;
+                                                    4000 * 30;
                                                 cubit.timerEnd = false;
                                                 cubit.resendActivationCode(
                                                     context);

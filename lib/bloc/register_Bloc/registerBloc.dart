@@ -31,7 +31,10 @@ class RegisterCubit extends Cubit<RegisterState> {
   bool activationDone = false;
   bool verifiedIsValid = false;
 
-  int endTime = DateTime.now().millisecondsSinceEpoch + 2000 * 30;
+
+  final formProjectInfoKey = GlobalKey<FormState>();
+
+  int endTime = DateTime.now().millisecondsSinceEpoch + 4000 * 30;
   bool timerEnd = false;
   StreamController<ErrorAnimationType> errorController =
       StreamController<ErrorAnimationType>();
@@ -52,7 +55,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
       listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
 
-      emit(Refersh());
+
     }).onError((handleError) {
       if (kDebugMode) {
         print(handleError);
@@ -320,6 +323,8 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   registerAndLoginAdmin(context) async {
+
+
     if(listProject.any((element) => element.name.toLowerCase().trim() == txtRegisterProjectNameControl.text.toLowerCase().trim() )){
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -463,18 +468,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  //
-  // List<UserModel> listUser = [];
-  //
-  // getUsers() async {
-  //   FirebaseFirestore.instance.collection('User').snapshots().listen((event) {
-  //     listUser = event.docs.map((x) => UserModel.fromJson(x.data())).toList();
-  //
-  //     emit(LoginSuccessState());
-  //   }).onError((handleError) {
-  //     print(handleError);
-  //   });
-  // }
+
   String departMentSelectedName = '';
   TextEditingController txtProjectMobileControl = TextEditingController();
 
@@ -486,7 +480,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         .snapshots()
         .listen((event) {
       listProject = event.docs.map((x) => Project.fromJson(x.data())).toList();
-      emit(Refersh());
+
     });
   }
 

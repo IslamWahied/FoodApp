@@ -38,7 +38,7 @@ class ItemsScreen extends StatelessWidget {
                   color: Constants.black
               ),
 
-              title:customAppBar(context: context,title: subcategoryTitle) ,
+              title:customAppBar(context: context,title: subcategoryTitle,isShowCarShop: true,isYellow: true) ,
             ),
             backgroundColor:Constants.white,
             body: SafeArea(

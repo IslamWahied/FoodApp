@@ -25,6 +25,9 @@ class AdminBackLayerMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
         builder: (context, state) {
+
+
+
           var cubit = HomeCubit.get(context);
           return Stack(
             fit: StackFit.expand,
@@ -32,161 +35,162 @@ class AdminBackLayerMenu extends StatelessWidget {
               Ink(
                 decoration: const BoxDecoration(color: Colors.black),
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Global.imageUrl != null && Global.imageUrl.trim() != ''
-                        ? Center(
-                            child: CircleAvatar(
-                              radius: 60.0,
-                              backgroundImage: NetworkImage(Global.imageUrl),
-                              backgroundColor: Colors.transparent,
-                            ),
-                          )
-                        : const Center(
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundImage: AssetImage('assets/person.jpg'),
-                            ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: ListView(
+                      children: [
+
+                        cubit.listProject.isNotEmpty &&     cubit.listProject.firstWhere((element) => element.id == Global.projectId).image != null && cubit.listProject.firstWhere((element) => element.id == Global.projectId).image.trim() != ''
+                            ? Center(
+                          child: CircleAvatar(
+                            radius: 60.0,
+                            backgroundImage: NetworkImage(cubit.listProject.firstWhere((element) => element.id == Global.projectId).image),
+                            backgroundColor: Colors.transparent,
                           ),
-                    const SizedBox(height: 5.0),
+                        )
+                            : const Center(
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: AssetImage('assets/person.jpg'),
+                          ),
+                        ),
 
-                    content(context, () {
-                      if (cubit.listUser
-                          .firstWhere(
-                              (element) => element.mobile == Global.mobile)
-                          .isActive) {
-                        navigateTo(context, const SendNotifacationScreen());
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text(
-                                  'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
-                                  textAlign: TextAlign.center,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
+                        const SizedBox(height: 5.0),
+                        content(context, () {
+                          if (cubit.listUser.firstWhere((element) => element.mobile == Global.mobile).isActive)
+                          {
+                            navigateTo(context, const UploadProductForm());
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                      'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
                                         BorderRadius.all(Radius.circular(30))),
-                                behavior: SnackBarBehavior.floating,
-                                padding: EdgeInsets.all(20.0),
-                                duration: Duration(milliseconds: 4000)));
-                      }
-                    }, 'ارسال عرض', 0),
-                    const SizedBox(height: 5.0),
+                                    behavior: SnackBarBehavior.floating,
+                                    padding: EdgeInsets.all(20.0),
+                                    duration: Duration(milliseconds: 4000)));
+                          }
 
-                    content(context, () {
-                      if (cubit.listUser
-                          .firstWhere(
-                              (element) => element.mobile == Global.mobile)
-                          .isActive) {
-                        navigateTo(context, const UploadProductForm());
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text(
-                                  'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
-                                  textAlign: TextAlign.center,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
+                          // HomeCubit.get(context).changeCurrentIndex(3);
+                        }, 'اضافة منتجات', 0),
+
+
+                        const SizedBox(height: 5.0),
+                        content(context, () {
+                          if (cubit.listUser
+                              .firstWhere(
+                                  (element) => element.mobile == Global.mobile)
+                              .isActive) {
+                            navigateTo(context, const UpdateDataScreen());
+                            HomeCubit.get(context).changeCurrentIndex(1);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                      'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
                                         BorderRadius.all(Radius.circular(30))),
-                                behavior: SnackBarBehavior.floating,
-                                padding: EdgeInsets.all(20.0),
-                                duration: Duration(milliseconds: 4000)));
-                      }
-
-                      // HomeCubit.get(context).changeCurrentIndex(3);
-                    }, 'اضافة منتج', 0),
-                    const SizedBox(height: 5.0),
-
-                    content(context, () {
-                      if (cubit.listUser
-                          .firstWhere(
-                              (element) => element.mobile == Global.mobile)
-                          .isActive) {
-                        navigateTo(context, const UpdateDataScreen());
-                        HomeCubit.get(context).changeCurrentIndex(1);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text(
-                                  'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
-                                  textAlign: TextAlign.center,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
+                                    behavior: SnackBarBehavior.floating,
+                                    padding: EdgeInsets.all(20.0),
+                                    duration: Duration(milliseconds: 4000)));
+                          }
+                        }, 'تعديل منتجات', 1),
+                        const SizedBox(height: 5.0),
+                        content(context, () {
+                          if (cubit.listUser
+                              .firstWhere(
+                                  (element) => element.mobile == Global.mobile)
+                              .isActive) {
+                            navigateTo(context, const SendNotifacationScreen());
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                      'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
                                         BorderRadius.all(Radius.circular(30))),
-                                behavior: SnackBarBehavior.floating,
-                                padding: EdgeInsets.all(20.0),
-                                duration: Duration(milliseconds: 4000)));
-                      }
-                    }, 'تعديل منتجات', 1),
-                    const SizedBox(height: 5.0),
+                                    behavior: SnackBarBehavior.floating,
+                                    padding: EdgeInsets.all(20.0),
+                                    duration: Duration(milliseconds: 4000)));
+                          }
+                        }, 'ارسال عرض', 0),
+                        const SizedBox(height: 5.0),
 
-                    // content(context, () {
-                    //   UpdateDataCubit.get(context).restAfterUpload(context);
-                    //   UpdateDataCubit.get(context).selectedTypeItemId = 1;
-                    //   navigateTo(context, const UpdateDataScreen());
-                    // }, 'حذف منتج', 2),
-                    //
-                    // const SizedBox(height: 5.0),
-                    content(context, () {
-                      if (cubit.listUser
-                          .firstWhere(
-                              (element) => element.mobile == Global.mobile)
-                          .isActive) {
-                        cubit.selectedUserId = '';
 
-                        // navigateTo(context, const CustomerAccountScreen());
-                        navigateTo(context, const UserAccountScreenForAdmin());
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text(
-                                  'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
-                                  textAlign: TextAlign.center,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
+                        content(context, () {
+                          if (cubit.listUser
+                              .firstWhere(
+                                  (element) => element.mobile == Global.mobile)
+                              .isActive) {
+                            cubit.selectedUserId = '';
+
+                            // navigateTo(context, const CustomerAccountScreen());
+                            navigateTo(context, const UserAccountScreenForAdmin());
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                      'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
                                         BorderRadius.all(Radius.circular(30))),
-                                behavior: SnackBarBehavior.floating,
-                                padding: EdgeInsets.all(20.0),
-                                duration: Duration(milliseconds: 4000)));
-                      }
-                    }, 'حسابات العملاء', 3),
+                                    behavior: SnackBarBehavior.floating,
+                                    padding: EdgeInsets.all(20.0),
+                                    duration: Duration(milliseconds: 4000)));
+                          }
+                        }, 'حسابات العملاء', 3),
 
-                    const SizedBox(height: 5.0),
-                    content(context, () {
-                      if (cubit.listUser
-                          .firstWhere(
-                              (element) => element.mobile == Global.mobile)
-                          .isActive) {
-                        navigateTo(context, const AdminAccountScreen());
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text(
-                                  'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
-                                  textAlign: TextAlign.center,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
+                        const SizedBox(height: 5.0),
+
+                        content(context, () {
+                          if (cubit.listUser
+                              .firstWhere(
+                                  (element) => element.mobile == Global.mobile)
+                              .isActive) {
+                            navigateTo(context, const AdminAccountScreen());
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                      'لم يتم تفعيل الحساب برجاء الاتصال بالدعم الفني لاتمام عملية التسجيل',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
                                         BorderRadius.all(Radius.circular(30))),
-                                behavior: SnackBarBehavior.floating,
-                                padding: EdgeInsets.all(20.0),
-                                duration: Duration(milliseconds: 4000)));
-                      }
-                    }, 'كشف حسابي', 4),
-                  ],
-                ),
+                                    behavior: SnackBarBehavior.floating,
+                                    padding: EdgeInsets.all(20.0),
+                                    duration: Duration(milliseconds: 4000)));
+                          }
+                        }, 'كشف حسابي', 4),
+                      ],
+                      scrollDirection: Axis.vertical,
+                    ),
+                  ),
+
+                ],
               ),
             ],
           );
@@ -234,7 +238,7 @@ class AdminBackLayerMenu extends StatelessWidget {
   }
 }
 
-Widget backdrop({BuildContext context, newOrderList, Widget backLayer}) =>
+Widget backdrop({BuildContext context, newOrderList, Widget backLayer,String image}) =>
     Scaffold(
       body: Center(
         child: BackdropScaffold(
@@ -271,11 +275,10 @@ Widget backdrop({BuildContext context, newOrderList, Widget backLayer}) =>
                       icon: CircleAvatar(
                         radius: 15,
                         backgroundColor: Colors.white,
-                        child: Global.imageUrl != null &&
-                                Global.imageUrl.trim() != ''
+                        child: image != null && image.trim() != ''
                             ? CircleAvatar(
                                 radius: 30.0,
-                                backgroundImage: NetworkImage(Global.imageUrl),
+                                backgroundImage: NetworkImage(image),
                                 backgroundColor: Colors.transparent,
                               )
                             : const CircleAvatar(

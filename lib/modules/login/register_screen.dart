@@ -27,7 +27,7 @@ class RegisterScreen extends StatelessWidget {
         leadingWidth: 0,
         iconTheme: const IconThemeData(color: Constants.black),
         title: customAppBar(
-            context: context, title: 'البيانات الشخصية', isShowCarShop: false),
+            context: context, title: 'البيانات الشخصية', isShowCarShop: false,isYellow: false),
       ),
       backgroundColor: Colors.white,
       body: BlocConsumer<RegisterCubit, RegisterState>(

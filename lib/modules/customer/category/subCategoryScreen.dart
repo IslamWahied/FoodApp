@@ -33,7 +33,7 @@ class SubCategoryScreen extends StatelessWidget {
               color: Constants.black
           ),
 
-          title:customAppBar(context: context,title: categoryTitle,) ,
+          title:customAppBar(context: context,title: categoryTitle,isShowCarShop: true,isYellow: true) ,
         ),
       backgroundColor:Constants.white,
         body: SafeArea(

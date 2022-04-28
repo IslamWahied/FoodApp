@@ -31,7 +31,7 @@ class UserAccountScreenForAdmin extends StatelessWidget {
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
             title: customAppBar(
-                context: context, title: ' حساب العملاء', isShowCarShop: false),
+                context: context, title: ' حساب العملاء', isShowCarShop: false,isYellow: true),
           ),
           body: SingleChildScrollView(
             child: Column(

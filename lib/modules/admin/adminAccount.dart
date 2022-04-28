@@ -28,7 +28,7 @@ class AdminAccountScreen extends StatelessWidget {
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
             title: customAppBar(
-                context: context, title: 'حسابي', isShowCarShop: false),
+                context: context, title: 'حسابي', isShowCarShop: false,isYellow: true),
           ),
           body: SingleChildScrollView(
             child: Column(

@@ -46,7 +46,7 @@ class OrderDetailScreen extends StatelessWidget {
                 color: Constants.black
             ),
 
-            title:customAppBar(context: context,title: itemName) ,
+            title:customAppBar(context: context,title: itemName,isYellow: true,isShowCarShop: true) ,
           ),
           // floatingActionButton: ConstrainedBox(
           //   constraints: BoxConstraints(

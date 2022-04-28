@@ -28,7 +28,7 @@ class SendNotifacationScreen extends StatelessWidget {
             centerTitle: false,
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
-            title: customAppBar(context: context, title: '',isShowCarShop: false),
+            title: customAppBar(context: context, title: '',isShowCarShop: false,isYellow: true),
           ),
           body: SingleChildScrollView(
             child: Center(

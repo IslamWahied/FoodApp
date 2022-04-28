@@ -108,7 +108,7 @@ class UserInformationScreen extends StatelessWidget {
                                         width: 10,
                                       ),
                                       Text(
-                                        Global.userName ?? '',
+                                      Global.isAdmin?  cubit.listProject.firstWhere((element) => element.id == Global.projectId).name : Global.userName  ?? 'لا يوجد اسم',
                                         style: const TextStyle(
                                             fontSize: 20.0,
                                             color: Colors.white),

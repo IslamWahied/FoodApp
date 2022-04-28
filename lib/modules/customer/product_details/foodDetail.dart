@@ -46,7 +46,7 @@ class FoodDetail extends StatelessWidget {
             centerTitle: false,
             leadingWidth: 0,
             iconTheme: const IconThemeData(color: Constants.black),
-            title: customAppBar(context: context, title: itemName),
+            title: customAppBar(context: context, title: itemName,isYellow: true,isShowCarShop: true,),
           ),
           bottomSheet: BottomSheet(
             enableDrag: false,
@@ -393,7 +393,7 @@ class FoodDetail extends StatelessWidget {
 }
 
 Padding customAppBar(
-    {BuildContext context, String title, bool isShowCarShop = true}) {
+    {@required BuildContext context,@required String title,@required bool isShowCarShop,@required bool isYellow }) {
   return Padding(
     padding: const EdgeInsets.symmetric(
       horizontal: 0,
@@ -407,7 +407,7 @@ Padding customAppBar(
           child: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color:Colors.amberAccent,
+                color: isYellow?Constants.primary : Colors.blue,
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(width: 1, color: Colors.grey[400])),
             child: const Icon(Icons.chevron_left,color: AppColors.white,),
