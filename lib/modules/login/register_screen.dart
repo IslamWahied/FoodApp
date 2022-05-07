@@ -5,7 +5,7 @@ import 'package:elomda/bloc/register_Bloc/registerState.dart';
 import 'package:elomda/modules/customer/product_details/foodDetail.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -177,37 +177,82 @@ class RegisterScreen extends StatelessWidget {
                         vertical: 20,
                         horizontal: 30,
                       ),
-                      child: TextFormField(
-                        textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.right,
-                        controller: cubit.txtRegisterUserNameControl,
-                        onChanged: (value) {
-                          cubit.changeRegisterValidState();
-                        },
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
+                      child: Directionality(
+                        textDirection:                         TextDirection.rtl ,
+                        child: TextFormField(
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.right,
+                          controller: cubit.txtRegisterUserNameControl,
+                          onChanged: (value) {
+                            cubit.changeRegisterValidState();
+                          },
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: const BorderSide(
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
-                              width: 2.0,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: const BorderSide(
+                                color: Colors.black,
+                                width: 2.0,
+                              ),
                             ),
+                            labelText: 'الاسم',
+                            labelStyle: const TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 17),
                           ),
-                          labelText: 'الاسم',
-                          labelStyle: const TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 17),
+                          maxLength: 50,
+                          keyboardType: TextInputType.text,
                         ),
-                        maxLength: 150,
-                        keyboardType: TextInputType.text,
                       ),
                     ),
-                  ],
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 30,
+                      ),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl ,
+                        child: TextFormField(
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.right,
+                          controller: cubit.txtRegisterUserAddressControl,
+                          onChanged: (value) {
+                            cubit.changeRegisterValidState();
+                          },
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: const BorderSide(
+                                color: Colors.black,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: const BorderSide(
+                                color: Colors.black,
+                                width: 2.0,
+                              ),
+                            ),
+                            labelText: 'العنوان',
+                            labelStyle: const TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 17),
+                          ),
+                          maxLength: 100,
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
+                    ),
+
+          ],
                 ),
                 if (cubit.isAdmin)
                   SizedBox(height: MediaQuery.of(context).size.height * 0.2925),
@@ -273,7 +318,7 @@ class RegisterScreen extends StatelessWidget {
                             // color: Colors.green,
                             animateOnTap: false,
                             color: cubit.registerValid
-                                ? Colors.blue
+                                ?  Constants.primary
                                 : Colors.grey[500],
                             disabledColor: Colors.grey,
                             child: Row(

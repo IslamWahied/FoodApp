@@ -7,6 +7,7 @@ class Project{
   String createdDate;
   String image;
   String projectMobile;
+  String address;
   bool isActive;
 
   Project({
@@ -17,6 +18,7 @@ class Project{
     this.image,
     this.projectMobile,
     this.isActive,
+    this.address,
 
   });
 
@@ -29,6 +31,7 @@ class Project{
     image = json['image'];
     projectMobile = json['projectMobile'];
     isActive = json['isActive'];
+    address = json['address'];
   }
 
   Map<String, dynamic> toMap()
@@ -41,6 +44,7 @@ class Project{
       'image':image,
       'projectMobile':projectMobile,
       'isActive':isActive,
+      'address':address,
     };
   }
 

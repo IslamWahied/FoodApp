@@ -51,9 +51,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   getActivationCode(context) async {
     FocusManager.instance.primaryFocus?.unfocus();
-    if ((Global.mobile != textMobileControl.text ||
-            verificationCode == null ||
-            verificationCode.trim() == '') &&
+    if ((Global.mobile != textMobileControl.text || verificationCode == null || verificationCode.trim() == '') &&
         textMobileControl.text.trim() != '' &&
         textMobileControl.text != null) {
       loginBtnController.start();

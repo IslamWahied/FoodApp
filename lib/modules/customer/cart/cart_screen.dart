@@ -332,7 +332,7 @@ Widget itemCard(
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 45, vertical: 20),
-                            decoration: const BoxDecoration(
+                            decoration:   BoxDecoration(
                                 color: Constants.primary,
                                 borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(20),

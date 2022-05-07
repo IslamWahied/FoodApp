@@ -54,10 +54,9 @@ class ActivationCodeScreen extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color:   Constants.primary,
                                 borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                    width: 1, color: Colors.grey[400])),
+                                ),
                             child: const Icon(Icons.chevron_left,color: Constants.white,),
                           ),
                         ),
@@ -262,7 +261,7 @@ class ActivationCodeScreen extends StatelessWidget {
                                     controller: cubit.verifiedBtnController,
                                     successColor: Colors.green,
                                     color: cubit.verifiedIsValid
-                                        ? Colors.blue
+                                        ?  Constants.primary
                                         : Colors.grey[500],
                                     disabledColor: Colors.grey,
                                     child: Row(

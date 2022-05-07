@@ -24,7 +24,8 @@ class UserBackLayerMenu extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               Ink(
-                decoration: const BoxDecoration(color: Colors.black),
+                decoration:   BoxDecoration(color: Colors.black.withOpacity(0.8)),
+
               ),
               SingleChildScrollView(
                 child: Container(

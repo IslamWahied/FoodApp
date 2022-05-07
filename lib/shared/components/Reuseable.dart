@@ -62,7 +62,7 @@ Widget itemCard(
                           children: [
                             Row(
                               children: [
-                                const Icon(
+                                  Icon(
                                   Icons.star,
                                   color: Constants.primary,
                                   size: 20,
@@ -115,11 +115,11 @@ Widget itemCard(
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 45, vertical: 20),
-                              decoration: const BoxDecoration(
+                              decoration:   BoxDecoration(
                                   color: Constants.primary,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft:const Radius.circular(20),
+                                    topRight:const Radius.circular(20),
                                   )),
                               child: const Icon(Icons.add, size: 20),
                             ),

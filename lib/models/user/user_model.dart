@@ -10,6 +10,7 @@ double currentBalance ;
   String userName;
   String fireBaseToken;
   int departmentId;
+  String address;
   String createdDate;
 
 
@@ -23,6 +24,7 @@ double currentBalance ;
     this.fireBaseToken,
     this.createdDate,
     this.currentBalance,
+    this.address,
     this.isActive,
   });
 
@@ -37,6 +39,7 @@ double currentBalance ;
     userName = json['userName'];
     fireBaseToken = json['fireBaseToken']??'';
     createdDate = json['createdDate']??'';
+    address = json['address']??'';
     isActive = json['isActive']??'';
   }
 
@@ -51,6 +54,7 @@ double currentBalance ;
       'mobile':mobile,
       'fireBaseToken':fireBaseToken??'',
       'userName':userName,
+      'address':address,
       'createdDate':createdDate,
       'isActive':isActive,
     };

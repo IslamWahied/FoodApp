@@ -325,6 +325,47 @@ class ProjectInfoRegisterScreen extends StatelessWidget {
                         height: 15,
                       ),
                       const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 30,
+                        ),
+                        child: Directionality(
+                          textDirection: TextDirection.rtl ,
+                          child: TextFormField(
+                            textDirection: TextDirection.rtl,
+                            textAlign: TextAlign.right,
+                            controller: cubit.txtRegisterUserAddressControl,
+                            onChanged: (value) {
+                              cubit.changeRegisterValidState();
+                            },
+                            decoration: InputDecoration(
+                              fillColor: Colors.white,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: const BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: const BorderSide(
+                                  color: Colors.black,
+                                  width: 2.0,
+                                ),
+                              ),
+                              labelText: 'عنوان المطعم',
+                              labelStyle: const TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 17),
+                            ),
+                            maxLength: 100,
+                            keyboardType: TextInputType.text,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
                         height: 30,
                       ),
                       SizedBox(
@@ -336,7 +377,7 @@ class ProjectInfoRegisterScreen extends StatelessWidget {
                             // color: Colors.green,
                             animateOnTap: false,
                             color: cubit.registerValid
-                                ? Colors.blue
+                                ?Constants.primary
                                 : Colors.grey[500],
                             disabledColor: Colors.grey,
                             child: Row(

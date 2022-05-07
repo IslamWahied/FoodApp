@@ -18,7 +18,8 @@ class Constants {
   static const lightGray = Color(0xffc0c1c3);
   static const lighterGray = Color(0xffe0e0e0);
   static const black = Colors.black;
-  static const primary = Color(0xfffdc912);
+  static Color  primary = Colors.orange[500];
+  // Color(0xfffdc500);
   static const tertiary = Color(0xffff36b6b);
 
 

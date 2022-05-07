@@ -2,6 +2,7 @@
 
 
 import 'package:elomda/styles/colors.dart';
+import 'package:elomda/styles/icons/icon_broken.dart';
 import 'package:flutter/material.dart';
 
 
@@ -17,47 +18,77 @@ void navigateWithoutBack(context, widget) {
       context, MaterialPageRoute(builder: (BuildContext context) => widget));
 }
 
-Widget defultTextFormFaild(
-    {@required TextEditingController controlle,
-    @required TextInputType tybe,
-    @required String lable,
-    @required IconData prefix,
-    @required Function validate,
-    IconData sufix,
-    bool ispassowrd = false,
-    Function onchange,
-    Function onsubmit,
-    Function hideen,
-    Function onTap,
-    Function onSave,
-    Color fillColor,
-    TextInputAction textInputAction}) {
-  return TextFormField(
-    onChanged: onchange,
-    onTap: onTap,
-    onFieldSubmitted: onsubmit,
-    validator: validate,
-    controller: controlle,
-    keyboardType: tybe,
-    obscureText: ispassowrd,
-    //textInputAction: textInputAction,
-    //  onSaved: onSave,
-    decoration: InputDecoration(
-      labelText: lable,
-      border: const UnderlineInputBorder(),
-      prefixIcon: Icon(prefix),
-      filled: true,
-      fillColor: fillColor,
-      suffixIcon: sufix != null
-          ? IconButton(
-              icon: Icon(sufix),
-              onPressed: hideen,
-            )
-          : null,
+Widget defaultAppBar({
+  @required BuildContext context,
+  String title,
+  List<Widget> actions,
+}) => AppBar(
+  leading: IconButton(
+    onPressed: ()
+    {
+      Navigator.pop(context);
+    },
+    icon: const Icon(
+      IconBroken.Arrow___Left_2,
     ),
-  );
-}
+  ),
+  titleSpacing: 5.0,
+  title: Text(
+    title,
+  ),
+  actions: actions,
+);
 
+Widget defaultFormField({
+  @required TextEditingController controller,
+  @required TextInputType type,
+  Function onSubmit,
+  Function onChange,
+  Function onTap,
+  bool isPassword = false,
+  @required Function validate,
+  @required String label,
+  @required IconData prefix,
+  IconData suffix,
+  Function suffixPressed,
+  bool isClickable = true,
+}) =>
+    TextFormField(
+      controller: controller,
+      keyboardType: type,
+      obscureText: isPassword,
+      enabled: isClickable,
+      onFieldSubmitted: onSubmit,
+      onChanged: onChange,
+      onTap: onTap,
+      validator: validate,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(
+          prefix,
+        ),
+        suffixIcon: suffix != null
+            ? IconButton(
+          onPressed: suffixPressed,
+          icon: Icon(
+            suffix,
+          ),
+        )
+            : null,
+        border: const OutlineInputBorder(),
+      ),
+    );
+
+Widget defaultTextButton({
+  @required Function function,
+  @required String text,
+}) =>
+    TextButton(
+      onPressed: function,
+      child: Text(
+        text.toUpperCase(),
+      ),
+    );
 // void showToast({
 //   @required String text,
 //   @required ToastState state,

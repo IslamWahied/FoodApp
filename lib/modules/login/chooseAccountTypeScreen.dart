@@ -3,8 +3,10 @@
 import 'package:elomda/bloc/register_Bloc/registerBloc.dart';
 import 'package:elomda/bloc/register_Bloc/registerState.dart';
 import 'package:elomda/modules/customer/product_details/foodDetail.dart';
+import 'package:elomda/modules/login/login_screen.dart';
 
 import 'package:elomda/modules/login/register_screen.dart';
+import 'package:elomda/shared/components/Componant.dart';
 
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
@@ -29,7 +31,44 @@ class AccountTypeScreen  extends StatelessWidget {
             color: Constants.black
         ),
 
-        title:customAppBar(context: context,title: '',isShowCarShop: false,isYellow: false) ,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 0,
+            vertical: 10,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () => NavigatToAndReplace(context, const LoginScreen()),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color:   Constants.primary,
+                      borderRadius: BorderRadius.circular(15),
+
+                  ),
+                  child: const Icon(Icons.chevron_left,color: AppColors.white,),
+                ),
+              ),
+
+
+
+
+                SizedBox(
+                  width:MediaQuery.of(context).size.width * .10,
+                )
+              // Container(
+              //   padding: const EdgeInsets.all(10),
+              //   decoration: BoxDecoration(
+              //     color: Constants.primary,
+              //     borderRadius: BorderRadius.circular(15),
+              //   ),
+              //   child: const Icon(Icons.star, color: Constants.white),
+              // ),
+            ],
+          ),
+        ) ,
       ),
       body: BlocConsumer<RegisterCubit,RegisterState>(
         builder: (context, state)  {
@@ -71,7 +110,7 @@ class AccountTypeScreen  extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(
                                     10.0,
                                   ),
-                                  color:!cubit.isAdmin? Colors.blue:Colors.grey[400],
+                                  color:!cubit.isAdmin? Constants.primary:Colors.grey[400],
                                 ),
                               ),
                               const Text('عميل',style: TextStyle(fontSize: 18),)
@@ -106,7 +145,7 @@ class AccountTypeScreen  extends StatelessWidget {
                                   ),
                                 ),
                                 decoration: BoxDecoration(
-                                  color:cubit.isAdmin? Colors.blue:Colors.grey[400],
+                                  color:cubit.isAdmin?  Constants.primary:Colors.grey[400],
                                   borderRadius: BorderRadius.circular(
                                     10.0,
                                   ),
@@ -148,9 +187,10 @@ class AccountTypeScreen  extends StatelessWidget {
 
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            color:Colors.blue,
+                            color: Constants.primary,
                             borderRadius: BorderRadius.circular(15),
-                            border: Border.all(width: 1, color: Colors.grey[400])),
+
+                        ),
                         child: Row(
                           children: const [
                             Text('التالي',style: TextStyle(fontSize: 18,color: Constants.white),),

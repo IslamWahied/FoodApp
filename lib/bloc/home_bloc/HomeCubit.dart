@@ -1,5 +1,7 @@
 // @dart=2.9
 
+import 'dart:io';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -35,6 +37,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as sd;
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
@@ -125,6 +128,24 @@ class HomeCubit extends Cubit<HomeState> {
 
     emit(SearchSubCategoryState());
   }
+
+  File profileImage;
+  var picker = ImagePicker();
+  Future<void> getProfileImage() async {
+    final pickedFile = await picker.getImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      profileImage = File(pickedFile.path);
+
+      emit(SocialProfileImagePickedSuccessState());
+    } else {
+      debugPrint('No image selected.');
+      emit(SocialProfileImagePickedErrorState());
+    }
+  }
+
 
   List<Project> listProject = [];
 
@@ -420,6 +441,7 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   bool isShowAllAccount = false;
+
   getOrders() async {
     FirebaseFirestore.instance.collection('Orders').snapshots().listen((event) {
       var x1 = listAllOrders
@@ -465,7 +487,7 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   String getTotalAddaitonlPriceForItem({int index}) {
-    try{
+    try {
       double price = 0;
       for (var element in listOrder[index].additionsList) {
         price = price + element.price;
@@ -473,8 +495,7 @@ class HomeCubit extends Cubit<HomeState> {
       price = price * listOrder[index].orderCount;
       emit(SelectCategoryState());
       return price.toString();
-    }
-    catch(e){
+    } catch (e) {
       print(e);
       return '0';
     }
@@ -883,8 +904,8 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   addNewItemToCartFromFeedsScreen({itemId, orderCount}) {
-
-    var newList = popularList.firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId);
+    var newList = popularList.firstWhere((element) =>
+        element.itemId == itemId && element.projectId == Global.projectId);
 
     var model = ItemModel(
       orderCount: orderCount,
@@ -1012,11 +1033,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   getItems() async {
     FirebaseFirestore.instance.collection('Items').snapshots().listen((event) {
-
-
-    listItems = event.docs.map((x) => ItemModel.fromJson(x.data())).toList();
-
-
+      listItems = event.docs.map((x) => ItemModel.fromJson(x.data())).toList();
 
       listItemsSearch = listItems;
       listItemsBySubCategSearch = listItems;
@@ -1053,14 +1070,16 @@ class HomeCubit extends Cubit<HomeState> {
   List<AdditionsModel> listOfSelectedAdditions = [];
 
   getAdditions() async {
-
     FirebaseFirestore.instance
         .collection('Additions')
         .snapshots()
         .listen((event) {
-      listAdditions = event.docs.map((x) => AdditionsModel.fromJson(x.data())).toList();
+      listAdditions =
+          event.docs.map((x) => AdditionsModel.fromJson(x.data())).toList();
 
-      listAdditions.forEach((element) {print(element.toMap());});
+      listAdditions.forEach((element) {
+        print(element.toMap());
+      });
 
       emit(SelectCategoryState());
     });
@@ -1126,9 +1145,14 @@ class HomeCubit extends Cubit<HomeState> {
     selectedItemId = 0;
     selectedSubCategoryId = supCategoryId;
 
-   print('listItems.forEach((element) {print(element.toJson());})');
-    listItems.forEach((element) {print(element.toJson());});
-    listItemsSearch = listItems.where((element) => element.supCategoryId == supCategoryId && element.projectId == Global.projectId)
+    print('listItems.forEach((element) {print(element.toJson());})');
+    listItems.forEach((element) {
+      print(element.toJson());
+    });
+    listItemsSearch = listItems
+        .where((element) =>
+            element.supCategoryId == supCategoryId &&
+            element.projectId == Global.projectId)
         .toList();
     emit(SelectCategoryState());
     // print('listItemsSearch.length');
@@ -1140,7 +1164,15 @@ class HomeCubit extends Cubit<HomeState> {
               element.categoryId == selectedCategoryId &&
               element.projectId == Global.projectId)
           .toList();
-      navigateTo(context, ItemsScreen(subcategoryTitle: listItems.firstWhere((element) => element.supCategoryId == supCategoryId && element.projectId == Global.projectId).supCategoryTitle ?? ''));
+      navigateTo(
+          context,
+          ItemsScreen(
+              subcategoryTitle: listItems
+                      .firstWhere((element) =>
+                          element.supCategoryId == supCategoryId &&
+                          element.projectId == Global.projectId)
+                      .supCategoryTitle ??
+                  ''));
     } else {
       EasyLoading.showError('لا يوجد بيانات');
     }

@@ -2,6 +2,7 @@
 
 import 'package:elomda/bloc/login_bloc/loginCubit.dart';
 import 'package:elomda/bloc/login_bloc/loginState.dart';
+import 'package:elomda/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -67,7 +68,7 @@ maxLength: 11,
                           ),
                           fillColor: Colors.white,
                           filled: true,
-                          prefixIcon: Icon(Icons.phone),
+                          prefixIcon: Icon(Icons.phone,color:  Colors.orange),
                           prefixIconConstraints: BoxConstraints(
                             minWidth: 75,
                           ),
@@ -96,7 +97,7 @@ maxLength: 11,
                           height: 60,
                           controller: cubit.loginBtnController,
                           successColor: Colors.green,
-                          color: cubit.isValid ? Colors.blue : Colors.grey[500],
+                          color: cubit.isValid ? Colors.orange[500] : Colors.grey[500],
                           disabledColor: Colors.grey,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

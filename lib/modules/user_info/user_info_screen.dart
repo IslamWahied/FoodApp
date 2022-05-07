@@ -2,13 +2,18 @@
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
+import 'package:elomda/modules/user_info/edit_profile/edit_project_profile_screen.dart';
 import 'package:elomda/shared/Global.dart';
+import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
 import 'package:elomda/styles/colors.dart';
+import 'package:elomda/styles/icons/icon_broken.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:list_tile_switch/list_tile_switch.dart';
+
+import 'edit_profile/edit_user_profile_screen.dart';
 
 class UserInformationScreen extends StatelessWidget {
   const UserInformationScreen({Key key}) : super(key: key);
@@ -161,12 +166,14 @@ class UserInformationScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            if (!Global.isAdmin)
                             Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: userTitle(
                                     title: Global.isAdmin
                                         ? 'بيانات المطعم'
                                         : 'الصفحة الشخصية')),
+                            if (!Global.isAdmin)
                             const Divider(
                               thickness: 1,
                               color: Colors.grey,
@@ -208,18 +215,8 @@ class UserInformationScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            if (Global.isAdmin)
-                              Container(
-                                child: userTile(
-                                  'رقم التليفون',
-                                  cubit.listProject
-                                          .firstWhere((element) =>
-                                              element.id == Global.projectId)
-                                          .projectMobile ??
-                                      '',
-                                  Icons.phone,
-                                ),
-                              ),
+
+
                             // Material(
                             //   color: Colors.transparent,
                             //   child: InkWell(
@@ -234,9 +231,52 @@ class UserInformationScreen extends StatelessWidget {
                             //     ),
                             //   ),
                             // ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: userTitle(title:Global.isAdmin?'البيانات الشخصة': 'البيانات '),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: userTitle(title:Global.isAdmin?'بيانات المطعم': 'البيانات '),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: OutlinedButton(
+                                    onPressed: () {
+if(Global.isAdmin) {
+  navigateTo(
+                                        context,
+                                        EditProjectProfileScreen(projectModel: cubit.listProject.firstWhere((element) => element.id == Global.projectId) ),
+                                      );
+}
+
+if(!Global.isAdmin) {
+  navigateTo(
+    context,
+    EditUserProfileScreen( userModel:  cubit.listUser.firstWhere((element) => element.mobile == Global.mobile)),
+  );
+}
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(
+                                          IconBroken.Edit,
+                                          size: 16.0,
+                                        ),
+                                        SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        Text(
+                                          'تعديل البيانات',
+                                        ),
+
+
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const Divider(
                               thickness: 1,
@@ -249,6 +289,19 @@ class UserInformationScreen extends StatelessWidget {
                             //     Icons.email,
                             //   ),
                             // ),
+                            if (Global.isAdmin)
+                            Container(
+                              child: userTile(
+                                'رقم التليفون',
+                                cubit.listProject
+                                    .firstWhere((element) =>
+                                element.id == Global.projectId)
+                                    .projectMobile ??
+                                    '',
+                                Icons.phone,
+                              ),
+                            ),
+                            if (!Global.isAdmin)
                             Container(
                               child: userTile(
                                 'رقم التليفون',
@@ -256,6 +309,32 @@ class UserInformationScreen extends StatelessWidget {
                                 Icons.phone,
                               ),
                             ),
+                            if(cubit.listUser.isNotEmpty && !Global.isAdmin )
+                            Container(
+                              child: userTile(
+                                'العنوان',
+                                cubit.listUser
+                                    .firstWhere((element) =>
+                                element.mobile == Global.mobile)
+                                    .address ??
+                                    '',
+                                Icons.location_on_outlined,
+                              ),
+                            ),
+
+                            if(cubit.listProject.isNotEmpty && Global.isAdmin )
+                              Container(
+                                child: userTile(
+                                  'العنوان',
+                                  cubit.listProject
+                                      .firstWhere((element) =>
+                                  element.id == Global.projectId)
+                                      .address ??
+                                      '',
+                                  Icons.location_on_outlined,
+                                ),
+                              ),
+
                             if (Global.isAdmin)
                               Container(
                                 child: userTile(
@@ -266,10 +345,13 @@ class UserInformationScreen extends StatelessWidget {
                                           .isActive
                                       ? 'فعال'
                                       : 'غير فعال' ?? '',
-                                  Icons.phone,
+                                  cubit.listProject
+                                      .firstWhere((element) =>
+                                  element.id == Global.projectId)
+                                      .isActive?  Icons.check_circle_outline:Icons.do_not_disturb,
                                 ),
                               ),
-
+                            if (!Global.isAdmin)
                             Container(
                               child: userTile(
                                 'تاريخ الانضمام',
@@ -282,6 +364,21 @@ class UserInformationScreen extends StatelessWidget {
                                 Icons.watch_later,
                               ),
                             ),
+
+                            if ( Global.isAdmin)
+                              Container(
+                                child: userTile(
+                                  'تاريخ الانضمام',
+                                  cubit.listProject.isNotEmpty?      cubit.convertDateFormat(cubit.listProject
+                                      .firstWhere((element) =>
+                                  element.id == Global.projectId)
+                                      .createdDate ??
+                                      '') ??
+                                      '':'',
+                                  Icons.watch_later,
+                                ),
+                              ),
+
                             Padding(
                               padding: const EdgeInsets.all(0.8),
                               child: userTitle(title: 'الاعدادات'),
@@ -360,7 +457,6 @@ class UserInformationScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-
                             // Material(
                             //   color: Colors.transparent,
                             //   child: InkWell(
@@ -400,12 +496,17 @@ class UserInformationScreen extends StatelessWidget {
     );
   }
 
-  Widget userTitle({@required String title}) {
+  Widget userTitle({@required String title }) {
     return Padding(
       padding: const EdgeInsets.all(14.0),
-      child: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+      child: Row(
+        children: [
+
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+          ),
+        ],
       ),
     );
   }

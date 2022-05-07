@@ -50,8 +50,8 @@ class RestrantListScreen extends StatelessWidget {
                  color: Colors.deepOrange,
                ),
                flexibleSpace: Container(
-                 decoration: const BoxDecoration(
-                   color: Colors.black,
+                 decoration:   BoxDecoration(
+                   color: Colors.black.withOpacity(0.8),
                  ),
                ),
                actions: [

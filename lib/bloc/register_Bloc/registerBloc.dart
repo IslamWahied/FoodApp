@@ -204,7 +204,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     // Check Image Is Null
 
     if (finalPickedUserImage != null) {
-      print('1');
+
       rgisterBtnController.start();
       // if not image null  Update User By Image
       firebase_storage.FirebaseStorage.instance
@@ -213,7 +213,7 @@ class RegisterCubit extends Cubit<RegisterState> {
               'User/${Uri.file(finalPickedUserImage.path).pathSegments.last}')
           .putFile(finalPickedUserImage)
           .then((value) {
-        print('2');
+
         value.ref.getDownloadURL().then((value) async {
           UserModel model = UserModel(
             isActive: false,
@@ -222,49 +222,39 @@ class RegisterCubit extends Cubit<RegisterState> {
             createdDate: DateTime.now().toString(),
             isAdmin: false,
             departmentId: 0,
+            address: txtRegisterUserAddressControl.text,
             mobile: Global.mobile,
             userName: txtRegisterUserNameControl.text,
             fireBaseToken: Global.fireBaseToken,
           );
-          print('3');
+
           Global.imageUrl = value;
-          print('4');
+
           await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
-          print('5');
+
           FirebaseFirestore.instance
               .collection('User')
               .doc(Global.mobile)
               .set(model.toMap());
         }).then((value) async {
+
           // Save In CashHelper
-          print('6');
           await CachHelper.SetData(key: 'mobile', value: Global.mobile);
-          print('7');
           await CachHelper.SetData(key: 'userName', value: txtRegisterUserNameControl.text);
-          print('8');
           await CachHelper.SetData(key: 'departmentId', value: 0);
-          print('9');
           await CachHelper.SetData(key: 'showOnBoarding', value: false);
-          print('10');
           await CachHelper.SetData(key: 'isUserLogin', value: true);
-          print('11');
           await CachHelper.SetData(key: 'isAdmin', value: false);
-          print('12');
+
 
           // Save Global
           Global.departMent = 0;
-          print('13');
           Global.userName = txtRegisterUserNameControl.text;
-          print('14');
           Global.isAdmin = false;
-          print('15');
-
           Global.projectId = 0;
-          print('16');
 
           // Go To Home
           rgisterBtnController.success();
-          print('17');
           await Future.delayed(const Duration(seconds: 1));
           rgisterBtnController.reset();
           NavigatToAndReplace(context, const HomeLayout());
@@ -282,17 +272,18 @@ class RegisterCubit extends Cubit<RegisterState> {
         createdDate: DateTime.now().toString(),
         isAdmin: false,
         departmentId: 0,
+        address: txtRegisterUserAddressControl.text,
         mobile: Global.mobile,
         userName: txtRegisterUserNameControl.text,
         fireBaseToken: Global.fireBaseToken,
       );
       if (kDebugMode) {
-        print('2');
+
       }
       Global.imageUrl = '';
       await CachHelper.SetData(key: 'imageUrl', value: Global.imageUrl);
       if (kDebugMode) {
-        print('3');
+
       }
       FirebaseFirestore.instance
           .collection('User')
@@ -372,9 +363,11 @@ class RegisterCubit extends Cubit<RegisterState> {
               image: value,
               currentBalance: 0,
               createdDate: DateTime.now().toString(),
+
               isAdmin: true,
               departmentId: 0,
               mobile: Global.mobile,
+
               userName: txtRegisterUserNameControl.text,
               fireBaseToken: Global.fireBaseToken,
             );
@@ -427,6 +420,7 @@ class RegisterCubit extends Cubit<RegisterState> {
             Project model = Project(
                 isActive: false,
                 image: value,
+                address: txtRegisterUserAddressControl.text,
                 createdDate: DateTime.now().toString(),
                 adminMobile: Global.mobile,
                 id: listProject.length + 1,
@@ -469,6 +463,119 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
 
+
+
+  updateProjectData({context,Project projectModel}) async {
+
+
+    if(listProject.any((element) => element.name.toLowerCase().trim() == txtRegisterProjectNameControl.text.toLowerCase().trim() )){
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            'تم استخدام اسم المطعم من قبل',
+            textAlign: TextAlign.center,
+          ),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30))),
+          behavior: SnackBarBehavior.floating,
+          padding: EdgeInsets.all(20.0),
+          duration: Duration(milliseconds: 4000)));
+
+
+    }
+
+      // check if same Project Name
+
+    if(finalPickedProjectImage != null){
+
+      firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child(
+          'Project/${Uri.file(finalPickedProjectImage.path).pathSegments.last}')
+          .putFile(finalPickedProjectImage)
+          .then((value) {
+        value.ref.getDownloadURL().then((value) async {
+
+
+          Global.projectImageUrl = value;
+
+          projectModel.image = value;
+          projectModel.address = txtRegisterUserAddressControl.text;
+          projectModel.name = txtRegisterProjectNameControl.text;
+
+
+          FirebaseFirestore.instance
+              .collection('Projects')
+              .doc(projectModel.adminMobile)
+              .update(projectModel.toMap())
+              .then((value) async {
+
+            await Future.delayed(const Duration(seconds: 1));
+            rgisterBtnController.reset();
+            Global.isAdmin = true;
+            NavigatToAndReplace(context, const HomeLayout());
+          }).catchError((erorr) async {
+
+            rgisterBtnController.error();
+            await Future.delayed(const Duration(seconds: 1));
+            rgisterBtnController.reset();
+
+
+          });
+        });
+      });
+
+    }
+    else{
+
+      Global.projectImageUrl = projectModel.image;
+
+
+      projectModel.address = txtRegisterUserAddressControl.text;
+      projectModel.name = txtRegisterProjectNameControl.text;
+
+
+
+
+
+      await CachHelper.SetData(key: 'ProjectId', value: Global.projectId);
+
+
+      FirebaseFirestore.instance
+          .collection('Projects')
+          .doc(Global.mobile)
+          .update(projectModel.toMap())
+          .then((value) async {
+
+        await Future.delayed(const Duration(seconds: 1));
+        rgisterBtnController.reset();
+        Global.isAdmin = true;
+        NavigatToAndReplace(context, const HomeLayout());
+      }).catchError((erorr) async {
+
+        rgisterBtnController.error();
+        await Future.delayed(const Duration(seconds: 1));
+        rgisterBtnController.reset();
+
+
+      });
+
+
+
+
+    }
+
+
+
+
+
+
+
+  }
+
+
+
   String departMentSelectedName = '';
   TextEditingController txtProjectMobileControl = TextEditingController();
 
@@ -498,19 +605,20 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   TextEditingController txtRegisterUserNameControl = TextEditingController();
+  TextEditingController txtRegisterUserAddressControl = TextEditingController();
   TextEditingController txtRegisterProjectNameControl = TextEditingController();
   bool registerValid = false;
 
   changeRegisterValidState() {
     if (isAdmin &&
         txtRegisterUserNameControl.text.trim() != '' &&
-        txtRegisterUserNameControl.text.trim() != '' &&
-        // finalPickedUserImage != null &&
+        txtRegisterUserAddressControl.text.trim() != '' &&
+
         finalPickedProjectImage != null &&
         txtProjectMobileControl.text.trim() != '' &&
         txtProjectMobileControl.text != null) {
       registerValid = true;
-    } else if (!isAdmin && txtRegisterUserNameControl.text.trim() != '') {
+    } else if (!isAdmin && txtRegisterUserNameControl.text.trim() != '' && txtRegisterUserAddressControl.text.trim() != '') {
       registerValid = true;
     } else {
       registerValid = false;
@@ -518,7 +626,27 @@ class RegisterCubit extends Cubit<RegisterState> {
 
     emit(Refersh());
   }
+  changeUpdateValidState({String name,String address}) {
 
+    print(name);
+    print(txtRegisterProjectNameControl.text);
+
+    if (
+
+        
+        (txtRegisterProjectNameControl.text.trim() != '' && txtRegisterProjectNameControl.text.trim() != name.trim() )
+        ||
+        (txtRegisterUserAddressControl.text.trim() != '' && txtRegisterUserAddressControl.text.trim() != address.trim())
+    ) {
+      registerValid = true;
+    } else if (!isAdmin && txtRegisterUserNameControl.text.trim() != '' && txtRegisterUserAddressControl.text.trim() != '') {
+      registerValid = true;
+    } else {
+      registerValid = false;
+    }
+
+    emit(Refersh());
+  }
   resendActivationCode(context) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '+2' + LoginCubit.get(context).textMobileControl.text,
