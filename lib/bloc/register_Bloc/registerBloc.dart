@@ -174,9 +174,26 @@ class RegisterCubit extends Cubit<RegisterState> {
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     final pickedImageFile = File(pickedImage.path);
     finalPickedProjectImage = pickedImageFile;
-    changeRegisterValidState();
+
     emit(Refersh());
   }
+
+
+  void editProjectPickImageGallery(context) async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    final pickedImageFile = File(pickedImage.path);
+    finalPickedProjectImage = pickedImageFile;
+    if(finalPickedProjectImage != null){
+      registerValid = true;
+    }
+    emit(Refersh());
+  }
+
+
+
+
+
 
   void uploadPickImageCamera(context) async {
     final picker = ImagePicker();
@@ -499,21 +516,20 @@ class RegisterCubit extends Cubit<RegisterState> {
 
 
           Global.projectImageUrl = value;
-
           projectModel.image = value;
           projectModel.address = txtRegisterUserAddressControl.text;
           projectModel.name = txtRegisterProjectNameControl.text;
 
 
-          FirebaseFirestore.instance
-              .collection('Projects')
-              .doc(projectModel.adminMobile)
-              .update(projectModel.toMap())
-              .then((value) async {
+          FirebaseFirestore.instance.collection('Projects').doc(projectModel.adminMobile).update(projectModel.toMap()).then((value) async {
 
             await Future.delayed(const Duration(seconds: 1));
             rgisterBtnController.reset();
-            Global.isAdmin = true;
+            txtRegisterUserNameControl.clear();
+            txtRegisterUserAddressControl.clear();
+          txtRegisterProjectNameControl.clear();
+          txtProjectMobileControl.clear();
+
             NavigatToAndReplace(context, const HomeLayout());
           }).catchError((erorr) async {
 
@@ -550,7 +566,10 @@ class RegisterCubit extends Cubit<RegisterState> {
 
         await Future.delayed(const Duration(seconds: 1));
         rgisterBtnController.reset();
-        Global.isAdmin = true;
+        txtRegisterUserNameControl.clear();
+        txtRegisterUserAddressControl.clear();
+        txtRegisterProjectNameControl.clear();
+        txtProjectMobileControl.clear();
         NavigatToAndReplace(context, const HomeLayout());
       }).catchError((erorr) async {
 
@@ -604,6 +623,14 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(Refersh());
   }
 
+
+
+  void removeEditProjectImage({BuildContext context,String address,String name}) {
+    finalPickedProjectImage = null;
+ changeUpdateValidState(address:  address,name: name);
+    emit(Refersh());
+  }
+
   TextEditingController txtRegisterUserNameControl = TextEditingController();
   TextEditingController txtRegisterUserAddressControl = TextEditingController();
   TextEditingController txtRegisterProjectNameControl = TextEditingController();
@@ -628,8 +655,6 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
   changeUpdateValidState({String name,String address}) {
 
-    print(name);
-    print(txtRegisterProjectNameControl.text);
 
     if (
 

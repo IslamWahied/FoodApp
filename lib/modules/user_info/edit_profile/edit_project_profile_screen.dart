@@ -96,8 +96,7 @@ class EditProjectProfileScreen extends StatelessWidget {
                                         child: FlatButton.icon(
                                           textColor: Colors.white,
                                           onPressed: () {
-                                            cubit.uploadProjectPickImageGallery(
-                                                context);
+                                            cubit.editProjectPickImageGallery(context);
                                           },
                                           icon: const Icon(Icons.image,
                                               color: Colors.purpleAccent),
@@ -115,7 +114,8 @@ class EditProjectProfileScreen extends StatelessWidget {
                                         child: FlatButton.icon(
                                           textColor: Colors.white,
                                           onPressed: () {
-                                            cubit.removeUploadProjectImage(context);
+                                            cubit.removeEditProjectImage(context: context,address: projectModel.address,name: projectModel.name);
+
                                           },
                                           icon: Icon(
                                             Icons.remove_circle_rounded,
