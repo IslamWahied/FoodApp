@@ -9,6 +9,7 @@ import 'package:elomda/models/category/categoryModel.dart';
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -548,25 +549,16 @@ bool isOldPrice = false;
     selectedCategoryId =0;
     selectedSupCategoryId = 0;
 
-     if(index == 1) {
+
 
     selectedTypeItemId = index;
-    emit(UploadProductsCameraUploadImageState());
-
-    }
+      emit(UploadProductsCameraUploadImageState());
 
 
-   else if (index == 2 || index == 3 ) {
-       selectedTypeItemId = index;
 
-    }
-
-   else if(index == 4){
-
-       selectedTypeItemId = index;
-       emit(UploadProductsCameraUploadImageState());
-
-     }
+if (kDebugMode) {
+  print(index);
+}
 
 
 
@@ -578,10 +570,10 @@ bool isOldPrice = false;
 }
 
 List<ListItemTypeCategory> listItemTypeCategory = [
-  ListItemTypeCategory(id: 1, name: 'Category'),
-  ListItemTypeCategory(id: 2, name: 'SupCategory'),
-  ListItemTypeCategory(id: 3, name: 'Product'),
-  ListItemTypeCategory(id: 4, name: 'Additions'),
+  ListItemTypeCategory(id: 1, name: 'قسم جديد'),
+  ListItemTypeCategory(id: 2, name: 'فرع جديد'),
+  ListItemTypeCategory(id: 3, name: 'منتج جديد'),
+  ListItemTypeCategory(id: 4, name: 'الاضافات'),
 ];
 
 class ListItemTypeCategory {

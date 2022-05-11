@@ -174,7 +174,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     final pickedImageFile = File(pickedImage.path);
     finalPickedProjectImage = pickedImageFile;
-
+    changeRegisterValidState();
     emit(Refersh());
   }
 
@@ -550,8 +550,6 @@ class RegisterCubit extends Cubit<RegisterState> {
 
       projectModel.address = txtRegisterUserAddressControl.text;
       projectModel.name = txtRegisterProjectNameControl.text;
-
-
 
 
 
