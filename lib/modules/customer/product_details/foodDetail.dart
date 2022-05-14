@@ -462,3 +462,82 @@ Padding customAppBar(
     ),
   );
 }
+Padding customAppBarOrderDetial(
+    {@required BuildContext context,@required String title,@required String orderNumber,}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 0,
+      vertical: 10,
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color:   Constants.primary,
+              borderRadius: BorderRadius.circular(15),
+
+            ),
+            child: const Icon(Icons.chevron_left,color: AppColors.white,),
+          ),
+        ),
+
+        Column(
+          children: [
+            Text(
+              title ?? '',
+              style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                  overflow: TextOverflow.ellipsis),
+            ),
+            Text(
+              '1111111' ?? '',
+              style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                  overflow: TextOverflow.ellipsis),
+            ),
+          ],
+        ),
+
+          InkWell(
+            onTap: () {
+              NavigatToAndReplace(context, const HomeLayout());
+              HomeCubit.get(context).changeCurrentIndex(3);
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10, top: 15),
+              child: Badge(
+                  badgeContent: Text(
+                    HomeCubit.get(context)
+                        .listOrder
+                        .where((element) =>
+                    element.projectId == Global.projectId)
+                        .toList()
+                        .length
+                        .toString() ??
+                        '0',
+                    style: const TextStyle(color: Colors.white, fontSize: 11),
+                  ),
+                  child: Image.asset('assets/shoppingcart.png', width: 30)),
+            ),
+          ),
+
+        // Container(
+        //   padding: const EdgeInsets.all(10),
+        //   decoration: BoxDecoration(
+        //     color: Constants.primary,
+        //     borderRadius: BorderRadius.circular(15),
+        //   ),
+        //   child: const Icon(Icons.star, color: Constants.white),
+        // ),
+      ],
+    ),
+  );
+}

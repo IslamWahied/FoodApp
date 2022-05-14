@@ -27,11 +27,11 @@ class OrderScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = HomeCubit.get(context);
-          var newOrderList = cubit.listAllOrders
-              .where((element) =>
-                  element.orderState.toLowerCase() != 'New'.toLowerCase() &&
-                  element.userMobile == Global.mobile)
-              .toList();
+          // var newOrderList = cubit.listAllOrders
+          //     .where((element) =>
+          //         element.orderState.toLowerCase() != 'New'.toLowerCase() &&
+          //         element.userMobile == Global.mobile)
+          //     .toList();
 
           return BackdropScaffold(
               onBackLayerConcealed: () {

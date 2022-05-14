@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'UserAccount/UserAccountScreen.dart';
+import 'order/orders.dart';
 
 class UserBackLayerMenu extends StatelessWidget {
   UserBackLayerMenu({Key key}) : super(key: key);
@@ -58,6 +59,12 @@ class UserBackLayerMenu extends StatelessWidget {
                         NavigatToAndReplace(context, const HomeLayout());
                         cubit.changeCurrentIndex(4);
                       }, 'الصفحة الشخصية', 3),
+
+                      content(context, () {
+                        cubit.isShowBackLayer = false;
+                        navigateTo(context,  OrdersScreen());
+                        // cubit.changeCurrentIndex(4);
+                      }, 'متابعة الطلبات', 3),
                       const SizedBox(height: 5.0),
                     ],
                   ),

@@ -313,28 +313,25 @@ Widget orderModelCard(ItemModel model, context) => Card(
               SizedBox(
                 height: 30,
                 width: MediaQuery.of(context).size.width * 0.5,
-                child: Container(
-                  // color: Colors.red,
-                  child: ListView.separated(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Text(
-                          model.additionsList[index].itemTitle ?? '',
-                          style: const TextStyle(
-                            fontSize: 14,
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) =>
-                          index + 1 < model.additionsList.length
-                              ? const Text(
-                                  '  -  ',
-                                  style: TextStyle(color: Colors.black),
-                                )
-                              : const SizedBox(width: 5),
-                      itemCount: model.additionsList.length),
-                ),
+                child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Text(
+                        model.additionsList[index].itemTitle ?? '',
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) =>
+                        index + 1 < model.additionsList.length
+                            ? const Text(
+                                '  -  ',
+                                style: TextStyle(color: Colors.black),
+                              )
+                            : const SizedBox(width: 5),
+                    itemCount: model.additionsList.length),
               )
           ],
         ),

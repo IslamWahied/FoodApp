@@ -1,27 +1,19 @@
 // @dart=2.9
-
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:elomda/bloc/UpdateData/updateDataCubit.dart';
 import 'package:elomda/bloc/Upload_products/upload_products_cubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
-
 import 'package:elomda/styles/colors.dart';
 import 'package:elomda/shared/network/Dio_Helper/Dio_Helper.dart';
 import 'package:elomda/shared/network/local/shared_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
 import 'bloc/login_bloc/loginCubit.dart';
-
 import 'bloc/register_Bloc/registerBloc.dart';
-
 import 'home_layout/home_layout.dart';
-import 'modules/login/activationCodeScreen.dart';
-
 import 'modules/login/login_screen.dart';
 import 'shared/Global.dart';
 

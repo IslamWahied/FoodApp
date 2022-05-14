@@ -117,12 +117,12 @@ class RestrantListScreen extends StatelessWidget {
                conditionBuilder: (BuildContext context) => cubit.listProject.where((element) => element.isActive).isNotEmpty,
                widgetBuilder: (BuildContext context) {
                  return Container(
-                   decoration: const BoxDecoration(
-                     image: DecorationImage(
-                       image: AssetImage("assets/foodBackGround.jpg"),
-                       fit: BoxFit.cover,
-                     ),
-                   ),
+                   // decoration: const BoxDecoration(
+                   //   image: DecorationImage(
+                   //     image: AssetImage("assets/foodBackGround.jpg"),
+                   //     fit: BoxFit.cover,
+                   //   ),
+                   // ),
                    child: Column(
                      children: [
                        const SizedBox(
@@ -183,40 +183,32 @@ Widget buildGridProjects(Project model, context) => GestureDetector(
       },
       child: SizedBox(
         height: 174,
-        child: Stack(
-          children: <Widget>[
-            Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
+        child: Card(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
 
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 335,
-                    height: 180,
-                    child: Image.network(
-                      model.image,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 335,
+                height: 180,
+                child: Image.network(
+                  model.image,
+                  fit: BoxFit.cover,
+                ),
               ),
+              const SizedBox(height: 15),
+              Text(model.name,)
+            ],
+          ),
 
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
 
-              elevation: 5,
+          elevation: 5,
 
-              // margin: const EdgeInsets.all(10),
-            ),
-            Positioned(
-              right: 20,
-              bottom: 20,
-              left: 75,
-              child: Text(model.name),
-            )
-          ],
+          // margin: const EdgeInsets.all(10),
         ),
       ),
     );
