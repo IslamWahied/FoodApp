@@ -369,6 +369,7 @@ class OrderAllDetail extends StatelessWidget {
                     ),
                   ),
                 ),
+
               ));
         },
         listener: (context,state){},
