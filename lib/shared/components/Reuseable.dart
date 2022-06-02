@@ -118,8 +118,8 @@ Widget itemCard(
                               decoration:   BoxDecoration(
                                   color: Constants.primary,
                                   borderRadius: const BorderRadius.only(
-                                    bottomLeft:const Radius.circular(20),
-                                    topRight:const Radius.circular(20),
+                                    bottomLeft:Radius.circular(20),
+                                    topRight:  Radius.circular(20),
                                   )),
                               child: const Icon(Icons.add, size: 20),
                             ),
@@ -217,20 +217,19 @@ Widget itemCard(
                       ),
                     ],
                   ),
-
                   Container(
-                    transform: Matrix4.translationValues(0.0, 10.0, 40.0),
+                    transform: Matrix4.translationValues(20.0, -10.0, 40.0),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(1),
                         boxShadow: [
-                          BoxShadow(color: Colors.grey[400], blurRadius: 20)
+                          BoxShadow(color: Colors.grey[300], blurRadius: 20)
                         ]),
                     child: Hero(
                       tag:itemModel.image,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: CircleAvatar(
-                          radius: 50,
+                          radius: 60,
                          backgroundImage:  NetworkImage(itemModel.image)
 
 
@@ -248,97 +247,3 @@ Widget itemCard(
   );
 }
 
-// Widget itemCard(
-// {
-//       ItemModel itemModel,
-//       context,
-//       isFavourite
-//     }) {
-//   return GestureDetector(
-//     onTap: () => {
-//       Navigator.push(context,
-//           MaterialPageRoute(builder: (context) => FoodDetail(imagePath: itemModel.image)))
-//     },
-//     child: Container(
-//       margin: EdgeInsets.only(right: 25, left: 20, top: 25),
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(20),
-//         boxShadow: [BoxShadow(blurRadius: 10, color: AppColors.lighterGray)],
-//         color: AppColors.white,
-//       ),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Padding(
-//                 padding: EdgeInsets.only(top: 25, left: 20),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Row(
-//                       children: [
-//                         Icon(
-//                           Icons.star,
-//                           color: AppColors.primary,
-//                           size: 20,
-//                         ),
-//                         SizedBox(width: 10),
-//                         PrimaryText(
-//                           text: 'top of the week',
-//                           size: 16,
-//                         )
-//                       ],
-//                     ),
-//                     SizedBox(height: 15),
-//                     SizedBox(
-//                       width: MediaQuery.of(context).size.width/2.2,
-//                       child: PrimaryText(
-//                           text:itemModel.itemTitle, size: 22, fontWeight: FontWeight.w700),
-//                     ),
-//                     // PrimaryText(
-//                     //     text:itemModel. weight, size: 18, color: AppColors.lightGray),
-//                   ],
-//                 ),
-//               ),
-//               SizedBox(
-//                 height: 20,
-//               ),
-//               Row(
-//                 children: [
-//                   Container(
-//                     padding:
-//                     EdgeInsets.symmetric(horizontal: 45, vertical: 20),
-//                     decoration: const BoxDecoration(
-//                         color: AppColors.primary,
-//                         borderRadius: BorderRadius.only(
-//                           bottomLeft: Radius.circular(20),
-//                           topRight: Radius.circular(20),
-//                         )),
-//                     child: Icon(Icons.add, size: 20),
-//                   ),
-//                   SizedBox(width: 20),
-//                   SizedBox(
-//                     child: Row(
-//                       children: const [
-//                         Icon(Icons.star, size: 12),
-//                         SizedBox(width: 5),
-//                         PrimaryText(
-//                           text: '2',
-//                           size: 18,
-//                           fontWeight: FontWeight.w600,
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//
-//         ],
-//       ),
-//     ),
-//   );
-// }

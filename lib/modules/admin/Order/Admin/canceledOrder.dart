@@ -293,44 +293,56 @@ Widget orderModelCard(ItemModel model, context) => Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(model.orderCount.toString()),
-                const Text('X'),
-                Text(model.itemTitle.toString()),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(model.orderCount.toString()),
+                  const Text('X'),
+                  Text(model.itemTitle.toString()),
+                ],
+              ),
             ),
             const SizedBox(
               height: 20,
             ),
             if (model.additionsList.isNotEmpty)
-              const Text(
-                ': الاضافات',
-                style: TextStyle(color: Colors.blue),
+              const Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Text(
+                  ': الاضافات',
+                  style: TextStyle(color: Colors.blue),
+                ),
               ),
             if (model.additionsList.isNotEmpty)
               SizedBox(
                 height: 30,
-                width: MediaQuery.of(context).size.width * 0.5,
+                width: MediaQuery.of(context).size.width * 0.9,
                 child: ListView.separated(
                     shrinkWrap: true,
+                    reverse: true,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return Text(
-                        model.additionsList[index].itemTitle ?? '',
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
+                      return Row(
+                        children: [
+
+                          Text(
+                            model.additionsList[index].itemTitle ?? '',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.red
+
+                            ),
+                          ),
+                          Text(' - '+(index +1).toString() ),
+
+                        ],
                       );
                     },
                     separatorBuilder: (context, index) =>
-                        index + 1 < model.additionsList.length
-                            ? const Text(
-                                '  -  ',
-                                style: TextStyle(color: Colors.black),
-                              )
-                            : const SizedBox(width: 5),
+
+                              const SizedBox(width:15),
                     itemCount: model.additionsList.length),
               )
           ],

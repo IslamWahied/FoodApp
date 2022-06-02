@@ -93,22 +93,20 @@ class ShopScreen extends StatelessWidget {
                 onClosing: () {},
                 enableDrag: false,
                 builder: (context) {
-                  return cubit.tabController == null ||
-                          cubit.tabController.index == 0
+                  return cubit.tabController == null || cubit.tabController.index == 0
                       ? Padding(
-                          padding: const EdgeInsets.only(bottom: 55),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                cubit.sendOrder(context);
-                              },
-                              child: Row(
-                                // mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+                          padding:   EdgeInsets.only(bottom:MediaQuery.of(context).size.width * 0.15),
+                          child: ElevatedButton(
+
+                            onPressed: () {
+                              cubit.sendOrder(context);
+                            },
+                            child: Row(
+                              // mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       SvgPicture.asset(
@@ -125,52 +123,108 @@ class ShopScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  Padding(
+                                ),
+
+                                Expanded(
+                                  child: Padding(
                                     padding: const EdgeInsets.only(left: 20),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: const [
-                                        SizedBox(
-                                          width: 20,
-                                        ),
+
                                         PrimaryText(
                                           text: 'تاكيد الطلب',
                                           fontWeight: FontWeight.w600,
                                           size: 18,
                                         ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
+
                                         Icon(
                                           Icons.chevron_right,
                                           color: Constants.black,
                                         ),
                                       ],
                                     ),
-                                  )
-                                ],
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                  primary: cubit.getTotalPrice() == '0' ||
-                                          cubit.getTotalPrice() == null ||
-                                          cubit.listOrder.isEmpty
-                                      ? Colors.grey[200]
-                                      : Constants.primary,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 50, vertical: 20),
-                                  textStyle: const TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold)),
+                                  ),
+                                )
+
+                              ],
                             ),
+                            style: ElevatedButton.styleFrom(
+                                primary: cubit.getTotalPrice() == '0' ||
+                                        cubit.getTotalPrice() == null ||
+                                        cubit.listOrder.isEmpty
+                                    ? Colors.grey[200]
+                                    : Constants.primary,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(10.0)),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 25, vertical: 20),
+                                textStyle: const TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold)),
                           ),
                         )
                       : const SizedBox();
                 },
               ),
-              frontLayer: const TabsInCartScreen());
+              frontLayer:    Padding(
+                padding: const EdgeInsets.only(bottom: 100, top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: cubit.listOrder.isEmpty
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.start,
+                  children: [
+                    Visibility(
+                        visible: cubit.listOrder.isNotEmpty &&
+                            cubit.listOrder != [],
+                        replacement: const Center(
+                          child: Text(
+                            'لايوجد طلبات مضافة',
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: cubit.listOrder.length ?? 0,
+                              itemBuilder: (context, index) => itemCard(
+                                  itemId: cubit.listOrder[index].itemId,
+                                  isFavourite: cubit
+                                      .listFavourite.isNotEmpty &&
+                                      cubit.listFavourite.any((element) =>
+                                      element.ItemId ==
+                                          cubit.listOrder[index]
+                                              .itemId &&
+                                          element.isFavourit)
+                                      ? true
+                                      : false,
+                                  itemPrice: cubit.listOrder[index].price,
+                                  index: index,
+                                  subCategoryTitle: cubit
+                                      .listOrder[index].supCategoryTitle,
+                                  name: cubit.listOrder[index].itemTitle,
+                                  context: context,
+                                  imagePath: cubit.listOrder[index].image,
+                                  itemsPrice:
+                                  cubit.listOrder[index].price,
+                                  star: '',
+                                  itemDescription: cubit
+                                      .listOrder[index].description ??
+                                      ''),
+                            ),
+                          ),
+                        )),
+
+                  ],
+                ),
+              ));
         });
   }
 }
@@ -476,380 +530,4 @@ Widget itemCard(
   });
 }
 
-class TabsInCartScreen extends StatefulWidget {
-  const TabsInCartScreen({Key key}) : super(key: key);
 
-  @override
-  _TabsInTicketState createState() => _TabsInTicketState();
-}
-
-class _TabsInTicketState extends State<TabsInCartScreen>
-    with SingleTickerProviderStateMixin {
-  @override
-  void initState() {
-    HomeCubit.get(context).tabController = TabController(length: 2, vsync: this)
-      ..addListener(() {
-        setState(() {
-          HomeCubit.get(context).emit(SearchSubCategoryState());
-        });
-      });
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeState>(
-        listener: (context, state) => {},
-        builder: (context, state) {
-          var cubit = HomeCubit.get(context);
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TabBar(
-                onTap: (value) {
-                  HomeCubit.get(context).tabController.index = value;
-                },
-                labelPadding: EdgeInsets.zero,
-                padding: EdgeInsets.zero,
-                isScrollable: false,
-                indicatorPadding: EdgeInsets.zero,
-                automaticIndicatorColorAdjustment: true,
-                unselectedLabelColor: Colors.grey,
-                labelColor: Colors.white,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicator: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(5)),
-                tabs: const [
-                  Tab(
-                    child: Text(
-                      'المشتريات',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    // icon: Icon(Icons.bookmark_border),
-                  ),
-                  Tab(
-                    child: Text(
-                      'الطلبات السابقة',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    // icon: Icon(
-                    //   Icons.history,
-                    // ),
-                  ),
-                ],
-                controller: cubit.tabController,
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: cubit.tabController,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 100, top: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: cubit.listOrder.isEmpty
-                            ? MainAxisAlignment.center
-                            : MainAxisAlignment.start,
-                        children: [
-                          Visibility(
-                              visible: cubit.listOrder.isNotEmpty &&
-                                  cubit.listOrder != [],
-                              replacement: const Center(
-                                child: Text(
-                                  'لايوجد طلبات مضافة',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              child: Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: cubit.listOrder.length ?? 0,
-                                    itemBuilder: (context, index) => itemCard(
-                                        itemId: cubit.listOrder[index].itemId,
-                                        isFavourite: cubit
-                                                    .listFavourite.isNotEmpty &&
-                                                cubit.listFavourite.any((element) =>
-                                                    element.ItemId ==
-                                                        cubit.listOrder[index]
-                                                            .itemId &&
-                                                    element.isFavourit)
-                                            ? true
-                                            : false,
-                                        itemPrice: cubit.listOrder[index].price,
-                                        index: index,
-                                        subCategoryTitle: cubit
-                                            .listOrder[index].supCategoryTitle,
-                                        name: cubit.listOrder[index].itemTitle,
-                                        context: context,
-                                        imagePath: cubit.listOrder[index].image,
-                                        itemsPrice:
-                                            cubit.listOrder[index].price,
-                                        star: '',
-                                        itemDescription: cubit
-                                                .listOrder[index].description ??
-                                            ''),
-                                  ),
-                                ),
-                              )),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 100),
-                      child: Conditional.single(
-                        context: context,
-                        conditionBuilder: (BuildContext context) => cubit
-                            .listAllOrders
-                            .where((element) =>
-                                element.userMobile == Global.mobile)
-                            .toList()
-                            .isNotEmpty,
-                        widgetBuilder: (BuildContext context) {
-                          return ListView.separated(
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(),
-                            itemCount: cubit.listAllOrders
-                                .where((element) =>
-                                    element.userMobile == Global.mobile)
-                                .toList()
-                                .length,
-                            itemBuilder: (context, index) {
-                              var orderModel = cubit.listAllOrders
-                                  .where((element) =>
-                                      element.userMobile == Global.mobile)
-                                  .toList()[index];
-                              return StatefulBuilder(
-                                  builder: (context, setState) {
-                                return Slidable(
-                                  closeOnScroll: false,
-
-                                  // component is not dragged.
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 200,
-                                      child: Card(
-                                        elevation: 2,
-                                        color: Colors.white,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                          orderModel.userName ??
-                                                              ''),
-                                                      Baseline(
-                                                          baseline: 25.0,
-                                                          baselineType:
-                                                              TextBaseline
-                                                                  .alphabetic,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 3),
-                                                            child: Text(
-                                                                orderModel
-                                                                        .departMent ??
-                                                                    '',
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 10,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                )),
-                                                          )),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    width: 80,
-                                                    height: 30,
-                                                    child: Card(
-                                                      color:
-                                                          cubit.orderStateColor(
-                                                              orderModel
-                                                                  .orderState),
-                                                      child: Center(
-                                                          child: Text(
-                                                        cubit.orderStateArabic(
-                                                            orderModel
-                                                                .orderState),
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      )),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const Divider(),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    cubit.convertDateFormat(
-                                                            orderModel
-                                                                .createdDate) ??
-                                                        '',
-                                                    style: TextStyle(
-                                                        fontSize: 13.5,
-                                                        color:
-                                                            Colors.grey[600]),
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        orderModel.orderCount
-                                                                .toString() ??
-                                                            '0',
-                                                        style: const TextStyle(
-                                                            fontSize: 17),
-                                                      ),
-                                                      const Text(
-                                                        ' : عدد الوحدات  ',
-                                                        style: TextStyle(
-                                                            color: Colors.blue,
-                                                            fontSize: 17),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 10),
-                                              const Spacer(),
-                                              const Divider(),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  MaterialButton(
-                                                      color: Colors.brown,
-                                                      onPressed: () {
-                                                        showDialog(
-                                                            useSafeArea: true,
-                                                            context: context,
-                                                            builder:
-                                                                (context) =>
-                                                                    AlertDialog(
-                                                                      content:
-                                                                          SingleChildScrollView(
-                                                                        child:
-                                                                            Column(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.min,
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.end,
-                                                                          children: [
-                                                                            Row(
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                                              children: const [
-                                                                                Text(
-                                                                                  'تفاصيل الطلب',
-                                                                                  style: TextStyle(color: Colors.blue, fontSize: 16),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            const SizedBox(
-                                                                              height: 10,
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width * 0.7,
-                                                                              height: 200,
-                                                                              child: ListView.separated(itemBuilder: (context, index) => orderModelCard(orderModel.listItemModel[index], context), separatorBuilder: (context, index) => const SizedBox(height: 10), itemCount: orderModel.listItemModel.length),
-                                                                            ),
-                                                                            const Divider(),
-                                                                            TextButton(
-                                                                                onPressed: () {
-                                                                                  Navigator.pop(context);
-                                                                                },
-                                                                                child: const Text(
-                                                                                  'Close',
-                                                                                  style: TextStyle(color: Colors.red),
-                                                                                ))
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ));
-                                                      },
-                                                      child: const Text(
-                                                        'التفاصيل',
-                                                        style: TextStyle(
-                                                            color: AppColors
-                                                                .white),
-                                                      )),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        orderModel.orderPrice
-                                                                .toString() ??
-                                                            '0',
-                                                        style: const TextStyle(
-                                                            fontSize: 17),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      const Text(
-                                                        ': الاجمالي  ',
-                                                        style: TextStyle(
-                                                            color: Colors.blue,
-                                                            fontSize: 17),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              });
-                            },
-                          );
-                        },
-                        fallbackBuilder: (BuildContext context) => const Center(
-                          child: Text(
-                            'لايوجد طلبات مضافة',
-                            style: TextStyle(
-                                fontSize: 17,
-                                color: Colors.red,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        });
-  }
-}

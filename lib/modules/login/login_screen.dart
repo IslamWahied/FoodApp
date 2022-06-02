@@ -26,6 +26,7 @@ class LoginScreen extends StatelessWidget {
                 width: double.infinity,
                 child: Column(
                   children: [
+
                     Image.asset('assets/foodLogo.jpg'),
                     const SizedBox(
                       height: 40,

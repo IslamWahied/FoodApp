@@ -28,6 +28,7 @@ class ItemsScreen extends StatelessWidget {
         builder: (context, state) {
           var cubit = HomeCubit.get(context);
           return Scaffold(
+            extendBody: true,
             appBar: AppBar(
               elevation: 0,
               automaticallyImplyLeading: false,
@@ -41,82 +42,67 @@ class ItemsScreen extends StatelessWidget {
               title:customAppBar(context: context,title: subcategoryTitle,isShowCarShop: true,isYellow: true) ,
             ),
             backgroundColor:Constants.white,
-            body: SafeArea(
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
 
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     // customAppBar2(context),
-                    //
-                    //
-                    //     SizedBox(width: MediaQuery.of(context).size.width * 0.15),
-                    //   ],
-                    // ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:  [
+                      const SizedBox(width: 20),
+                      const Icon(
+                        Icons.search,
+                        color: AppColors.secondary,
+                        size: 25,
+                      ),
+                      const SizedBox(width: 10),
+                      Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: Expanded(
+                            child: TextField(
+                              controller: cubit.txtItemControl,
+                              onChanged: (String value){
+                                  cubit.searchInItemsBySupCategory(value);
+                              },
+                              decoration: const InputDecoration(
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2, color: AppColors.lighterGray)),
+                                hintText: 'بحث...',
+                                hintStyle: TextStyle(
+                                    color: AppColors.lightGray,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500),
+                              ),
 
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children:  [
-                        const SizedBox(width: 20),
-                        const Icon(
-                          Icons.search,
-                          color: AppColors.secondary,
-                          size: 25,
-                        ),
-                        const SizedBox(width: 10),
-                        Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: Expanded(
-                              child: TextField(
-                                controller: cubit.txtItemControl,
-                                onChanged: (String value){
-                                    cubit.searchInItemsBySupCategory(value);
-                                },
-                                decoration: const InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 2, color: AppColors.lighterGray)),
-                                  hintText: 'بحث..',
-                                  hintStyle: TextStyle(
-                                      color: AppColors.lightGray,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
-                                ),
+                            )),
+                      ),
 
-                              )),
-                        ),
-                        const SizedBox(width: 20),
-                      ],
-                    ),
-
-
-
-                    Expanded(
-                      child: SizedBox(
-
-                        width: MediaQuery.of(context).size.width * 1.1,
-                        child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          itemCount: cubit.listItemsBySubCategSearch.where((element) =>  element.categoryId == cubit.selectedCategoryId && element.supCategoryId == cubit.selectedSubCategoryId  && element.projectId == Global.projectId ).toList().length??0,
-                          itemBuilder: (context, index) {
-                            var itemModel =  cubit.listItemsBySubCategSearch.where((element) =>  element.categoryId == cubit.selectedCategoryId && element.supCategoryId == cubit.selectedSubCategoryId  && element.projectId == Global.projectId ).toList()[index];
-                            return itemCard(
-                              context: context,
-                              itemModel: itemModel,
-                              isFavourite: cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == itemModel.itemId && element.isFavourit) ? true : false,
-                            );
-                          }
-                        ),
+                    ],
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 1.1,
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: cubit.listItemsBySubCategSearch.where((element) =>  element.categoryId == cubit.selectedCategoryId && element.supCategoryId == cubit.selectedSubCategoryId  && element.projectId == Global.projectId ).toList().length??0,
+                        itemBuilder: (context, index) {
+                          var itemModel =  cubit.listItemsBySubCategSearch.where((element) =>  element.categoryId == cubit.selectedCategoryId && element.supCategoryId == cubit.selectedSubCategoryId  && element.projectId == Global.projectId ).toList()[index];
+                          return itemCard(
+                            context: context,
+                            itemModel: itemModel,
+                            isFavourite: cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == itemModel.itemId && element.isFavourit) ? true : false,
+                          );
+                        }
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                 Container( height: 80,color: Colors.transparent,)
+                ],
               ),
             ),
           );

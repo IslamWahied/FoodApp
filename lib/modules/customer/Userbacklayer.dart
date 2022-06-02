@@ -50,13 +50,13 @@ class UserBackLayerMenu extends StatelessWidget {
                               ),
                       ),
                       const SizedBox(height: 5.0),
-                      const SizedBox(height: 5.0),
+
                       content(context, () {
                         navigateTo(context, const UserAccountScreen());
                       }, 'حسابي', 1),
                       content(context, () {
                         cubit.isShowBackLayer = false;
-                        NavigatToAndReplace(context, const HomeLayout());
+                        navigateTo(context, const HomeLayout());
                         cubit.changeCurrentIndex(4);
                       }, 'الصفحة الشخصية', 3),
 

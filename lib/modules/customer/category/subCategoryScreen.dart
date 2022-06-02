@@ -101,6 +101,7 @@ class SubCategoryScreen extends StatelessWidget {
                     ),
                 ),
               ),
+
             ],
           ),
         ),
@@ -132,7 +133,7 @@ Widget foodSubCategoryCard({String imagePath, String name, int supCategoryId, co
               boxShadow: const [
                 BoxShadow(
                   color: Colors.grey,
-                  blurRadius: 15,
+                  blurRadius: 10,
                 )
               ]
           ),

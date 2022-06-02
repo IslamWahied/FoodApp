@@ -20,7 +20,7 @@ import 'package:elomda/modules/admin/Order/Admin/canceledOrder.dart';
 import 'package:elomda/modules/admin/Order/Admin/doneOrder.dart';
 import 'package:elomda/modules/admin/Order/Admin/newOrders.dart';
 import 'package:elomda/modules/admin/adminBackLayerOpations/sendNotifacation.dart';
-import 'package:elomda/modules/customer/RestrantListScreen.dart';
+import 'package:elomda/modules/customer/home/RestrantListScreen.dart';
 import 'package:elomda/modules/customer/cart/shopScreen.dart';
 import 'package:elomda/modules/customer/category/subCategoryScreen.dart';
 import 'package:elomda/modules/customer/favourite/favouriteScreen.dart';
@@ -49,6 +49,7 @@ class HomeCubit extends Cubit<HomeState> {
   TextEditingController txtUpdateCustomerBalance = TextEditingController();
 
   TextEditingController txtCustomerPayAmount = TextEditingController();
+  TextEditingController txtnote = TextEditingController();
   double finalAmount = 0;
 
   FocusNode sendMessageNode = FocusNode();
@@ -118,7 +119,7 @@ class HomeCubit extends Cubit<HomeState> {
       } else if (value == 2) {
         selectedTab = 'بحث';
       } else if (value == 3) {
-        selectedTab = 'المشتريات';
+        selectedTab = 'سلة التسوق';
       } else if (value == 4) {
         selectedTab = 'الاعدادات';
       }
@@ -159,23 +160,33 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
+
+
+
+  addNote({BuildContext context,String noteText,int projectId}){
+
+
+
+
+  }
+
+
+
   convertDateFormat(String date) {
     if (date != null) {
       try {
-        String dateAfterFormat =
-            sd.DateFormat("dd/MM/yyyy").format(DateTime.parse(date));
-        // String today = sd.DateFormat("dd / MM / yyyy").format(DateTime(
-        //     DateTime.now().year, DateTime.now().month, DateTime.now().day));
-        // String yesterday = sd.DateFormat("dd / MM / yyyy").format(DateTime(
-        //     DateTime.now().year, DateTime.now().month, DateTime.now().day - 1));
+        String dateAfterFormat = sd.DateFormat("dd-MM-yyyy").format(DateTime.parse(date));
 
-        // if (dateAfterFormat == yesterday) {
-        //   return 'Yesterday';
-        // } else if (dateAfterFormat == today) {
-        //   return 'Today';
-        // } else {
-        return dateAfterFormat;
-        // }
+        String today = sd.DateFormat("dd-MM-yyyy").format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
+        String yesterday = sd.DateFormat("dd-MM-yyyy").format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day - 1));
+
+        if (dateAfterFormat == yesterday) {
+          return 'Yesterday'+' '+ sd.DateFormat("hh:mm a").format(DateTime.parse(date));
+        } else if (dateAfterFormat == today) {
+          return 'Today' + ' '+sd.DateFormat("hh:mm a").format(DateTime.parse(date));
+        } else {
+          return dateAfterFormat+ ' '+sd.DateFormat("hh:mm a").format(DateTime.parse(date));
+        }
       } catch (e) {
         return '';
       }
@@ -184,8 +195,14 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+
+
   RoundedLoadingButtonController loginUpdateCustomerBalance =
       RoundedLoadingButtonController();
+
+
+  // addNote(){}
+
 
   void modalBottomSheetMenu(context) {
     showModalBottomSheet(
@@ -1145,18 +1162,14 @@ class HomeCubit extends Cubit<HomeState> {
     selectedItemId = 0;
     selectedSubCategoryId = supCategoryId;
 
-    print('listItems.forEach((element) {print(element.toJson());})');
-    listItems.forEach((element) {
-      print(element.toJson());
-    });
+
     listItemsSearch = listItems
         .where((element) =>
             element.supCategoryId == supCategoryId &&
             element.projectId == Global.projectId)
         .toList();
     emit(SelectCategoryState());
-    // print('listItemsSearch.length');
-    // print(listItemsSearch.length);
+
     if (listItemsSearch.isNotEmpty) {
       txtSubCategoryControl.clear();
       listSubCategorySearch = listSubCategory

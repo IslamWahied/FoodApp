@@ -2,6 +2,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
+import 'package:elomda/allCasesModel.dart';
 import 'package:elomda/models/project/projectModel.dart';
 import 'package:elomda/models/user/user_model.dart';
 import 'package:elomda/modules/login/activationCodeScreen.dart';
@@ -95,6 +97,11 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
+
+
+
+
+  AllCasesModel data;
   StreamController<ErrorAnimationType> errorController =
       StreamController<ErrorAnimationType>();
 
