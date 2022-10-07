@@ -8,5 +8,6 @@ class SelectCategoryState extends HomeState {}
 class SocialUserUpdateLoadingState extends HomeState {}
 class SocialProfileImagePickedErrorState extends HomeState {}
 class SocialProfileImagePickedSuccessState extends HomeState {}
+class RefershHomeScreen extends HomeState {}
 
 

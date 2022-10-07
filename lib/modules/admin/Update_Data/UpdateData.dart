@@ -408,8 +408,11 @@ class UpdateDataScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     FittedBox(
-                                      child: FlatButton.icon(
-                                        textColor: Colors.white,
+                                      child: TextButton.icon(
+                                        style:   ButtonStyle(
+                                          backgroundColor:MaterialStateProperty.all(Colors.white)
+                                        ),
+                                      //  textColor: Colors.white,
                                         onPressed: () =>
                                             cubit.uploadPickImageCamera(context),
                                         icon: const Icon(Icons.camera,
@@ -418,15 +421,16 @@ class UpdateDataScreen extends StatelessWidget {
                                           'الكاميرا',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w500,
-                                            color: Theme.of(context)
-                                                .textSelectionColor,
+                                            color: Theme.of(context).textSelectionTheme.selectionColor
                                           ),
                                         ),
                                       ),
                                     ),
                                     FittedBox(
-                                      child: FlatButton.icon(
-                                        textColor: Colors.white,
+                                      child: TextButton.icon(
+        style:   ButtonStyle(
+        backgroundColor:MaterialStateProperty.all(Colors.white)
+        ),
                                         onPressed: () =>
                                             cubit.uploadPickImageGallery(context),
                                         icon: const Icon(Icons.image,
@@ -435,15 +439,16 @@ class UpdateDataScreen extends StatelessWidget {
                                           'معرض الصور',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w500,
-                                            color: Theme.of(context)
-                                                .textSelectionColor,
+                                            color: Theme.of(context).textSelectionTheme.selectionColor,
                                           ),
                                         ),
                                       ),
                                     ),
                                     FittedBox(
-                                      child: FlatButton.icon(
-                                        textColor: Colors.white,
+                                      child: TextButton.icon(
+        style:   ButtonStyle(
+        backgroundColor:MaterialStateProperty.all(Colors.white)
+        ),
                                         onPressed: () =>
                                             cubit.removeUploadImage(context),
                                         icon: Icon(

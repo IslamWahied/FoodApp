@@ -105,8 +105,10 @@ class RegisterScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 FittedBox(
-                                  child: FlatButton.icon(
-                                    textColor: Colors.white,
+                                  child: TextButton.icon(
+                                    style:   ButtonStyle(
+                                        backgroundColor:MaterialStateProperty.all(Colors.white)
+                                    ),
                                     onPressed: () =>
                                         cubit.uploadPickImageCamera(context),
                                     icon: const Icon(Icons.camera,
@@ -115,15 +117,16 @@ class RegisterScreen extends StatelessWidget {
                                       'Camera',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Theme.of(context)
-                                            .textSelectionColor,
+                                        color:Theme.of(context).textSelectionTheme.selectionColor
                                       ),
                                     ),
                                   ),
                                 ),
                                 FittedBox(
-                                  child: FlatButton.icon(
-                                    textColor: Colors.white,
+                                  child: TextButton.icon(
+                                  style:   ButtonStyle(
+                                  backgroundColor:MaterialStateProperty.all(Colors.white)
+                                  ),
                                     onPressed: () {
                                       cubit.uploadPickImageGallery(context);
                                     },
@@ -133,15 +136,16 @@ class RegisterScreen extends StatelessWidget {
                                       'Gallery',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Theme.of(context)
-                                            .textSelectionColor,
+                                        color:Theme.of(context).textSelectionTheme.selectionColor
                                       ),
                                     ),
                                   ),
                                 ),
                                 FittedBox(
-                                  child: FlatButton.icon(
-                                    textColor: Colors.white,
+                                  child: TextButton.icon(
+                                    style:   ButtonStyle(
+                                        backgroundColor:MaterialStateProperty.all(Colors.white)
+                                    ),
                                     onPressed: () {
                                       cubit.removeUploadImage(context);
                                     },

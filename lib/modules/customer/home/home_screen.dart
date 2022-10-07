@@ -109,6 +109,8 @@ class HomeScreen extends StatelessWidget {
                     IconButton(
                         icon: const Icon(Icons.arrow_back),
                         onPressed: () {
+                          Global.projectId = 0;
+
                           Navigator.pop(context);
                         }),
                     const PrimaryText(
@@ -305,41 +307,7 @@ class HomeScreen extends StatelessWidget {
               ],
             )
 
-            // Container(
-            //   margin: const EdgeInsets.only(right: 20, top: 20, bottom: 20),
-            //   padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-            //   decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(20),
-            //       color: HomeCubit.get(context).selectedCategoryId == categoryId
-            //           ? Constants.primary
-            //           : Constants.white,
-            //       boxShadow: const [
-            //         BoxShadow(
-            //           color: Colors.grey,
-            //           blurRadius: 15,
-            //         )
-            //       ]),
-            //   child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       // SvgPicture.asset(imagePath, width: 40),
-            //       Image.network(imagePath, width: 90, height: 80,fit: BoxFit.cover,),
-            //       PrimaryText(text: name, fontWeight: FontWeight.w800, size: 16),
-            //       RawMaterialButton(
-            //           onPressed: null,
-            //           fillColor: cubit.selectedCategoryId == categoryId
-            //               ? Constants.white
-            //               : Constants.tertiary,
-            //           shape: const CircleBorder(),
-            //           child: Icon(Icons.chevron_right_rounded,
-            //               size: 20,
-            //               color: HomeCubit.get(context).selectedCategoryId ==
-            //                       categoryId
-            //                   ? Constants.black
-            //                   : Constants.white))
-            //     ],
-            //   ),
-            // ),
+
             );
       },
     );

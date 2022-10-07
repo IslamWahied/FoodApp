@@ -116,41 +116,33 @@ class RestrantListScreen extends StatelessWidget {
              frontLayer: Conditional.single(context: context,
                conditionBuilder: (BuildContext context) => cubit.listProject.where((element) => element.isActive).isNotEmpty,
                widgetBuilder: (BuildContext context) {
-                 return Container(
-                   // decoration: const BoxDecoration(
-                   //   image: DecorationImage(
-                   //     image: AssetImage("assets/foodBackGround.jpg"),
-                   //     fit: BoxFit.cover,
-                   //   ),
-                   // ),
-                   child: Column(
-                     children: [
-                       const SizedBox(
-                         height: 30,
-                       ),
-                       Padding(
-                         padding: const EdgeInsets.all(8.0),
-                         child: GridView.count(
-                           shrinkWrap: true,
-                           physics: const NeverScrollableScrollPhysics(),
-                           crossAxisCount: 2,
-                           mainAxisSpacing: 1.0,
-                           crossAxisSpacing: 1.0,
-                           childAspectRatio: 1 / 1.3,
-                           children: List.generate(
-                             cubit.listProject
-                                 .where((element) => element.isActive)
-                                 .length,
-                                 (index) => buildGridProjects(
-                                 cubit.listProject
-                                     .where((element) => element.isActive)
-                                     .toList()[index],
-                                 context),
-                           ),
+                 return Column(
+                   children: [
+                     const SizedBox(
+                       height: 30,
+                     ),
+                     Padding(
+                       padding: const EdgeInsets.all(8.0),
+                       child: GridView.count(
+                         shrinkWrap: true,
+                         physics: const NeverScrollableScrollPhysics(),
+                         crossAxisCount: 2,
+                         mainAxisSpacing: 1.0,
+                         crossAxisSpacing: 1.0,
+                         childAspectRatio: 1 / 1.3,
+                         children: List.generate(
+                           cubit.listProject
+                               .where((element) => element.isActive)
+                               .length,
+                               (index) => buildGridProjects(
+                               cubit.listProject
+                                   .where((element) => element.isActive)
+                                   .toList()[index],
+                               context),
                          ),
                        ),
-                     ],
-                   ),
+                     ),
+                   ],
                  );
                },
                fallbackBuilder: (BuildContext context) => const Center(
@@ -179,7 +171,7 @@ Widget buildGridProjects(Project model, context) => GestureDetector(
             MaterialPageRoute(
                 builder: (BuildContext context) => const HomeScreen()));
 
-        // navigatTo(context, const HomeScreen());
+
       },
       child: SizedBox(
         height: 174,

@@ -121,7 +121,7 @@ Widget itemCard(
                                     bottomLeft:Radius.circular(20),
                                     topRight:  Radius.circular(20),
                                   )),
-                              child: const Icon(Icons.add, size: 20),
+                              child: const Icon(Icons.add, size: 24,color: AppColors.white),
                             ),
                           ),
                           const SizedBox(width: 15),

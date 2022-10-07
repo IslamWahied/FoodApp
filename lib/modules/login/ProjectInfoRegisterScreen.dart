@@ -61,8 +61,10 @@ class ProjectInfoRegisterScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   FittedBox(
-                                    child: FlatButton.icon(
-                                      textColor: Colors.white,
+                                    child: TextButton.icon(
+                          style:   ButtonStyle(
+                          backgroundColor:MaterialStateProperty.all(Colors.white)
+                        ),
                                       onPressed: () =>
                                           cubit.uploadProjectPickImageGallery(
                                               context),
@@ -72,15 +74,16 @@ class ProjectInfoRegisterScreen extends StatelessWidget {
                                         'كاميرا',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
-                                          color: Theme.of(context)
-                                              .textSelectionColor,
+                                          color: Theme.of(context).textSelectionTheme.selectionColor
                                         ),
                                       ),
                                     ),
                                   ),
                                   FittedBox(
-                                    child: FlatButton.icon(
-                                      textColor: Colors.white,
+                                    child: TextButton.icon(
+                                        style:   ButtonStyle(
+                                            backgroundColor:MaterialStateProperty.all(Colors.white)
+                                        ),
                                       onPressed: () {
                                         cubit.uploadProjectPickImageGallery(
                                             context);
@@ -91,15 +94,16 @@ class ProjectInfoRegisterScreen extends StatelessWidget {
                                         'معرض الصور',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
-                                          color: Theme.of(context)
-                                              .textSelectionColor,
+                                          color: Theme.of(context).textSelectionTheme.selectionColor
                                         ),
                                       ),
                                     ),
                                   ),
                                   FittedBox(
-                                    child: FlatButton.icon(
-                                      textColor: Colors.white,
+                                    child: TextButton.icon(
+                                        style:   ButtonStyle(
+                                            backgroundColor:MaterialStateProperty.all(Colors.white)
+                                        ),
                                       onPressed: () {
                                         cubit.removeUploadProjectImage(context);
                                       },

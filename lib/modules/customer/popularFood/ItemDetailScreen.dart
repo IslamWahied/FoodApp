@@ -46,7 +46,7 @@ class ItemDetailScreen extends StatelessWidget {
             onClosing: () {},
             builder: (context) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: 60),
+                padding:Global.projectId != 0? const EdgeInsets.only(bottom: 60):EdgeInsets.zero,
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -60,11 +60,13 @@ class ItemDetailScreen extends StatelessWidget {
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children:   const [
                         Padding(
                           padding: EdgeInsets.only(bottom: 15),
                           child: PrimaryText(
                             text: 'اضافة الي طلباتي',
+                            color: AppColors.white,
+
                             fontWeight: FontWeight.w600,
                             size: 18,
                           ),
@@ -74,12 +76,12 @@ class ItemDetailScreen extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(bottom: 15),
-                          child: Icon(Icons.add),
+                          child: Icon(Icons.add,color: AppColors.white),
                         )
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
-                        primary: Constants.primary,
+                        backgroundColor: Constants.primary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         padding: const EdgeInsets.symmetric(
@@ -103,70 +105,105 @@ class ItemDetailScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Hero(
-                          tag: itemModel.image,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey[400], blurRadius: 30),
-                              ],
-                              borderRadius: BorderRadius.circular(100),
+
+                        Expanded(
+                          flex: 2,
+                          child: Hero(
+                            tag: itemModel.image,
+                            child:  Card(
+                              // color: HomeCubit.get(context).selectedCategoryId == categoryId
+                              //     ? Constants.primary
+                              //     : Constants.white,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * .47,
+                                height: MediaQuery.of(context).size.height * .3,
+                                child: Image.network(
+                                 itemModel.image,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+
+                              elevation: 5,
+
+                              // margin: const EdgeInsets.all(10),
                             ),
-                            height: 200,
-                            width: 170,
-                            child: Image.network(itemModel.image, fit: BoxFit.cover),
+
+                            // Container(
+                            //
+                            //   decoration: BoxDecoration(
+                            //
+                            //     boxShadow: [
+                            //       BoxShadow(
+                            //           color: Colors.grey[400], blurRadius: 30),
+                            //     ],
+                            //     borderRadius: BorderRadius.circular(100),
+                            //   ),
+                            //
+                            //   height: 200,
+                            //   width: 170,
+                            //   child: Image.network(itemModel.image, fit: BoxFit.cover),
+                            // ),
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              width: 160,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  if (itemModel.isDiscount)
+
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                width: 160,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    if (itemModel.isDiscount)
+                                      PrimaryText(
+                                        isDiscount: true,
+                                        text:itemModel.oldPrice.toString(),
+                                        size: 20,
+                                        fontWeight: FontWeight.w700,
+                                        color: Constants.lighterGray,
+                                        height: 1,
+                                      ),
+                                    SvgPicture.asset(
+                                      'assets/dollar.svg',
+                                      color: Constants.tertiary,
+                                      width: 15,
+                                    ),
                                     PrimaryText(
-                                      isDiscount: true,
-                                      text:itemModel.oldPrice.toString(),
-                                      size: 20,
+                                      text: itemModel.price.toString(),
+                                      size: 40,
                                       fontWeight: FontWeight.w700,
-                                      color: Constants.lighterGray,
+                                      color: Constants.tertiary,
                                       height: 1,
                                     ),
-                                  SvgPicture.asset(
-                                    'assets/dollar.svg',
-                                    color: Constants.tertiary,
-                                    width: 15,
-                                  ),
-                                  PrimaryText(
-                                    text: itemModel.price.toString(),
-                                    size: 40,
-                                    fontWeight: FontWeight.w700,
-                                    color: Constants.tertiary,
-                                    height: 1,
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            const PrimaryText(
-                                text: 'التوصيل في',
-                                fontWeight: FontWeight.w700,
-                                size: 22),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            const PrimaryText(
-                              text: '30 دقيقة',
-                              color: Constants.secondary,
-                              size: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ],
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              const PrimaryText(
+                                  text: 'التوصيل في',
+                                  fontWeight: FontWeight.w700,
+                                  size: 22),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              const PrimaryText(
+                                text: '30 دقيقة',
+                                color: Constants.secondary,
+                                size: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -201,7 +238,7 @@ class ItemDetailScreen extends StatelessWidget {
                     if (cubit.listItems
                         .firstWhere((element) =>
                             element.itemId == itemModel.itemId &&
-                            element.projectId == Global.projectId)
+                            element.projectId == itemModel.projectId)
                         .additionsList
                         .isNotEmpty)
                       const SizedBox(
@@ -210,7 +247,7 @@ class ItemDetailScreen extends StatelessWidget {
                     if (cubit.listItems
                         .firstWhere((element) =>
                             element.itemId == itemModel.itemId &&
-                            element.projectId == Global.projectId)
+                            element.projectId == itemModel.projectId)
                         .additionsList
                         .isNotEmpty)
                       const PrimaryText(
@@ -238,13 +275,11 @@ class ItemDetailScreen extends StatelessWidget {
                       padding: EdgeInsets.only(
                           left: index2 == 0 ? 20 : 0, top: 10, bottom: 20),
                       child: additionCard(
-                          imagePath:itemModel
-                              .additionsList[index2]
-                              .image,
+                          imagePath:itemModel.additionsList[index2].image??"",
                           context: context,
+                          itemModel: itemModel,
                           cubit: cubit,
-                          additionId: itemModel
-                              .additionsList[index2]
+                          additionId: itemModel.additionsList[index2]
                               .itemId),
                     ),
                   ),
@@ -257,7 +292,7 @@ class ItemDetailScreen extends StatelessWidget {
     );
   }
 
-  GestureDetector additionCard({String imagePath, int additionId, HomeCubit cubit, context}) {
+  GestureDetector additionCard({String imagePath,itemModel ,int additionId, HomeCubit cubit, context}) {
     return GestureDetector(
       onTap: () {
         if (cubit.listOfSelectedAdditions
@@ -296,6 +331,7 @@ class ItemDetailScreen extends StatelessWidget {
                   ]),
               child: Column(
                 children: [
+                  if(imagePath != null && imagePath != '')
                   Image.network(
                     imagePath,
                     width: 110,
@@ -318,7 +354,7 @@ class ItemDetailScreen extends StatelessWidget {
                                 .listAdditions
                                 .firstWhere((element) =>
                                     element.itemId == additionId &&
-                                    element.projectId == Global.projectId)
+                                    element.projectId == itemModel.projectId)
                                 .price
                                 .toString() ??
                             0.toString(),
@@ -337,7 +373,7 @@ class ItemDetailScreen extends StatelessWidget {
                             .listAdditions
                             .firstWhere((element) =>
                                 element.itemId == additionId &&
-                                element.projectId == Global.projectId)
+                                element.projectId == itemModel.projectId)
                             .itemTitle
                             .toString() ??
                         ''.toString(),

@@ -7,7 +7,6 @@ import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
 import 'package:elomda/modules/customer/Userbacklayer.dart';
 
-
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/shared/network/local/helper.dart';
@@ -17,8 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../shared/components/Reuseable.dart';
-
-
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({Key key}) : super(key: key);
@@ -83,7 +80,8 @@ class SearchScreen extends StatelessWidget {
                               icon: CircleAvatar(
                                 radius: 15,
                                 backgroundColor: Colors.white,
-                                child: Global.imageUrl != null  && Global.imageUrl.trim() != ''
+                                child: Global.imageUrl != null &&
+                                        Global.imageUrl.trim() != ''
                                     ? CircleAvatar(
                                         radius: 30.0,
                                         backgroundImage:
@@ -127,7 +125,6 @@ class SearchScreen extends StatelessWidget {
                         onChanged: (String value) {
                           cubit.searchInItems(value);
                         },
-
                         decoration: const InputDecoration(
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
@@ -143,12 +140,10 @@ class SearchScreen extends StatelessWidget {
                     const SizedBox(width: 20),
                   ],
                 ),
-
                 const SizedBox(height: 20),
                 Visibility(
                   visible: cubit.listItemsSearch.isNotEmpty,
-                  replacement: const Expanded(
-                      child: Center(child: Text('لايوجد بيانات'))),
+                  replacement: const Expanded(child: Center(child: Text('لايوجد بيانات'))),
                   child: Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -164,18 +159,9 @@ class SearchScreen extends StatelessWidget {
                                     cubit.listItemsSearch[index].itemId);
 
                             return itemCard(
-                               context: context,
-                                isFavourite: cubit.listFavourite.any(
-                                        (element) =>
-                                            element.UesrMobile ==
-                                                Global.mobile &&
-                                            element.ItemId ==
-                                                cubit.listItemsSearch[index]
-                                                    .itemId)
-                                    ? true
-                                    : false,
-itemModel:itemModel ,
-                               
+                              context: context,
+                              isFavourite: cubit.listFavourite.any((element) => element.UesrMobile == Global.mobile && element.ItemId == cubit.listItemsSearch[index].itemId) ? true : false,
+                              itemModel: itemModel,
                             );
                           }),
                     ),
@@ -187,5 +173,3 @@ itemModel:itemModel ,
         });
   }
 }
-
- 
