@@ -182,7 +182,7 @@ class HomeLayout extends StatelessWidget {
                                     color: Colors.white, fontSize: 11),
                               ),
                               child: const Icon(
-                                Icons.shopping_basket_outlined,
+                                Icons.shopping_cart_outlined,
                               ),
                             ),
                             label: 'سلة التسوق',

@@ -250,7 +250,7 @@ OrderModel orderModel;
         emit(SelectCategoryState());
       }
     } catch (e) {
-      print(e);
+
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           backgroundColor: Colors.red,
           content: Text(

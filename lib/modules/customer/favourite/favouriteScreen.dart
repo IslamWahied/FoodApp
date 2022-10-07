@@ -137,6 +137,7 @@ class FavouriteScreen extends StatelessWidget {
                                 (element) => element.itemId == favModel.ItemId);
 
                             return itemCard(
+                              isSearch: true,
                                 isFavourite: favModel.isFavourit,
                                 context: context,
                                 itemModel: itemModel);

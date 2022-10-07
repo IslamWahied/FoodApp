@@ -27,11 +27,11 @@ class ShopScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = HomeCubit.get(context);
-          var newOrderList = cubit.listAllOrders
-              .where((element) =>
-                  element.orderState.toLowerCase() != 'New'.toLowerCase() &&
-                  element.userMobile == Global.mobile)
-              .toList();
+          // var newOrderList = cubit.listAllOrders
+          //     .where((element) =>
+          //         element.orderState.toLowerCase() != 'New'.toLowerCase() &&
+          //         element.userMobile == Global.mobile)
+          //     .toList();
 
           return BackdropScaffold(
               onBackLayerConcealed: () {
@@ -340,11 +340,7 @@ Widget itemCard(
                       children: [
                         Row(
                           children: [
-                            // const Icon(
-                            //   Icons.star,
-                            //   color: Constants.primary,
-                            //   size: 20,
-                            // ),
+
                             GestureDetector(
                                 onTap: () {
                                   HomeCubit.get(context)
@@ -389,24 +385,13 @@ Widget itemCard(
                         decoration:   BoxDecoration(
                             color: Constants.primary,
                             borderRadius: const BorderRadius.only(
-                              bottomLeft:const Radius.circular(20),
-                              topRight:const Radius.circular(20),
+                              bottomLeft:Radius.circular(20),
+                              topRight:Radius.circular(20),
                             )),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            // if (HomeCubit.get(context).listOrder[index].isDiscount)
-                            //   PrimaryText(
-                            //     isDiscount: true,
-                            //     text: HomeCubit.get(context)
-                            //         .listOrder[index]
-                            //         .oldPrice
-                            //         .toString(),
-                            //     size: 20,
-                            //     fontWeight: FontWeight.w700,
-                            //     color: Constants.lighterGray,
-                            //     height: 1,
-                            //   ),
+
                             SvgPicture.asset(
                               'assets/dollar.svg',
                               color: Constants.tertiary,
@@ -428,16 +413,7 @@ Widget itemCard(
                           ],
                         ),
 
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.end,
-                        //   children:  [
-                        //     Text(
-                        //       HomeCubit.get(context).listOrder[index].orderCount.toString()??'1',style: const TextStyle(color: Colors.black,fontWeight: FontWeight.w400,),),
-                        //     const Text(' : العدد',style: TextStyle(  fontWeight: FontWeight.w700,
-                        //       color: Constants.tertiary, ),),
-                        //
-                        //   ],
-                        // ),
+
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
@@ -516,10 +492,9 @@ Widget itemCard(
                             spreadRadius: 2)
                       ]),
                   child: Hero(
-                    // key: GlobalKey(debugLabel: index.toString()),
+
                     tag: imagePath + index.toString(),
-                    child: Image.network(imagePath ?? '',
-                        width: MediaQuery.of(context).size.width / 2.9),
+                    child: CircleAvatar(backgroundImage: NetworkImage(imagePath ?? '')),
                   ),
                 ),
               ),

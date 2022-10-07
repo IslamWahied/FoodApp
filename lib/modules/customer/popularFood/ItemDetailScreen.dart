@@ -256,9 +256,9 @@ this.isSearch = false,
                           fontWeight: FontWeight.w700,
                           size: 22),
                     // if(cubit.listFeedsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId).additionsList.isNotEmpty)
-                    // const SizedBox(
-                    //   height: 15,
-                    // ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                   ],
                 ),
               ),
@@ -285,7 +285,9 @@ this.isSearch = false,
                     ),
                   ),
                 ),
-
+                SizedBox(
+                height: MediaQuery.of(context).size.height * 0.3,
+              ),
             ],
           ),
         );

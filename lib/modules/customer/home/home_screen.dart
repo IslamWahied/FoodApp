@@ -197,7 +197,7 @@ class HomeScreen extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(right: 20, top: 10),
                           child: PrimaryText(
-                              text: 'الاكثر طالبا',
+                              text: 'العروض',
                               fontWeight: FontWeight.w700,
                               size: 22),
                         ),

@@ -48,40 +48,7 @@ class OrderDetailScreen extends StatelessWidget {
 
             title:customAppBar(context: context,title: itemName,isYellow: true,isShowCarShop: true) ,
           ),
-          // floatingActionButton: ConstrainedBox(
-          //   constraints: BoxConstraints(
-          //       minWidth: MediaQuery.of(context).size.width - 40),
-          //   child: ElevatedButton(
-          //     onPressed: ()  async {
-          //
-          //        cubit.listOrder.removeWhere((item) => item ==  cubit.listOrder[index]);
-          //         cubit.emit(SearchSubCategoryState());
-          //       Navigator.pop(context);
-          //     },
-          //     child: Row(
-          //       mainAxisSize: MainAxisSize.min,
-          //       children: const [
-          //         PrimaryText(
-          //           text: 'حذف',
-          //           color: Constants.white,
-          //           fontWeight: FontWeight.w600,
-          //           size: 18,
-          //         ),
-          //         SizedBox(width: 10,),
-          //         Icon(Icons.chevron_right)
-          //       ],
-          //     ),
-          //     style: ElevatedButton.styleFrom(
-          //         primary: Colors.red,
-          //         shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(10.0)),
-          //         padding:
-          //         const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-          //         textStyle: const TextStyle(
-          //             fontSize: 30, fontWeight: FontWeight.bold)),
-          //   ),
-          // ),
-          // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
           body: SingleChildScrollView(
             child: Column(
               children: [
@@ -97,21 +64,28 @@ class OrderDetailScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
 
-                          Hero(
+                          Card(
+                            // color: HomeCubit.get(context).selectedCategoryId == categoryId
+                            //     ? Constants.primary
+                            //     : Constants.white,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
 
-                            tag: imagePath??'',
-                            child: Container(
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey[400], blurRadius: 30),
-                                ],
-                                borderRadius: BorderRadius.circular(100),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * .47,
+                              height: MediaQuery.of(context).size.height * .3,
+                              child: Image.network(
+                                imagePath,
+                                fit: BoxFit.cover,
                               ),
-                              height: 200,
-                              width: 170,
-                              child: Image.network(imagePath??'', fit: BoxFit.cover),
                             ),
+
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+
+                            elevation: 5,
+
+                            // margin: const EdgeInsets.all(10),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
