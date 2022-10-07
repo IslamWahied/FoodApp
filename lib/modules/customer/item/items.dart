@@ -93,7 +93,9 @@ class ItemsScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           var itemModel =  cubit.listItemsBySubCategSearch.where((element) =>  element.categoryId == cubit.selectedCategoryId && element.supCategoryId == cubit.selectedSubCategoryId  && element.projectId == Global.projectId ).toList()[index];
                           return itemCard(
+
                             context: context,
+                            isSearch: false,
                             itemModel: itemModel,
                             isFavourite: cubit.listFavourite.isNotEmpty && cubit.listFavourite.any((element) => element.ItemId == itemModel.itemId && element.isFavourit) ? true : false,
                           );

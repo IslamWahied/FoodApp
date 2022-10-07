@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:elomda/models/category/itemModel.dart';
+import 'package:elomda/models/noteModel.dart';
 
 class OrderModel {
   int orderId;
@@ -19,6 +20,7 @@ class OrderModel {
   String orderState;
   int orderCount;
   List<ItemModel> listItemModel;
+  List<NoteModel> listNoteModel;
 
   OrderModel(
       {this.orderId,
@@ -30,6 +32,7 @@ class OrderModel {
       this.createdDate,
       this.isDeleted,
       this.listItemModel,
+      this.listNoteModel,
       this.totalAdditionalPrice,
       this.totalDiscountPrice,
       this.departMent,
@@ -37,9 +40,11 @@ class OrderModel {
       this.projectId});
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
-    List<dynamic> listItemlist = json['listItemModel'] ?? [];
+    List<dynamic> listItemModel = json['listItemModel'] ?? [];
+    List<dynamic> listNoteModel = json['listNoteModel'] ?? [];
 
-    var customList = listItemlist.map((e) => ItemModel.fromJson(e)).toList();
+    var customList = listItemModel.map((e) => ItemModel.fromJson(e)).toList();
+    var customNoteList = listNoteModel.map((e) => NoteModel.fromJson(e)).toList();
 
     return OrderModel(
         orderId: json['orderId'],
@@ -55,7 +60,9 @@ class OrderModel {
         totalDiscountPrice: json['totalDiscountPrice'] ?? 0,
         projectId: json['projectId'] ?? 1,
         orderCount: json['orderCount'] ?? 0,
-        listItemModel: customList);
+        listItemModel: customList,
+      listNoteModel: customNoteList
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -74,6 +81,7 @@ class OrderModel {
       'projectId': projectId ?? 1,
       'orderCount': orderCount ?? 0,
       'listItemModel': listItemModel.map((e) => e.toJson())?.toList(),
+      'listNoteModel': listNoteModel.map((e) => e.toMap())?.toList(),
     };
   }
 

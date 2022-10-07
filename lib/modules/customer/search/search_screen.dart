@@ -159,6 +159,7 @@ class SearchScreen extends StatelessWidget {
                                     cubit.listItemsSearch[index].itemId);
 
                             return itemCard(
+                              isSearch:true,
                               context: context,
                               isFavourite: cubit.listFavourite.any((element) => element.UesrMobile == Global.mobile && element.ItemId == cubit.listItemsSearch[index].itemId) ? true : false,
                               itemModel: itemModel,

@@ -5,8 +5,12 @@ class NoteModel
 
 
   String senderMobile;
+  String senderName;
   String fireBaseToken;
   int projectId;
+
+
+
   String noteText;
   String createdDate;
 
@@ -14,6 +18,8 @@ class NoteModel
   NoteModel({
 
     this.senderMobile,
+    this.senderName,
+
     this.projectId,
     this.noteText,
     this.fireBaseToken,
@@ -23,7 +29,9 @@ class NoteModel
   NoteModel.fromJson(Map<String, dynamic> json)
   {
 
+
     senderMobile = json['senderMobile'];
+    senderName = json['senderName'];
     projectId = json['projectId'];
     noteText = json['noteText'];
     fireBaseToken = json['fireBaseToken']??'';
@@ -36,7 +44,10 @@ class NoteModel
     return {
 
 
+
+
       'projectId':projectId??'',
+      'senderName':senderName??'',
       'fireBaseToken':fireBaseToken??'',
       'senderMobile':senderMobile??'',
       'noteText':noteText??'',

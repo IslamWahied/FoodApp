@@ -216,6 +216,7 @@ class HomeScreen extends StatelessWidget {
                                   element.projectId == Global.projectId)
                               .toList()[index];
                           return itemCard(
+                            isSearch: false,
                               isFavourite: cubit.listFavourite.isNotEmpty &&
                                       cubit.listFavourite.any((element) =>
                                           element.ItemId ==

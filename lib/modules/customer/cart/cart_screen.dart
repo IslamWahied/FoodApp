@@ -96,8 +96,8 @@ class OrderScreen extends StatelessWidget {
                           child: SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
-                                cubit.sendOrder(context);
+                              onPressed: () async {
+                                await cubit.sendOrder(context);
                               },
                               child: Row(
                                 // mainAxisSize: MainAxisSize.min,
@@ -332,7 +332,7 @@ Widget itemCard(
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 45, vertical: 20),
-                            decoration:   BoxDecoration(
+                            decoration: BoxDecoration(
                                 color: Constants.primary,
                                 borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(20),

@@ -103,37 +103,7 @@ class FavouriteScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Row(
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     const SizedBox(width: 20),
-                //     const Icon(
-                //       Icons.search,
-                //       color: AppColors.secondary,
-                //       size: 25,
-                //     ),
-                //     const SizedBox(width: 10),
-                //     Expanded(
-                //         child: TextField(
-                //       controller: cubit.txtFavouriteControl,
-                //       onChanged: (String value) {
-                //         cubit.searchInFavourite(value);
-                //       },
-                //       decoration: const InputDecoration(
-                //         enabledBorder: UnderlineInputBorder(
-                //             borderSide: BorderSide(
-                //                 width: 2, color: AppColors.lighterGray)),
-                //         hintText: 'Search..',
-                //         hintStyle: TextStyle(
-                //             color: AppColors.lightGray,
-                //             fontSize: 20,
-                //             fontWeight: FontWeight.w500),
-                //       ),
-                //     )),
-                //     const SizedBox(width: 20),
-                //   ],
-                // ),
+
                 Visibility(
                   visible: cubit.listFavourite
                       .where((element) => element.UesrMobile == Global.mobile)

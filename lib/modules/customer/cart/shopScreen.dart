@@ -118,7 +118,7 @@ class ShopScreen extends StatelessWidget {
                                         text: cubit.getTotalPrice() ?? '0',
                                         size: 30,
                                         fontWeight: FontWeight.w700,
-                                        color: Constants.tertiary,
+                                        color: Colors.deepOrange[500],
                                         height: 1,
                                       ),
                                     ],
@@ -135,13 +135,14 @@ class ShopScreen extends StatelessWidget {
                                         PrimaryText(
                                           text: 'تاكيد الطلب',
                                           fontWeight: FontWeight.w600,
-                                          size: 18,
+                                          color: Colors.white,
+                                          size: 21,
                                         ),
 
-                                        Icon(
-                                          Icons.chevron_right,
-                                          color: Constants.black,
-                                        ),
+                                        // Icon(
+                                        //   Icons.chevron_right,
+                                        //   color: Constants.white,
+                                        // ),
                                       ],
                                     ),
                                   ),

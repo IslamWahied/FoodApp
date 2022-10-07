@@ -96,6 +96,7 @@ class FavouriteScreenDetail extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     cubit.addNewItemToCartFromFeedsScreen(
+
                         itemId: cubit.selectedItemId,
                         orderCount: orderCount ?? 1);
                     // cubit.listOrder.add(HomeCubit.get(context).listItemsSearch.firstWhere((element) => element.itemId == cubit.selectedItemId));

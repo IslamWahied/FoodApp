@@ -11,6 +11,7 @@ import 'package:elomda/models/category/additionsModel.dart';
 import 'package:elomda/models/category/categoryModel.dart';
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/models/favourit/favouritModel.dart';
+import 'package:elomda/models/noteModel.dart';
 import 'package:elomda/models/order/orderModel.dart';
 import 'package:elomda/models/project/projectModel.dart';
 import 'package:elomda/models/user/userAccount.dart';
@@ -25,6 +26,7 @@ import 'package:elomda/modules/customer/cart/shopScreen.dart';
 import 'package:elomda/modules/customer/category/subCategoryScreen.dart';
 import 'package:elomda/modules/customer/favourite/favouriteScreen.dart';
 import 'package:elomda/modules/customer/item/items.dart';
+import 'package:elomda/modules/customer/order/OrderAllDetail.dart';
 import 'package:elomda/modules/customer/search/search_screen.dart';
 import 'package:elomda/modules/login/login_screen.dart';
 import 'package:elomda/modules/user_info/user_info_screen.dart';
@@ -160,12 +162,107 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
+OrderModel orderModel;
 
 
 
-  addNote({BuildContext context,String noteText,int projectId}){
+  goToOrderDetail({int orderId,context}){
+    FirebaseFirestore.instance.collection('Orders').doc(orderId.toString())
+        .snapshots().listen((event) {
+
+      orderModel = OrderModel.fromJson(event.data());
+
+      emit(SelectCategoryState());
+
+    });
+    navigateTo(context,  OrderAllDetail());
+  }
+
+  addNote({BuildContext context,OrderModel orderModel ,String noteText,int projectId}){
+
+    try {
+      if (orderModel != null) {
+
+       List<NoteModel> listNote = [];
+       listNote = orderModel.listNoteModel.toList();
+       listNote.add(NoteModel(
+         senderName: Global.userName,
+           noteText: noteText??"",
+           createdDate: DateTime.now().toString(),
+           projectId: orderModel.projectId ,
+           senderMobile: Global.mobile,
+           fireBaseToken: Global.fireBaseToken
+
+       ));
 
 
+
+       var model = OrderModel(
+           orderId: orderModel.orderId,
+           projectId: orderModel.projectId,
+           userMobile: orderModel.userMobile,
+           adminMobile: orderModel.adminMobile,
+           createdDate: orderModel.createdDate,
+           listItemModel: orderModel.listItemModel,
+           totalAdditionalPrice: orderModel.totalAdditionalPrice,
+           totalDiscountPrice: orderModel.totalDiscountPrice,
+           userName: orderModel.userName,
+           departMent: 'Programmer',
+           orderPrice: orderModel.orderPrice,
+           orderState: orderModel.orderState,
+           isDeleted: orderModel.isDeleted,
+           listNoteModel:listNote.toList() ,
+           orderCount: listOrder.length ?? 0);
+
+
+
+          FirebaseFirestore.instance
+              .collection('Orders')
+              .doc(orderModel.orderId.toString())
+              .update(model.toJson())
+              .then((value) {
+            for (var element in listUser) {
+              if (element.isAdmin && listProject.any((element2) => element2.adminMobile == element.mobile && element2.id == Global.projectId)) {
+                sendNotificationToUserByToken(
+                    messageBody: '${Global.userName} رساله من   ',
+                    messageTitle: ' ملاحظات علي الطلب رقم ${orderModel.orderId}',
+                    userToken: element.fireBaseToken);
+              }
+            }
+
+            txtnote.text = '';
+          }).catchError((onError) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Colors.red,
+                content: Text(
+                  'حدث خطئ بارسال الطلب برجاء المحاولة مرة اخري',
+                  textAlign: TextAlign.center,
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                behavior: SnackBarBehavior.floating,
+                padding: EdgeInsets.all(20.0),
+                duration: Duration(milliseconds: 4000)));
+          });
+
+        // Send Notification For Admin
+
+        emit(SelectCategoryState());
+      }
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            'حدث خطئ بارسال المحاولة مرة اخري',
+            textAlign: TextAlign.center,
+          ),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30))),
+          behavior: SnackBarBehavior.floating,
+          padding: EdgeInsets.all(20.0),
+          duration: Duration(milliseconds: 4000)));
+    }
 
 
   }
@@ -556,6 +653,7 @@ class HomeCubit extends Cubit<HomeState> {
             adminMobile: '0',
             createdDate: DateTime.now().toString(),
             listItemModel: listOrder,
+            listNoteModel: [],
             totalAdditionalPrice: totalAdditionalPrice,
             totalDiscountPrice: totalDiscountPrice,
             userName: Global.userName,
@@ -921,13 +1019,16 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   addNewItemToCartFromFeedsScreen({itemId, orderCount}) {
-    var newList = popularList.firstWhere((element) =>
-        element.itemId == itemId && element.projectId == Global.projectId);
+    var newList = popularList.firstWhere((element) => element.itemId == itemId && element.projectId == Global.projectId);
+
+
 
     var model = ItemModel(
+
       orderCount: orderCount,
       orderState: 'New',
       oldPrice: newList.oldPrice,
+
       itemTitle: newList.itemTitle,
       itemId: newList.itemId,
       isPopular: newList.isPopular,
@@ -935,6 +1036,7 @@ class HomeCubit extends Cubit<HomeState> {
       isDeleted: newList.isDeleted,
       isAvailable: newList.isAvailable,
       image: newList.image,
+
       description: newList.description,
       createdDate: newList.createdDate,
       categoryTitle: newList.categoryTitle,
@@ -950,9 +1052,12 @@ class HomeCubit extends Cubit<HomeState> {
           ? true
           : false ?? false,
       userMobile: Global.mobile,
+
       userName: Global.userName,
       projectId: Global.projectId,
     );
+
+
 
     listOrder.add(model);
 
@@ -1260,7 +1365,7 @@ class HomeCubit extends Cubit<HomeState> {
     emit(SearchSubCategoryState());
   }
 
-  sendNotifacation() {
+  sendNotification() {
     Dio dio;
     dio = Dio(
         BaseOptions(baseUrl: '', receiveDataWhenStatusError: true, headers: {

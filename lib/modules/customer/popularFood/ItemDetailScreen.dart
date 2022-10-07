@@ -13,11 +13,12 @@ import 'package:flutter_svg/svg.dart';
 class ItemDetailScreen extends StatelessWidget {
  final ItemModel itemModel;
   final int orderCount;
+  final bool isSearch;
 
 
   const ItemDetailScreen(
       {
-
+this.isSearch = false,
       this.orderCount,
       this.itemModel,
       Key key
@@ -46,7 +47,7 @@ class ItemDetailScreen extends StatelessWidget {
             onClosing: () {},
             builder: (context) {
               return Padding(
-                padding:Global.projectId != 0? const EdgeInsets.only(bottom: 60):EdgeInsets.zero,
+                padding:!isSearch? const EdgeInsets.only(bottom: 60):EdgeInsets.zero,
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(

@@ -11,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 
 Widget itemCard(
     {
+      bool isSearch,
       ItemModel itemModel,
       context,
       isFavourite
@@ -33,6 +34,8 @@ Widget itemCard(
               navigateTo(
                   context,
                   ItemDetailScreen(
+                    isSearch: isSearch,
+
                   orderCount: value ?? 1,
                   itemModel: itemModel,
                   ));

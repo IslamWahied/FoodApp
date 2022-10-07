@@ -1,4 +1,6 @@
 // @dart=2.9
+import 'package:backdrop/backdrop.dart';
+import 'package:badges/badges.dart';
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:list_tile_switch/list_tile_switch.dart';
 
+import '../customer/Userbacklayer.dart';
 import 'edit_profile/edit_user_profile_screen.dart';
 
 class UserInformationScreen extends StatelessWidget {
@@ -20,472 +23,374 @@ class UserInformationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeState>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        var cubit = HomeCubit.get(context);
-        return SafeArea(
-          child: Scaffold(
-            backgroundColor: Constants.lightBG,
-            body: Stack(
-              children: [
-                CustomScrollView(
-                  controller: cubit.scrollController,
-                  slivers: [
-                    SliverAppBar(
-                      // leading: Icon(Icons.ac_unit_outlined),
-                      automaticallyImplyLeading: false,
-                      expandedHeight: 200,
-                      centerTitle: true,
+   return BlocConsumer<HomeCubit, HomeState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          var cubit = HomeCubit.get(context);
+          return BackdropScaffold(
+            onBackLayerConcealed: () {
+              cubit.isShowBackLayer = true;
 
-                      elevation: 0,
-                      pinned: true,
-                      flexibleSpace: LayoutBuilder(builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        cubit.top = constraints.biggest.height;
+              cubit.emit(SelectCategoryState());
+            },
+            onBackLayerRevealed: () {
+              cubit.isShowBackLayer = false;
+              cubit.emit(SelectCategoryState());
+            },
+            frontLayerBackgroundColor: Constants.white,
+            headerHeight: MediaQuery.of(context).size.height * 0.45,
+            appBar: BackdropAppBar(
+              title: Text(cubit.selectedTab),
+              leading: const BackdropToggleButton(
+                icon: AnimatedIcons.home_menu,
+                color: Colors.deepOrange,
+              ),
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                ),
+              ),
+              actions: [
+                cubit.isShowBackLayer
+                    ? Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        cubit.isShowBackLayer = false;
+                        NavigatToAndReplace(context, const HomeLayout());
+                        cubit.changeCurrentIndex(3);
+                      },
+                      child: Badge(
+                          badgeContent: Text(
+                            cubit.listOrder.length.toString() ?? '0',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 11),
+                          ),
+                          child: Image.asset(
+                            'assets/shoppingcart.png',
+                            width: 22,
+                            color: Colors.white,
+                          )),
+                    ),
+                    const SizedBox(width: 20),
+                    IconButton(
+                        onPressed: () {
+                          // navigateTo(context, User_Info());
+                        },
+                        padding: const EdgeInsets.all(10),
+                        icon: CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.white,
+                          child: Global.imageUrl != null &&
+                              Global.imageUrl.trim() != ''
+                              ? CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage:
+                            NetworkImage(Global.imageUrl),
+                            backgroundColor: Colors.transparent,
+                          )
+                              : const CircleAvatar(
+                            radius: 13,
+                            backgroundImage:
+                            AssetImage('assets/person.jpg'),
+                          ),
+                        )),
+                  ],
+                )
+                    : const SizedBox(
+                  width: 1,
+                )
+              ],
+            ),
+            backLayer: UserBackLayerMenu(),
+            frontLayer: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
 
-                        return Stack(
-                          children: [
-                            Container(
-                              decoration:
-                                  const BoxDecoration(color: Colors.black),
-                              child: FlexibleSpaceBar(
-                                centerTitle: true,
-                                title: AnimatedOpacity(
-                                  duration: const Duration(milliseconds: 300),
-                                  opacity: cubit.top <= 110.0 ? 1.0 : 0,
-                                  child: Row(
+
+                  if (!Global.isAdmin)
+                    userTitle(
+                        isShowAvatar: true,
+                        title: Global.isAdmin
+                            ? 'بيانات المطعم'
+                            : 'الصفحة الشخصية'),
+
+                  if (!Global.isAdmin)
+                    const Divider(
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                  if (!Global.isAdmin)
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          cubit.isShowBackLayer = false;
+                          NavigatToAndReplace(
+                              context, const HomeLayout());
+                          cubit.changeCurrentIndex(1);
+                        },
+                        splashColor: Colors.red,
+                        child: const ListTile(
+                          title: Text('المفضلات'),
+                          trailing: Icon(Icons.chevron_right_rounded),
+                          leading: Icon(Icons.favorite),
+                        ),
+                      ),
+                    ),
+                  if (!Global.isAdmin)
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          cubit.isShowBackLayer = false;
+                          NavigatToAndReplace(
+                              context, const HomeLayout());
+                          cubit.changeCurrentIndex(3);
+                        },
+                        splashColor: Colors.red,
+                        child: const ListTile(
+                          title: Text('المشتريات'),
+                          trailing: Icon(Icons.chevron_right_rounded),
+                          leading: Icon(MaterialCommunityIcons.cart_plus),
+                        ),
+                      ),
+                    ),
+
+
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 10.0),
+                      //   child: OutlinedButton(
+                      //     onPressed: () {
+                      //       if(Global.isAdmin) {
+                      //         navigateTo(
+                      //           context,
+                      //           EditProjectProfileScreen(projectModel: cubit.listProject.firstWhere((element) => element.id == Global.projectId) ),
+                      //         );
+                      //       }
+                      //
+                      //       if(!Global.isAdmin) {
+                      //         navigateTo(
+                      //           context,
+                      //           EditUserProfileScreen( userModel:  cubit.listUser.firstWhere((element) => element.mobile == Global.mobile)),
+                      //         );
+                      //       }
+                      //     },
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: const [
+                      //         Icon(
+                      //           IconBroken.Edit,
+                      //           size: 16.0,
+                      //         ),
+                      //         SizedBox(
+                      //           width: 10.0,
+                      //         ),
+                      //         Text(
+                      //           'تعديل البيانات',
+                      //         ),
+                      //
+                      //
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      SizedBox(),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: userTitle(title:Global.isAdmin?'بيانات المطعم': 'البيانات '),
+                      ),
+
+                    ],
+                  ),
+                  const Divider(
+                    thickness: 1,
+                    color: Colors.grey,
+                  ),
+
+                  if (Global.isAdmin)
+                    Container(
+                      child: userTile(
+                        'رقم التليفون',
+                        cubit.listProject
+                            .firstWhere((element) =>
+                        element.id == Global.projectId)
+                            .projectMobile ??
+                            '',
+                        Icons.phone,
+                      ),
+                    ),
+                  if (!Global.isAdmin)
+                    Container(
+                      child: userTile(
+                        'رقم التليفون',
+                        Global.mobile ?? '',
+                        Icons.phone,
+                      ),
+                    ),
+                  if(cubit.listUser.isNotEmpty && !Global.isAdmin )
+                    Container(
+                      child: userTile(
+                        'العنوان',
+                        cubit.listUser
+                            .firstWhere((element) =>
+                        element.mobile == Global.mobile)
+                            .address ??
+                            '',
+                        Icons.location_on_outlined,
+                      ),
+                    ),
+
+                  if(cubit.listProject.isNotEmpty && Global.isAdmin )
+                    Container(
+                      child: userTile(
+                        'العنوان',
+                        cubit.listProject
+                            .firstWhere((element) =>
+                        element.id == Global.projectId)
+                            .address ??
+                            '',
+                        Icons.location_on_outlined,
+                      ),
+                    ),
+
+                  if (Global.isAdmin)
+                    Container(
+                      child: userTile(
+                        'الحالة',
+                        cubit.listProject
+                            .firstWhere((element) =>
+                        element.id == Global.projectId)
+                            .isActive
+                            ? 'فعال'
+                            : 'غير فعال' ?? '',
+                        cubit.listProject
+                            .firstWhere((element) =>
+                        element.id == Global.projectId)
+                            .isActive?  Icons.check_circle_outline:Icons.do_not_disturb,
+                      ),
+                    ),
+                  if (!Global.isAdmin)
+                    Container(
+                      child: userTile(
+                        'تاريخ الانضمام',
+                        cubit.listUser.isNotEmpty?      cubit.convertDateFormat(cubit.listUser
+                            .firstWhere((element) =>
+                        element.mobile == Global.mobile)
+                            .createdDate ??
+                            '') ??
+                            '':'',
+                        Icons.watch_later,
+                      ),
+                    ),
+
+                  if ( Global.isAdmin)
+                    Container(
+                      child: userTile(
+                        'تاريخ الانضمام',
+                        cubit.listProject.isNotEmpty?      cubit.convertDateFormat(cubit.listProject
+                            .firstWhere((element) =>
+                        element.id == Global.projectId)
+                            .createdDate ??
+                            '') ??
+                            '':'',
+                        Icons.watch_later,
+                      ),
+                    ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(0.8),
+                    child: userTitle(title: 'الاعدادات'),
+                  ),
+                  const Divider(
+                    thickness: 1,
+                    color: Colors.grey,
+                  ),
+                  ListTileSwitch(
+                    value: cubit.isDarkTheme,
+                    onChanged: (value) {
+                      //cubit.mode();
+                    },
+                    leading: const Icon(Icons.dark_mode_outlined),
+                    visualDensity: VisualDensity.comfortable,
+                    switchType: SwitchType.cupertino,
+                    switchActiveColor: Colors.indigo,
+                    title: const Text('الوضع اليلي'),
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      splashColor: Theme.of(context).splashColor,
+                      child: ListTile(
+                        onTap: () async {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext ctx) {
+                                return AlertDialog(
+                                  title: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
                                     children: [
-                                      const SizedBox(
-                                        width: 12,
-                                      ),
-                                      if (!Global.isAdmin)
-                                        Container(
-                                          height: kToolbarHeight / 1.8,
-                                          width: kToolbarHeight / 1.8,
-                                          decoration: BoxDecoration(
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Colors.white,
-                                                blurRadius: 1.0,
-                                              ),
-                                            ],
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: Global.imageUrl != null &&
-                                                      Global.imageUrl.trim() !=
-                                                          ''
-                                                  ? NetworkImage(
-                                                      Global.imageUrl)
-                                                  : const AssetImage(
-                                                      'assets/person.jpg'),
-                                            ),
-                                          ),
+                                      Padding(
+                                        padding:
+                                        const EdgeInsets.only(
+                                            right: 6.0),
+                                        child: Image.asset(
+                                          'assets/logout.png',
+                                          height: 20,
+                                          width: 40,
                                         ),
-                                      if (Global.isAdmin)
-                                        Container(
-                                          height: kToolbarHeight / 1.8,
-                                          width: kToolbarHeight / 1.8,
-                                          decoration: BoxDecoration(
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Colors.white,
-                                                blurRadius: 1.0,
-                                              ),
-                                            ],
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: cubit.listProject.firstWhere((element) => element.id == Global.projectId).image !=
-                                                          null &&
-                                                  cubit.listProject.firstWhere((element) => element.id == Global.projectId).image
-                                                      .trim() !=
-                                                          ''
-                                                  ? NetworkImage(
-                                                  cubit.listProject.firstWhere((element) => element.id == Global.projectId).image )
-                                                  : const AssetImage(
-                                                      'assets/person.jpg'),
-                                            ),
-                                          ),
-                                        ),
-                                      const SizedBox(
-                                        width: 10,
                                       ),
-                                      Text(
-                                      Global.isAdmin?  cubit.listProject.firstWhere((element) => element.id == Global.projectId).name : Global.userName  ?? 'لا يوجد اسم',
-                                        style: const TextStyle(
-                                            fontSize: 20.0,
-                                            color: Colors.white),
+                                      const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text('تسجيل الخروج'),
                                       ),
                                     ],
                                   ),
-                                ),
-                                background: Stack(
-                                  alignment: Alignment.bottomRight,
-                                  children: [
-                                    if (Global.isAdmin)
-                                      Image(
-                                        // image: AssetImage('assets/person.jpg'),
-                                        image: cubit.listProject.firstWhere((element) => element.id == Global.projectId).image  != null &&
-                                            cubit.listProject.firstWhere((element) => element.id == Global.projectId).image .trim() !=
-                                                    ''
-                                            ? NetworkImage(
-                                            cubit.listProject.firstWhere((element) => element.id == Global.projectId).image )
-                                            : const AssetImage(
-                                                'assets/person.jpg'),
-                                        fit: BoxFit.fitWidth,
-                                        width: double.infinity,
-                                      ),
-                                    if (!Global.isAdmin)
-                                      Image(
-                                        // image: AssetImage('assets/person.jpg'),
-                                        image: Global.imageUrl != null &&
-                                                Global.imageUrl.trim() != ''
-                                            ? NetworkImage(Global.imageUrl)
-                                            : const AssetImage(
-                                                'assets/person.jpg'),
-                                        fit: BoxFit.fitWidth,
-                                        width: double.infinity,
-                                      ),
+                                  content: const Text(
+                                    'هل تريد تسجيل الخروج؟',
+                                    textAlign: TextAlign.end,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('الغاء')),
+                                    TextButton(
+                                        onPressed: () {
+                                          cubit.logOut(context);
+                                        },
+                                        child: const Text(
+                                          'تاكيد',
+                                          style: TextStyle(
+                                              color: Colors.red),
+                                        ))
                                   ],
-                                ),
-                              ),
-                            ),
-                            // if(Global.isAdmin)
-                            //   IconButton(icon: const Icon(Icons.arrow_back,size: 30),color: Constants.black,onPressed: (){
-                            //     Navigator.pop(context);
-                            //   }),
-                          ],
-                        );
-                      }),
-                    ),
-                    SliverToBoxAdapter(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (!Global.isAdmin)
-                            Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: userTitle(
-                                    title: Global.isAdmin
-                                        ? 'بيانات المطعم'
-                                        : 'الصفحة الشخصية')),
-                            if (!Global.isAdmin)
-                            const Divider(
-                              thickness: 1,
-                              color: Colors.grey,
-                            ),
-                            if (!Global.isAdmin)
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () {
-                                    cubit.isShowBackLayer = false;
-                                    NavigatToAndReplace(
-                                        context, const HomeLayout());
-                                    cubit.changeCurrentIndex(1);
-                                  },
-                                  splashColor: Colors.red,
-                                  child: const ListTile(
-                                    title: Text('المفضلات'),
-                                    trailing: Icon(Icons.chevron_right_rounded),
-                                    leading: Icon(Icons.favorite),
-                                  ),
-                                ),
-                              ),
-                            if (!Global.isAdmin)
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () {
-                                    cubit.isShowBackLayer = false;
-                                    NavigatToAndReplace(
-                                        context, const HomeLayout());
-                                    cubit.changeCurrentIndex(3);
-                                  },
-                                  splashColor: Colors.red,
-                                  child: const ListTile(
-                                    title: Text('المشتريات'),
-                                    trailing: Icon(Icons.chevron_right_rounded),
-                                    leading:
-                                        Icon(MaterialCommunityIcons.cart_plus),
-                                  ),
-                                ),
-                              ),
-
-
-                            // Material(
-                            //   color: Colors.transparent,
-                            //   child: InkWell(
-                            //     onTap: () {
-                            //       navigateTo(context, const Orders());
-                            //     },
-                            //     splashColor: Colors.red,
-                            //     child: const ListTile(
-                            //       title: Text('My Orders'),
-                            //       trailing: Icon(Icons.chevron_right_rounded),
-                            //       leading: Icon(Icons.shopping_bag_outlined),
-                            //     ),
-                            //   ),
-                            // ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: userTitle(title:Global.isAdmin?'بيانات المطعم': 'البيانات '),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: OutlinedButton(
-                                    onPressed: () {
-if(Global.isAdmin) {
-  navigateTo(
-                                        context,
-                                        EditProjectProfileScreen(projectModel: cubit.listProject.firstWhere((element) => element.id == Global.projectId) ),
-                                      );
-}
-
-if(!Global.isAdmin) {
-  navigateTo(
-    context,
-    EditUserProfileScreen( userModel:  cubit.listUser.firstWhere((element) => element.mobile == Global.mobile)),
-  );
-}
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(
-                                          IconBroken.Edit,
-                                          size: 16.0,
-                                        ),
-                                        SizedBox(
-                                          width: 10.0,
-                                        ),
-                                        Text(
-                                          'تعديل البيانات',
-                                        ),
-
-
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Divider(
-                              thickness: 1,
-                              color: Colors.grey,
-                            ),
-                            // Container(
-                            //   child: userTile(
-                            //     'البريد الالكتروني',
-                            //     "IslamWaheed@gmail.com",
-                            //     Icons.email,
-                            //   ),
-                            // ),
-                            if (Global.isAdmin)
-                            Container(
-                              child: userTile(
-                                'رقم التليفون',
-                                cubit.listProject
-                                    .firstWhere((element) =>
-                                element.id == Global.projectId)
-                                    .projectMobile ??
-                                    '',
-                                Icons.phone,
-                              ),
-                            ),
-                            if (!Global.isAdmin)
-                            Container(
-                              child: userTile(
-                                'رقم التليفون',
-                                Global.mobile ?? '',
-                                Icons.phone,
-                              ),
-                            ),
-                            if(cubit.listUser.isNotEmpty && !Global.isAdmin )
-                            Container(
-                              child: userTile(
-                                'العنوان',
-                                cubit.listUser
-                                    .firstWhere((element) =>
-                                element.mobile == Global.mobile)
-                                    .address ??
-                                    '',
-                                Icons.location_on_outlined,
-                              ),
-                            ),
-
-                            if(cubit.listProject.isNotEmpty && Global.isAdmin )
-                              Container(
-                                child: userTile(
-                                  'العنوان',
-                                  cubit.listProject
-                                      .firstWhere((element) =>
-                                  element.id == Global.projectId)
-                                      .address ??
-                                      '',
-                                  Icons.location_on_outlined,
-                                ),
-                              ),
-
-                            if (Global.isAdmin)
-                              Container(
-                                child: userTile(
-                                  'الحالة',
-                                  cubit.listProject
-                                          .firstWhere((element) =>
-                                              element.id == Global.projectId)
-                                          .isActive
-                                      ? 'فعال'
-                                      : 'غير فعال' ?? '',
-                                  cubit.listProject
-                                      .firstWhere((element) =>
-                                  element.id == Global.projectId)
-                                      .isActive?  Icons.check_circle_outline:Icons.do_not_disturb,
-                                ),
-                              ),
-                            if (!Global.isAdmin)
-                            Container(
-                              child: userTile(
-                                'تاريخ الانضمام',
-        cubit.listUser.isNotEmpty?      cubit.convertDateFormat(cubit.listUser
-                                            .firstWhere((element) =>
-                                                element.mobile == Global.mobile)
-                                            .createdDate ??
-                                        '') ??
-                                    '':'',
-                                Icons.watch_later,
-                              ),
-                            ),
-
-                            if ( Global.isAdmin)
-                              Container(
-                                child: userTile(
-                                  'تاريخ الانضمام',
-                                  cubit.listProject.isNotEmpty?      cubit.convertDateFormat(cubit.listProject
-                                      .firstWhere((element) =>
-                                  element.id == Global.projectId)
-                                      .createdDate ??
-                                      '') ??
-                                      '':'',
-                                  Icons.watch_later,
-                                ),
-                              ),
-
-                            Padding(
-                              padding: const EdgeInsets.all(0.8),
-                              child: userTitle(title: 'الاعدادات'),
-                            ),
-                            const Divider(
-                              thickness: 1,
-                              color: Colors.grey,
-                            ),
-                            ListTileSwitch(
-                              value: cubit.isDarkTheme,
-                              onChanged: (value) {
-                                //cubit.mode();
-                              },
-                              leading: const Icon(Icons.dark_mode_outlined),
-                              visualDensity: VisualDensity.comfortable,
-                              switchType: SwitchType.cupertino,
-                              switchActiveColor: Colors.indigo,
-                              title: const Text('الوضع اليلي'),
-                            ),
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                splashColor: Theme.of(context).splashColor,
-                                child: ListTile(
-                                  onTap: () async {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext ctx) {
-                                          return AlertDialog(
-                                            title: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 6.0),
-                                                  child: Image.asset(
-                                                    'assets/logout.png',
-                                                    height: 20,
-                                                    width: 40,
-                                                  ),
-                                                ),
-                                                const Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Text('تسجيل الخروج'),
-                                                ),
-                                              ],
-                                            ),
-                                            content: const Text(
-                                              'هل تريد تسجيل الخروج؟',
-                                              textAlign: TextAlign.end,
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () async {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('الغاء')),
-                                              TextButton(
-                                                  onPressed: () {
-                                                    cubit.logOut(context);
-                                                  },
-                                                  child: const Text(
-                                                    'تاكيد',
-                                                    style: TextStyle(
-                                                        color: Colors.red),
-                                                  ))
-                                            ],
-                                          );
-                                        });
-                                  },
-                                  title: const Text('تسجيل الخروج'),
-                                  leading:
-                                      const Icon(Icons.exit_to_app_rounded),
-                                ),
-                              ),
-                            ),
-                            // Material(
-                            //   color: Colors.transparent,
-                            //   child: InkWell(
-                            //     splashColor: Theme.of(context).splashColor,
-                            //     child: ListTile(
-                            //       onTap: () async {
-                            //         Global.isAdmin = !Global.isAdmin;
-                            //         HomeCubit.get(context).emit(SearchSubCategoryState());
-                            //       },
-                            //       title:Global.isAdmin? const Text('التحويل الي مستخدم'):const Text('التحويل الي مدير'),
-                            //       leading: const Icon(Icons.exit_to_app_rounded),
-                            //     ),
-                            //   ),
-                            // ),
-                            const SizedBox(
-                              height: 85,
-                            ),
-                          ],
-                        ),
+                                );
+                              });
+                        },
+                        title: const Text('تسجيل الخروج'),
+                        leading:
+                        const Icon(Icons.exit_to_app_rounded),
                       ),
-                    )
-                  ],
-                ),
-              ],
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 85,
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        });
   }
 
   Widget userTile(String title, String subtitle, IconData leading) {
@@ -496,16 +401,26 @@ if(!Global.isAdmin) {
     );
   }
 
-  Widget userTitle({@required String title }) {
+  Widget userTitle({@required String title,bool isShowAvatar = false }) {
     return Padding(
       padding: const EdgeInsets.all(14.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
 
           Text(
             title,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
           ),
+          if(isShowAvatar)
+          const SizedBox(width: 10,),
+    //       if(isShowAvatar)
+    //       CircleAvatar(
+    //         backgroundImage: Global.imageUrl != null ?
+    // Image.network(Global.imageUrl, errorBuilder: (BuildContext context, Object exception,StackTrace stackTrace) {
+    //           return const Text('😢');
+    //   }):)
+
         ],
       ),
     );

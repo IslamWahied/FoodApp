@@ -41,156 +41,156 @@ class OrdersScreen extends StatelessWidget {
         backgroundColor:Constants.white,
         body: SafeArea(
           bottom: false,
-          child: Expanded(
-            child: Column(
-              children: [
-                Conditional.single(
-                  context: context,
-                  conditionBuilder: (BuildContext context) => cubit.listAllOrders.isNotEmpty,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Conditional.single(
+                context: context,
+                conditionBuilder: (BuildContext context) => cubit.listAllOrders.isNotEmpty,
 
-                  widgetBuilder: (BuildContext context) {
-                    return Expanded(
-                      child: ListView.separated(
+                widgetBuilder: (BuildContext context) {
+                  return Expanded(
+                    child: ListView.separated(
 
-                        separatorBuilder: (context, index) => const SizedBox(),
-                        itemCount: cubit.listAllOrders.length,
-                        itemBuilder: (context, index) {
-                          var orderModel = cubit.listAllOrders.toList()[index];
+                      separatorBuilder: (context, index) => const SizedBox(),
+                      itemCount: cubit.listAllOrders.length,
+                      itemBuilder: (context, index) {
+                        var orderModel = cubit.listAllOrders.toList()[index];
 
-                          return Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: 200,
-                                  child: Card(
-                                    elevation: 2,
-                                    color: Colors.white,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                cubit.convertDateFormat(
-                                                    orderModel
-                                                        .createdDate) ??
-                                                    '',
-                                                style: TextStyle(
-                                                    fontSize: 13.5,
-                                                    color: Colors.grey[600]),
-                                              ),
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 200,
+                                child: Card(
+                                  elevation: 2,
+                                  color: Colors.white,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              cubit.convertDateFormat(
+                                                  orderModel
+                                                      .createdDate) ??
+                                                  '',
+                                              style: TextStyle(
+                                                  fontSize: 13.5,
+                                                  color: Colors.grey[600]),
                                             ),
-                                            SizedBox(
-                                              width: 80,
-                                              height: 30,
-                                              child: Card(
-                                                color: orderModel.orderState
-                                                    .toLowerCase() ==
-                                                    'Canceled'
-                                                    ? Colors.red
-                                                    : Colors.green,
-                                                child: Center(
-                                                    child: Text(
-                                                      orderModel.orderState
-                                                          .toLowerCase() ==
-                                                          'Canceled'
-                                                          ? 'تم الالغاء'
-                                                          : 'تم الاستلام',
-                                                      style: const TextStyle(
-                                                          color: Colors.white),
-                                                    )),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const Divider(),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 10),
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Text(cubit.listProject.firstWhere((element) => element.id == orderModel.projectId).name),
-                                              const SizedBox(width: 15),
-
-                                              CircleAvatar(
-                                                radius: 25.0,
-                                                backgroundImage: NetworkImage(cubit.listProject.firstWhere((element) => element.id == orderModel.projectId).image),
-                                                backgroundColor: Colors.transparent,
-                                              ),
-                                            ],
                                           ),
-                                        ),
-                                        const Divider(),
-                                        Row(
+                                          SizedBox(
+                                            width: 80,
+                                            height: 30,
+                                            child: Card(
+                                              color: orderModel.orderState
+                                                  .toLowerCase() ==
+                                                  'Canceled'
+                                                  ? Colors.red
+                                                  : Colors.green,
+                                              child: Center(
+                                                  child: Text(
+                                                    orderModel.orderState
+                                                        .toLowerCase() ==
+                                                        'Canceled'
+                                                        ? 'تم الالغاء'
+                                                        : 'تم الاستلام',
+                                                    style: const TextStyle(
+                                                        color: Colors.white),
+                                                  )),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Divider(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
-                                            Text(
-                                              orderModel.orderPrice
-                                                  .toString() +' EGP'??
-                                                  '0',
-                                              style: const TextStyle(
-                                                  color: Colors.lightBlueAccent,
-                                                  fontSize: 17),
-                                            ),
-                                            const Text(
-                                              ' : المجموع  ',
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 17),
-                                            ),
+                                            Text(cubit.listProject.firstWhere((element) => element.id == orderModel.projectId).name),
+                                            const SizedBox(width: 15),
 
+                                            CircleAvatar(
+                                              radius: 25.0,
+                                              backgroundImage: NetworkImage(cubit.listProject.firstWhere((element) => element.id == orderModel.projectId).image),
+                                              backgroundColor: Colors.transparent,
+                                            ),
                                           ],
                                         ),
-                                        const SizedBox(height: 15,),
-                                        Expanded(
-                                          child: InkWell(
-                                            onTap: (){
-                                              navigateTo(context,  OrderAllDetail(orderModel: orderModel,));
-                                            },
-                                            child: Container(
-                                              width: double.infinity,
+                                      ),
+                                      const Divider(),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            orderModel.orderPrice
+                                                .toString() +' EGP'??
+                                                '0',
+                                            style: const TextStyle(
+                                                color: Colors.lightBlueAccent,
+                                                fontSize: 17),
+                                          ),
+                                          const Text(
+                                            ' : المجموع  ',
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 17),
+                                          ),
 
-                                              color: Colors.blue[300],
-                                              child: const Center(child: Text('تفاصيل الطلب',style: TextStyle(color: Constants.white,fontWeight: FontWeight.w800),)),
-                                            ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 15,),
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: (){
+                                            cubit.goToOrderDetail(orderId:orderModel.orderId ,context: context);
+
+                                          },
+                                          child: Container(
+                                            width: double.infinity,
+
+                                            color: Colors.blue[300],
+                                            child: const Center(child: Text('تفاصيل الطلب',style: TextStyle(color: Constants.white,fontWeight: FontWeight.w800),)),
                                           ),
                                         ),
+                                      ),
 
-                                      ],
-                                    ),
+                                    ],
                                   ),
                                 ),
                               ),
+                            ),
 if(cubit.listAllOrders.length -1 == index)
-                              Container(
-                                height: 100,
-                                color: Colors.transparent,
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  fallbackBuilder: (BuildContext context) =>
-                  const Center(
-                      child: Text(
-                        'لا يوجد طلبات',
-                        style: TextStyle(color: Colors.red, fontSize: 18),
-                      )),
-                ),
+                            Container(
+                              height: 100,
+                              color: Colors.transparent,
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                },
+                fallbackBuilder: (BuildContext context) =>
+                const Center(
+                    child: Text(
+                      'لا يوجد طلبات',
+                      style: TextStyle(color: Colors.red, fontSize: 18),
+                    )),
+              ),
 
-              ],
-            ),
+            ],
           ),
         ),
       );
