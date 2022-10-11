@@ -137,24 +137,24 @@ class NewOrderScreen extends StatelessWidget {
                                           Row(
                                             children: [
                                               Text(orderModel.userName ?? ''),
-                                              Baseline(
-                                                  baseline: 25.0,
-                                                  baselineType:
-                                                      TextBaseline.alphabetic,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 3),
-                                                    child: Text(
-                                                        orderModel.departMent ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                          fontSize: 10,
-                                                          color: Colors.grey,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                        )),
-                                                  )),
+                                              // Baseline(
+                                              //     baseline: 25.0,
+                                              //     baselineType:
+                                              //         TextBaseline.alphabetic,
+                                              //     child: Padding(
+                                              //       padding:
+                                              //           const EdgeInsets.only(
+                                              //               left: 3),
+                                              //       child: Text(
+                                              //           orderModel.departMent ??
+                                              //               '',
+                                              //           style: const TextStyle(
+                                              //             fontSize: 10,
+                                              //             color: Colors.grey,
+                                              //             fontWeight:
+                                              //                 FontWeight.w400,
+                                              //           )),
+                                              //     )),
                                             ],
                                           ),
                                           SizedBox(
@@ -213,19 +213,20 @@ class NewOrderScreen extends StatelessWidget {
                                         children: [
                                           Row(
                                             children: [
+                                              Text(
+                                                orderModel.orderPrice
+                                                    .toString() ??
+                                                    '0',
+                                                style: const TextStyle(
+                                                    fontSize: 23,color: Colors.green),
+                                              ),
                                               const Text(
-                                                'الاجمالي : ',
+                                                ' : الاجمالي',
                                                 style: TextStyle(
                                                     color: Colors.blue,
                                                     fontSize: 17),
                                               ),
-                                              Text(
-                                                orderModel.orderPrice
-                                                        .toString() ??
-                                                    '0',
-                                                style: const TextStyle(
-                                                    fontSize: 17),
-                                              ),
+
                                             ],
                                           ),
                                           TextButton(
@@ -235,66 +236,69 @@ class NewOrderScreen extends StatelessWidget {
                                                         element.mobile ==
                                                         Global.mobile)
                                                     .isActive) {
-                                                  showDialog(
-                                                      useSafeArea: true,
-                                                      context: context,
-                                                      builder:
-                                                          (context) =>
-                                                              AlertDialog(
-                                                                content:
-                                                                    SingleChildScrollView(
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .end,
-                                                                    children: [
-                                                                      Row(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.center,
-                                                                        children: const [
-                                                                          Text(
-                                                                            'تفاصيل الطلب',
-                                                                            style:
-                                                                                TextStyle(color: Colors.blue, fontSize: 16),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            10,
-                                                                      ),
-                                                                      SizedBox(
-                                                                        width: MediaQuery.of(context).size.width *
-                                                                            0.7,
-                                                                        height:
-                                                                            200,
-                                                                        child: ListView.separated(
-                                                                            itemBuilder: (context, index) =>
-                                                                                orderModelCard(orderModel.listItemModel[index], context),
-                                                                            separatorBuilder: (context, index) => const SizedBox(height: 10),
-                                                                            itemCount: orderModel.listItemModel.length),
-                                                                      ),
-                                                                      const Divider(),
-                                                                      TextButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                          child:
-                                                                              const Text(
-                                                                            'اغلاق',
-                                                                            style:
-                                                                                TextStyle(color: Colors.red),
-                                                                          ))
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ));
+                                                  cubit.goToOrderDetail(
+                                                      orderId: orderModel.orderId,
+                                                      context: context);
+                                                  // showDialog(
+                                                  //     useSafeArea: true,
+                                                  //     context: context,
+                                                  //     builder:
+                                                  //         (context) =>
+                                                  //             AlertDialog(
+                                                  //               content:
+                                                  //                   SingleChildScrollView(
+                                                  //                 child: Column(
+                                                  //                   mainAxisSize:
+                                                  //                       MainAxisSize
+                                                  //                           .min,
+                                                  //                   crossAxisAlignment:
+                                                  //                       CrossAxisAlignment
+                                                  //                           .end,
+                                                  //                   children: [
+                                                  //                     Row(
+                                                  //                       crossAxisAlignment:
+                                                  //                           CrossAxisAlignment.start,
+                                                  //                       mainAxisAlignment:
+                                                  //                           MainAxisAlignment.center,
+                                                  //                       children: const [
+                                                  //                         Text(
+                                                  //                           'تفاصيل الطلب',
+                                                  //                           style:
+                                                  //                               TextStyle(color: Colors.blue, fontSize: 16),
+                                                  //                         ),
+                                                  //                       ],
+                                                  //                     ),
+                                                  //                     const SizedBox(
+                                                  //                       height:
+                                                  //                           10,
+                                                  //                     ),
+                                                  //                     SizedBox(
+                                                  //                       width: MediaQuery.of(context).size.width *
+                                                  //                           0.7,
+                                                  //                       height:
+                                                  //                           200,
+                                                  //                       child: ListView.separated(
+                                                  //                           itemBuilder: (context, index) =>
+                                                  //                               orderModelCard(orderModel.listItemModel[index], context),
+                                                  //                           separatorBuilder: (context, index) => const SizedBox(height: 10),
+                                                  //                           itemCount: orderModel.listItemModel.length),
+                                                  //                     ),
+                                                  //                     const Divider(),
+                                                  //                     TextButton(
+                                                  //                         onPressed:
+                                                  //                             () {
+                                                  //                           Navigator.pop(context);
+                                                  //                         },
+                                                  //                         child:
+                                                  //                             const Text(
+                                                  //                           'اغلاق',
+                                                  //                           style:
+                                                  //                               TextStyle(color: Colors.red),
+                                                  //                         ))
+                                                  //                   ],
+                                                  //                 ),
+                                                  //               ),
+                                                  //             ));
                                                 } else {
                                                   ScaffoldMessenger.of(context).showSnackBar(
                                                       const SnackBar(

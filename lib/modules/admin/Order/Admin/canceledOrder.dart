@@ -4,7 +4,7 @@ import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/modules/admin/adminBackLayer.dart';
 import 'package:elomda/shared/Global.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
@@ -150,19 +150,20 @@ class CancelOrderScreen extends StatelessWidget {
                                           children: [
                                             Row(
                                               children: [
+                                                Text(
+                                                  orderModel.orderPrice
+                                                      .toString() ??
+                                                      '0',
+                                                  style: const TextStyle(
+                                                      fontSize: 23,color: Colors.green),
+                                                ),
                                                 const Text(
-                                                  'الاجمالي : ',
+                                                  ' : الاجمالي',
                                                   style: TextStyle(
                                                       color: Colors.blue,
                                                       fontSize: 17),
                                                 ),
-                                                Text(
-                                                  orderModel.orderPrice
-                                                          .toString() ??
-                                                      '0',
-                                                  style: const TextStyle(
-                                                      fontSize: 17),
-                                                ),
+
                                               ],
                                             ),
                                             TextButton(

@@ -1,15 +1,13 @@
 // @dart=2.9
 
-import 'package:backdrop/backdrop.dart';
+
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/modules/admin/adminBackLayer.dart';
-import 'package:elomda/modules/user_info/user_info_screen.dart';
+
 import 'package:elomda/shared/Global.dart';
-import 'package:elomda/shared/components/Componant.dart';
-import 'package:elomda/styles/colors.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
@@ -95,9 +93,7 @@ class DoneOrderScreen extends StatelessWidget {
                                                           color: Colors.grey,
                                                           fontWeight:
                                                           FontWeight.w400,
-                                                          //    fontFamily: 'Raleway'
-                                                          // fontFamily: 'Elshan'
-                                                          // fontFamily: 'Elshan'
+
                                                         )),
                                                   )),
                                             ],
@@ -155,19 +151,20 @@ class DoneOrderScreen extends StatelessWidget {
                                         children: [
                                           Row(
                                             children: [
-                                              const Text(
-                                                'الاجمالي : ',
-                                                style: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontSize: 17),
-                                              ),
                                               Text(
                                                 orderModel.orderPrice
                                                     .toString() ??
                                                     '0',
                                                 style: const TextStyle(
+                                                    fontSize: 23,color: Colors.green),
+                                              ),
+                                              const Text(
+                                                ' : الاجمالي',
+                                                style: TextStyle(
+                                                    color: Colors.blue,
                                                     fontSize: 17),
                                               ),
+
                                             ],
                                           ),
                                           TextButton(

@@ -3,13 +3,13 @@ import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/admin/adminBackLayer.dart';
 import 'package:elomda/shared/Global.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 import 'newOrders.dart';
 
@@ -292,9 +292,7 @@ Text('#${cubit.selectedOrderId}تحصيل اوردر '),
                                                           color: Colors.grey,
                                                           fontWeight:
                                                               FontWeight.w400,
-                                                          //    fontFamily: 'Raleway'
-                                                          // fontFamily: 'Elshan'
-                                                          // fontFamily: 'Elshan'
+
                                                         )),
                                                   )),
                                             ],
@@ -352,19 +350,20 @@ Text('#${cubit.selectedOrderId}تحصيل اوردر '),
                                         children: [
                                           Row(
                                             children: [
+                                              Text(
+                                                orderModel.orderPrice
+                                                    .toString() ??
+                                                    '0',
+                                                style: const TextStyle(
+                                                    fontSize: 23,color: Colors.green),
+                                              ),
                                               const Text(
-                                                'الاجمالي : ',
+                                                ' : الاجمالي',
                                                 style: TextStyle(
                                                     color: Colors.blue,
                                                     fontSize: 17),
                                               ),
-                                              Text(
-                                                orderModel.orderPrice
-                                                        .toString() ??
-                                                    '0',
-                                                style: const TextStyle(
-                                                    fontSize: 17),
-                                              ),
+
                                             ],
                                           ),
                                           TextButton(

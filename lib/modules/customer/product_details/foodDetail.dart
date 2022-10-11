@@ -394,7 +394,7 @@ class FoodDetail extends StatelessWidget {
 }
 
 Padding customAppBar(
-    {@required BuildContext context,@required String title,@required bool isShowCarShop,@required bool isYellow }) {
+    {@required BuildContext context,@required String title,@required bool isShowCarShop,@required bool isYellow,bool isCategory = false ,bool isSubCategory = false}) {
   return Padding(
     padding: const EdgeInsets.symmetric(
       horizontal: 0,
@@ -404,7 +404,17 @@ Padding customAppBar(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () {
+            if(isCategory){
+              HomeCubit.get(context).selectedCategoryId = 0;
+              HomeCubit.get(context).emit(RefershHomeScreen());
+            }
+            if(isSubCategory){
+              HomeCubit.get(context).selectedSubCategoryId = 0;
+              HomeCubit.get(context).emit(RefershHomeScreen());
+            }
+            Navigator.pop(context);
+  } ,
           child: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(

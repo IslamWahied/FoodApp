@@ -118,6 +118,24 @@ bool isOldPrice = false;
       'imagePath': 'assets/onion.png',
     },
   ];
+
+
+  addAddition({int additionId,BuildContext context}){
+    if ( listOfSelectedAdditions.any((element) =>
+    element.itemId == additionId &&
+        element.projectId == Global.projectId)) {
+      listOfSelectedAdditions.removeWhere((element) =>
+      element.itemId == additionId &&
+          element.projectId == Global.projectId);
+    } else {
+      listOfSelectedAdditions.add(HomeCubit.get(context)
+          .listAdditions
+          .firstWhere((element) =>
+      element.itemId == additionId &&
+          element.projectId == Global.projectId));
+    }
+    emit(UploadProductsCameraUploadImageState());
+  }
   uploadCategory(context) {
     if (selectedTypeItemId == 1 && isUploadValid) {
       EasyLoading.show(status: 'Uploading...');

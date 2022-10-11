@@ -263,12 +263,13 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+
                       SizedBox(
                         width: 150,
                         height: 150,
                         child: Image.network(
                           imagePath,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ],

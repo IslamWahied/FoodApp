@@ -17,10 +17,26 @@ class HomeLayout extends StatelessWidget {
         var cubit = HomeCubit.get(context);
 
         return Scaffold(
+
           extendBody: true,
-          body: Global.isAdmin
+          body:Container(
+            decoration: const BoxDecoration(
+            image: DecorationImage(
+            image: AssetImage("assets/background.jpg"),
+        fit: BoxFit.cover,
+        ),
+        ),
+        child:
+          Global.isAdmin
               ? cubit.adminScreens[cubit.currentIndex]
               : cubit.userScreens[cubit.currentIndex],
+
+          ),
+
+
+
+
+
           bottomNavigationBar: Global.isAdmin
               ? BottomAppBar(
                   shape: const CircularNotchedRectangle(),
@@ -143,7 +159,7 @@ class HomeLayout extends StatelessWidget {
                         onTap: (value) {
                           cubit.changeCurrentIndex(value);
                         },
-                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Colors.white,
                         unselectedItemColor: Colors.grey,
                         selectedItemColor: Colors.deepOrange,
                         currentIndex: cubit.currentIndex,

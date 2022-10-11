@@ -538,7 +538,7 @@ class UpdateDataScreen extends StatelessWidget {
                                           },
                                         ), //Checkbox
                                         const Text(
-                                          'الظهور في قائمة الاكثر طالبا',
+                                          'الظهور في قائمة العروض',
                                           style: TextStyle(fontSize: 13.0),
                                         ), //Text
                                       ], //<Widget>[]

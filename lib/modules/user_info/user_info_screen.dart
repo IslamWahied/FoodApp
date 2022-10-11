@@ -312,17 +312,17 @@ class UserInformationScreen extends StatelessWidget {
                     thickness: 1,
                     color: Colors.grey,
                   ),
-                  ListTileSwitch(
-                    value: cubit.isDarkTheme,
-                    onChanged: (value) {
-                      //cubit.mode();
-                    },
-                    leading: const Icon(Icons.dark_mode_outlined),
-                    visualDensity: VisualDensity.comfortable,
-                    switchType: SwitchType.cupertino,
-                    switchActiveColor: Colors.indigo,
-                    title: const Text('الوضع اليلي'),
-                  ),
+                  // ListTileSwitch(
+                  //   value: cubit.isDarkTheme,
+                  //   onChanged: (value) {
+                  //     //cubit.mode();
+                  //   },
+                  //   leading: const Icon(Icons.dark_mode_outlined),
+                  //   visualDensity: VisualDensity.comfortable,
+                  //   switchType: SwitchType.cupertino,
+                  //   switchActiveColor: Colors.indigo,
+                  //   title: const Text('الوضع اليلي'),
+                  // ),
                   Material(
                     color: Colors.transparent,
                     child: InkWell(

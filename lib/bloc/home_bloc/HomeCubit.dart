@@ -447,7 +447,7 @@ OrderModel orderModel;
   int selectedSubCategoryId = 0;
   int selectedItemId = 0;
 
-  List<String> departMentList = ['برمجه', 'IT'];
+  List<String> departMentList = ['', ''];
 
   List foodCategoryList = [
     {
@@ -813,6 +813,9 @@ OrderModel orderModel;
     }
     return arState;
   }
+
+
+
 
   Color orderStateColor(String state) {
     Color arStateColor = Colors.red;
