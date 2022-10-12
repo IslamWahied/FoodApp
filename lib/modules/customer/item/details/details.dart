@@ -117,6 +117,7 @@ class DetailsScreen extends StatelessWidget {
           ),
 
           Hero(
+
             tag: item.itemId,
             child:
 
