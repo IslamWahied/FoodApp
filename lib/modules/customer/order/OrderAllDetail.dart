@@ -6,6 +6,7 @@ import 'package:elomda/models/category/itemModel.dart';
 import 'package:elomda/modules/customer/product_details/foodDetail.dart';
 import 'package:elomda/shared/Global.dart';
 import 'package:elomda/styles/colors.dart';
+import 'package:elomda/styles/icons/icon_broken.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -153,148 +154,66 @@ class OrderAllDetail extends StatelessWidget {
                           const SizedBox(height: 10),
                           itemCount: cubit.orderModel.listItemModel.length),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const Text('الملاحظات'),
-                        IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: SizedBox(
-                                      height:
-                                      MediaQuery.of(context).size.height *
-                                          0.33,
-                                      width:
-                                      MediaQuery.of(context).size.width *
-                                          0.4,
-                                      child: Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                            children: [
-                                              const SizedBox( height: 50,),
-                                              Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                                children: const [
-                                                  Text(
-                                                    'اضافة ملاحظة',
-                                                    style: TextStyle(
-                                                        color: Colors.red,
-                                                        fontWeight:
-                                                        FontWeight.bold),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 10),
-                                              Directionality(
-                                                textDirection: TextDirection.rtl,
-                                                child: TextFormField(
-                                                  // key: const ValueKey('Description'),
-                                                  controller: cubit.txtnote,
 
-                                                  maxLines: 4,
 
-                                                  autofocus: true,
-                                                  textCapitalization:
-                                                  TextCapitalization.sentences,
-                                                  decoration: InputDecoration(
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[300],
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          15.0,
+                        ),
+                      ),
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15.0,
+                              ),
+                              child: Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: TextFormField(
+                                  controller:  cubit.txtnote,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'أضافة ملاحظات علي الطلب...',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 50.0,
+                            color: Colors.lightBlue,
+                            child: MaterialButton(
+                              onPressed: () async {
+                                if( cubit.txtnote.text!= null &&  cubit.txtnote.text.trim() != ''){
+                                 await cubit.addNote(context: context,projectId: cubit.orderModel.projectId,noteText:  cubit.txtnote.text,orderModel:  cubit.orderModel);
+                                }
 
-                                                    fillColor: Colors.white,
-                                                    focusedBorder: OutlineInputBorder(
-                                                      borderRadius:
-                                                      BorderRadius.circular(25.0),
-                                                      borderSide: const BorderSide(
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    border: OutlineInputBorder(
-                                                      borderRadius:
-                                                      BorderRadius.circular(25.0),
-                                                      borderSide: const BorderSide(
-                                                        color: Colors.black,
-                                                        width: 2.0,
-                                                      ),
-                                                    ),
-                                                    // labelText: 'الوصف',
-                                                    labelStyle: const TextStyle(
-                                                        fontWeight: FontWeight.w400,
-                                                        fontSize: 14),
-                                                  ),
-                                                  onChanged: (text) {
-                                                    // cubit.checkIsUploadValid(context);
-                                                  },
-                                                ),
-                                              ),
-                                              const SizedBox(height: 20),
-                                              GestureDetector(
-                                                  onTap: () {
-
-                                                    cubit.addNote(orderModel: cubit.orderModel,context: context,noteText: cubit.txtnote.text,projectId:cubit.orderModel.projectId);
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child:
-                                                  const CircleAvatar(
-                                                    radius: 25,
-                                                    child:
-                                                    Center(
-                                                        child:
-                                                        Icon(
-                                                          Icons.send,
-                                                          color: Colors
-                                                              .white,
-                                                          size: 15,
-                                                        )),
-                                                    backgroundColor:
-                                                    Colors.red,
-                                                  )),
-                                            ],
-                                          ),
-                                          Positioned(
-                                            top: -12,
-                                            right: 0,
-                                            child: InkWell(onTap: (){
-
-                                              Navigator.pop(context);
-                                            },
-                                              child: const CircleAvatar(
-                                                radius: 13,
-                                                backgroundColor: Colors.red,
-                                                child: Icon(Icons.close,color: Constants.white,),
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                    elevation: 24,
-                                    backgroundColor: Colors.blueGrey[50],
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(25.0))),
-                                  );
-                                },
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.add_comment,
-                              color: Colors.red,
-                              size: 25,
-                            )),
-
-                      ],
+                              },
+                              minWidth: 1.0,
+                              child: const Icon(
+                                IconBroken.Send,
+                                size: 16.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(height: 20),
                     SizedBox(
                       height:500 ,
                       width:double.infinity,
                       child:  ListView.separated(
-// controller: ScrollController,
+                        reverse: true,
+  controller: cubit.chatScrollControl,
                           itemBuilder: (context,index){
                             return   Directionality(
                               textDirection: TextDirection.rtl,
@@ -331,8 +250,8 @@ class OrderAllDetail extends StatelessWidget {
                                       ),
                                     ),
 
-                                    if(cubit.orderModel.listNoteModel.length - 1 == index)
-                                      const SizedBox(height: 150,)
+                                    // if(cubit.orderModel.listNoteModel.length - 1 == index)
+                                    //   const SizedBox(height: 150,)
                                   ],
                                 ),
                               ),

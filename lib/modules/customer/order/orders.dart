@@ -3,18 +3,15 @@ import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/modules/customer/product_details/foodDetail.dart';
 import 'package:elomda/shared/Global.dart';
-
-import 'package:elomda/shared/components/Componant.dart';
 import 'package:elomda/styles/colors.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
-import 'OrderAllDetail.dart';
 
 class OrdersScreen extends StatelessWidget {
+  const OrdersScreen({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
@@ -49,6 +46,7 @@ class OrdersScreen extends StatelessWidget {
                     widgetBuilder: (BuildContext context) {
                       return Expanded(
                         child: ListView.separated(
+                          reverse: true,
                           separatorBuilder: (context, index) =>
                               const SizedBox(),
                           itemCount: cubit.listAllOrders.where((element) => element.userMobile == Global.mobile && element.projectId == Global.projectId).length,
@@ -190,11 +188,11 @@ class OrdersScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                if (cubit.listAllOrders.where((element) => element.userMobile == Global.mobile && element.projectId == Global.projectId).length - 1 == index)
-                                  Container(
-                                    height: 100,
-                                    color: Colors.transparent,
-                                  )
+                                // if (cubit.listAllOrders.where((element) => element.userMobile == Global.mobile && element.projectId == Global.projectId).length - 1 == index)
+                                //   Container(
+                                //     height: 100,
+                                //     color: Colors.transparent,
+                                //   )
                               ],
                             );
                           },

@@ -231,6 +231,15 @@ OrderModel orderModel;
             }
 
             txtnote.text = '';
+            SystemChannels.textInput.invokeMethod('TextInput.hide');
+            chatScrollControl.animateTo(
+              orderModel.listNoteModel.length * 100.0,
+              duration: Duration(seconds: 2),
+              curve: Curves.fastOutSlowIn,
+            );
+
+            // chatScrollControl.sc(index: 150, duration: Duration(seconds: 1));
+
           }).catchError((onError) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 backgroundColor: Colors.red,
@@ -268,7 +277,7 @@ OrderModel orderModel;
   }
 
 
-
+  ScrollController  chatScrollControl  =   ScrollController();
   convertDateFormat(String date) {
     if (date != null) {
       try {
