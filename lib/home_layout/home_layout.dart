@@ -1,5 +1,5 @@
 // @dart=2.9
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/shared/Global.dart';
@@ -67,7 +67,7 @@ class HomeLayout extends StatelessWidget {
                         iconSize: 20,
                         items: [
                           BottomNavigationBarItem(
-                            icon: Badge(
+                            icon: badges.Badge(
                               showBadge:cubit.listAllOrders
                                   .where((element) =>
                               element.orderState.toLowerCase() == 'New'.toLowerCase() &&
@@ -95,7 +95,7 @@ class HomeLayout extends StatelessWidget {
                             label: 'جديد',
                           ),
                             BottomNavigationBarItem(
-                            icon: Badge(
+                            icon: badges.Badge(
                               showBadge:cubit.listAllOrders
                                   .where((element) =>
                               element.orderState.toLowerCase() == 'Prepared'.toLowerCase() &&
@@ -183,7 +183,7 @@ class HomeLayout extends StatelessWidget {
                             label: 'بحث',
                           ),
                           BottomNavigationBarItem(
-                            icon: Badge(
+                            icon: badges.Badge(
                               showBadge:
                                   HomeCubit.get(context).listOrder.isNotEmpty &&
                                       HomeCubit.get(context).listOrder.length !=

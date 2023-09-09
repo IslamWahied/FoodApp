@@ -1,6 +1,6 @@
 // @dart=2.9
 import 'package:backdrop/backdrop.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
@@ -65,7 +65,7 @@ class RestrantListScreen extends StatelessWidget {
                              context, const HomeLayout());
                          cubit.changeCurrentIndex(3);
                        },
-                       child: Badge(
+                       child: badges.Badge(
                            badgeContent: Text(
                              cubit.listOrder.length.toString() ??
                                  '0',

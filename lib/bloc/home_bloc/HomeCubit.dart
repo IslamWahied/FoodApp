@@ -135,7 +135,7 @@ class HomeCubit extends Cubit<HomeState> {
   File profileImage;
   var picker = ImagePicker();
   Future<void> getProfileImage() async {
-    final pickedFile = await picker.getImage(
+    final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
     );
 

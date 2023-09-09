@@ -45,56 +45,57 @@ class UserAccountScreen extends StatelessWidget {
                       child: SizedBox(
                           height: MediaQuery.of(context).size.height * 0.095,
                           width: double.infinity,
-                          child: DropdownSearch(
-                            showClearButton: true,
-                            popupBackgroundColor: Colors.grey[250],
-                            maxHeight:
-                                MediaQuery.of(context).size.height * 0.35,
-                            dropdownSearchDecoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              fillColor: Colors.white,
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                                borderSide: const BorderSide(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                                borderSide: const BorderSide(
-                                  color: Colors.black,
-                                  width: 2.0,
-                                ),
-                              ),
-                              labelText: 'المطعم',
-                              alignLabelWithHint: true,
-                              labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.w400, fontSize: 20),
-                            ),
-                            selectedItem: cubit.selectedUserId != null &&
-                                    cubit.listProject.isNotEmpty &&
-                                    cubit.selectedUserId.trim() != ''
-                                ? cubit.listProject
-                                        .firstWhere((element) =>
-                                            element.name.toLowerCase() ==
-                                            cubit.selectedUserId.toLowerCase())
-                                        .name ??
-                                    ''
-                                : '',
-                            showSearchBox: true,
-                            mode: Mode.BOTTOM_SHEET,
-                            items:
-                                cubit.listProject.map((e) => e.name).toList(),
-                            onChanged: (value) async {
-                              if (value != null) {
-                                cubit.selectedUserId = value;
-                                cubit.isShowAllAccount = false;
-                              } else {
-                                cubit.selectedUserId = '';
-                              }
-                              cubit.emit(SelectCategoryState());
-                            },
-                          )),
+                          // child: DropdownSearch(
+                          //   showClearButton: true,
+                          //   popupBackgroundColor: Colors.grey[250],
+                          //   maxHeight:
+                          //       MediaQuery.of(context).size.height * 0.35,
+                          //   dropdownSearchDecoration: InputDecoration(
+                          //     floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          //     fillColor: Colors.white,
+                          //     focusedBorder: OutlineInputBorder(
+                          //       borderRadius: BorderRadius.circular(25.0),
+                          //       borderSide: const BorderSide(
+                          //         color: Colors.black,
+                          //       ),
+                          //     ),
+                          //     border: OutlineInputBorder(
+                          //       borderRadius: BorderRadius.circular(25.0),
+                          //       borderSide: const BorderSide(
+                          //         color: Colors.black,
+                          //         width: 2.0,
+                          //       ),
+                          //     ),
+                          //     labelText: 'المطعم',
+                          //     alignLabelWithHint: true,
+                          //     labelStyle: const TextStyle(
+                          //         fontWeight: FontWeight.w400, fontSize: 20),
+                          //   ),
+                          //   selectedItem: cubit.selectedUserId != null &&
+                          //           cubit.listProject.isNotEmpty &&
+                          //           cubit.selectedUserId.trim() != ''
+                          //       ? cubit.listProject
+                          //               .firstWhere((element) =>
+                          //                   element.name.toLowerCase() ==
+                          //                   cubit.selectedUserId.toLowerCase())
+                          //               .name ??
+                          //           ''
+                          //       : '',
+                          //   showSearchBox: true,
+                          //   mode: Mode.BOTTOM_SHEET,
+                          //   items:
+                          //       cubit.listProject.map((e) => e.name).toList(),
+                          //   onChanged: (value) async {
+                          //     if (value != null) {
+                          //       cubit.selectedUserId = value;
+                          //       cubit.isShowAllAccount = false;
+                          //     } else {
+                          //       cubit.selectedUserId = '';
+                          //     }
+                          //     cubit.emit(SelectCategoryState());
+                          //   },
+                          // )
+                      ),
                     ),
                     const SizedBox(height: 60),
                     if (cubit.selectedUserId != null &&

@@ -1,5 +1,5 @@
 // @dart=2.9
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
@@ -442,7 +442,7 @@ Padding customAppBar(
           },
           child: Padding(
             padding: const EdgeInsets.only(right: 10, top: 15),
-            child: Badge(
+            child: badges.Badge(
                 badgeContent: Text(
                   HomeCubit.get(context)
                           .listOrder
@@ -524,7 +524,7 @@ Padding customAppBarOrderDetial(
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 10, top: 15),
-              child: Badge(
+              child: badges.Badge(
                   badgeContent: Text(
                     HomeCubit.get(context)
                         .listOrder

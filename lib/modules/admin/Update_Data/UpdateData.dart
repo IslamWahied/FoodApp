@@ -153,189 +153,196 @@ class UpdateDataScreen extends StatelessWidget {
                           SizedBox(
                               height: MediaQuery.of(context).size.height * 0.075,
                               width: double.infinity,
-                              child: DropdownSearch(
-                                key: GlobalKey(),
-                                showSelectedItems: true,
-                                popupBackgroundColor: Colors.grey[250],
-                                maxHeight:
-                                    MediaQuery.of(context).size.height * 0.35,
-                                dropdownSearchDecoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  labelText: 'القسم',
-                                  labelStyle: const TextStyle(
-                                      fontWeight: FontWeight.w400, fontSize: 14),
-                                ),
-                                showSearchBox: true,
-                                mode: Mode.BOTTOM_SHEET,
-                                items: HomeCubit.get(context)
-                                    .listCategory
-                                    .where((element) =>
-                                        element.isDeleted == 0 &&
-                                        element.projectId == Global.projectId)
-                                    .map((e) => e.categoryTitle)
-                                    .toList(),
-                                onChanged: (value) async {
-                                  cubit.onChangeCategory(context, value);
-                                  cubit.checkIsUploadValid(context);
-                                },
-                              )),
+                              // child: DropdownSearch(
+                              //   key: GlobalKey(),
+                              //   showSelectedItems: true,
+                              //   popupBackgroundColor: Colors.grey[250],
+                              //   maxHeight:
+                              //       MediaQuery.of(context).size.height * 0.35,
+                              //   dropdownSearchDecoration: InputDecoration(
+                              //     fillColor: Colors.white,
+                              //     focusedBorder: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(25.0),
+                              //       borderSide: const BorderSide(
+                              //         color: Colors.black,
+                              //       ),
+                              //     ),
+                              //     border: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(25.0),
+                              //       borderSide: const BorderSide(
+                              //         color: Colors.black,
+                              //         width: 2.0,
+                              //       ),
+                              //     ),
+                              //     labelText: 'القسم',
+                              //     labelStyle: const TextStyle(
+                              //         fontWeight: FontWeight.w400, fontSize: 14),
+                              //   ),
+                              //   showSearchBox: true,
+                              //   mode: Mode.BOTTOM_SHEET,
+                              //   items: HomeCubit.get(context)
+                              //       .listCategory
+                              //       .where((element) =>
+                              //           element.isDeleted == 0 &&
+                              //           element.projectId == Global.projectId)
+                              //       .map((e) => e.categoryTitle)
+                              //       .toList(),
+                              //   onChanged: (value) async {
+                              //     cubit.onChangeCategory(context, value);
+                              //     cubit.checkIsUploadValid(context);
+                              //   },
+                              // )
+
+
+                          ),
                         if (cubit.selectedTypeItemId == 2)
                           SizedBox(
                               height: MediaQuery.of(context).size.height * 0.075,
                               width: double.infinity,
-                              child: DropdownSearch(
-                                key: GlobalKey(),
-                                showSelectedItems: true,
-                                // enabled: cubit.selectedCategoryId == 0 ?false:true,
-                                // showClearButton: true,
-                                popupBackgroundColor: Colors.grey[250],
-
-                                maxHeight:
-                                    MediaQuery.of(context).size.height * 0.35,
-                                dropdownSearchDecoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  labelText: 'الفرع',
-                                  labelStyle: const TextStyle(
-                                      fontWeight: FontWeight.w400, fontSize: 14),
-                                ),
-
-                                showSearchBox: true,
-                                mode: Mode.BOTTOM_SHEET,
-                                items: HomeCubit.get(context)
-                                    .listSubCategory
-                                    .where((element) =>
-                                        element.isDeleted == 0 &&
-                                        element.projectId == Global.projectId)
-                                    .map((e) => e.subCategoryTitle)
-                                    .toList(),
-                                onChanged: (value) async {
-                                  cubit.onChangeSupCategory(
-                                      context: context, value: value);
-                                  cubit.checkIsUploadValid(context);
-                                },
-                              )),
+                              // child: DropdownSearch(
+                              //   key: GlobalKey(),
+                              //   showSelectedItems: true,
+                              //   // enabled: cubit.selectedCategoryId == 0 ?false:true,
+                              //   // showClearButton: true,
+                              //   popupBackgroundColor: Colors.grey[250],
+                              //
+                              //   maxHeight:
+                              //       MediaQuery.of(context).size.height * 0.35,
+                              //   dropdownSearchDecoration: InputDecoration(
+                              //     fillColor: Colors.white,
+                              //     focusedBorder: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(25.0),
+                              //       borderSide: const BorderSide(
+                              //         color: Colors.black,
+                              //       ),
+                              //     ),
+                              //     border: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(25.0),
+                              //       borderSide: const BorderSide(
+                              //         color: Colors.black,
+                              //         width: 2.0,
+                              //       ),
+                              //     ),
+                              //     labelText: 'الفرع',
+                              //     labelStyle: const TextStyle(
+                              //         fontWeight: FontWeight.w400, fontSize: 14),
+                              //   ),
+                              //
+                              //   showSearchBox: true,
+                              //   mode: Mode.BOTTOM_SHEET,
+                              //   items: HomeCubit.get(context)
+                              //       .listSubCategory
+                              //       .where((element) =>
+                              //           element.isDeleted == 0 &&
+                              //           element.projectId == Global.projectId)
+                              //       .map((e) => e.subCategoryTitle)
+                              //       .toList(),
+                              //   onChanged: (value) async {
+                              //     cubit.onChangeSupCategory(
+                              //         context: context, value: value);
+                              //     cubit.checkIsUploadValid(context);
+                              //   },
+                              // )
+                          ),
                         if (cubit.selectedTypeItemId == 3)
                           SizedBox(
                               height: MediaQuery.of(context).size.height * 0.075,
                               width: double.infinity,
-                              child: DropdownSearch(
-                                showSelectedItems: true,
-                                key: GlobalKey(),
-                                // enabled: cubit.selectedCategoryId == 0 ?false:true,
-                                // showClearButton: true,
-                                popupBackgroundColor: Colors.grey[250],
-
-                                maxHeight:
-                                    MediaQuery.of(context).size.height * 0.35,
-                                dropdownSearchDecoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  labelText: 'المنتج',
-                                  labelStyle: const TextStyle(
-                                      fontWeight: FontWeight.w400, fontSize: 14),
-                                ),
-
-                                showSearchBox: true,
-                                mode: Mode.BOTTOM_SHEET,
-                                items: HomeCubit.get(context)
-                                    .listItems
-                                    .where((element) =>
-                                        element.isDeleted == 0 &&
-                                        element.projectId == Global.projectId)
-                                    .map((e) => e.itemTitle)
-                                    .toList(),
-                                onChanged: (value) async {
-                                  cubit.onChangeItems(
-                                      context: context, value: value);
-                                  cubit.checkIsUploadValid(context);
-                                },
-                              )),
+                              // child: DropdownSearch(
+                              //   showSelectedItems: true,
+                              //   key: GlobalKey(),
+                              //   // enabled: cubit.selectedCategoryId == 0 ?false:true,
+                              //   // showClearButton: true,
+                              //   popupBackgroundColor: Colors.grey[250],
+                              //
+                              //   maxHeight:
+                              //       MediaQuery.of(context).size.height * 0.35,
+                              //   dropdownSearchDecoration: InputDecoration(
+                              //     fillColor: Colors.white,
+                              //     focusedBorder: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(25.0),
+                              //       borderSide: const BorderSide(
+                              //         color: Colors.black,
+                              //       ),
+                              //     ),
+                              //     border: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(25.0),
+                              //       borderSide: const BorderSide(
+                              //         color: Colors.black,
+                              //         width: 2.0,
+                              //       ),
+                              //     ),
+                              //     labelText: 'المنتج',
+                              //     labelStyle: const TextStyle(
+                              //         fontWeight: FontWeight.w400, fontSize: 14),
+                              //   ),
+                              //
+                              //   showSearchBox: true,
+                              //   mode: Mode.BOTTOM_SHEET,
+                              //   items: HomeCubit.get(context)
+                              //       .listItems
+                              //       .where((element) =>
+                              //           element.isDeleted == 0 &&
+                              //           element.projectId == Global.projectId)
+                              //       .map((e) => e.itemTitle)
+                              //       .toList(),
+                              //   onChanged: (value) async {
+                              //     cubit.onChangeItems(
+                              //         context: context, value: value);
+                              //     cubit.checkIsUploadValid(context);
+                              //   },
+                              // )
+                          ),
                         if (cubit.selectedTypeItemId == 4)
                           SizedBox(
                               height: MediaQuery.of(context).size.height * 0.075,
                               width: double.infinity,
-                              child: DropdownSearch(
-                                key: GlobalKey(),
-                                showSelectedItems: true,
-                                // enabled: cubit.selectedCategoryId == 0 ?false:true,
-                                // showClearButton: true,
-                                popupBackgroundColor: Colors.grey[250],
+                              // child: DropdownSearch(
+                              //   key: GlobalKey(),
+                              //   showSelectedItems: true,
+                              //   // enabled: cubit.selectedCategoryId == 0 ?false:true,
+                              //   // showClearButton: true,
+                              //   popupBackgroundColor: Colors.grey[250],
+                              //
+                              //   maxHeight:
+                              //       MediaQuery.of(context).size.height * 0.35,
+                              //   dropdownSearchDecoration: InputDecoration(
+                              //     fillColor: Colors.white,
+                              //     focusedBorder: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(25.0),
+                              //       borderSide: const BorderSide(
+                              //         color: Colors.black,
+                              //       ),
+                              //     ),
+                              //     border: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(25.0),
+                              //       borderSide: const BorderSide(
+                              //         color: Colors.black,
+                              //         width: 2.0,
+                              //       ),
+                              //     ),
+                              //     labelText: 'الاضافات',
+                              //     labelStyle: const TextStyle(
+                              //         fontWeight: FontWeight.w400, fontSize: 14),
+                              //   ),
+                              //
+                              //   showSearchBox: true,
+                              //   mode: Mode.BOTTOM_SHEET,
+                              //   items: HomeCubit.get(context)
+                              //       .listAdditions
+                              //       .where((element) =>
+                              //           element.isDeleted == 0 &&
+                              //           element.projectId == Global.projectId)
+                              //       .map((e) => e.itemTitle)
+                              //       .toList(),
+                              //   onChanged: (value) async {
+                              //     cubit.onChangeAddition(
+                              //         context: context, value: value);
+                              //     cubit.checkIsUploadValid(context);
+                              //   },
+                              // )
 
-                                maxHeight:
-                                    MediaQuery.of(context).size.height * 0.35,
-                                dropdownSearchDecoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  labelText: 'الاضافات',
-                                  labelStyle: const TextStyle(
-                                      fontWeight: FontWeight.w400, fontSize: 14),
-                                ),
-
-                                showSearchBox: true,
-                                mode: Mode.BOTTOM_SHEET,
-                                items: HomeCubit.get(context)
-                                    .listAdditions
-                                    .where((element) =>
-                                        element.isDeleted == 0 &&
-                                        element.projectId == Global.projectId)
-                                    .map((e) => e.itemTitle)
-                                    .toList(),
-                                onChanged: (value) async {
-                                  cubit.onChangeAddition(
-                                      context: context, value: value);
-                                  cubit.checkIsUploadValid(context);
-                                },
-                              )),
+                          ),
                         const SizedBox(height: 15),
                         Card(
                           color: Colors.grey.shade100,

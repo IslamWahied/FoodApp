@@ -314,81 +314,83 @@ class UploadProductForm extends StatelessWidget {
                                   height: MediaQuery.of(context).size.height *
                                       0.075,
                                   width: double.infinity,
-                                  child: DropdownSearch(
-                                    popupBackgroundColor: Colors.grey[250],
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height *
-                                            0.35,
-                                    dropdownSearchDecoration: InputDecoration(
-                                      fillColor: Colors.white,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        borderSide: const BorderSide(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        borderSide: const BorderSide(
-                                          color: Colors.black,
-                                          width: 2.0,
-                                        ),
-                                      ),
-                                      labelText: 'القسم',
-                                      labelStyle: const TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                    selectedItem: cubit.selectedCategoryId !=
-                                                0 &&
-                                            HomeCubit.get(context)
-                                                .listCategory
-                                                .where((element) =>
-                                                    element.isDeleted == 0 &&
-                                                    element.projectId ==
-                                                        Global.projectId)
-                                                .isNotEmpty
-                                        ? HomeCubit.get(context)
-                                            .listCategory
-                                            .firstWhere((element) =>
-                                                element.categoryId ==
-                                                    cubit.selectedCategoryId &&
-                                                element.isDeleted == 0 &&
-                                                element.projectId ==
-                                                    Global.projectId)
-                                            .categoryTitle
-                                        : '',
-                                    showSearchBox: true,
-                                    mode: Mode.BOTTOM_SHEET,
-                                    items: HomeCubit.get(context)
-                                        .listCategory
-                                        .where((element) =>
-                                            element.isDeleted == 0 &&
-                                            element.projectId ==
-                                                Global.projectId)
-                                        .map((e) => e.categoryTitle)
-                                        .toList(),
-                                    onChanged: (value) async {
-                                      cubit.selectedSupCategoryId = 0;
-                                      cubit.selectedCategoryId =
-                                          HomeCubit.get(context)
-                                              .listCategory
-                                              .firstWhere((element) =>
-                                                  element.categoryTitle ==
-                                                      value &&
-                                                  element.isDeleted == 0 &&
-                                                  element.projectId ==
-                                                      Global.projectId)
-                                              .categoryId;
-                                      if (cubit.selectedTypeItemId == 3) {
-                                        cubit.getSubCategoryByCategoryId(
-                                            cubit.selectedCategoryId);
-                                      }
-                                      cubit.checkIsUploadValid(context);
-                                    },
-                                  )),
+                                  // child: DropdownSearch(
+                                  //   popupBackgroundColor: Colors.grey[250],
+                                  //   maxHeight:
+                                  //       MediaQuery.of(context).size.height *
+                                  //           0.35,
+                                  //   dropdownSearchDecoration: InputDecoration(
+                                  //     fillColor: Colors.white,
+                                  //     focusedBorder: OutlineInputBorder(
+                                  //       borderRadius:
+                                  //           BorderRadius.circular(25.0),
+                                  //       borderSide: const BorderSide(
+                                  //         color: Colors.black,
+                                  //       ),
+                                  //     ),
+                                  //     border: OutlineInputBorder(
+                                  //       borderRadius:
+                                  //           BorderRadius.circular(25.0),
+                                  //       borderSide: const BorderSide(
+                                  //         color: Colors.black,
+                                  //         width: 2.0,
+                                  //       ),
+                                  //     ),
+                                  //     labelText: 'القسم',
+                                  //     labelStyle: const TextStyle(
+                                  //         fontWeight: FontWeight.w400,
+                                  //         fontSize: 14),
+                                  //   ),
+                                  //   selectedItem: cubit.selectedCategoryId !=
+                                  //               0 &&
+                                  //           HomeCubit.get(context)
+                                  //               .listCategory
+                                  //               .where((element) =>
+                                  //                   element.isDeleted == 0 &&
+                                  //                   element.projectId ==
+                                  //                       Global.projectId)
+                                  //               .isNotEmpty
+                                  //       ? HomeCubit.get(context)
+                                  //           .listCategory
+                                  //           .firstWhere((element) =>
+                                  //               element.categoryId ==
+                                  //                   cubit.selectedCategoryId &&
+                                  //               element.isDeleted == 0 &&
+                                  //               element.projectId ==
+                                  //                   Global.projectId)
+                                  //           .categoryTitle
+                                  //       : '',
+                                  //   showSearchBox: true,
+                                  //   mode: Mode.BOTTOM_SHEET,
+                                  //   items: HomeCubit.get(context)
+                                  //       .listCategory
+                                  //       .where((element) =>
+                                  //           element.isDeleted == 0 &&
+                                  //           element.projectId ==
+                                  //               Global.projectId)
+                                  //       .map((e) => e.categoryTitle)
+                                  //       .toList(),
+                                  //   onChanged: (value) async {
+                                  //     cubit.selectedSupCategoryId = 0;
+                                  //     cubit.selectedCategoryId =
+                                  //         HomeCubit.get(context)
+                                  //             .listCategory
+                                  //             .firstWhere((element) =>
+                                  //                 element.categoryTitle ==
+                                  //                     value &&
+                                  //                 element.isDeleted == 0 &&
+                                  //                 element.projectId ==
+                                  //                     Global.projectId)
+                                  //             .categoryId;
+                                  //     if (cubit.selectedTypeItemId == 3) {
+                                  //       cubit.getSubCategoryByCategoryId(
+                                  //           cubit.selectedCategoryId);
+                                  //     }
+                                  //     cubit.checkIsUploadValid(context);
+                                  //   },
+                                  // )
+
+                              ),
                             const SizedBox(height: 25),
                             if (cubit.selectedTypeItemId == 3 &&
                                 HomeCubit.get(context)
@@ -401,85 +403,86 @@ class UploadProductForm extends StatelessWidget {
                                   height: MediaQuery.of(context).size.height *
                                       0.075,
                                   width: double.infinity,
-                                  child: DropdownSearch(
-                                    popupBackgroundColor: Colors.grey[250],
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height *
-                                            0.35,
-                                    dropdownSearchDecoration: InputDecoration(
-                                      fillColor: Colors.white,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        borderSide: const BorderSide(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        borderSide: const BorderSide(
-                                          color: Colors.black,
-                                          width: 2.0,
-                                        ),
-                                      ),
-                                      labelText: 'الفرع',
-                                      labelStyle: const TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14),
-                                    ),
-                                    selectedItem: cubit.selectedSupCategoryId !=
-                                                0 &&
-                                            HomeCubit.get(context)
-                                                .listSubCategory
-                                                .where((element) =>
-                                                    element.isDeleted == 0 &&
-                                                    element.categoryId ==
-                                                        cubit
-                                                            .selectedCategoryId &&
-                                                    element.projectId ==
-                                                        Global.projectId)
-                                                .isNotEmpty &&
-                                            cubit.selectedCategoryId != 0 &&
-                                            cubit.selectedCategoryId != null
-                                        ? HomeCubit.get(context)
-                                            .listSubCategory
-                                            .firstWhere((element) =>
-                                                element.supCategoryId ==
-                                                    cubit
-                                                        .selectedSupCategoryId &&
-                                                element.isDeleted == 0 &&
-                                                element.projectId ==
-                                                    Global.projectId)
-                                            .subCategoryTitle
-                                        : '',
-                                    showSearchBox: true,
-                                    mode: Mode.BOTTOM_SHEET,
-                                    items: HomeCubit.get(context)
-                                        .listSubCategory
-                                        .where((element) =>
-                                            element.isDeleted == 0 &&
-                                            element.categoryId ==
-                                                cubit.selectedCategoryId &&
-                                            element.projectId ==
-                                                Global.projectId)
-                                        .map((e) => e.subCategoryTitle)
-                                        .toList(),
-                                    onChanged: (value) async {
-                                      cubit.selectedSupCategoryId =
-                                          HomeCubit.get(context)
-                                              .listSubCategory
-                                              .firstWhere((element) =>
-                                                  element.subCategoryTitle ==
-                                                      value &&
-                                                  element.isDeleted == 0 &&
-                                                  element.projectId ==
-                                                      Global.projectId)
-                                              .supCategoryId;
-
-                                      cubit.checkIsUploadValid(context);
-                                    },
-                                  )),
+                                  // child: DropdownSearch(
+                                  //   popupBackgroundColor: Colors.grey[250],
+                                  //   maxHeight:
+                                  //       MediaQuery.of(context).size.height *
+                                  //           0.35,
+                                  //   dropdownSearchDecoration: InputDecoration(
+                                  //     fillColor: Colors.white,
+                                  //     focusedBorder: OutlineInputBorder(
+                                  //       borderRadius:
+                                  //           BorderRadius.circular(25.0),
+                                  //       borderSide: const BorderSide(
+                                  //         color: Colors.black,
+                                  //       ),
+                                  //     ),
+                                  //     border: OutlineInputBorder(
+                                  //       borderRadius:
+                                  //           BorderRadius.circular(25.0),
+                                  //       borderSide: const BorderSide(
+                                  //         color: Colors.black,
+                                  //         width: 2.0,
+                                  //       ),
+                                  //     ),
+                                  //     labelText: 'الفرع',
+                                  //     labelStyle: const TextStyle(
+                                  //         fontWeight: FontWeight.w400,
+                                  //         fontSize: 14),
+                                  //   ),
+                                  //   selectedItem: cubit.selectedSupCategoryId !=
+                                  //               0 &&
+                                  //           HomeCubit.get(context)
+                                  //               .listSubCategory
+                                  //               .where((element) =>
+                                  //                   element.isDeleted == 0 &&
+                                  //                   element.categoryId ==
+                                  //                       cubit
+                                  //                           .selectedCategoryId &&
+                                  //                   element.projectId ==
+                                  //                       Global.projectId)
+                                  //               .isNotEmpty &&
+                                  //           cubit.selectedCategoryId != 0 &&
+                                  //           cubit.selectedCategoryId != null
+                                  //       ? HomeCubit.get(context)
+                                  //           .listSubCategory
+                                  //           .firstWhere((element) =>
+                                  //               element.supCategoryId ==
+                                  //                   cubit
+                                  //                       .selectedSupCategoryId &&
+                                  //               element.isDeleted == 0 &&
+                                  //               element.projectId ==
+                                  //                   Global.projectId)
+                                  //           .subCategoryTitle
+                                  //       : '',
+                                  //   showSearchBox: true,
+                                  //   mode: Mode.BOTTOM_SHEET,
+                                  //   items: HomeCubit.get(context)
+                                  //       .listSubCategory
+                                  //       .where((element) =>
+                                  //           element.isDeleted == 0 &&
+                                  //           element.categoryId ==
+                                  //               cubit.selectedCategoryId &&
+                                  //           element.projectId ==
+                                  //               Global.projectId)
+                                  //       .map((e) => e.subCategoryTitle)
+                                  //       .toList(),
+                                  //   onChanged: (value) async {
+                                  //     cubit.selectedSupCategoryId =
+                                  //         HomeCubit.get(context)
+                                  //             .listSubCategory
+                                  //             .firstWhere((element) =>
+                                  //                 element.subCategoryTitle ==
+                                  //                     value &&
+                                  //                 element.isDeleted == 0 &&
+                                  //                 element.projectId ==
+                                  //                     Global.projectId)
+                                  //             .supCategoryId;
+                                  //
+                                  //     cubit.checkIsUploadValid(context);
+                                  //   },
+                                  // )
+                              ),
                             const SizedBox(height: 25),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,

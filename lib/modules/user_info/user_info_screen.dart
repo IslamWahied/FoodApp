@@ -1,6 +1,6 @@
 // @dart=2.9
 import 'package:backdrop/backdrop.dart';
-import 'package:badges/badges.dart';
+
 import 'package:elomda/bloc/home_bloc/HomeCubit.dart';
 import 'package:elomda/bloc/home_bloc/HomeState.dart';
 import 'package:elomda/home_layout/home_layout.dart';
@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:list_tile_switch/list_tile_switch.dart';
+import 'package:badges/badges.dart' as badges;
 
 import '../customer/Userbacklayer.dart';
 import 'edit_profile/edit_user_profile_screen.dart';
@@ -60,7 +61,7 @@ class UserInformationScreen extends StatelessWidget {
                         NavigatToAndReplace(context, const HomeLayout());
                         cubit.changeCurrentIndex(3);
                       },
-                      child: Badge(
+                      child: badges.Badge(
                           badgeContent: Text(
                             cubit.listOrder.length.toString() ?? '0',
                             style: const TextStyle(
